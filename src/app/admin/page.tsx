@@ -1,121 +1,200 @@
-import { createClient } from '@/utils/supabase/server'
-import { redirect } from 'next/navigation'
-import { Users, Calendar, IndianRupee, MessageSquare } from 'lucide-react'
+import Link from 'next/link';
+import {
+  AlertTriangle, CalendarDays, CreditCard, IndianRupee, TrendingUp, UserPlus,
+} from 'lucide-react';
+import { requireAdmin } from '@/lib/auth/session';
+import {
+  getPendingActions, getRevenueSummary, getTodaysAppointments, getAppointmentsForAdmin,
+} from '@/lib/booking/queries';
+import { formatPaise, formatPaiseCompact } from '@/lib/money';
+import { formatTime, formatDate, relativeTime } from '@/lib/date';
+import { PageHeader, StatCard } from '@/components/dashboard/AppShell';
+import { AppointmentStatusBadge } from '@/components/ui/badge';
+import { EmptyState } from '@/components/ui/states';
+import { Button } from '@/components/ui/button';
 
-export default async function AdminDashboard() {
-  const supabase = await createClient()
+export const metadata = { title: 'Admin overview', robots: { index: false } };
 
-  // Middleware already protects this route, but it's good practice to ensure user exists
-  const { data: { user } } = await supabase.auth.getUser()
-  
-  if (!user) {
-    redirect('/login')
-  }
+/**
+ * Admin home.
+ *
+ * Ordered by what needs a decision, not by what is interesting. "Pending
+ * actions" sits above the revenue tiles because a payment that succeeded
+ * without securing a slot is worth more of Komal's attention than this month's
+ * total — and a dashboard that buries the urgent item under a chart is a
+ * dashboard nobody trusts.
+ */
+export default async function AdminOverviewPage() {
+  await requireAdmin();
 
-  // Fetch some mock or real data
-  // In a real app with data, we would query the tables:
-  const { count: appointmentsCount } = await supabase.from('appointments').select('*', { count: 'exact', head: true })
-  const { count: contactRequestsCount } = await supabase.from('contact_requests').select('*', { count: 'exact', head: true }).eq('status', 'unread')
-  const { data: recentAppointments } = await supabase.from('appointments').select('*, profiles(full_name)').order('created_at', { ascending: false }).limit(5)
-  const { data: contactRequests } = await supabase.from('contact_requests').select('*').order('created_at', { ascending: false }).limit(5)
+  const now = new Date();
+  const startOfToday = new Date(now); startOfToday.setHours(0, 0, 0, 0);
+  const startOfWeek = new Date(startOfToday); startOfWeek.setDate(startOfWeek.getDate() - startOfToday.getDay());
+  const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+  const tomorrow = new Date(startOfToday); tomorrow.setDate(tomorrow.getDate() + 1);
+
+  const [today, upcoming, pending, revToday, revWeek, revMonth] = await Promise.all([
+    getTodaysAppointments(),
+    getAppointmentsForAdmin({ status: 'confirmed', from: tomorrow.toISOString(), limit: 6 }),
+    getPendingActions(),
+    getRevenueSummary(startOfToday, tomorrow),
+    getRevenueSummary(startOfWeek, tomorrow),
+    getRevenueSummary(startOfMonth, tomorrow),
+  ]);
+
+  const actionCount =
+    pending.needsAttention.count + pending.failedPayments.count +
+    pending.newLeads.count + pending.pendingTestimonials.count;
 
   return (
-    <div className="container mx-auto px-4 py-12 max-w-6xl">
-      <div className="flex items-center justify-between mb-8">
-        <h1 className="text-3xl font-serif font-bold text-foreground">Admin Dashboard</h1>
-        <div className="px-4 py-2 bg-slate-100 rounded-full text-sm font-medium text-slate-600 border border-slate-200">
-          Admin Role Active
-        </div>
-      </div>
+    <div className="mx-auto max-w-6xl px-5 py-8 lg:px-10 lg:py-12">
+      <PageHeader
+        title="Overview"
+        description={`${today.length} ${today.length === 1 ? 'appointment' : 'appointments'} today · ${formatDate(now)}`}
+        action={<Button asChild variant="outline"><Link href="/admin/appointments">All appointments</Link></Button>}
+      />
 
-      {/* Stats Overview */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
-        <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col">
-          <div className="flex items-center gap-3 text-slate-500 mb-4">
-            <Calendar className="w-5 h-5 text-brand" />
-            <span className="font-medium">Appointments</span>
-          </div>
-          <div className="text-3xl font-bold">{appointmentsCount || 0}</div>
-        </div>
-        
-        <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col">
-          <div className="flex items-center gap-3 text-slate-500 mb-4">
-            <IndianRupee className="w-5 h-5 text-emerald-500" />
-            <span className="font-medium">Total Revenue</span>
-          </div>
-          <div className="text-3xl font-bold">₹0</div>
-        </div>
+      {/* ---- Needs a decision ---- */}
+      {actionCount > 0 && (
+        <section aria-labelledby="actions-heading" className="mt-8">
+          <h2 id="actions-heading" className="flex items-center gap-2 font-sans text-sm font-semibold uppercase tracking-[0.1em] text-[var(--color-stone)]">
+            <AlertTriangle className="size-3.5 text-[var(--color-amber-warn)]" aria-hidden />
+            Pending actions ({actionCount})
+          </h2>
 
-        <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col">
-          <div className="flex items-center gap-3 text-slate-500 mb-4">
-            <Users className="w-5 h-5 text-blue-500" />
-            <span className="font-medium">Total Clients</span>
+          <div className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            <ActionTile
+              count={pending.needsAttention.count}
+              label="Bookings need attention"
+              detail="Paid, but the slot was lost. Refund or re-slot."
+              href="/admin/appointments?status=needs_attention"
+              tone="danger"
+            />
+            <ActionTile
+              count={pending.failedPayments.count}
+              label="Failed payments (7 days)"
+              detail="Worth a follow-up call."
+              href="/admin/payments?status=failed"
+              tone="warning"
+            />
+            <ActionTile
+              count={pending.newLeads.count}
+              label="New enquiries"
+              detail="Waiting for a first reply."
+              href="/admin/leads?status=new"
+              tone="accent"
+            />
+            <ActionTile
+              count={pending.pendingTestimonials.count}
+              label="Reviews to approve"
+              detail="Nothing publishes until you approve it."
+              href="/admin/testimonials"
+              tone="neutral"
+            />
           </div>
-          <div className="text-3xl font-bold">0</div>
-        </div>
+        </section>
+      )}
 
-        <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col">
-          <div className="flex items-center gap-3 text-slate-500 mb-4">
-            <MessageSquare className="w-5 h-5 text-purple-500" />
-            <span className="font-medium">Unread Messages</span>
-          </div>
-          <div className="text-3xl font-bold">{contactRequestsCount || 0}</div>
+      {/* ---- Revenue ---- */}
+      <section aria-labelledby="revenue-heading" className="mt-8">
+        <h2 id="revenue-heading" className="font-sans text-sm font-semibold uppercase tracking-[0.1em] text-[var(--color-stone)]">
+          Revenue
+        </h2>
+        <div className="mt-3 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <StatCard label="Today" value={formatPaise(revToday?.net_paise ?? 0)} sublabel={`${revToday?.paid_count ?? 0} paid`} icon={IndianRupee} />
+          <StatCard label="This week" value={formatPaiseCompact(revWeek?.net_paise ?? 0)} sublabel={`${revWeek?.paid_count ?? 0} paid`} icon={TrendingUp} />
+          <StatCard label="This month" value={formatPaiseCompact(revMonth?.net_paise ?? 0)} sublabel={`${revMonth?.paid_count ?? 0} bookings`} icon={CreditCard} />
+          <StatCard
+            label="Checkout conversion"
+            value={`${revMonth?.conversion_rate ?? 0}%`}
+            sublabel={`${revMonth?.attempt_count ?? 0} attempts this month`}
+            tone={(revMonth?.conversion_rate ?? 0) < 25 ? 'warning' : 'success'}
+          />
         </div>
-      </div>
+        {(revMonth?.conversion_rate ?? 100) < 25 && (revMonth?.attempt_count ?? 0) > 10 && (
+          <p className="mt-3 text-xs leading-relaxed text-[var(--color-amber-warn)]">
+            Conversion below 25% usually means there is friction in the booking flow rather
+            than a demand problem. The Analytics page breaks down where attempts stop.
+          </p>
+        )}
+      </section>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Recent Appointments */}
-        <div className="bg-white rounded-3xl border border-slate-200 overflow-hidden">
-          <div className="p-6 border-b border-slate-100 bg-slate-50/50">
-            <h2 className="text-xl font-bold font-serif">Recent Appointments</h2>
-          </div>
-          <div className="p-6">
-            {recentAppointments && recentAppointments.length > 0 ? (
-              <div className="space-y-4">
-                {recentAppointments.map((apt: any) => (
-                  <div key={apt.id} className="flex justify-between items-center p-4 bg-slate-50 rounded-xl border border-slate-100">
-                    <div>
-                      <div className="font-medium">{apt.profiles?.full_name || 'Client'}</div>
-                      <div className="text-sm text-slate-500">{new Date(apt.appointment_date).toLocaleDateString()}</div>
-                    </div>
-                    <span className="px-3 py-1 bg-yellow-100 text-yellow-700 text-xs font-medium rounded-full">
-                      {apt.status}
+      <div className="mt-8 grid gap-6 lg:grid-cols-2">
+        {/* ---- Today ---- */}
+        <section aria-labelledby="today-heading">
+          <h2 id="today-heading" className="font-sans text-sm font-semibold uppercase tracking-[0.1em] text-[var(--color-stone)]">
+            Today&apos;s schedule
+          </h2>
+          {today.length > 0 ? (
+            <ul className="mt-3 divide-y divide-[var(--color-linen)] rounded-[var(--radius-card)] border border-[var(--color-linen)] bg-white">
+              {today.map((a) => (
+                <li key={a.id}>
+                  <Link href={`/admin/appointments?ref=${a.reference}`} className="flex items-center gap-4 px-5 py-3.5 hover:bg-[var(--color-sand)]">
+                    <span className="tabular w-16 shrink-0 text-sm font-semibold">{formatTime(a.starts_at)}</span>
+                    <span className="min-w-0 flex-1">
+                      <span className="block truncate text-sm font-medium">{a.profiles?.full_name ?? 'Client'}</span>
+                      <span className="block truncate text-xs text-[var(--color-stone)]">{a.service_title_snapshot}</span>
                     </span>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="text-center py-8 text-slate-500">No appointments found.</div>
-            )}
-          </div>
-        </div>
+                    <AppointmentStatusBadge status={a.status} />
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <div className="mt-3">
+              <EmptyState icon={CalendarDays} title="Nothing scheduled today" description="A clear day. Upcoming bookings are listed alongside." />
+            </div>
+          )}
+        </section>
 
-        {/* Contact Requests */}
-        <div className="bg-white rounded-3xl border border-slate-200 overflow-hidden">
-          <div className="p-6 border-b border-slate-100 bg-slate-50/50">
-            <h2 className="text-xl font-bold font-serif">Contact Requests</h2>
-          </div>
-          <div className="p-6">
-            {contactRequests && contactRequests.length > 0 ? (
-              <div className="space-y-4">
-                {contactRequests.map((req: any) => (
-                  <div key={req.id} className="p-4 bg-slate-50 rounded-xl border border-slate-100">
-                    <div className="flex justify-between items-start mb-2">
-                      <div className="font-medium">{req.name}</div>
-                      <span className={`px-2 py-1 text-xs font-medium rounded-full ${req.status === 'unread' ? 'bg-purple-100 text-purple-700' : 'bg-slate-200 text-slate-700'}`}>
-                        {req.status}
-                      </span>
-                    </div>
-                    <div className="text-sm text-slate-600 line-clamp-2">{req.message}</div>
+        {/* ---- Upcoming ---- */}
+        <section aria-labelledby="upcoming-heading">
+          <h2 id="upcoming-heading" className="font-sans text-sm font-semibold uppercase tracking-[0.1em] text-[var(--color-stone)]">
+            Coming up
+          </h2>
+          {upcoming.length > 0 ? (
+            <ul className="mt-3 divide-y divide-[var(--color-linen)] rounded-[var(--radius-card)] border border-[var(--color-linen)] bg-white">
+              {upcoming.map((a) => (
+                <li key={a.id} className="flex items-center justify-between gap-4 px-5 py-3.5">
+                  <div className="min-w-0">
+                    <p className="truncate text-sm font-medium">{a.profiles?.full_name ?? 'Client'}</p>
+                    <p className="truncate text-xs text-[var(--color-stone)]">
+                      {a.service_title_snapshot} · {relativeTime(a.starts_at)}
+                    </p>
                   </div>
-                ))}
-              </div>
-            ) : (
-              <div className="text-center py-8 text-slate-500">No contact requests found.</div>
-            )}
-          </div>
-        </div>
+                  <span className="tabular shrink-0 text-xs text-[var(--color-stone)]">
+                    {formatDate(a.starts_at)}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <div className="mt-3">
+              <EmptyState icon={UserPlus} title="No upcoming bookings" description="New bookings will appear here as they come in." />
+            </div>
+          )}
+        </section>
       </div>
     </div>
-  )
+  );
+}
+
+function ActionTile({ count, label, detail, href, tone }: {
+  count: number; label: string; detail: string; href: string;
+  tone: 'danger' | 'warning' | 'accent' | 'neutral';
+}) {
+  if (count === 0) return null;
+  const tones = {
+    danger: 'border-[var(--color-clay)]/30 bg-[var(--color-clay-tint)]',
+    warning: 'border-[var(--color-amber-warn)]/30 bg-[var(--color-amber-tint)]',
+    accent: 'border-[var(--color-saffron)]/30 bg-[var(--color-saffron-tint)]',
+    neutral: 'border-[var(--color-linen)] bg-white',
+  };
+  return (
+    <Link href={href} className={`block rounded-[var(--radius-card)] border p-4 transition-shadow hover:shadow-[var(--shadow-overlay)] ${tones[tone]}`}>
+      <p className="tabular font-[family-name:var(--font-display)] text-2xl font-semibold">{count}</p>
+      <p className="mt-1 text-sm font-semibold text-[var(--color-ink)]">{label}</p>
+      <p className="mt-0.5 text-xs leading-relaxed text-[var(--color-stone)]">{detail}</p>
+    </Link>
+  );
 }

@@ -1,36 +1,88 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Astrologer Komal Kalra — Consultation Platform
 
-## Getting Started
+A production booking and payment platform for a single-practitioner consultation
+business. Clients browse services, pick a time, pay online, and manage their
+bookings; Komal runs the practice — calendar, clients, revenue, refunds — from an
+admin console.
 
-First, run the development server:
+**Next.js 16 · TypeScript · Tailwind CSS v4 · Supabase (Postgres + RLS) · Razorpay**
+
+---
+
+## Documentation
+
+| Document | What is in it |
+|---|---|
+| [`docs/research.md`](docs/research.md) | Competitor, UX, conversion, payment and concurrency research, and the seven places the evidence changed the brief |
+| [`docs/architecture.md`](docs/architecture.md) | How the system works and why each decision was made |
+| [`docs/api.md`](docs/api.md) | Every endpoint, error code and database RPC |
+| [`docs/progress.md`](docs/progress.md) | Status, placeholders, setup checklist, pre-launch tests |
+| [`database/README.md`](database/README.md) | Schema files and the order to run them |
+
+---
+
+## Quick start
 
 ```bash
+npm install
+cp .env.example .env.local        # fill in Supabase + Razorpay
+# run database/*.sql in numerical order in the Supabase SQL editor
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Then sign up at `/login` and promote yourself once, from the Supabase SQL editor:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```sql
+update public.profiles set role = 'admin' where email = 'you@example.com';
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+There is **no application code path** that can create an admin. That is
+deliberate and enforced three ways — see `database/03_profiles.sql`.
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## What is worth knowing before you change anything
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+**All money is integer paise.** In the database, in API payloads, in props.
+`₹2,100.00` is `210000`. Razorpay is paise-native, and rupee floats eventually
+produce a rounding bug in the one part of the system where being wrong costs
+money. `src/lib/money.ts` is the only place paise become a display string.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+**The client never sends an amount.** It sends a `serviceId` and a `holdId`.
+Price, discount and tax are all computed server-side and asserted before an order
+is created.
 
-## Deploy on Vercel
+**Double-booking is prevented by the database, not by application code.** An
+`EXCLUDE USING gist` constraint on `appointments` means overlapping bookings
+cannot be stored, under any concurrency, from any client. Do not drop it.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+**Webhook idempotency is a `UNIQUE` constraint.** `payment_events (provider,
+event_id)` is what makes Razorpay's retries safe. Do not relax it.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+**`proxy.ts` is not the admin security boundary.** It is a UX redirect. Every
+`/admin` page and every `/api/admin/*` handler re-reads the caller's role from
+the database.
+
+---
+
+## Scripts
+
+```bash
+npm run dev         # development server
+npm run build       # production build
+npm run start       # serve the production build
+npm run typecheck   # tsc --noEmit
+npm run lint        # eslint
+```
+
+---
+
+## Status
+
+Typecheck and production build are clean. The schema was reviewed by hand (no
+Postgres was available in the build environment) and no live Razorpay transaction
+has been run — **test in Razorpay test mode before taking real money.**
+
+Placeholder content (prices, biography, portrait, legal pages) is listed and
+marked in [`docs/progress.md`](docs/progress.md). There are no fabricated
+testimonials or statistics anywhere in the codebase, by construction.

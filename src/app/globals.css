@@ -1,33 +1,191 @@
 @import "tailwindcss";
 
+/* ==========================================================================
+   DESIGN TOKENS — Astrologer Komal Kalra
+   Derived in docs/research.md §2. Summary of the decisions encoded here:
+
+   The brief asks for Trust + Luxury + Calmness + Spirituality + Professionalism.
+   Spirituality pulls toward celestial ornament; trust and professionalism pull
+   toward restraint. Every low-credibility site in this category resolves that
+   tension toward ornament, so we resolve it toward restraint and let ONE warm
+   accent plus a serif display face carry the spiritual register.
+
+   No zodiac wheels. No starfields. No purple→gold gradients. Nothing glows.
+   ========================================================================== */
+
 @theme {
-  --font-sans: var(--font-inter);
-  --font-serif: var(--font-playfair);
-  
-  --color-brand: #F99C23;
-  --color-brand-hover: #e0891d;
-  --color-background: #FAFAF9;
-  --color-foreground: #0F172A;
+  /* --- Colour ------------------------------------------------------------
+     A near-neutral warm base with a single saturated accent. Neutral bases
+     make photography look expensive and let one accent do all the CTA work,
+     which is what conversion research asks for.                            */
+
+  --color-ink: #14100E;        /* warm near-black — headings, body */
+  --color-bark: #3D332C;       /* warm brown-grey — secondary text */
+  --color-stone: #6B5E54;      /* tertiary / meta text */
+  --color-sand: #FAF7F2;       /* page background */
+  --color-linen: #F1EAE0;      /* cards, section bands, borders */
+  --color-linen-hover: #E8DFD2;/* pressed/hover on linen surfaces */
+  --color-edge-hover: #E0D5C6; /* input & card border on hover */
+  --color-placeholder: #A79B8F;/* input placeholder text */
+  --color-sand-muted: #C9BEB2; /* body copy on the dark (ink) background */
+  --color-shell: #FFFFFF;
+
+  --color-saffron: #C2762B;    /* primary CTA, focus ring, active */
+  --color-ember: #A45F1E;      /* hover / pressed */
+  --color-saffron-tint: #F7EEE2;
+
+  --color-sage: #4E6650;       /* success / confirmed / paid */
+  --color-sage-tint: #EDF2ED;
+  --color-clay: #A8412F;       /* destructive / failed / cancelled */
+  --color-clay-tint: #FBEDEA;
+  --color-amber-warn: #8A6412; /* pending / attention */
+  --color-amber-tint: #FBF3E0;
+
+  /* The single "celestial" note. Used sparingly — never as a gradient. */
+  --color-indigo: #2C3557;
+  --color-indigo-tint: #EDEFF5;
+
+  /* --- Type --------------------------------------------------------------
+     Fraunces (variable serif, optical-size axis) for display; Inter for UI.
+     A high-contrast serif + neutral sans is the reliable premium pairing;
+     the serif carries gravitas without becoming decorative.               */
+  --font-display: var(--font-fraunces), ui-serif, Georgia, serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system, sans-serif;
+
+  /* 1.25 major-third scale, fluid via clamp so mobile does not need overrides */
+  --text-display: clamp(2.25rem, 1.6rem + 3.2vw, 4rem);
+  --text-h1: clamp(1.875rem, 1.4rem + 2.2vw, 3rem);
+  --text-h2: clamp(1.5rem, 1.25rem + 1.2vw, 2.25rem);
+  --text-h3: clamp(1.25rem, 1.1rem + 0.7vw, 1.5rem);
+
+  /* --- Radius ------------------------------------------------------------
+     No fully-rounded pills on buttons: pills read consumer-app, not
+     professional practice. Reserved for status badges only.                */
+  --radius-control: 0.375rem;
+  --radius-card: 0.75rem;
+  --radius-panel: 1.25rem;
+
+  /* --- Elevation ---------------------------------------------------------
+     Two levels. Large diffuse shadows read as dated SaaS.                  */
+  --shadow-resting: 0 1px 2px rgb(20 16 14 / 0.04), 0 1px 3px rgb(20 16 14 / 0.06);
+  --shadow-overlay: 0 10px 15px -3px rgb(20 16 14 / 0.08), 0 4px 6px -4px rgb(20 16 14 / 0.06);
+
+  /* --- Motion ------------------------------------------------------------
+     Entrance-only, short. Scroll-linked parallax and long staggers are what
+     make a site feel like a template.                                      */
+  --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-/*
-  The default border color has changed to `currentColor` in Tailwind CSS v4,
-  so we've added these compatibility styles to make sure everything still
-  looks the same as it did with Tailwind CSS v3.
-
-  If we ever want to remove these styles, we need to add an explicit border
-  color utility to any element that depends on these defaults.
-*/
 @layer base {
   *,
   ::after,
   ::before,
   ::backdrop,
   ::file-selector-button {
-    border-color: var(--color-gray-200, currentColor);
+    border-color: var(--color-linen);
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--color-sand);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1, h2, h3 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.12;
+    text-wrap: balance;
+  }
+
+  p { text-wrap: pretty; }
+
+  /* Focus ring: always visible, never removed. 2px accent + 2px offset gives
+     contrast against both the sand background and white cards.            */
+  :focus-visible {
+    outline: 2px solid var(--color-saffron);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+  :focus:not(:focus-visible) { outline: none; }
+
+  /* Money and dashboard counts use tabular figures so columns line up and
+     numbers do not jitter as they update. */
+  .tabular { font-variant-numeric: tabular-nums; }
+
+  ::selection { background: var(--color-saffron-tint); color: var(--color-ink); }
+}
+
+@layer components {
+  /* Skip link — first focusable element on every page. */
+  .skip-link {
+    position: absolute;
+    left: -9999px;
+    top: 0;
+    z-index: 100;
+    background: var(--color-ink);
+    color: var(--color-sand);
+    padding: 0.75rem 1.25rem;
+    border-radius: 0 0 var(--radius-control) 0;
+  }
+  .skip-link:focus { left: 0; }
+
+  /* The one celestial motif, used at most once per page and at low opacity. */
+  .constellation-motif {
+    background-image: radial-gradient(circle at 20% 30%, rgb(44 53 87 / 0.10) 1px, transparent 1px),
+                      radial-gradient(circle at 65% 15%, rgb(44 53 87 / 0.08) 1px, transparent 1px),
+                      radial-gradient(circle at 85% 60%, rgb(44 53 87 / 0.10) 1px, transparent 1px),
+                      radial-gradient(circle at 40% 80%, rgb(44 53 87 / 0.06) 1px, transparent 1px);
+    background-size: 100% 100%;
   }
 }
 
-html {
-  scroll-behavior: smooth;
+@layer utilities {
+  /* Entrance animation. Fires once on first intersection, never re-fires. */
+  .reveal {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  .reveal.is-visible {
+    opacity: 1;
+    transform: none;
+    transition: opacity 420ms var(--ease-out-quint), transform 420ms var(--ease-out-quint);
+  }
+
+  .shimmer {
+    background: linear-gradient(90deg, var(--color-linen) 25%, #F7F2EA 50%, var(--color-linen) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.4s linear infinite;
+  }
+  @keyframes shimmer {
+    from { background-position: 200% 0; }
+    to   { background-position: -200% 0; }
+  }
+}
+
+/* Reduced motion is respected globally: animations become instant rather than
+   merely shorter. Nothing in this product depends on motion to be understood. */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  .reveal { opacity: 1; transform: none; }
+}
+
+@media print {
+  .no-print { display: none !important; }
+  body { background: #fff; }
 }

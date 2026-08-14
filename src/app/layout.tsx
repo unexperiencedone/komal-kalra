@@ -1,53 +1,83 @@
-import type { Metadata } from "next";
-import { Inter, Playfair_Display } from "next/font/google";
-import "./globals.css";
+import type { Metadata, Viewport } from 'next';
+import { Inter, Fraunces } from 'next/font/google';
+import { Toaster } from 'sonner';
+import { BRAND } from '@/lib/config';
+import './globals.css';
 
+/**
+ * Fonts are self-hosted through next/font: no render-blocking request to a
+ * third-party CDN, no layout shift from a late swap, and no privacy question
+ * about who is being told which pages a visitor loads.
+ */
 const inter = Inter({
-  variable: "--font-inter",
-  subsets: ["latin"],
+  subsets: ['latin'],
+  variable: '--font-inter',
+  display: 'swap',
 });
 
-const playfair = Playfair_Display({
-  variable: "--font-playfair",
-  subsets: ["latin"],
+const fraunces = Fraunces({
+  subsets: ['latin'],
+  variable: '--font-fraunces',
+  display: 'swap',
+  axes: ['SOFT', 'WONK', 'opsz'],
 });
+
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000';
 
 export const metadata: Metadata = {
-  title: "Komal Kalra | Vedic Astrology",
-  description: "Navigate Your Life's Journey with Cosmic Clarity.",
+  metadataBase: new URL(siteUrl),
+  title: {
+    default: `${BRAND.fullName} — Astrology, Coaching & Counselling`,
+    template: `%s — ${BRAND.fullName}`,
+  },
+  description:
+    'One-to-one Vedic astrology consultations, Kundli Milan, coaching, healing and counselling with Komal Kalra. Book a private online session at a time that suits you.',
+  keywords: [
+    'astrologer Komal Kalra', 'online astrology consultation', 'kundli milan',
+    'vedic astrology consultation', 'birth chart reading', 'life coach', 'counselling',
+  ],
+  authors: [{ name: BRAND.fullName }],
+  openGraph: {
+    type: 'website',
+    locale: 'en_IN',
+    url: siteUrl,
+    siteName: BRAND.fullName,
+    title: `${BRAND.fullName} — Astrology, Coaching & Counselling`,
+    description:
+      'Private one-to-one consultations. Astrological guidance, Kundli Milan, coaching, healing and counselling.',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: `${BRAND.fullName}`,
+    description: 'Private one-to-one astrology and counselling consultations.',
+  },
+  alternates: { canonical: '/' },
+  robots: { index: true, follow: true },
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export const viewport: Viewport = {
+  themeColor: '#FAF7F2',
+  width: 'device-width',
+  initialScale: 1,
+};
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
-      <body
-        className={`${inter.variable} ${playfair.variable} antialiased bg-[#FAFAF9] text-[#0F172A] font-sans`}
-      >
-        <div className="flex flex-col min-h-screen">
-          <header className="sticky top-0 z-50 w-full backdrop-blur supports-[backdrop-filter]:bg-[#FAFAF9]/60 border-b border-gray-200">
-            <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-              <div className="text-xl font-serif font-bold text-[#F99C23]">Komal Kalra</div>
-              <nav className="hidden md:flex gap-6">
-                <a href="#about" className="text-sm font-medium hover:text-[#F99C23] transition-colors">About</a>
-                <a href="#services" className="text-sm font-medium hover:text-[#F99C23] transition-colors">Services</a>
-                <a href="/login" className="text-sm font-medium hover:text-[#F99C23] transition-colors">Login</a>
-                <a href="/book" className="text-sm font-medium bg-[#F99C23] text-white px-4 py-2 rounded-full hover:bg-[#e0891d] transition-colors">Book Now</a>
-              </nav>
-            </div>
-          </header>
-          <main className="flex-1">
-            {children}
-          </main>
-          <footer className="bg-[#0F172A] text-white py-12 mt-auto">
-            <div className="container mx-auto px-4 text-center">
-              <p className="text-gray-400">&copy; {new Date().getFullYear()} Komal Kalra Astrology. All rights reserved.</p>
-            </div>
-          </footer>
-        </div>
+    <html lang="en" className={`${inter.variable} ${fraunces.variable}`}>
+      <body>
+        {/* First focusable element on every page. */}
+        <a href="#main" className="skip-link">Skip to content</a>
+        {children}
+        <Toaster
+          position="top-center"
+          toastOptions={{
+            style: {
+              background: '#fff',
+              border: '1px solid var(--color-linen)',
+              color: 'var(--color-ink)',
+            },
+          }}
+        />
       </body>
     </html>
   );
