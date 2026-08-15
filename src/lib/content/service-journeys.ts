@@ -126,6 +126,27 @@ const JOURNEYS: Record<string, ServiceJourney> = {
   },
 };
 
+/**
+ * The editorial still-life beside "What this session covers".
+ *
+ * Scoped per service ON PURPOSE. The journal of astronomical notation is
+ * specific to chart work — putting it on the Counselling or Healing page would
+ * misrepresent what those sessions involve, in the same way reusing another
+ * service's journey photographs would.
+ *
+ * Services without a fitting still-life return null and the column renders as
+ * heading and rule alone, which the layout already handles.
+ */
+const CONTEXT_IMAGE: Record<string, ImageKey> = {
+  'astrological-guidance': 'serviceContext',
+  // Kundli Milan is also chart work, so the same still-life reads correctly.
+  'kundli-milan': 'serviceContext',
+};
+
+export function serviceContextImage(slug: string): ImageKey | null {
+  return CONTEXT_IMAGE[slug] ?? null;
+}
+
 export function serviceJourney(slug: string): ServiceJourney | null {
   return JOURNEYS[slug] ?? null;
 }

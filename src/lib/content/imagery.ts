@@ -30,8 +30,8 @@ export interface BrandImage {
 
 export const IMAGES = {
   heroImage: {
-    remote: '/images/heroImage.jpg',
-    local: '/images/heroImage.jpg',
+    remote: '/images/heroImage.png',
+    local: '/images/heroImage.png',
     alt:
       'Astrologer Komal Kalra, the portrait used on the home page hero.',
   },
@@ -45,28 +45,28 @@ export const IMAGES = {
   aboutStill: {
     remote:
       'https://lh3.googleusercontent.com/aida-public/AB6AXuDi7dnFcTB9ZrnQNYjE7FtldmoJa5Cp4qIuji9Fj2d1A3FZsPuFd0pjpMN9BDdCLEwl8V9khbhx8o1zABdf9S_g-K0g_O3S5JWw0TGehKvAv0FMTuRBCH9uC8R25mbkwl33Duh-1g0_n1YmsjZrX8VI_3uDStsVIpljIZ46PHsDuofXEmMw0CvqVobQXsuJuwEkud1DecYsgDABn7luWxJX1KRIqspunAha2BT9fvUjmf6pnfQ1CYDU',
-    local: '/images/aboutStill.jpg',
+    local: '/images/aboutStill.png',
     alt:
       "A minimalist still-life composition featuring a smooth, polished stone resting on a pristine, textured linen surface. The lighting is soft and directional, casting long, elegant shadows. A single, delicate, dried botanical stem lies…",
   },
   journalCompass: {
     remote:
       'https://lh3.googleusercontent.com/aida-public/AB6AXuDA7otnExcjJnjKZrMUu7CNh4_mp2QHVAsqnrHs-1ryvIEMVrurgUXIkmjEIdcfwl_kUfFXAxABF8YwpAdeJAVZg9rnZ5JCxqlBcrd-vtusPjLFsghk5OYOtEnsSSuttHwDx3t9Yk7knQA7E6DDBLXLR7X-WfxUWMRS7Ek13BObRPVnIKJNmdZp5mkq1UGqJ_XyGaMghww9jLFi116WJ7ZAKIxTETEDq_VGockxtTuRg1HpxZEfgp9z',
-    local: '/images/journalCompass.jpg',
+    local: '/images/journalCompass.png',
     alt:
       "A macro, detailed shot of an antique brass compass resting on top of complex architectural blueprints or minimalist architectural sketches. The lighting is crisp and moody, emphasizing the texture of the paper and the metallic sheen of…",
   },
   journalCandle: {
     remote:
       'https://lh3.googleusercontent.com/aida-public/AB6AXuB77C7NNiTexJbXHor4GfrTHlPLzL5J59xAT2sSN9ZTuZpM3untgw13M9MVI_WvMGm7cWomrdZsx8cRGG0lu_MvZRaYvMNSOtqxQufX_jjeQY4nnpyVCT5cEVK4BFRWsOiuPSRmyLaZGzz7D0lSWwSwYzGxwUKuGF6ydX_7GOSgqdsvo8pi1SgJYoe5QytaAot4DazLPJsxBNm2d-DTGtN6OlGQIM5kE5bDAIes5ZnaHty_P--_A31N',
-    local: '/images/journalCandle.jpg',
+    local: '/images/journalCandle.png',
     alt:
       "A serene, minimalist scene of a single lit white candle in a heavy, dark ceramic holder, placed on a clean wooden desk beside an open, high-quality leather-bound journal and a luxury fountain pen. The overall aesthetic is dark academia…",
   },
   serviceAstrologicalGuidance: {
     remote:
       'https://lh3.googleusercontent.com/aida-public/AB6AXuAIwWf65E-H6pxKgXQQ0UDvE4KPbGy816r7G_fPYoWdAO_iZ2vixHBL8XUnOBSV06WnrtLar_CDRdNmAVUtpq_37qphszJG5UCt292Fm4xODpxHflkA0xNLoWr_Zil4KlCmdIDPiB8qfOWqjJ7twiwuBf8syp0_RPejTt2U0IPZTU6TLb9stF_H3HLxC_2zNYVBx_Ta_RZhi-WacfUy0NDKbkzYaBM8fQcDU3BD7KlzMfWWMw-uTNTD',
-    local: '/images/serviceAstrologicalGuidance.jpg',
+    local: '/images/serviceAstrologicalGuidance.png',
     alt:
       "A sophisticated, high-end editorial photograph of an antique brass astrolabe resting on a dark walnut table. The lighting is moody and dramatic, with soft, warm golden light illuminating the intricate details of the instrument against a…",
   },
@@ -139,6 +139,15 @@ export const IMAGES = {
     local: '/images/confirmationMandala.jpg',
     alt:
       "A subtle, minimalist abstract representation of a serene cosmic alignment or mandala, using very faint muted gold and warm ivory tones, designed as a small, elegant decorative element for a luxury spiritual website. Professional,…",
+  },
+  serviceContext: {
+    // Locally supplied, not from the Stitch set — `remote` mirrors `local` so
+    // the USE_LOCAL_IMAGES switch and `npm run images:download` both stay
+    // well-defined for this key rather than special-casing it.
+    remote: '/images/serviceContext.png',
+    local: '/images/serviceContext.png',
+    alt:
+      "An open journal of handwritten astronomical notation, showing a star chart and compass rose, resting on linen beside a brass compass and reading glasses.",
   },
 } as const satisfies Record<string, BrandImage>;
 

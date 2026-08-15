@@ -32,7 +32,10 @@ const SIZE_SUFFIXES = ['=s0', '=w2560', '=w2048', ''];
 
 const source = fs.readFileSync(SRC, 'utf8');
 const entries = [...source.matchAll(/(\w+):\s*\{\s*remote:\s*'([^']+)',\s*local:\s*'([^']+)'/g)]
-  .map(([, key, remote, local]) => ({ key, remote, local }));
+  .map(([, key, remote, local]) => ({ key, remote, local }))
+  // Locally supplied images have a `remote` that is just the local path. They
+  // are already in public/images and there is nothing to fetch.
+  .filter(({ remote }) => remote.startsWith('http'));
 
 if (!entries.length) {
   console.error('No images found in imagery.ts — has its shape changed?');

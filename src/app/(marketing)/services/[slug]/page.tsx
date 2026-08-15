@@ -12,7 +12,7 @@ import { Reveal } from '@/components/common/Reveal';
 import { FaqAccordion } from '@/components/marketing/FaqAccordion';
 import { BOOKING_FAQ } from '@/lib/content/faq';
 import { img, serviceImage } from '@/lib/content/imagery';
-import { serviceJourney, serviceLogistics } from '@/lib/content/service-journeys';
+import { serviceContextImage, serviceJourney, serviceLogistics } from '@/lib/content/service-journeys';
 
 /**
  * Service detail — built to the `service_detail_healing` design.
@@ -74,6 +74,8 @@ export default async function ServiceDetailPage(props: { params: Promise<{ slug:
 
   const mode = MODE[service.mode];
   const photo = serviceImage(service.slug);
+  const contextKey = serviceContextImage(service.slug);
+  const context = contextKey ? img(contextKey) : null;
   const journey = serviceJourney(service.slug);
   const logistics = serviceLogistics(service.mode);
   const cancellationHours = service.free_cancellation_hours ?? POLICY.freeCancellationHours;
@@ -321,6 +323,32 @@ export default async function ServiceDetailPage(props: { params: Promise<{ slug:
                 What this session covers
               </h2>
               <span className="gold-rule mt-6" aria-hidden />
+
+              {/*
+                Editorial still-life anchoring the context column.
+
+                Only rendered for services where it is truthful — the journal of
+                astronomical notation belongs to chart work, and would
+                misrepresent a counselling or healing session. See
+                serviceContextImage() for the mapping. Where there is none the
+                column is heading and rule alone, which reads fine.
+
+                Placed in the short column rather than beside the body copy
+                because that column was otherwise a heading against a tall block
+                of text; the image gives it enough weight for the two to balance.
+                4/5 crop with the same gold hairline as the About still, so the
+                editorial images read as a set.
+              */}
+              {context && (
+                <Image
+                  src={context.src}
+                  alt={context.alt}
+                  width={1024}
+                  height={1024}
+                  sizes="(min-width: 768px) 30vw, 100vw"
+                  className="mt-10 hidden aspect-[4/5] w-full border border-[color-mix(in_srgb,var(--color-muted-gold)_20%,transparent)] object-cover md:block"
+                />
+              )}
             </Reveal>
 
             <Reveal delay={100} className="md:col-span-8">
