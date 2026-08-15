@@ -3,15 +3,11 @@ import type { NextConfig } from 'next';
 const nextConfig: NextConfig = {
   images: {
     /**
-     * Stitch-hosted brand photography.
-     *
-     * Development convenience only. These URLs can rotate without warning, so
-     * before launch run `npm run images:download` and flip USE_LOCAL_IMAGES in
-     * src/lib/content/imagery.ts — at which point this entry can be deleted.
+     * All brand photography is now served from /public/images
+     * (see src/lib/content/imagery.ts, USE_LOCAL_IMAGES = true), so no remote
+     * pattern is required. Re-add lh3.googleusercontent.com only if you switch
+     * back to the Stitch-hosted originals.
      */
-    remotePatterns: [
-      { protocol: 'https', hostname: 'lh3.googleusercontent.com', pathname: '/aida-public/**' },
-    ],
     formats: ['image/avif', 'image/webp'],
   },
 };

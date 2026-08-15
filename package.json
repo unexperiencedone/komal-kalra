@@ -3,13 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "eslint",
-    "typecheck": "tsc --noEmit",
     "audit:contrast": "python3 scripts/contrast-audit.py",
-    "images:download": "node scripts/download-images.js"
+    "build": "next build",
+    "dev": "next dev",
+    "images:download": "node scripts/download-images.js",
+    "lint": "eslint",
+    "start": "next start",
+    "typecheck": "tsc --noEmit",
+    "watermark:prepare": "node scripts/prepare-watermark.js"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.1",

@@ -487,3 +487,75 @@ One consequence worth stating plainly: the real-data stats band is gone, so the
 honesty guarantee it enforced now rests on the testimonial components alone.
 Those still render nothing without an approved review, and there is still no
 hardcoded testimonial anywhere in the codebase.
+
+---
+
+## 16. The Rashi Chakra watermark
+
+A brass zodiac wheel fixed behind the homepage, rotating as the page scrolls.
+
+### The source file needed fixing first
+
+`public/images/watermark.png` has **no alpha channel** — 3 channels, 1.83 MB.
+What looks like transparency is the editor's checkerboard rendered into the
+pixels. Used directly it renders a grey checkered square.
+
+`npm run watermark:prepare` keys it out and writes
+`public/images/watermark-mark.webp` (235 KB, real alpha). The key uses
+*saturation*, not brightness:
+
+```
+background  ⟺  max(r,g,b) − min(r,g,b) < 14   AND   max(r,g,b) > 185
+```
+
+The background is strictly neutral (r = g = b); the brass is strongly warm
+(166,141,100 at centre). A flat brightness cut would have eaten the brass
+specular highlights, which are bright but never neutral. A 10-unit feather band
+ramps alpha so the cut edge is not aliased. The original PNG is left untouched.
+
+### The rotation runs on the compositor
+
+Primary path is a native CSS scroll-driven animation:
+
+```css
+@supports (animation-timeline: scroll()) {
+  .watermark-scrub { animation: watermark-rotate 1s linear both;
+                     animation-timeline: scroll(root block); }
+}
+```
+
+Zero JavaScript, driven off the scrollbar, running on the compositor.
+`ScrollWatermark.tsx` carries a rAF-coalesced fallback that **only attaches
+when `CSS.supports('animation-timeline: scroll()')` is false** — where support
+exists, this component ships no runtime work at all. This matters because the
+element is on screen for the whole page, and scroll-linked JS runs on every
+frame.
+
+### z-index −1, not 0
+
+A positioned element at `z-index: 0` paints in step 6 of the stacking order —
+**above** block backgrounds and above inline text. At `z-0` the mark would sit
+on top of every paragraph. At `−1` it paints in step 2: above the `<body>`
+background, below all content.
+
+The consequence is that any section with its own opaque background hides it. The
+homepage's two ivory sections therefore carry **no** background class —
+`band-ivory` is the same colour as the body, so dropping it is visually neutral
+and lets the mark through. The hero, the tonal bands and the navy sections stay
+opaque, which gives the mark a rhythm of appearing and receding rather than
+being permanently on screen.
+
+### Accessibility
+
+`aria-hidden`, empty `alt`, `pointer-events: none`, `select-none` — never in the
+accessibility tree, the tab order, or a text selection.
+
+Under `prefers-reduced-motion` it **stops**, rather than snapping to its end
+rotation. `animation: none !important` is required because the blanket
+reduced-motion rule only shortens `animation-duration`, and a scroll-driven
+animation has no duration to shorten. A slowly turning element in the periphery
+is a classic vestibular trigger and it carries no information, so holding it
+still loses nothing.
+
+At 6% opacity over Warm Ivory it sits far below any text it passes behind, so it
+cannot affect the ratios `npm run audit:contrast` enforces.

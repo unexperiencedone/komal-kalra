@@ -8,6 +8,7 @@ import { BRAND } from '@/lib/config';
 import { Button } from '@/components/ui/button';
 import { SectionHeading } from '@/components/ui/card';
 import { Reveal } from '@/components/common/Reveal';
+import { ScrollWatermark } from '@/components/common/ScrollWatermark';
 import { ServiceGrid } from '@/components/marketing/ServiceGrid';
 import { Testimonials } from '@/components/marketing/Testimonials';
 import { img } from '@/lib/content/imagery';
@@ -91,6 +92,15 @@ export default async function HomePage() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
+      {/*
+        Rashi Chakra watermark. Fixed behind the page, turning as it scrolls.
+        Only shows through the sections below that carry no background of their
+        own — the hero and the tonal/navy bands stay opaque, which gives the
+        mark a rhythm of appearing and receding rather than being permanently
+        on screen.
+      */}
+      <ScrollWatermark />
+
       {/* ========================= HERO — cinematic ========================= */}
       <section className="band-low relative flex min-h-[calc(100svh-5rem)] items-center overflow-hidden py-20 md:min-h-[819px] md:py-[var(--spacing-section-md)]">
         <div className="absolute inset-0 z-0">
@@ -146,7 +156,7 @@ export default async function HomePage() {
       </section>
 
       {/* ====================== CONSULTATION SERVICES ====================== */}
-      <section aria-labelledby="services-heading" className="band-ivory py-[var(--spacing-section-lg)]">
+      <section aria-labelledby="services-heading" className="py-[var(--spacing-section-lg)]">
         <div className="shell">
           <Reveal>
             <div className="mb-16 md:w-1/2">
@@ -220,7 +230,7 @@ export default async function HomePage() {
       </section>
 
       {/* ================= SOCIAL PROOF + CURATED INSIGHTS ================= */}
-      <section aria-labelledby="proof-heading" className="band-ivory py-[var(--spacing-section-md)]">
+      <section aria-labelledby="proof-heading" className="py-[var(--spacing-section-md)]">
         <h2 id="proof-heading" className="sr-only">What clients say, and where to follow along</h2>
 
         <div className="shell grid grid-cols-1 gap-16 md:grid-cols-2">

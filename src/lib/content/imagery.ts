@@ -16,7 +16,8 @@
  * goes through `img()`.
  */
 
-const USE_LOCAL_IMAGES = false;
+// All 15 files are present in public/images (npm run images:download).
+const USE_LOCAL_IMAGES = true;
 
 export interface BrandImage {
   /** Remote (Stitch) source. */

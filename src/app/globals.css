@@ -272,6 +272,30 @@
 }
 
 @layer utilities {
+  /* --- Scroll-scrubbed watermark ------------------------------------------
+     Native scroll-driven rotation. `scroll(root block)` ties the animation's
+     progress to the document scrollbar, so the mark turns as the page moves
+     with no JavaScript and no main-thread work.
+
+     `animation-range` is what makes the rate feel right: without it the whole
+     rotation is spread across the entire document, so a long page barely turns
+     and a short one whips round. Pinning the range to the document length and
+     using a large total rotation gives a steady, page-length-independent feel.
+
+     ScrollWatermark.tsx supplies a rAF fallback for browsers without support,
+     and skips attaching it entirely where this rule applies. */
+  @supports (animation-timeline: scroll()) {
+    .watermark-scrub {
+      animation: watermark-rotate 1s linear both;
+      animation-timeline: scroll(root block);
+    }
+  }
+
+  @keyframes watermark-rotate {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(160deg); }
+  }
+
   /* Entrance animation, matching the design files' fadeInUp. Fires once. */
   .reveal { opacity: 0; transform: translateY(20px); }
   .reveal.is-visible {
@@ -321,6 +345,16 @@
     scroll-behavior: auto !important;
   }
   .reveal { opacity: 1; transform: none; }
+
+  /* The watermark holds still rather than snapping to its end rotation. A
+     slowly turning element in the periphery is a classic vestibular trigger,
+     and it carries no information, so stopping it loses nothing. `none` is
+     required because the blanket rule above only shortens animations — a
+     scroll-driven one has no duration to shorten. */
+  .watermark-scrub {
+    animation: none !important;
+    transform: none !important;
+  }
 }
 
 @media print {
