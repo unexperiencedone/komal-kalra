@@ -1,11 +1,7 @@
-import {
-  BarChart3, CalendarDays, CalendarRange, CreditCard, LayoutDashboard,
-  MessageSquareQuote, Sparkles, UserRound, Users,
-} from 'lucide-react';
 import { requireAdmin } from '@/lib/auth/session';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { signOut } from '@/app/login/actions';
-import { AppShell } from '@/components/dashboard/AppShell';
+import { AppShell, type NavItem } from '@/components/dashboard/AppShell';
 
 /**
  * Admin shell.
@@ -28,16 +24,16 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     admin.from('appointments').select('id', { count: 'exact', head: true }).eq('status', 'needs_attention'),
   ]);
 
-  const nav = [
-    { href: '/admin', label: 'Overview', icon: LayoutDashboard, badge: attention ?? 0 },
-    { href: '/admin/appointments', label: 'Appointments', icon: CalendarDays },
-    { href: '/admin/clients', label: 'Clients', icon: Users },
-    { href: '/admin/payments', label: 'Payments', icon: CreditCard },
-    { href: '/admin/leads', label: 'Leads', icon: UserRound, badge: newLeads ?? 0 },
-    { href: '/admin/services', label: 'Services', icon: Sparkles },
-    { href: '/admin/availability', label: 'Availability', icon: CalendarRange },
-    { href: '/admin/testimonials', label: 'Testimonials', icon: MessageSquareQuote },
-    { href: '/admin/analytics', label: 'Analytics', icon: BarChart3 },
+  const nav: NavItem[] = [
+    { href: '/admin', label: 'Overview', icon: 'LayoutDashboard', badge: attention ?? 0 },
+    { href: '/admin/appointments', label: 'Appointments', icon: 'CalendarDays' },
+    { href: '/admin/clients', label: 'Clients', icon: 'Users' },
+    { href: '/admin/payments', label: 'Payments', icon: 'CreditCard' },
+    { href: '/admin/leads', label: 'Leads', icon: 'UserRound', badge: newLeads ?? 0 },
+    { href: '/admin/services', label: 'Services', icon: 'Sparkles' },
+    { href: '/admin/availability', label: 'Availability', icon: 'CalendarRange' },
+    { href: '/admin/testimonials', label: 'Testimonials', icon: 'MessageSquareQuote' },
+    { href: '/admin/analytics', label: 'Analytics', icon: 'BarChart3' },
   ];
 
   return (

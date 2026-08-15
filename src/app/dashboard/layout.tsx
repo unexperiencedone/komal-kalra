@@ -1,8 +1,7 @@
-import { CalendarDays, CreditCard, LayoutDashboard, User } from 'lucide-react';
 import { requireUser } from '@/lib/auth/session';
 import { createClient } from '@/lib/supabase/server';
 import { signOut } from '@/app/login/actions';
-import { AppShell } from '@/components/dashboard/AppShell';
+import { AppShell, type NavItem } from '@/components/dashboard/AppShell';
 
 /**
  * Client dashboard shell.
@@ -24,11 +23,11 @@ export default async function DashboardLayout({ children }: { children: React.Re
     .select('id', { count: 'exact', head: true })
     .eq('read', false);
 
-  const nav = [
-    { href: '/dashboard', label: 'Overview', icon: LayoutDashboard, badge: unread ?? 0 },
-    { href: '/dashboard/appointments', label: 'Appointments', icon: CalendarDays },
-    { href: '/dashboard/payments', label: 'Payments', icon: CreditCard },
-    { href: '/dashboard/profile', label: 'Profile', icon: User },
+  const nav: NavItem[] = [
+    { href: '/dashboard', label: 'Overview', icon: 'LayoutDashboard', badge: unread ?? 0 },
+    { href: '/dashboard/appointments', label: 'Appointments', icon: 'CalendarDays' },
+    { href: '/dashboard/payments', label: 'Payments', icon: 'CreditCard' },
+    { href: '/dashboard/profile', label: 'Profile', icon: 'User' },
   ];
 
   return (

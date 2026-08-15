@@ -7,10 +7,32 @@ import type {
   ProviderPayment, ProviderRefund, RefundArgs,
 } from './provider';
 
+/**
+ * Razorpay's three vars are optional in the shared env() schema (see env.ts),
+ * so every actual payment operation re-checks them here and fails loudly with
+ * a specific message rather than a generic "undefined is not a string" from
+ * deep inside the SDK. Route handlers should still check isPaymentsConfigured()
+ * first and return a clean 503 — this is the defence-in-depth backstop.
+ */
+function requireRazorpayEnv() {
+  const e = env();
+  if (!e.RAZORPAY_KEY_ID || !e.RAZORPAY_KEY_SECRET || !e.RAZORPAY_WEBHOOK_SECRET) {
+    throw new Error(
+      'Razorpay is not configured: set RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET and ' +
+        'RAZORPAY_WEBHOOK_SECRET. Use isPaymentsConfigured() to check before reaching here.',
+    );
+  }
+  return e as typeof e & {
+    RAZORPAY_KEY_ID: string;
+    RAZORPAY_KEY_SECRET: string;
+    RAZORPAY_WEBHOOK_SECRET: string;
+  };
+}
+
 let client: Razorpay | null = null;
 function sdk(): Razorpay {
   if (client) return client;
-  const e = env();
+  const e = requireRazorpayEnv();
   client = new Razorpay({ key_id: e.RAZORPAY_KEY_ID, key_secret: e.RAZORPAY_KEY_SECRET });
   return client;
 }
@@ -37,7 +59,7 @@ export const razorpayAdapter: PaymentProviderAdapter = {
   name: 'razorpay',
 
   publicKey() {
-    return env().RAZORPAY_KEY_ID;
+    return requireRazorpayEnv().RAZORPAY_KEY_ID;
   },
 
   async createOrder(args: CreateOrderArgs): Promise<ProviderOrder> {
@@ -111,7 +133,7 @@ export const razorpayAdapter: PaymentProviderAdapter = {
    *   expected = HMAC_SHA256(key_secret, "<order_id>|<payment_id>")
    */
   verifyCheckoutSignature({ orderId, paymentId, signature }): boolean {
-    const expected = hmacHex(env().RAZORPAY_KEY_SECRET, `${orderId}|${paymentId}`);
+    const expected = hmacHex(requireRazorpayEnv().RAZORPAY_KEY_SECRET, `${orderId}|${paymentId}`);
     return safeEqual(expected, signature);
   },
 
@@ -126,7 +148,7 @@ export const razorpayAdapter: PaymentProviderAdapter = {
    */
   verifyWebhookSignature(rawBody: string, signature: string): boolean {
     if (!signature) return false;
-    const expected = hmacHex(env().RAZORPAY_WEBHOOK_SECRET, rawBody);
+    const expected = hmacHex(requireRazorpayEnv().RAZORPAY_WEBHOOK_SECRET, rawBody);
     return safeEqual(expected, signature);
   },
 };

@@ -4,10 +4,18 @@ import { z } from 'zod';
 /**
  * Server-side environment contract.
  *
- * Validated once, at first import, so a missing Razorpay secret fails loudly at
- * boot instead of silently at 2am during a real payment. `server-only` makes it
- * a build error to import this from a Client Component, which is the mechanism
- * that guarantees secrets cannot be bundled into browser JavaScript.
+ * Validated once, at first call, so a missing *required* var fails loudly
+ * immediately instead of silently mid-request. Razorpay's three vars are the
+ * exception — optional here so that unrelated server code (createAdminClient()
+ * role lookups on /login, for instance) isn't forced to have payments
+ * configured just to boot. Payment code still fails loudly on a missing
+ * secret, just at the point it actually needs one — see
+ * requireRazorpayEnv() in lib/payments/razorpay.ts, and isPaymentsConfigured()
+ * below for the non-throwing check used by surfaces that render either way.
+ *
+ * `server-only` makes it a build error to import this from a Client Component,
+ * which is the mechanism that guarantees secrets cannot be bundled into
+ * browser JavaScript.
  */
 const serverSchema = z.object({
   NEXT_PUBLIC_SUPABASE_URL: z.string().url(),
@@ -20,10 +28,17 @@ const serverSchema = z.object({
    */
   SUPABASE_SERVICE_ROLE_KEY: z.string().min(20),
 
-  RAZORPAY_KEY_ID: z.string().startsWith('rzp_'),
-  RAZORPAY_KEY_SECRET: z.string().min(10),
+  /**
+   * Optional at the schema level so that code with nothing to do with payments
+   * (createAdminClient() role lookups on /login, for instance) doesn't fail to
+   * boot just because Razorpay isn't configured yet. Payment code itself still
+   * fails loudly — see requireRazorpayEnv() in lib/payments/razorpay.ts and
+   * isPaymentsConfigured() below for the two ways call sites enforce that.
+   */
+  RAZORPAY_KEY_ID: z.string().startsWith('rzp_').optional(),
+  RAZORPAY_KEY_SECRET: z.string().min(10).optional(),
   /** Set in the Razorpay dashboard when creating the webhook. NOT the API secret. */
-  RAZORPAY_WEBHOOK_SECRET: z.string().min(8),
+  RAZORPAY_WEBHOOK_SECRET: z.string().min(8).optional(),
 
   /** Shared secret for /api/cron/* so the reconciliation job is not public. */
   CRON_SECRET: z.string().min(16).optional(),

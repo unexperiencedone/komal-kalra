@@ -3,14 +3,35 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LogOut, Menu, Plus, X } from 'lucide-react';
+import {
+  LogOut, Menu, Plus, X,
+  LayoutDashboard, CalendarDays, CreditCard, User, Users, UserRound,
+  Sparkles, CalendarRange, MessageSquareQuote, BarChart3, ClipboardClock, IndianRupee,
+} from 'lucide-react';
 import { cn, initials } from '@/lib/utils';
 import { BRAND } from '@/lib/config';
+
+/**
+ * Icon registry, keyed by name rather than component reference.
+ *
+ * This file is 'use client', but the nav arrays and stat configs that use it
+ * are built in Server Component layouts/pages. A component reference is a
+ * function, and a function cannot be passed as a prop across the Server-to-
+ * Client boundary — only the plain string name can. So callers pass a name,
+ * and the actual lucide-react component is resolved here, entirely
+ * client-side. Add an icon here before referencing its name elsewhere.
+ */
+const ICONS = {
+  LayoutDashboard, CalendarDays, CreditCard, User, Users, UserRound,
+  Sparkles, CalendarRange, MessageSquareQuote, BarChart3, ClipboardClock, IndianRupee,
+} as const;
+
+export type IconName = keyof typeof ICONS;
 
 export interface NavItem {
   href: string;
   label: string;
-  icon: React.ComponentType<{ className?: string }>;
+  icon: IconName;
   badge?: number;
 }
 
@@ -48,28 +69,31 @@ export function AppShell({
 
   const navList = (
     <nav aria-label={title} className="flex-1 space-y-1 px-3">
-      {nav.map((item) => (
-        <Link
-          key={item.href}
-          href={item.href}
-          onClick={() => setOpen(false)}
-          aria-current={isActive(item.href) ? 'page' : undefined}
-          className={cn(
-            'flex items-center gap-3  px-3 py-2.5 text-sm font-medium transition-colors',
-            isActive(item.href)
-              ? 'bg-[var(--color-linen-grey)] text-[var(--color-gold-deep)]'
-              : 'text-[var(--color-on-surface-variant)] hover:bg-[var(--color-outline-variant)] hover:text-[var(--color-cosmic-navy)]',
-          )}
-        >
-          <item.icon className="size-4 shrink-0" />
-          <span className="flex-1">{item.label}</span>
-          {item.badge ? (
-            <span className="label-small tabular border border-current px-1.5 py-0.5">
-              {item.badge > 99 ? '99+' : item.badge}
-            </span>
-          ) : null}
-        </Link>
-      ))}
+      {nav.map((item) => {
+        const Icon = ICONS[item.icon];
+        return (
+          <Link
+            key={item.href}
+            href={item.href}
+            onClick={() => setOpen(false)}
+            aria-current={isActive(item.href) ? 'page' : undefined}
+            className={cn(
+              'flex items-center gap-3  px-3 py-2.5 text-sm font-medium transition-colors',
+              isActive(item.href)
+                ? 'bg-[var(--color-linen-grey)] text-[var(--color-gold-deep)]'
+                : 'text-[var(--color-on-surface-variant)] hover:bg-[var(--color-outline-variant)] hover:text-[var(--color-cosmic-navy)]',
+            )}
+          >
+            <Icon className="size-4 shrink-0" />
+            <span className="flex-1">{item.label}</span>
+            {item.badge ? (
+              <span className="label-small tabular border border-current px-1.5 py-0.5">
+                {item.badge > 99 ? '99+' : item.badge}
+              </span>
+            ) : null}
+          </Link>
+        );
+      })}
     </nav>
   );
 
@@ -199,17 +223,18 @@ export function PageHeader({
  * one per row, otherwise the emphasis stops meaning anything.
  */
 export function StatCard({
-  label, value, sublabel, pill, icon: Icon, inverted = false, tone = 'neutral',
+  label, value, sublabel, pill, icon, inverted = false, tone = 'neutral',
 }: {
   label: string;
   value: string;
   sublabel?: string;
   /** Small right-aligned qualifier, e.g. "This Month" / "YTD". */
   pill?: string;
-  icon?: React.ComponentType<{ className?: string }>;
+  icon?: IconName;
   inverted?: boolean;
   tone?: 'neutral' | 'success' | 'warning' | 'danger';
 }) {
+  const Icon = icon ? ICONS[icon] : null;
   const toneClass = inverted
     ? 'text-[var(--color-gold-light)]'
     : {

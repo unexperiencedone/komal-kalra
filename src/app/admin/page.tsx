@@ -1,7 +1,5 @@
 import Link from 'next/link';
-import {
-  AlertTriangle, CalendarDays, ClipboardClock, IndianRupee, Users, UserPlus,
-} from 'lucide-react';
+import { AlertTriangle, CalendarDays, UserPlus } from 'lucide-react';
 import { requireAdmin } from '@/lib/auth/session';
 import { createAdminClient } from '@/lib/supabase/admin';
 import {
@@ -109,14 +107,14 @@ export default async function AdminOverviewPage() {
             label="Total Clients"
             value={String(clientCount)}
             pill="All time"
-            icon={Users}
+            icon="Users"
             sublabel={`${revMonth?.paid_count ?? 0} paid bookings this month`}
           />
           <StatCard
             label="Pending Requests"
             value={String(actionCount)}
             pill={actionCount > 0 ? 'Action Needed' : 'Clear'}
-            icon={ClipboardClock}
+            icon="ClipboardClock"
             tone={actionCount > 0 ? 'warning' : 'neutral'}
             sublabel={actionCount > 0 ? 'Requires attention today' : 'Nothing waiting on you'}
           />
@@ -127,7 +125,7 @@ export default async function AdminOverviewPage() {
             label="Monthly Revenue"
             value={formatPaiseCompact(revMonth?.net_paise ?? 0)}
             pill="This month"
-            icon={IndianRupee}
+            icon="IndianRupee"
             inverted
             sublabel={`Today ${formatPaise(revToday?.net_paise ?? 0)} · This week ${formatPaiseCompact(revWeek?.net_paise ?? 0)}`}
           />

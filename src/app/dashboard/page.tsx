@@ -129,9 +129,9 @@ export default async function DashboardPage() {
       </section>
 
       <section aria-label="Summary" className="mt-8 grid gap-4 sm:grid-cols-3">
-        <StatCard label="Upcoming" value={String(upcoming.length)} icon={CalendarDays} />
+        <StatCard label="Upcoming" value={String(upcoming.length)} icon="CalendarDays" />
         <StatCard label="Completed" value={String(past.length)} sublabel="Sessions attended" />
-        <StatCard label="Total paid" value={formatPaise(totalPaid)} icon={CreditCard} sublabel="Net of refunds" />
+        <StatCard label="Total paid" value={formatPaise(totalPaid)} icon="CreditCard" sublabel="Net of refunds" />
       </section>
 
       <div className="mt-8 grid gap-6 lg:grid-cols-2">

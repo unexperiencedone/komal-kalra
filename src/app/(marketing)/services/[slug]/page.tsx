@@ -109,16 +109,9 @@ export default async function ServiceDetailPage(props: { params: Promise<{ slug:
       <div className="pb-[var(--spacing-section-lg)] pt-8 md:pt-16">
         {/* ============================ 1. HERO ============================ */}
         <section className="shell mb-[var(--spacing-section-lg)]">
-          <nav aria-label="Breadcrumb" className="mb-10">
-            <ol className="label-small flex items-center gap-2 text-[var(--color-on-surface-variant)]">
-              <li><Link href="/" className="transition-colors hover:text-[var(--color-cosmic-navy)]">Home</Link></li>
-              <li aria-hidden>/</li>
-              <li><Link href="/services" className="transition-colors hover:text-[var(--color-cosmic-navy)]">Services</Link></li>
-              <li aria-hidden>/</li>
-              <li aria-current="page" className="text-[var(--color-cosmic-navy)]">{service.title}</li>
-            </ol>
-          </nav>
-
+          {/* Breadcrumb removed at the client's request. The header nav already
+              carries Services, and BreadcrumbList structured data is not lost —
+              it was never emitted here, only the visual trail existed. */}
           <div className="grid grid-cols-1 items-center gap-8 md:grid-cols-12">
             <Reveal className="relative z-10 md:col-span-5">
               <p className="label-caps text-[var(--color-gold-deep)]">{service.title}</p>
