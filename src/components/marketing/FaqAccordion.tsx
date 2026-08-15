@@ -1,32 +1,47 @@
 'use client';
 
 import * as Accordion from '@radix-ui/react-accordion';
-import { ChevronDown } from 'lucide-react';
+import { Minus, Plus } from 'lucide-react';
 
 export interface FaqItem { question: string; answer: string }
 
 /**
- * FAQ accordion. Radix gives correct keyboard behaviour and aria-expanded
- * wiring for free, which is the whole reason to use a primitive here rather
- * than <details> — <details> cannot be styled consistently across browsers for
- * the open/close transition.
+ * FAQ accordion — the editorial pattern from the service detail design.
+ *
+ * Hairline-separated rows, question in body-lg, and a Muted Gold plus that
+ * becomes a minus when open. No card, no fill, no radius: the rows ARE the
+ * structure, matching the spec's "horizontal hairline rules... mimicking the
+ * layout of a luxury broadsheet".
+ *
+ * Radix rather than <details> for two reasons: correct `aria-expanded` and
+ * keyboard behaviour without hand-rolling it, and a `data-state` hook so the
+ * icon swap is pure CSS rather than React state.
  */
 export function FaqAccordion({ items }: { items: FaqItem[] }) {
   return (
-    <Accordion.Root type="single" collapsible className="divide-y divide-[var(--color-outline-variant)]">
+    <Accordion.Root type="single" collapsible className="w-full">
       {items.map((item, i) => (
-        <Accordion.Item key={i} value={`item-${i}`}>
+        <Accordion.Item
+          key={i}
+          value={`item-${i}`}
+          className="border-b border-[color-mix(in_srgb,var(--color-muted-gold)_20%,transparent)]"
+        >
           <Accordion.Header>
-            <Accordion.Trigger className="group flex w-full items-start justify-between gap-4 py-5 text-left">
-              <span className="text-[15px] font-medium text-[var(--color-cosmic-navy)]">{item.question}</span>
-              <ChevronDown
-                className="mt-0.5 size-4 shrink-0 text-[var(--color-on-surface-variant)] transition-transform duration-200 group-data-[state=open]:rotate-180"
-                aria-hidden
-              />
+            <Accordion.Trigger className="group flex w-full items-center justify-between gap-6 py-6 text-left">
+              <span className="text-lg leading-relaxed text-[var(--color-cosmic-navy)] transition-colors duration-300 group-hover:text-[var(--color-gold-deep)]">
+                {item.question}
+              </span>
+              <span className="relative flex size-5 shrink-0 items-center justify-center text-[var(--color-muted-gold)]">
+                <Plus className="size-5 group-data-[state=open]:hidden" aria-hidden />
+                <Minus className="hidden size-5 group-data-[state=open]:block" aria-hidden />
+              </span>
             </Accordion.Trigger>
           </Accordion.Header>
-          <Accordion.Content className="overflow-hidden data-[state=closed]:animate-none">
-            <p className="pb-5 pr-8 text-sm leading-relaxed text-[var(--color-on-surface-variant)]">{item.answer}</p>
+
+          <Accordion.Content className="overflow-hidden">
+            <p className="max-w-2xl pb-6 pr-12 text-base leading-relaxed text-[var(--color-on-surface-variant)]">
+              {item.answer}
+            </p>
           </Accordion.Content>
         </Accordion.Item>
       ))}
