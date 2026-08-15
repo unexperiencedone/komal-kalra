@@ -50,7 +50,7 @@ export default function FaqPage() {
               Ask before you book. Komal reads every enquiry personally.
             </p>
             <div className="mt-6 flex flex-col justify-center gap-3 sm:flex-row">
-              <Button asChild variant="outline" className="border-white/25 bg-transparent text-[var(--color-sand)] hover:border-white/45 hover:bg-white/10 hover:text-white"><Link href="/contact">Send a message</Link></Button>
+              <Button asChild variant="onDark"><Link href="/contact">Send a message</Link></Button>
               <Button asChild><Link href="/book">Book a consultation</Link></Button>
             </div>
           </div>

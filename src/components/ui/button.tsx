@@ -30,6 +30,22 @@ const buttonVariants = cva(
         ghost: 'text-[var(--color-bark)] hover:bg-[var(--color-linen)] hover:text-[var(--color-ink)]',
         link: 'text-[var(--color-ember-text)] underline-offset-4 hover:underline',
         destructive: 'bg-[var(--color-clay)] text-white hover:brightness-95',
+
+        /**
+         * For use ON a .band-night ground ONLY.
+         *
+         * This exists as a named variant rather than an inline
+         * `className="border-white/25 text-[var(--color-sand)]"` override
+         * because the ad-hoc version shipped a genuinely invisible button:
+         * when the night band lost its background (see the band/motif bug in
+         * globals.css), the pale text landed on a cream ground at roughly
+         * 1.1:1 and disappeared entirely.
+         *
+         * A named variant makes the requirement legible at the call site — if
+         * you are reaching for `onDark`, the surrounding band had better be
+         * dark — and gives one place to fix if it ever regresses.
+         */
+        onDark: 'border border-white/30 bg-white/[0.08] text-white hover:border-white/55 hover:bg-white/[0.16]',
         quiet: 'bg-[var(--color-linen)] text-[var(--color-ink)] hover:bg-[var(--color-linen-hover)]',
       },
       size: {

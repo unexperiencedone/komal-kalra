@@ -42,7 +42,7 @@
   --color-linen: #F4E9DA;        /* borders, dividers, quiet fills          */
   --color-linen-hover: #EBDCC7;
   --color-edge-hover: #E3D2BB;
-  --color-placeholder: #A8968A;
+  --color-placeholder: #7A6A5C;   /* 5.19:1 on white — was #A8968A at 2.84:1 */
   --color-shell: #FFFFFF;
 
   /* --- Primary: saffron / marigold ---------------------------------------
@@ -100,6 +100,23 @@
   --gradient-dawn: linear-gradient(150deg, #FDF0DC 0%, #FDF8F1 45%, #FCEDE8 100%);
   --gradient-night: linear-gradient(155deg, #2A2E5A 0%, #1B1E3E 100%);
   --gradient-ember: linear-gradient(135deg, #C2762B 0%, #A45F1E 100%);
+
+  /* Star motifs as variables so a band can compose them ON TOP of its own
+     gradient in one declaration, rather than a second class silently
+     overwriting the first. See the .band-* block below. */
+  --motif-light:
+    radial-gradient(circle at 18% 24%, rgb(42 46 90 / 0.13) 1.4px, transparent 1.5px),
+    radial-gradient(circle at 63% 12%, rgb(194 118 43 / 0.16) 1.2px, transparent 1.3px),
+    radial-gradient(circle at 86% 58%, rgb(42 46 90 / 0.11) 1.4px, transparent 1.5px),
+    radial-gradient(circle at 38% 78%, rgb(194 118 43 / 0.12) 1.2px, transparent 1.3px),
+    radial-gradient(circle at 74% 88%, rgb(42 46 90 / 0.09) 1.2px, transparent 1.3px);
+
+  --motif-dark:
+    radial-gradient(circle at 15% 20%, rgb(232 148 47 / 0.32) 1.4px, transparent 1.5px),
+    radial-gradient(circle at 68% 14%, rgb(255 255 255 / 0.24) 1.2px, transparent 1.3px),
+    radial-gradient(circle at 88% 62%, rgb(232 148 47 / 0.24) 1.3px, transparent 1.4px),
+    radial-gradient(circle at 32% 80%, rgb(255 255 255 / 0.18) 1.2px, transparent 1.3px),
+    radial-gradient(circle at 55% 46%, rgb(255 255 255 / 0.13) 1px, transparent 1.1px);
 
   /* --- Type ---------------------------------------------------------------
      Fraunces (variable serif, optical-size axis) for display; Inter for UI. */
@@ -189,36 +206,60 @@
   /* --- Section grounds ----------------------------------------------------
      The rhythm rule lives here so a page cannot accidentally place two
      identical grounds next to each other — you pick a named band, and the
-     names make the alternation obvious when reading the JSX.               */
+     names make the alternation obvious when reading the JSX.
 
-  .band-sand   { background: var(--color-sand); }
-  .band-shell  { background: var(--color-shell); }
-  .band-dawn   { background: var(--gradient-dawn); }
-  .band-warm   { background: var(--color-saffron-tint); }
-  .band-cool   { background: var(--color-indigo-tint); }
-  .band-night  { background: var(--gradient-night); color: var(--color-sand); }
+     ⚠️  BUG THIS FIXES — do not "simplify" it back.
+     The first version wrote `.band-night { background: <gradient> }` and put
+     the star motif in a separate `.constellation-motif-dark { background-image:
+     <dots> }`. Applying both classes to one element meant the motif's
+     `background-image` REPLACED the band's gradient (the `background`
+     shorthand writes background-image too). The section rendered with no
+     ground at all, the page's cream showed through, and every piece of
+     light-coloured text on it became invisible.
 
-  .band-night h1, .band-night h2, .band-night h3 { color: var(--color-sand); }
-  .band-night p  { color: var(--color-indigo-on-dark); }
+     The fix: each band sets `background-color` and `background-image`
+     SEPARATELY, and the motif is composed as an extra layer via a compound
+     selector rather than overwriting. A band always keeps its colour even if
+     the image layer is replaced by something else later.                   */
 
-  /* Celestial motif — thin scattered points, low opacity, once per page.
-     Two variants so it reads on both light and dark grounds. */
-  .constellation-motif {
-    background-image:
-      radial-gradient(circle at 18% 24%, rgb(42 46 90 / 0.13) 1.4px, transparent 1.4px),
-      radial-gradient(circle at 63% 12%, rgb(194 118 43 / 0.16) 1.2px, transparent 1.2px),
-      radial-gradient(circle at 86% 58%, rgb(42 46 90 / 0.11) 1.4px, transparent 1.4px),
-      radial-gradient(circle at 38% 78%, rgb(194 118 43 / 0.12) 1.2px, transparent 1.2px),
-      radial-gradient(circle at 74% 88%, rgb(42 46 90 / 0.09) 1.2px, transparent 1.2px);
+  .band-sand   { background-color: var(--color-sand); }
+  .band-shell  { background-color: var(--color-shell); }
+  .band-warm   { background-color: var(--color-saffron-tint); }
+  .band-cool   { background-color: var(--color-indigo-tint); }
+
+  .band-dawn {
+    background-color: var(--color-sand);
+    background-image: var(--gradient-dawn);
   }
 
-  .constellation-motif-dark {
-    background-image:
-      radial-gradient(circle at 15% 20%, rgb(232 148 47 / 0.30) 1.4px, transparent 1.4px),
-      radial-gradient(circle at 68% 14%, rgb(255 255 255 / 0.22) 1.2px, transparent 1.2px),
-      radial-gradient(circle at 88% 62%, rgb(232 148 47 / 0.22) 1.3px, transparent 1.3px),
-      radial-gradient(circle at 32% 80%, rgb(255 255 255 / 0.16) 1.2px, transparent 1.2px),
-      radial-gradient(circle at 55% 46%, rgb(255 255 255 / 0.12) 1px, transparent 1px);
+  .band-night {
+    background-color: var(--color-indigo-deep);   /* survives any image change */
+    background-image: var(--gradient-night);
+    color: var(--color-indigo-on-dark);
+  }
+
+  /* Headings only. Body copy inherits from the band, so an explicit Tailwind
+     text colour on a child still wins — the earlier `.band-night p { … }` rule
+     out-specified utility classes and quietly overrode them. */
+  .band-night h1,
+  .band-night h2,
+  .band-night h3 { color: var(--color-sand); }
+
+  /* --- Celestial motif ----------------------------------------------------
+     Thin scattered points, low opacity, at most once per page. Defined as
+     variables so a band can COMPOSE the dots on top of its gradient in a
+     single background-image declaration.                                    */
+
+  .constellation-motif      { background-image: var(--motif-light); }
+  .constellation-motif-dark { background-image: var(--motif-dark); }
+
+  /* Compound selectors — higher specificity than either class alone, so these
+     win and layer dots OVER the band gradient instead of replacing it. */
+  .band-dawn.constellation-motif {
+    background-image: var(--motif-light), var(--gradient-dawn);
+  }
+  .band-night.constellation-motif-dark {
+    background-image: var(--motif-dark), var(--gradient-night);
   }
 
   /* Thin rule used under section eyebrows. */

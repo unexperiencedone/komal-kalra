@@ -100,7 +100,7 @@ export default function AboutPage() {
               </p>
               <div className="mt-6 flex flex-col justify-center gap-3 sm:flex-row">
                 <Button asChild><Link href="/book">Book a consultation <ArrowRight aria-hidden /></Link></Button>
-                <Button asChild variant="outline" className="border-white/25 bg-transparent text-[var(--color-sand)] hover:border-white/45 hover:bg-white/10 hover:text-white"><Link href="/contact">Send a message</Link></Button>
+                <Button asChild variant="onDark"><Link href="/contact">Send a message</Link></Button>
               </div>
             </div>
           </Reveal>

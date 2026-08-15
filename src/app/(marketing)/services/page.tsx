@@ -58,7 +58,7 @@ export default async function ServicesPage() {
               </p>
               <div className="mt-6 flex flex-col justify-center gap-3 sm:flex-row">
                 <Button asChild><Link href="/book">Book a consultation <ArrowRight aria-hidden /></Link></Button>
-                <Button asChild variant="outline" className="border-white/25 bg-transparent text-[var(--color-sand)] hover:border-white/45 hover:bg-white/10 hover:text-white">
+                <Button asChild variant="onDark">
                   <a href={`tel:${BRAND.phonesE164[0]}`}>Call {BRAND.phones[0]}</a>
                 </Button>
               </div>

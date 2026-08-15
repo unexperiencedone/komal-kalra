@@ -97,7 +97,7 @@ export function AvailabilityManager({
                       <form action={deleteAvailabilityRule}>
                         <input type="hidden" name="id" value={r.id} />
                         <button type="submit" aria-label={`Remove ${day.name} ${r.start_time.slice(0, 5)} hours`}
-                          className="flex size-6 items-center justify-center rounded text-[var(--color-stone)] hover:bg-[var(--color-clay-tint)] hover:text-[var(--color-clay)]">
+                          className="flex size-6 items-center justify-center rounded text-[var(--color-bark)] hover:bg-[var(--color-clay-tint)] hover:text-[var(--color-clay)]">
                           <Trash2 className="size-3.5" aria-hidden />
                         </button>
                       </form>
@@ -178,7 +178,7 @@ export function AvailabilityManager({
                   <form action={deleteAvailabilityException}>
                     <input type="hidden" name="id" value={e.id} />
                     <button type="submit" aria-label={`Remove exception on ${e.date}`}
-                      className="flex size-8 items-center justify-center rounded text-[var(--color-stone)] hover:bg-[var(--color-clay-tint)] hover:text-[var(--color-clay)]">
+                      className="flex size-8 items-center justify-center rounded text-[var(--color-bark)] hover:bg-[var(--color-clay-tint)] hover:text-[var(--color-clay)]">
                       <Trash2 className="size-4" aria-hidden />
                     </button>
                   </form>

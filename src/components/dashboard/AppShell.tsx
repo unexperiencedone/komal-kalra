@@ -54,7 +54,7 @@ export function AppShell({
           className={cn(
             'flex items-center gap-3 rounded-[var(--radius-control)] px-3 py-2.5 text-sm font-medium transition-colors',
             isActive(item.href)
-              ? 'bg-[var(--color-saffron-tint)] text-[var(--color-ember)]'
+              ? 'bg-[var(--color-saffron-tint)] text-[var(--color-ember-text)]'
               : 'text-[var(--color-bark)] hover:bg-[var(--color-linen)] hover:text-[var(--color-ink)]',
           )}
         >

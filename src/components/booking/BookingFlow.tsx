@@ -618,7 +618,7 @@ function Stepper({ step }: { step: Step }) {
               'flex size-6 shrink-0 items-center justify-center rounded-full text-xs font-semibold',
               i <= activeIndex
                 ? 'bg-[var(--color-ember)] text-white'
-                : 'bg-[var(--color-linen)] text-[var(--color-stone)]',
+                : 'bg-[var(--color-linen)] text-[var(--color-bark)]',
             )}
           >
             {i + 1}

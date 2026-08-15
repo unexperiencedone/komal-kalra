@@ -46,7 +46,7 @@ export function StickyCta() {
         <Link
           href="/book"
           tabIndex={show ? 0 : -1}
-          className="flex h-12 flex-1 items-center justify-center rounded-[var(--radius-control)] bg-[var(--color-saffron)] text-[15px] font-semibold text-white"
+          className="flex h-12 flex-1 items-center justify-center rounded-[var(--radius-control)] bg-[var(--color-ember)] text-[15px] font-semibold text-white"
         >
           Book a consultation
         </Link>

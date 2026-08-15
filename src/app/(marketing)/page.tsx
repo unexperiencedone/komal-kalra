@@ -485,8 +485,7 @@ export default async function HomePage() {
               <Button
                 asChild
                 size="lg"
-                variant="outline"
-                className="border-white/20 bg-transparent text-[var(--color-sand)] hover:border-white/40 hover:text-white"
+                variant="onDark"
               >
                 <a href={`tel:${BRAND.phonesE164[0]}`}>
                   <Phone aria-hidden /> {BRAND.phones[0]}

@@ -361,3 +361,63 @@ Things a bigger system would have, left out on purpose:
 | Add a payment provider | Implement `PaymentProviderAdapter` in `lib/payments/`, swap `getPaymentProvider()` |
 | Add a colour / type token | `src/app/globals.css` `@theme` block — nothing hardcodes hex values |
 | Change email copy | `src/lib/notifications/email.ts` → `renderEmail()` |
+
+---
+
+## 14. Colour system — rules that are enforced, not just documented
+
+The palette (`src/app/globals.css`) is not a swatch list; three of its rules are
+mechanically checked.
+
+### The band/motif collision — read this before touching `.band-*`
+
+Section grounds set `background-color` and `background-image` **separately**, and
+the star motif composes on top through a compound selector:
+
+```css
+.band-night                            { background-color: …; background-image: var(--gradient-night); }
+.band-night.constellation-motif-dark   { background-image: var(--motif-dark), var(--gradient-night); }
+```
+
+The first version used the `background` shorthand on `.band-night` and a separate
+`.constellation-motif-dark { background-image: … }`. Applying both classes meant
+the motif **erased** the band's gradient — the section rendered with no ground,
+the page's cream showed through, and every piece of light text on it became
+invisible at roughly 1.1:1.
+
+It typechecked. It built. Nothing caught it but a screenshot. If you add a band
+or a motif variant, add the compound rule too.
+
+### Saffron is never a button fill
+
+White on saffron `#C2762B` is **3.55:1** — acceptable for large display type,
+a failure for a 15px semibold label. `--color-ember` `#A45F1E` (4.96:1) fills
+buttons; `--color-ember-text` `#8F5219` (5.5–6.2:1) carries accent text on light
+grounds. Saffron is for icons, rules and large display type only.
+
+### Light text belongs to a variant, not to an inline override
+
+`<Button variant="onDark">` exists because the ad-hoc
+`className="border-white/25 text-[var(--color-sand)]"` version is what shipped an
+invisible button when the band beneath it lost its ground. A named variant makes
+the requirement legible at the call site.
+
+### `npm run audit:contrast`
+
+Parses every `className` in `src/`, finds foreground/background token pairs on
+the same element, resolves both against the tokens **read from `globals.css`**,
+and fails on anything under 4.5:1.
+
+Two things it gets right that a naive version does not:
+
+- **State variants are paired.** `group-hover:bg-X` is measured against
+  `group-hover:text-Y` when one exists, so hover-inverting buttons do not
+  produce false positives.
+- **Opacity-modified backgrounds are skipped.** `bg-white/[0.08]` is a
+  translucent overlay whose effective colour depends on what is behind it and
+  cannot be judged from the class alone.
+
+Both matter for the same reason: an audit that cries wolf stops being read, and
+is then worse than no audit. It found three genuine faults on first run,
+including a saffron-filled sticky mobile CTA at 3.55:1 — the most-tapped button
+in the product.
