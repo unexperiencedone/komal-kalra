@@ -225,6 +225,18 @@ export const IMAGES = {
     alt:
       'Komal Kalra seated in a carved wooden chair, wearing a white floral-embroidered suit, in a warmly lit room with a table lamp behind her.',
   },
+  signInImage: {
+    remote: '/images/signInImage.png',
+    local: '/images/signInImage.png',
+    alt:
+      "A glass sphere reflecting a constellation, balanced on a stack of astronomical books tied with ribbon, against a dark blue and gold interior.",
+  },
+  createAccountImage: {
+    remote: '/images/createAccountImage.png',
+    local: '/images/createAccountImage.png',
+    alt:
+      "A brass astrolabe resting on a hand-drawn birth chart beside a fountain pen, with leather-bound books in the background.",
+  },
 } as const satisfies Record<string, BrandImage>;
 
 export type ImageKey = keyof typeof IMAGES;

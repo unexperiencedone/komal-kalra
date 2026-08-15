@@ -18,6 +18,7 @@ admin console.
 | [`docs/api.md`](docs/api.md) | Every endpoint, error code and database RPC |
 | [`docs/progress.md`](docs/progress.md) | Status, placeholders, setup checklist, pre-launch tests |
 | [`database/README.md`](database/README.md) | Schema files and the order to run them |
+| [`docs/google-auth-setup.md`](docs/google-auth-setup.md) | Google sign-in setup, and how to brand the consent screen |
 
 ---
 

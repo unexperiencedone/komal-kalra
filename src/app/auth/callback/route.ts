@@ -17,6 +17,15 @@ export async function GET(request: Request) {
   // Same open-redirect guard as the login action.
   const next = rawNext && rawNext.startsWith('/') && !rawNext.startsWith('//') ? rawNext : null;
 
+  // Google returns ?error=access_denied rather than a code when the user
+  // cancels at the consent screen. That is a normal outcome, not a fault, so it
+  // gets its own message rather than the generic "invalid link".
+  const providerError = url.searchParams.get('error');
+  if (providerError) {
+    const code_ = providerError === 'access_denied' ? 'cancelled' : 'provider_error';
+    return NextResponse.redirect(new URL(`/login?error=${code_}`, url.origin));
+  }
+
   if (!code) {
     return NextResponse.redirect(new URL('/login?error=missing_code', url.origin));
   }

@@ -153,6 +153,59 @@ export async function requestPasswordReset(_prev: AuthState, formData: FormData)
   return { success: 'If an account exists for that email, a reset link is on its way.' };
 }
 
+/**
+ * Google sign-in.
+ *
+ * WHY SUPABASE AUTH AND NOT NEXTAUTH
+ *
+ * Every row-level security policy in this database keys on `auth.uid()`, which
+ * reads the Supabase JWT. A NextAuth session is not a Supabase JWT, so
+ * `auth.uid()` would return null for anyone who signed in with Google — and
+ * every "clients see only their own appointments" policy would stop working
+ * correctly. Bolting a second auth system alongside Supabase Auth also means
+ * two user tables and two session lifecycles to keep in sync.
+ *
+ * Using Supabase's own Google provider means the Google user lands in
+ * `auth.users` exactly like a password user, `handle_new_user()` creates their
+ * profile with role 'client', and every existing policy keeps working unchanged.
+ *
+ * FLOW
+ * `signInWithOAuth` does NOT redirect on the server — it returns a URL. We
+ * redirect to it ourselves, Google sends the user back to /auth/callback, and
+ * that route exchanges the code and applies the same role-based routing as the
+ * password path. One login route, one place that decides where a user lands.
+ */
+export async function signInWithGoogle(formData: FormData): Promise<void> {
+  const supabase = await createClient();
+  const origin = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000';
+
+  // Carry the post-login destination through Google and back, using the same
+  // same-origin guard as the password path so this cannot become an open
+  // redirect.
+  const next = safeNext(formData.get('next'));
+  const callback = new URL('/auth/callback', origin);
+  if (next) callback.searchParams.set('next', next);
+
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider: 'google',
+    options: {
+      redirectTo: callback.toString(),
+      queryParams: {
+        // Ask for a refresh token and always show the account chooser, so a
+        // shared device does not silently sign in as the previous person.
+        access_type: 'offline',
+        prompt: 'select_account',
+      },
+    },
+  });
+
+  if (error || !data.url) {
+    redirect('/login?error=google_unavailable');
+  }
+
+  redirect(data.url);
+}
+
 export async function signOut() {
   const supabase = await createClient();
   await supabase.auth.signOut();
