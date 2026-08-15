@@ -559,3 +559,57 @@ still loses nothing.
 
 At 6% opacity over Warm Ivory it sits far below any text it passes behind, so it
 cannot affect the ratios `npm run audit:contrast` enforces.
+
+---
+
+## 17. Image resolution and upscaling
+
+### The situation
+
+Every photograph in `public/images` came down at **512px wide**. The hero renders
+full-bleed at `100vw`, so a 1440px retina viewport needs roughly **2880px** — the
+browser is currently stretching the source about 5.6×. That is the single most
+visible quality problem on the site.
+
+### Fix the source before reaching for an upscaler
+
+The Stitch URLs are served by Google's image CDN, which accepts a size suffix on
+the path. `=s0` returns the **original, unsampled** image. The first version of
+`download-images.js` fetched the bare URL, which is why it got thumbnails.
+
+`npm run images:download` now tries a ladder — `=s0`, `=w2560`, `=w2048`, bare —
+keeps whichever returns a meaningfully larger file, and prints the resulting
+dimensions so the outcome is visible rather than assumed.
+
+**Run this first.** Real pixels from the source always beat pixels invented by a
+model, and it costs nothing.
+
+### Only then, upscale what is genuinely stuck
+
+If `=s0` still returns 512px, the original really is that size and upscaling is
+the right call.
+
+| Tool | Best for | Notes |
+|---|---|---|
+| **Topaz Gigapixel** | Photographic fidelity — the portraits | Strongest face and skin recovery at 4–8×. Paid, runs locally, no upload. The right choice for `heroImage` and `practitionerPortrait`, where an invented face is unacceptable. |
+| **Upscayl** | Everything else, free | Open source, runs locally, no upload and no per-image cost. Measurably behind Topaz on fidelity but well ahead of other free options. Fine for the still-life and texture shots. |
+| **Magnific AI** | Creative reinvention | *Invents* detail rather than recovering it. Credit-priced and it adds up. **Avoid for the portraits** — it will confidently alter a face, and this site puts a real practitioner's name next to it. |
+
+### Rules for this project
+
+1. **Never run a generative upscaler on a photograph of a person** whose likeness
+   the brand depends on. Recovery models (Topaz "Standard"/"Recovery", Upscayl's
+   photo models) reconstruct; creative models fabricate.
+2. **Target 2× the largest rendered size**, not the maximum the tool offers.
+   The hero needs ~2880px. Upscaling to 8000px only inflates the repository —
+   `next/image` will downscale it anyway.
+3. **Re-run `npm run watermark:prepare`** if the watermark is ever re-exported;
+   the alpha key has to be redone.
+4. **Keep sources as they arrive.** `next/image` handles format and size at
+   request time, so there is no reason to pre-compress and lose headroom.
+
+### What is already handled
+
+Delivery is not the problem — `next/image` already emits AVIF/WebP at the right
+size per breakpoint, and `formats: ['image/avif', 'image/webp']` is set in
+`next.config.ts`. The only missing ingredient is source resolution.

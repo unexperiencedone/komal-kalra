@@ -49,7 +49,7 @@ export default async function HomePage() {
   ]);
 
   const reviews = testimonials ?? [];
-  const hero = img('heroPortrait');
+  const hero = img('heroImage');
   const about = img('aboutStill');
   const gramA = img('journalCompass');
   const gramB = img('journalCandle');

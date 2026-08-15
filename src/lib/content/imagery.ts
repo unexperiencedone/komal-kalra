@@ -29,6 +29,12 @@ export interface BrandImage {
 }
 
 export const IMAGES = {
+  heroImage: {
+    remote: '/images/heroImage.jpg',
+    local: '/images/heroImage.jpg',
+    alt:
+      'Astrologer Komal Kalra, the portrait used on the home page hero.',
+  },
   heroPortrait: {
     remote:
       'https://lh3.googleusercontent.com/aida-public/AB6AXuBoLgpXUjC_IqXcGU1kH9GtAsF_4l_XguV2G8oFX2G4IIyZfBPb8NbAsQ02xD2fxpP-NR7vafxYGJlGEqyVdWqUppQ3_I3cE872UL2z7ETQunblgRtswLAAckdDOeHjEmPxeLjCltgEOrzchj1361vGsRfx6BucNocCDT_42SgYRoqqJNt7K7s32_FLMH7DiCxGPGAevzPe7ujWM8YkDk65Pm2Y34_cKnCtGFzBXZAGqB7T3C48RLon',
