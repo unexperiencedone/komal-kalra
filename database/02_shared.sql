@@ -25,17 +25,24 @@ $$;
 -- search_path is pinned to close the search-path hijack vector that
 -- SECURITY DEFINER functions are otherwise exposed to.
 -- ---------------------------------------------------------------------------
+-- language plpgsql, not sql: a SQL-language function has its body resolved
+-- (including every referenced relation) at CREATE FUNCTION time, but
+-- public.profiles does not exist until 03_profiles.sql runs. plpgsql defers
+-- that resolution to first call, so file order can stay dependency-first
+-- (helpers before tables) as documented above.
 create or replace function public.is_admin()
 returns boolean
-language sql
+language plpgsql
 stable
 security definer
 set search_path = public, pg_temp
 as $$
-  select exists (
+begin
+  return exists (
     select 1 from public.profiles
     where id = (select auth.uid()) and role = 'admin'
   );
+end;
 $$;
 
 comment on function public.is_admin() is

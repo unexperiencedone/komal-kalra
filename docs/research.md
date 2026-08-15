@@ -547,3 +547,44 @@ Decisions:
 4. Two independent payment-confirmation paths, one idempotent state machine, plus reconciliation.
 5. Restraint as the differentiator. No fake data, no fake urgency, no zodiac wheels.
 6. Every feature must remove real weekly work for a solo practitioner, or it is not built.
+
+---
+
+## 13. Second pass — reading the reference site directly
+
+The first pass worked from category knowledge. This pass fetched
+astroarunpandit.org and read its actual structure. Four patterns were worth
+taking, and two were worth explicitly rejecting.
+
+### Adopted
+
+| Pattern on the reference | Why it works | How it is implemented here |
+|---|---|---|
+| **"One Call Can Change Everything"** — four cards named *Vedic Birth Chart Analysis / Career & Business / Relationship & Marriage / Remedies* | Names the visitor's **problem**, not the practitioner's catalogue. A visitor thinks "should I take this job", not "I would like a 45-minute session". | `GuidanceTopics` — six cards. **Improved:** each card routes to the matching service's page. The reference's four cards are decorative and all sit under one generic CTA, which wastes the intent the visitor just expressed. |
+| **Icon row under the hero** (Explore Report / Consult Now / Ask Astrologer / …) | Straight-to-action, excellent on mobile where it lands just below the fold. | `QuickLinks` — five tiles, scroll-snapped on mobile. **Trimmed:** theirs has eight and half point at separate businesses (gemstones, courses); every tile here is a real destination in this product. |
+| **Per-card micro-badges** ("1-on-1", "FREE", "India's No.1", "7L+ Sold") | Cheap, effective trust signal at the decision point. | `ServiceCard` badges. **Critical difference:** theirs are marketing claims typed into a CMS. Every badge here is derived from database truth — `featured` → "Most booked", `bookable_online = false` → "Enquiry only". There is deliberately **no free-text badge column**, because one would be an open invitation to type "India's No.1" into it. |
+| **"Available in Hindi and English"** | Language is a genuine hesitation point in this market and is rarely stated. | Hero meta row + `availableLanguage` in structured data. |
+| **Mid-page capture panel on a decorative background** | Their highest-converting element; visually distinct from the page around it. | Contact section is now a bordered panel on the constellation motif. **Reduced:** theirs collects seven fields for an automated report; this collects three, because the goal is a reply from a person. |
+
+### Rejected
+
+- **Their stats band.** It renders `0M+ / 0.0M+ / 0Lakh+ / 0+` on page load — the
+  placeholder values leak through before the animation runs, which is itself the
+  evidence that the numbers are decorative rather than derived. `StatsBand` here
+  animates identically but every figure is a `COUNT` over real rows, and the
+  whole section returns `null` below 25 completed consultations. There is no prop
+  for a hardcoded number; the component cannot be faked without editing it.
+- **Marketplace astrologer cards** (₹50/min, "Exp: 28 yrs", app-store links),
+  courses and gemstone cross-sells, and a 40-image duplicated marquee. Wrong
+  business model (see §1.1) and, in the marquee's case, pure weight.
+
+### The structural difference this exposed
+
+The reference is a **content-and-products business** that also sells
+consultations: reports, calculators, courses, pujas, gemstones, an app, a
+podcast. Its homepage is a hub, and the density is rational for that.
+
+This is **one practitioner with a calendar**. The homepage has one job, so the
+section order answers a visitor's questions in the order they actually arise
+rather than presenting a hub. Copying the reference's density would have been
+copying a solution to a problem this business does not have.

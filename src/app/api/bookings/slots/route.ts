@@ -1,4 +1,3 @@
-import { NextResponse } from 'next/server';
 import { getAvailableSlots } from '@/lib/booking/availability';
 import { readSessionKey } from '@/lib/booking/holds';
 import { ok, fail, fromUnknownError } from '@/lib/api';
@@ -38,10 +37,7 @@ export async function GET(request: Request) {
 
     const days_ = await getAvailableSlots({ serviceId, from, to, sessionKey });
 
-    return NextResponse.json(
-      { ok: true, data: { days: days_ } },
-      { headers: { 'Cache-Control': 'no-store' } },
-    );
+    return ok({ days: days_ }, { headers: { 'Cache-Control': 'no-store' } });
   } catch (error) {
     return fromUnknownError(error, 'bookings/slots');
   }

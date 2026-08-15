@@ -34,6 +34,10 @@ export function Reveal({
   // worth — every allowed tag is an HTMLElement and the observer only needs
   // that much.
   const ref = useRef<HTMLDivElement>(null);
+  // Must start `false` on both server and client: the server never has
+  // IntersectionObserver, so seeding this from `typeof IntersectionObserver`
+  // makes the very first client render disagree with the SSR output and
+  // React refuses to patch up the resulting hydration mismatch.
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
@@ -41,6 +45,9 @@ export function Reveal({
     if (!node) return;
 
     if (typeof IntersectionObserver === 'undefined') {
+      // No observer support post-mount (not the SSR case above) — reveal
+      // immediately rather than leaving the content permanently hidden.
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- capability fallback, not derivable at render time without breaking hydration above
       setVisible(true);
       return;
     }

@@ -16,7 +16,21 @@ import type { NotificationTemplate } from './outbox';
 
 interface RenderedEmail { subject: string; html: string; text: string }
 
-type Payload = Record<string, any>;
+type Payload = {
+  appointment?: {
+    name?: string;
+    reference?: string;
+    service?: string;
+    starts_at?: string;
+    total_paise?: number;
+    meeting_url?: string;
+  };
+  payment?: {
+    name?: string;
+    amount_refunded_paise?: number;
+    receipt_number?: string;
+  };
+};
 
 const wrap = (title: string, body: string) => `
 <!doctype html>

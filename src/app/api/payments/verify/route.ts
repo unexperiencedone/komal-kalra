@@ -1,4 +1,3 @@
-import { NextResponse } from 'next/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { getPaymentProvider } from '@/lib/payments/razorpay';
 import { settlePayment } from '@/lib/payments/settle';

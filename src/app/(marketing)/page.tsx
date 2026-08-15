@@ -1,13 +1,20 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
-import { ArrowRight, CalendarDays, CheckCircle2, CreditCard, MessageCircle, Phone, Sparkles } from 'lucide-react';
+import {
+  ArrowRight, CalendarDays, CheckCircle2, CreditCard, Languages,
+  MessageCircle, Phone, ShieldCheck, Sparkles,
+} from 'lucide-react';
 import { createClient } from '@/lib/supabase/server';
 import { getActiveServices } from '@/lib/booking/availability';
+import { getRealStats } from '@/lib/marketing/stats';
 import { BRAND, POLICY } from '@/lib/config';
 import { Button } from '@/components/ui/button';
 import { Reveal } from '@/components/common/Reveal';
 import { ServiceCard } from '@/components/marketing/ServiceCard';
+import { QuickLinks } from '@/components/marketing/QuickLinks';
 import { TrustStrip } from '@/components/marketing/TrustStrip';
+import { GuidanceTopics } from '@/components/marketing/GuidanceTopics';
+import { StatsBand } from '@/components/marketing/StatsBand';
 import { Testimonials } from '@/components/marketing/Testimonials';
 import { ContactForm } from '@/components/marketing/ContactForm';
 import { FaqAccordion } from '@/components/marketing/FaqAccordion';
@@ -26,19 +33,41 @@ export const metadata: Metadata = {
  * Landing page.
  *
  * A Server Component with zero client-side JavaScript for content. The only
- * interactive islands are the header menu, the FAQ accordion, the contact form
- * and the sticky mobile CTA.
+ * interactive islands are the header menu, the stats counters, the FAQ
+ * accordion, the contact form and the sticky mobile CTA.
  *
- * Section order follows the conversion research (docs/research.md §3.2): each
- * CTA sits at a point where the visitor has just acquired a reason to act.
- * There is deliberately no CTA after "About" — visitors reading a bio are
- * evaluating, not deciding, and a button there interrupts.
+ * SECTION ORDER — and why it is not the reference site's order.
+ *
+ * astroarunpandit.org leads with a product (a paid report), then a service
+ * grid, then five separate lead-capture calculators. That works for a
+ * multi-product content business selling to cold traffic.
+ *
+ * This is one practitioner with a finite calendar, so the order answers the
+ * questions a visitor actually has, in the order they have them:
+ *
+ *   1. Hero            what is this, and can I act now
+ *   2. Quick links     I already know what I want — let me go
+ *   3. Trust strip     is this safe to pay for
+ *   4. Guidance topics I have a problem, which session fits it   ← new
+ *   5. About           who am I trusting
+ *   6. Services        what exactly does it cost and how long
+ *   7. How it works    what happens after I pay
+ *   8. Stats           has anyone else done this                 ← real data only
+ *   9. Testimonials    what did they say
+ *  10. FAQ             my remaining objection
+ *  11. Contact         I want to ask first
+ *  12. Final CTA       decide
+ *
+ * CTAs sit at 1, 2, 6, 9 and 12 — each at a point where the visitor has just
+ * acquired a reason to act (docs/research.md §3.2). Deliberately none after
+ * "About": someone reading a biography is evaluating, not deciding.
  */
 export default async function HomePage() {
   const supabase = await createClient();
 
-  const [services, { data: testimonials }] = await Promise.all([
+  const [services, stats, { data: testimonials }] = await Promise.all([
     getActiveServices(),
+    getRealStats(),
     supabase
       .from('testimonials')
       .select('*')
@@ -54,8 +83,14 @@ export default async function HomePage() {
     ? reviews.reduce((sum, t) => sum + t.rating, 0) / reviews.length
     : 0;
 
+  const cheapest = services.length
+    ? Math.min(...services.map((s) => s.price_paise))
+    : null;
+
   // Structured data. Prices come from the database, so a rich result can never
-  // drift out of sync with what the site actually charges.
+  // drift out of sync with what the site actually charges. aggregateRating is
+  // included only when real approved reviews exist — Google penalises invented
+  // review markup, and inventing it would contradict the whole design.
   const jsonLd = {
     '@context': 'https://schema.org',
     '@graph': [
@@ -66,6 +101,7 @@ export default async function HomePage() {
         jobTitle: 'Astrologer, Life Coach & Counsellor',
         telephone: BRAND.phonesE164,
         sameAs: [BRAND.instagram],
+        knowsLanguage: ['en', 'hi', 'pa'],
       },
       {
         '@type': 'ProfessionalService',
@@ -74,6 +110,7 @@ export default async function HomePage() {
         telephone: BRAND.phonesE164[0],
         priceRange: '₹₹',
         areaServed: 'IN',
+        availableLanguage: ['English', 'Hindi', 'Punjabi'],
         ...(reviews.length > 0 && {
           aggregateRating: {
             '@type': 'AggregateRating',
@@ -97,10 +134,10 @@ export default async function HomePage() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
-      {/* ================= HERO ================= */}
+      {/* ============================ 1. HERO ============================ */}
       <section className="constellation-motif relative overflow-hidden">
-        <div className="mx-auto max-w-6xl px-5 pb-16 pt-14 sm:pb-24 sm:pt-20 lg:px-8">
-          <div className="grid items-center gap-14 lg:grid-cols-[1.05fr_0.95fr]">
+        <div className="mx-auto max-w-6xl px-5 pb-14 pt-12 sm:pb-20 sm:pt-16 lg:px-8">
+          <div className="grid items-center gap-12 lg:grid-cols-[1.05fr_0.95fr]">
             <div>
               <Reveal>
                 <p className="inline-flex items-center gap-2 rounded-full border border-[var(--color-linen)] bg-white px-3 py-1 text-xs font-medium text-[var(--color-bark)]">
@@ -128,49 +165,79 @@ export default async function HomePage() {
               </Reveal>
 
               <Reveal delay={180}>
-                <div className="mt-9 flex flex-col gap-3 sm:flex-row">
+                <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                   <Button asChild size="lg">
                     <Link href="/book">
                       Book a consultation <ArrowRight aria-hidden />
                     </Link>
                   </Button>
                   <Button asChild size="lg" variant="outline">
-                    <Link href="/services">Explore services</Link>
+                    <Link href="/services">
+                      {cheapest ? `See services from ₹${Math.round(cheapest / 100).toLocaleString('en-IN')}` : 'Explore services'}
+                    </Link>
                   </Button>
                 </div>
               </Reveal>
 
               <Reveal delay={240}>
-                <p className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-2 text-xs text-[var(--color-stone)]">
-                  <span className="flex items-center gap-1.5">
+                {/*
+                  Language availability, taken from the reference site
+                  ("Available in Hindi and English"). It genuinely matters in
+                  this market and is a real question people hesitate over.
+                */}
+                <ul className="mt-7 flex flex-wrap items-center gap-x-5 gap-y-2.5 text-xs text-[var(--color-stone)]">
+                  <li className="flex items-center gap-1.5">
+                    <Languages className="size-3.5 text-[var(--color-saffron)]" aria-hidden />
+                    English, Hindi &amp; Punjabi
+                  </li>
+                  <li className="flex items-center gap-1.5">
                     <CheckCircle2 className="size-3.5 text-[var(--color-sage)]" aria-hidden />
                     Free cancellation up to 24 hours before
-                  </span>
-                  <span className="flex items-center gap-1.5">
-                    <CheckCircle2 className="size-3.5 text-[var(--color-sage)]" aria-hidden />
-                    Secure online payment
-                  </span>
-                </p>
+                  </li>
+                  <li className="flex items-center gap-1.5">
+                    <ShieldCheck className="size-3.5 text-[var(--color-sage)]" aria-hidden />
+                    Confidential
+                  </li>
+                </ul>
               </Reveal>
             </div>
 
             {/*
-              Portrait placeholder.
+              Portrait.
               Left as a labelled placeholder rather than filled with a stock
               image: the brief asks for authentic, personal photography, and a
               stock portrait of someone who is not Komal would undermine exactly
-              the trust this page is built to establish.
+              the trust this page exists to establish.
             */}
             <Reveal delay={140} className="hidden lg:block">
-              <div className="relative aspect-[4/5] overflow-hidden rounded-[var(--radius-panel)] border border-[var(--color-linen)] bg-[var(--color-linen)]">
-                <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 p-8 text-center">
-                  <p className="font-[family-name:var(--font-display)] text-lg font-semibold text-[var(--color-bark)]">
-                    Portrait of Komal
+              <div className="relative">
+                <div className="relative aspect-[4/5] overflow-hidden rounded-[var(--radius-panel)] border border-[var(--color-linen)] bg-gradient-to-b from-[var(--color-linen)] to-[var(--color-saffron-tint)]">
+                  <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 p-8 text-center">
+                    <span className="flex size-12 items-center justify-center rounded-full bg-white/70">
+                      <Sparkles className="size-5 text-[var(--color-ember)]" aria-hidden />
+                    </span>
+                    <p className="mt-2 font-[family-name:var(--font-display)] text-lg font-semibold text-[var(--color-bark)]">
+                      Portrait of Komal
+                    </p>
+                    <p className="max-w-[24ch] text-xs leading-relaxed text-[var(--color-stone)]">
+                      PLACEHOLDER — add a real photograph at
+                      <code className="mx-1 rounded bg-white px-1 py-0.5">/public/komal-portrait.jpg</code>
+                      and replace this block.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Floating detail card — grounds the portrait and repeats the
+                    two facts that most often decide a booking. */}
+                <div className="absolute -bottom-5 -left-5 rounded-[var(--radius-card)] border border-[var(--color-linen)] bg-white p-4 shadow-[var(--shadow-overlay)]">
+                  <p className="text-[11px] uppercase tracking-[0.12em] text-[var(--color-stone)]">
+                    Every session
                   </p>
-                  <p className="max-w-[22ch] text-xs leading-relaxed text-[var(--color-stone)]">
-                    PLACEHOLDER — add a real photograph at
-                    <code className="mx-1 rounded bg-white px-1 py-0.5">/public/komal-portrait.jpg</code>
-                    and replace this block.
+                  <p className="mt-1 text-sm font-semibold text-[var(--color-ink)]">
+                    One-to-one, unhurried
+                  </p>
+                  <p className="mt-0.5 text-xs text-[var(--color-stone)]">
+                    Never a call centre, never a script
                   </p>
                 </div>
               </div>
@@ -179,10 +246,17 @@ export default async function HomePage() {
         </div>
       </section>
 
+      {/* ========================= 2. QUICK LINKS ======================== */}
+      <QuickLinks />
+
+      {/* ========================= 3. TRUST STRIP ======================== */}
       <TrustStrip reviewCount={reviews.length} averageRating={averageRating} />
 
-      {/* ================= ABOUT ================= */}
-      <section aria-labelledby="about-heading" className="py-20 sm:py-24">
+      {/* ======================= 4. GUIDANCE TOPICS ====================== */}
+      <GuidanceTopics services={services} />
+
+      {/* ============================ 5. ABOUT ========================== */}
+      <section aria-labelledby="about-heading" className="border-y border-[var(--color-linen)] bg-white py-20 sm:py-24">
         <div className="mx-auto max-w-6xl px-5 lg:px-8">
           <div className="grid gap-12 lg:grid-cols-[0.9fr_1.1fr]">
             <Reveal>
@@ -225,8 +299,8 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* ================= SERVICES ================= */}
-      <section aria-labelledby="services-heading" className="border-y border-[var(--color-linen)] bg-white py-20 sm:py-24">
+      {/* =========================== 6. SERVICES ======================== */}
+      <section aria-labelledby="services-heading" className="py-20 sm:py-24">
         <div className="mx-auto max-w-6xl px-5 lg:px-8">
           <Reveal>
             <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[var(--color-saffron)]">
@@ -255,7 +329,7 @@ export default async function HomePage() {
             </p>
           )}
 
-          {/* CTA #2 — placed here because the visitor now knows the price. */}
+          {/* CTA — placed here because the visitor now knows the price. */}
           <Reveal delay={120}>
             <div className="mt-10 flex justify-center">
               <Button asChild size="lg">
@@ -268,8 +342,8 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* ================= HOW IT WORKS ================= */}
-      <section aria-labelledby="how-heading" className="py-20 sm:py-24">
+      {/* ========================= 7. HOW IT WORKS ======================= */}
+      <section aria-labelledby="how-heading" className="border-y border-[var(--color-linen)] bg-white py-20 sm:py-24">
         <div className="mx-auto max-w-6xl px-5 lg:px-8">
           <Reveal>
             <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[var(--color-saffron)]">
@@ -288,9 +362,9 @@ export default async function HomePage() {
               { icon: MessageCircle, title: 'Attend your session', body: 'A joining link arrives by email before your appointment.' },
             ].map((step, i) => (
               <Reveal as="li" key={step.title} delay={i * 70}>
-                <div className="flex h-full flex-col rounded-[var(--radius-card)] border border-[var(--color-linen)] bg-white p-6">
+                <div className="flex h-full flex-col rounded-[var(--radius-card)] border border-[var(--color-linen)] bg-[var(--color-sand)] p-6">
                   <div className="flex items-center gap-3">
-                    <span className="flex size-8 items-center justify-center rounded-full bg-[var(--color-saffron-tint)] text-sm font-semibold text-[var(--color-ember)]">
+                    <span className="tabular flex size-8 items-center justify-center rounded-full bg-[var(--color-saffron-tint)] text-sm font-semibold text-[var(--color-ember)]">
                       {i + 1}
                     </span>
                     <step.icon className="size-4 text-[var(--color-stone)]" aria-hidden />
@@ -303,16 +377,21 @@ export default async function HomePage() {
           </ol>
 
           <Reveal delay={100}>
-            <p className="mx-auto mt-10 max-w-2xl rounded-[var(--radius-card)] border border-[var(--color-linen)] bg-white px-5 py-4 text-center text-sm leading-relaxed text-[var(--color-bark)]">
+            <p className="mx-auto mt-10 max-w-2xl rounded-[var(--radius-card)] border border-[var(--color-linen)] bg-[var(--color-sand)] px-5 py-4 text-center text-sm leading-relaxed text-[var(--color-bark)]">
               {POLICY.cancellationSummary}
             </p>
           </Reveal>
         </div>
       </section>
 
+      {/* ============================ 8. STATS ========================== */}
+      {/* Renders nothing until there is enough real data. See StatsBand. */}
+      <StatsBand stats={stats} />
+
+      {/* ========================= 9. TESTIMONIALS ====================== */}
       <Testimonials testimonials={reviews} />
 
-      {/* ================= FAQ ================= */}
+      {/* ============================= 10. FAQ ========================== */}
       <section aria-labelledby="faq-heading" className="py-20 sm:py-24">
         <div className="mx-auto max-w-3xl px-5 lg:px-8">
           <Reveal>
@@ -331,46 +410,60 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* ================= CONTACT ================= */}
-      <section aria-labelledby="contact-heading" className="border-y border-[var(--color-linen)] bg-white py-20 sm:py-24">
+      {/* =========================== 11. CONTACT ======================== */}
+      {/*
+        Panel treatment adapted from the reference site's mid-page capture
+        block, which sits on a decorative background and is visually distinct
+        from the surrounding page. Theirs asks for seven fields to generate a
+        free report; this asks for three, because the goal is a reply from a
+        person rather than an automated lead magnet.
+      */}
+      <section aria-labelledby="contact-heading" className="pb-20 sm:pb-24">
         <div className="mx-auto max-w-6xl px-5 lg:px-8">
-          <div className="grid gap-12 lg:grid-cols-[0.85fr_1.15fr]">
-            <Reveal>
-              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[var(--color-saffron)]">
-                Not sure yet?
-              </p>
-              <h2 id="contact-heading" className="mt-3 text-[length:var(--text-h2)]">
-                Ask first. Book later.
-              </h2>
-              <p className="mt-4 text-[15px] leading-relaxed text-[var(--color-bark)]">
-                If you are not sure which consultation fits, or you would rather speak to
-                someone first, send a message or call. Komal reads every enquiry personally.
-              </p>
+          <div className="constellation-motif overflow-hidden rounded-[var(--radius-panel)] border border-[var(--color-linen)] bg-white">
+            <div className="grid gap-12 p-8 sm:p-12 lg:grid-cols-[0.85fr_1.15fr]">
+              <Reveal>
+                <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[var(--color-saffron)]">
+                  Not sure yet?
+                </p>
+                <h2 id="contact-heading" className="mt-3 text-[length:var(--text-h2)]">
+                  Ask first. Book later.
+                </h2>
+                <p className="mt-4 text-[15px] leading-relaxed text-[var(--color-bark)]">
+                  If you are not sure which consultation fits, or you would rather speak to
+                  someone first, send a message or call. Komal reads every enquiry personally.
+                </p>
 
-              <ul className="mt-8 space-y-3">
-                {BRAND.phones.map((phone, i) => (
-                  <li key={phone}>
-                    <a
-                      href={`tel:${BRAND.phonesE164[i]}`}
-                      className="flex items-center gap-3 rounded-[var(--radius-control)] border border-[var(--color-linen)] px-4 py-3 text-[15px] font-medium text-[var(--color-ink)] transition-colors hover:border-[var(--color-saffron)]"
-                    >
-                      <Phone className="size-4 text-[var(--color-saffron)]" aria-hidden />
-                      {phone}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </Reveal>
+                <ul className="mt-8 space-y-3">
+                  {BRAND.phones.map((phone, i) => (
+                    <li key={phone}>
+                      <a
+                        href={`tel:${BRAND.phonesE164[i]}`}
+                        className="flex items-center gap-3 rounded-[var(--radius-control)] border border-[var(--color-linen)] bg-[var(--color-sand)] px-4 py-3 text-[15px] font-medium text-[var(--color-ink)] transition-colors hover:border-[var(--color-saffron)] hover:bg-white"
+                      >
+                        <Phone className="size-4 text-[var(--color-saffron)]" aria-hidden />
+                        {phone}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
 
-            <Reveal delay={80}>
-              <ContactForm services={services} />
-            </Reveal>
+                <p className="mt-5 text-xs leading-relaxed text-[var(--color-stone)]">
+                  Enquiries are usually answered within one working day. For anything urgent,
+                  calling is faster than the form.
+                </p>
+              </Reveal>
+
+              <Reveal delay={80}>
+                <ContactForm services={services} />
+              </Reveal>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* ================= FINAL CTA ================= */}
-      <section className="bg-[var(--color-ink)] py-20 text-center sm:py-24">
+      {/* ========================== 12. FINAL CTA ======================== */}
+      <section className="constellation-motif bg-[var(--color-ink)] py-20 text-center sm:py-24">
         <div className="mx-auto max-w-2xl px-5">
           <Reveal>
             <h2 className="text-[length:var(--text-h2)] text-[var(--color-sand)]">

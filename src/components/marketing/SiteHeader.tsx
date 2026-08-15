@@ -31,7 +31,15 @@ export function SiteHeader({ signedIn = false }: { signedIn?: boolean }) {
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
 
-  useEffect(() => setOpen(false), [pathname]);
+  // Close the mobile menu on navigation. Reset during render (React's
+  // documented pattern for "adjusting state when a prop changes") rather than
+  // in an effect, so there is no extra post-paint render where the menu is
+  // still open on the new page.
+  const [prevPathname, setPrevPathname] = useState(pathname);
+  if (pathname !== prevPathname) {
+    setPrevPathname(pathname);
+    setOpen(false);
+  }
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
