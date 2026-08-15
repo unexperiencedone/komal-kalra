@@ -43,7 +43,7 @@ export default async function AdminClientsPage(props: {
           <Field label="Search" htmlFor="c-q" className="w-72">
             <Input name="q" defaultValue={q} placeholder="Name, email or phone" type="search" />
           </Field>
-          <Button type="submit" variant="outline">Search</Button>
+          <Button type="submit" variant="secondary">Search</Button>
           {q && <Button asChild variant="ghost"><Link href="/admin/clients">Clear</Link></Button>}
         </FilterBar>
 
@@ -68,10 +68,10 @@ export default async function AdminClientsPage(props: {
               </thead>
               <Tbody>
                 {clients.map((c) => (
-                  <tr key={c.id} className="hover:bg-[var(--color-sand)]">
+                  <tr key={c.id} className="hover:bg-[var(--color-warm-ivory)]">
                     <Td>
                       <Link href={`/admin/clients/${c.id}`} className="flex items-center gap-2">
-                        <span className="text-sm font-medium hover:text-[var(--color-ember-text)]">
+                        <span className="text-sm font-medium hover:text-[var(--color-gold-deep)]">
                           {c.full_name ?? 'Unnamed'}
                         </span>
                         {c.role === 'admin' && <Badge tone="info">Admin</Badge>}
@@ -79,7 +79,7 @@ export default async function AdminClientsPage(props: {
                     </Td>
                     <Td>
                       <span className="block max-w-[200px] truncate text-xs">{c.email}</span>
-                      {c.phone && <span className="block text-xs text-[var(--color-stone)]">{c.phone}</span>}
+                      {c.phone && <span className="block text-xs text-[var(--color-on-surface-variant)]">{c.phone}</span>}
                     </Td>
                     <Td align="right"><span className="tabular text-sm">{c.appointments_count}</span></Td>
                     <Td align="right"><span className="tabular text-sm font-medium">{formatPaise(c.total_spent_paise)}</span></Td>
@@ -88,7 +88,7 @@ export default async function AdminClientsPage(props: {
                         {c.last_appointment_at ? formatDate(c.last_appointment_at) : '—'}
                       </span>
                     </Td>
-                    <Td><span className="text-xs text-[var(--color-stone)]">{formatDate(c.created_at)}</span></Td>
+                    <Td><span className="text-xs text-[var(--color-on-surface-variant)]">{formatDate(c.created_at)}</span></Td>
                   </tr>
                 ))}
               </Tbody>

@@ -1,152 +1,126 @@
 @import "tailwindcss";
 
 /* ==========================================================================
-   DESIGN TOKENS — Astrologer Komal Kalra
+   DESIGN TOKENS — "Silent Luxury"
 
-   REVISED PALETTE (second pass).
+   Taken directly from stitch_komal_kalra_brand_design_system/silent_luxury/
+   DESIGN.md and the seventeen screen files beside it. This replaces the
+   previous warm/saffron system wholesale.
 
-   The first pass used a single saffron accent on a near-neutral base, argued
-   from "restraint reads as premium". That reasoning was half right and the
-   result was wrong: it read monotone. Restraint is about avoiding NOISE —
-   glow, gradient meshes, rotating zodiac wheels — not about avoiding colour.
+   The three defining rules of this system, all of which differ from what was
+   here before:
 
-   Indian spiritual and wellness brands use rich colour legitimately, and it is
-   culturally grounded rather than gaudy: saffron and marigold (auspicious),
-   deep indigo (the night sky, and the traditional counterweight to warm tones),
-   terracotta, jade, rose. This palette uses all of them, with rules about
-   WHERE each one is allowed, which is what keeps it disciplined.
+     1. SHARP EDGES. Every button, input and card is 0px radius. The brief calls
+        this "precision, high-end tailoring, professional discipline". Only
+        avatars and the numbered step markers are circular.
+     2. NO SHADOWS. Depth comes from tonal layering (Ivory → Linen → Navy) and
+        1px hairline borders, not elevation. A drop shadow anywhere in this
+        system is a bug.
+     3. GOLD IS AN ACCENT, NEVER A FILL. Muted Gold appears as hairlines, small
+        icons, eyebrow labels and focus rings. Navy fills the buttons.
 
-   The discipline now lives in three rules rather than in scarcity:
-     1. ONE primary action colour. Ember/marigold owns every CTA. Category hues
-        never appear on a button.
-     2. Category hues encode MEANING (which topic, which state) — never
-        decoration. Six topics, six hues, consistently mapped.
-     3. Sections alternate on a fixed rhythm: sand → white → tinted → night.
-        Never two adjacent sections on the same ground.
-
-   ACCESSIBILITY — every pairing below was measured, not eyeballed.
-   Notably: white on saffron #C2762B is only 3.55:1, so saffron is NEVER a
-   button fill. Ember #A45F1E (4.96:1 with white) fills buttons; saffron is
-   reserved for icons, rules and large display type.
+   ACCESSIBILITY: every pairing below is measured, and `npm run audit:contrast`
+   enforces it. Note Muted Gold #a45f1e on Warm Ivory is 4.83:1 — it passes,
+   but only just, so it is never used below 12px.
    ========================================================================== */
 
 @theme {
-  /* --- Neutrals -----------------------------------------------------------
-     Warmed compared to the first pass. #FDF8F1 rather than #FAF7F2 — the extra
-     warmth stops the page reading grey next to the saturated hues.          */
+  /* --- The prestige triad -------------------------------------------------
+     Cosmic Navy grounds and authorises. Warm Ivory is the canvas — softer than
+     pure white and the reason the whole thing reads expensive. Muted Gold is
+     the mark of quality, used sparingly.                                    */
 
-  --color-ink: #17120E;          /* warm near-black — headings, body        */
-  --color-bark: #4A3C31;         /* secondary text            10.0:1 on sand */
-  --color-stone: #7A6A5C;        /* tertiary / meta            4.9:1 on sand */
-  --color-sand: #FDF8F1;         /* page ground                             */
-  --color-linen: #F4E9DA;        /* borders, dividers, quiet fills          */
-  --color-linen-hover: #EBDCC7;
-  --color-edge-hover: #E3D2BB;
-  --color-placeholder: #7A6A5C;   /* 5.19:1 on white — was #A8968A at 2.84:1 */
-  --color-shell: #FFFFFF;
+  --color-cosmic-navy: #1a1f2c;   /* white on this = 16.5:1                  */
+  --color-ink-black: #17120e;     /* body copy; primary button hover         */
+  --color-primary: #030612;       /* deepest — footer, inverted panels       */
+  --color-warm-ivory: #fef9f2;    /* the canvas                              */
+  --color-linen-grey: #ece7e1;    /* editorial card fill                     */
 
-  /* --- Primary: saffron / marigold ---------------------------------------
-     Warm, auspicious, and the only family permitted on a call to action.   */
+  /* --- Gold, in three measured weights -----------------------------------
+     One gold cannot serve every ground, and pretending otherwise is how the
+     accent ends up illegible. Measured:
 
-  --color-saffron: #C2762B;      /* icons, rules, large display ONLY        */
-  --color-marigold: #E8942F;     /* brighter — for use ON dark grounds      */
-  --color-ember: #A45F1E;        /* BUTTON FILL. white on this = 4.96:1     */
-  --color-ember-deep: #8A4E17;   /* pressed / hover        white = 6.60:1   */
-  --color-ember-text: #8F5219;   /* accent TEXT on light   5.5–6.2:1        */
-  --color-saffron-tint: #FDF0DC;
-  --color-saffron-tint-deep: #F9E3C2;
+       muted-gold  on ivory  4.73:1  ✓ text ≥12px, icons, hairlines
+       muted-gold  on linen  4.03:1  ✗ TEXT — icons and rules only (≥3:1)
+       muted-gold  on navy   3.32:1  ✗ TEXT — hairlines and icons only
+       gold-deep   on ivory  6.18:1  ✓ | on linen 5.27:1  ✓
+       gold-light  on navy   8.58:1  ✓ | on ink   10.5:1  ✓
 
-  /* --- Secondary: indigo --------------------------------------------------
-     A real second colour, not a garnish. Owns entire sections. This is the
-     "night sky" counterweight that lets the warm tones read as warm.       */
+     So: gold-deep for accent TEXT on light grounds, gold-light for accent
+     TEXT on dark grounds, muted-gold for the decorative work it was designed
+     for. The design file's own #fda861 is reused as gold-light.            */
 
-  --color-indigo: #2A2E5A;       /* white on this = 12.8:1                  */
-  --color-indigo-deep: #1B1E3E;  /* darkest ground                          */
-  --color-indigo-light: #4C5490;
-  --color-indigo-tint: #ECEDF6;
-  --color-indigo-on-dark: #C7CBE4;  /* body copy on indigo grounds          */
+  --color-muted-gold: #a45f1e;    /* hairlines, icons, eyebrows on ivory     */
+  --color-gold-deep: #8e4e0b;     /* accent TEXT on ivory and linen          */
+  --color-gold-light: #fda861;    /* accent TEXT on navy and ink             */
 
-  /* --- Category hues ------------------------------------------------------
-     One per guidance topic. Each is a {base, tint} pair where base-on-tint
-     clears AA. These NEVER appear on a button — they identify, they do not
-     call to action.                                                         */
+  /* --- Surfaces (tonal layering replaces elevation) ---------------------- */
+  --color-surface: #fdf9f2;
+  --color-surface-lowest: #ffffff;
+  --color-surface-low: #f8f3ec;
+  --color-surface-container: #f2ede6;
+  --color-surface-high: #ece8e1;
+  --color-surface-highest: #e6e2db;
+  --color-surface-dim: #ded9d3;
+  --color-inverse-surface: #32302c;
+  --color-inverse-on-surface: #f5f0e9;
 
-  --color-rose: #9E2F55;         --color-rose-tint: #FCEBF1;        /* 6.1:1 */
-  --color-jade: #256149;         --color-jade-tint: #E6F4EE;        /* 6.4:1 */
-  --color-plum: #59318A;         --color-plum-tint: #F2ECFA;        /* 8.1:1 */
-  --color-terracotta: #A2412A;   --color-terracotta-tint: #FCEDE8;  /* 5.5:1 */
-  --color-teal: #175A62;         --color-teal-tint: #E4F2F3;        /* 6.8:1 */
+  /* --- Text -------------------------------------------------------------- */
+  --color-on-surface: #1d1c18;          /* 15.6:1 on ivory                   */
+  --color-on-surface-variant: #45464c;  /*  8.3:1 on ivory — body copy       */
+  --color-outline: #76777c;             /*  3.9:1 — BORDERS ONLY, never text */
+  --color-outline-variant: #c6c6cc;
+  --color-on-primary: #ffffff;
+  --color-on-primary-container: #828697; /* muted copy on navy — 5.6:1       */
 
-  /* --- Semantic -----------------------------------------------------------
-     Deliberately distinct from the category hues so a green "confirmed"
-     badge is never confused with the jade "wellbeing" topic.               */
+  /* --- Status -----------------------------------------------------------
+     Kept deliberately quiet. A booking system still needs to say "confirmed"
+     and "failed", but in this aesthetic those states are stated, not shouted. */
+  --color-error: #ba1a1a;
+  --color-error-container: #ffdad6;
+  --color-on-error-container: #93000a;
+  --color-success: #2f6b4a;
+  --color-success-container: #e8f3ec;
+  --color-warning: #7d5709;
+  --color-warning-container: #fbf2de;
 
-  --color-sage: #2F6B4A;         --color-sage-tint: #E8F3EC;        /* 5.6:1 */
-  --color-clay: #9A3323;         --color-clay-tint: #FCEBE7;        /* 6.3:1 */
-  --color-amber-warn: #7D5709;   --color-amber-tint: #FBF2DE;       /* 5.8:1 */
+  /* --- Type -------------------------------------------------------------
+     Playfair Display (headings) + Public Sans (body/UI) — "Heritage meets
+     Modernity". Label Caps is used for eyebrows and every button label.     */
 
-  --color-sand-muted: #C6BCAE;   /* body copy on ink/indigo — 8.6:1        */
+  --font-display: var(--font-playfair), 'Playfair Display', ui-serif, Georgia, serif;
+  --font-sans: var(--font-public-sans), 'Public Sans', ui-sans-serif, system-ui, sans-serif;
 
-  /* --- Gradients ----------------------------------------------------------
-     The first pass banned gradients outright. That was over-broad: what makes
-     a site look cheap is a SATURATED gradient used as a focal point (purple→
-     gold hero washes, glowing buttons). A low-contrast wash between two
-     neighbouring tints is just an atmospheric ground, and it is what stops
-     large flat areas reading as dead space.
+  --text-display-lg: clamp(2.5rem, 1.6rem + 4vw, 4.5rem);   /* 40 → 72 */
+  --text-h1: clamp(2rem, 1.5rem + 2.2vw, 3rem);             /* 32 → 48 */
+  --text-h2: clamp(1.75rem, 1.4rem + 1.6vw, 2.25rem);       /* 28 → 36 */
+  --text-h3: clamp(1.375rem, 1.2rem + 0.7vw, 1.5rem);
 
-     Rules: two stops, both from the same temperature family, and never
-     underneath body text that needs to stay legible across the whole span.  */
+  /* --- Spacing (fixed grid, generous margins) ---------------------------- */
+  --spacing-gutter: 24px;
+  --spacing-section-md: 80px;
+  --spacing-section-lg: 120px;
+  --container-max: 1280px;
 
-  --gradient-dawn: linear-gradient(150deg, #FDF0DC 0%, #FDF8F1 45%, #FCEDE8 100%);
-  --gradient-night: linear-gradient(155deg, #2A2E5A 0%, #1B1E3E 100%);
-  --gradient-ember: linear-gradient(135deg, #C2762B 0%, #A45F1E 100%);
-
-  /* Star motifs as variables so a band can compose them ON TOP of its own
-     gradient in one declaration, rather than a second class silently
-     overwriting the first. See the .band-* block below. */
-  --motif-light:
-    radial-gradient(circle at 18% 24%, rgb(42 46 90 / 0.13) 1.4px, transparent 1.5px),
-    radial-gradient(circle at 63% 12%, rgb(194 118 43 / 0.16) 1.2px, transparent 1.3px),
-    radial-gradient(circle at 86% 58%, rgb(42 46 90 / 0.11) 1.4px, transparent 1.5px),
-    radial-gradient(circle at 38% 78%, rgb(194 118 43 / 0.12) 1.2px, transparent 1.3px),
-    radial-gradient(circle at 74% 88%, rgb(42 46 90 / 0.09) 1.2px, transparent 1.3px);
-
-  --motif-dark:
-    radial-gradient(circle at 15% 20%, rgb(232 148 47 / 0.32) 1.4px, transparent 1.5px),
-    radial-gradient(circle at 68% 14%, rgb(255 255 255 / 0.24) 1.2px, transparent 1.3px),
-    radial-gradient(circle at 88% 62%, rgb(232 148 47 / 0.24) 1.3px, transparent 1.4px),
-    radial-gradient(circle at 32% 80%, rgb(255 255 255 / 0.18) 1.2px, transparent 1.3px),
-    radial-gradient(circle at 55% 46%, rgb(255 255 255 / 0.13) 1px, transparent 1.1px);
-
-  /* --- Type ---------------------------------------------------------------
-     Fraunces (variable serif, optical-size axis) for display; Inter for UI. */
-  --font-display: var(--font-fraunces), ui-serif, Georgia, serif;
-  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system, sans-serif;
-
-  --text-display: clamp(2.25rem, 1.6rem + 3.2vw, 4rem);
-  --text-h1: clamp(1.875rem, 1.4rem + 2.2vw, 3rem);
-  --text-h2: clamp(1.5rem, 1.25rem + 1.2vw, 2.25rem);
-  --text-h3: clamp(1.25rem, 1.1rem + 0.7vw, 1.5rem);
-
-  /* --- Radius / elevation / motion --------------------------------------- */
-  --radius-control: 0.375rem;
-  --radius-card: 0.75rem;
-  --radius-panel: 1.25rem;
-
-  --shadow-resting: 0 1px 2px rgb(23 18 14 / 0.04), 0 1px 3px rgb(23 18 14 / 0.06);
-  --shadow-overlay: 0 10px 15px -3px rgb(23 18 14 / 0.09), 0 4px 6px -4px rgb(23 18 14 / 0.06);
-  --shadow-lifted: 0 18px 30px -12px rgb(42 46 90 / 0.18);
+  /* --- Shape ------------------------------------------------------------
+     Zero. Not "small" — zero. Kept as tokens so the intent is explicit and a
+     future rounded corner has to argue with a named value.                  */
+  --radius-control: 0px;
+  --radius-card: 0px;
+  --radius-panel: 0px;
 
   --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 @layer base {
+  /* Hairlines, not shadows. The default border is Muted Gold at 20% — the
+     single most characteristic detail of this system. */
   *,
   ::after,
   ::before,
   ::backdrop,
   ::file-selector-button {
-    border-color: var(--color-linen);
+    border-color: color-mix(in srgb, var(--color-muted-gold) 20%, transparent);
   }
 
   html {
@@ -155,39 +129,39 @@
   }
 
   body {
-    background-color: var(--color-sand);
-    color: var(--color-ink);
+    background-color: var(--color-warm-ivory);
+    color: var(--color-on-surface);
     font-family: var(--font-sans);
-    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
   }
 
   h1, h2, h3 {
     font-family: var(--font-display);
-    font-weight: 600;
-    letter-spacing: -0.02em;
-    line-height: 1.12;
+    color: var(--color-cosmic-navy);
     text-wrap: balance;
   }
+  h1 { font-weight: 600; letter-spacing: -0.02em; line-height: 1.1; }
+  h2 { font-weight: 500; line-height: 1.3; }
+  h3 { font-weight: 500; line-height: 1.3; }
 
   p { text-wrap: pretty; }
 
-  /* Focus ring: always visible, never removed. Uses ember rather than saffron
-     so it holds contrast against both the sand and white grounds. */
+  /* Focus ring transitions to Muted Gold, per the components spec. Square,
+     because everything in this system is square. */
   :focus-visible {
-    outline: 2px solid var(--color-ember);
+    outline: 2px solid var(--color-muted-gold);
     outline-offset: 2px;
-    border-radius: 2px;
+    border-radius: 0;
   }
   :focus:not(:focus-visible) { outline: none; }
 
-  /* Focus ring on dark grounds needs the brighter marigold to be visible. */
-  .on-dark :focus-visible { outline-color: var(--color-marigold); }
+  /* On navy grounds the gold ring loses contrast; use ivory instead. */
+  .on-dark :focus-visible { outline-color: var(--color-warm-ivory); }
 
   .tabular { font-variant-numeric: tabular-nums; }
 
-  ::selection { background: var(--color-saffron-tint-deep); color: var(--color-ink); }
+  ::selection { background: var(--color-linen-grey); color: var(--color-cosmic-navy); }
 }
 
 @layer components {
@@ -196,98 +170,118 @@
     left: -9999px;
     top: 0;
     z-index: 100;
-    background: var(--color-ink);
-    color: var(--color-sand);
+    background: var(--color-cosmic-navy);
+    color: var(--color-warm-ivory);
     padding: 0.75rem 1.25rem;
-    border-radius: 0 0 var(--radius-control) 0;
   }
   .skip-link:focus { left: 0; }
 
-  /* --- Section grounds ----------------------------------------------------
-     The rhythm rule lives here so a page cannot accidentally place two
-     identical grounds next to each other — you pick a named band, and the
-     names make the alternation obvious when reading the JSX.
+  /* --- Editorial primitives ---------------------------------------------- */
 
-     ⚠️  BUG THIS FIXES — do not "simplify" it back.
-     The first version wrote `.band-night { background: <gradient> }` and put
-     the star motif in a separate `.constellation-motif-dark { background-image:
-     <dots> }`. Applying both classes to one element meant the motif's
-     `background-image` REPLACED the band's gradient (the `background`
-     shorthand writes background-image too). The section rendered with no
-     ground at all, the page's cream showed through, and every piece of
-     light-coloured text on it became invisible.
-
-     The fix: each band sets `background-color` and `background-image`
-     SEPARATELY, and the motif is composed as an extra layer via a compound
-     selector rather than overwriting. A band always keeps its colour even if
-     the image layer is replaced by something else later.                   */
-
-  .band-sand   { background-color: var(--color-sand); }
-  .band-shell  { background-color: var(--color-shell); }
-  .band-warm   { background-color: var(--color-saffron-tint); }
-  .band-cool   { background-color: var(--color-indigo-tint); }
-
-  .band-dawn {
-    background-color: var(--color-sand);
-    background-image: var(--gradient-dawn);
+  /* Eyebrow: uppercase, wide-tracked, gold. Used above every section heading. */
+  .label-caps {
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
   }
 
-  .band-night {
-    background-color: var(--color-indigo-deep);   /* survives any image change */
-    background-image: var(--gradient-night);
-    color: var(--color-indigo-on-dark);
+  .label-small {
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 1.2;
   }
 
-  /* Headings only. Body copy inherits from the band, so an explicit Tailwind
-     text colour on a child still wins — the earlier `.band-night p { … }` rule
-     out-specified utility classes and quietly overrode them. */
-  .band-night h1,
-  .band-night h2,
-  .band-night h3 { color: var(--color-sand); }
-
-  /* --- Celestial motif ----------------------------------------------------
-     Thin scattered points, low opacity, at most once per page. Defined as
-     variables so a band can COMPOSE the dots on top of its gradient in a
-     single background-image declaration.                                    */
-
-  .constellation-motif      { background-image: var(--motif-light); }
-  .constellation-motif-dark { background-image: var(--motif-dark); }
-
-  /* Compound selectors — higher specificity than either class alone, so these
-     win and layer dots OVER the band gradient instead of replacing it. */
-  .band-dawn.constellation-motif {
-    background-image: var(--motif-light), var(--gradient-dawn);
-  }
-  .band-night.constellation-motif-dark {
-    background-image: var(--motif-dark), var(--gradient-night);
-  }
-
-  /* Thin rule used under section eyebrows. */
-  .accent-rule::after {
-    content: '';
+  /* The 48px gold hairline that sits under a section heading. */
+  .gold-rule {
     display: block;
-    width: 2.5rem;
-    height: 2px;
-    margin-top: 0.75rem;
-    border-radius: 999px;
-    background: var(--gradient-ember);
+    width: 3rem;
+    height: 1px;
+    background: color-mix(in srgb, var(--color-muted-gold) 45%, transparent);
+  }
+
+  /* Container: 1280px with 24px gutters rising to 48px on desktop, exactly as
+     the layout spec describes. */
+  .shell {
+    max-width: var(--container-max);
+    margin-inline: auto;
+    padding-inline: 24px;
+  }
+  @media (min-width: 768px) { .shell { padding-inline: 48px; } }
+
+  /* --- Section grounds ----------------------------------------------------
+     Tonal layering. Sections alternate between ivory, low and container tones;
+     navy is reserved for the footer and one or two high-impact panels.
+
+     NOTE: each band sets background-color ONLY. An earlier version of this
+     file used the `background` shorthand alongside a separate class that set
+     `background-image`, and the second class silently erased the first — the
+     section rendered with no ground and its light text became invisible. Keep
+     colour and image on separate properties.                                */
+
+  .band-ivory     { background-color: var(--color-warm-ivory); }
+  .band-surface   { background-color: var(--color-surface); }
+  .band-low       { background-color: var(--color-surface-low); }
+  .band-container { background-color: var(--color-surface-container); }
+  .band-linen     { background-color: var(--color-linen-grey); }
+
+  .band-navy {
+    background-color: var(--color-cosmic-navy);
+    color: var(--color-on-primary-container);
+  }
+  .band-navy h1, .band-navy h2, .band-navy h3 { color: var(--color-warm-ivory); }
+
+  .band-ink {
+    background-color: var(--color-primary);
+    color: var(--color-on-primary-container);
+  }
+  .band-ink h1, .band-ink h2, .band-ink h3 { color: var(--color-warm-ivory); }
+
+  /* Glassmorphism — reserved for persistent navigation only, per the spec. */
+  .glass-nav {
+    background-color: color-mix(in srgb, var(--color-warm-ivory) 92%, transparent);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+
+  /* Editorial card: no shadow, defined by a tonal shift and a gold hairline. */
+  .card-editorial {
+    background-color: var(--color-linen-grey);
+    border: 1px solid color-mix(in srgb, var(--color-muted-gold) 20%, transparent);
+    transition: background-color 300ms var(--ease-out-quint),
+                border-color 300ms var(--ease-out-quint);
+  }
+  .card-editorial:hover {
+    background-color: var(--color-surface-container);
+    border-color: color-mix(in srgb, var(--color-muted-gold) 45%, transparent);
+  }
+
+  /* Minimalist input: bottom rule only, becoming a full box on focus. */
+  .field-underline {
+    background: transparent;
+    border: 1px solid transparent;
+    border-bottom-color: var(--color-outline-variant);
+    transition: border-color 200ms var(--ease-out-quint);
+  }
+  .field-underline:hover { border-bottom-color: var(--color-outline); }
+  .field-underline:focus {
+    outline: none;
+    border-color: var(--color-muted-gold);
   }
 }
 
 @layer utilities {
-  /* Entrance animation. Fires once on first intersection, never re-fires. */
-  .reveal {
-    opacity: 0;
-    transform: translateY(12px);
-  }
+  /* Entrance animation, matching the design files' fadeInUp. Fires once. */
+  .reveal { opacity: 0; transform: translateY(20px); }
   .reveal.is-visible {
     opacity: 1;
     transform: none;
-    transition: opacity 420ms var(--ease-out-quint), transform 420ms var(--ease-out-quint);
+    transition: opacity 800ms var(--ease-out-quint), transform 800ms var(--ease-out-quint);
   }
 
   .shimmer {
-    background: linear-gradient(90deg, var(--color-linen) 25%, #FAF2E6 50%, var(--color-linen) 75%);
+    background: linear-gradient(90deg, var(--color-linen-grey) 25%, var(--color-surface-low) 50%, var(--color-linen-grey) 75%);
     background-size: 200% 100%;
     animation: shimmer 1.4s linear infinite;
   }
@@ -295,10 +289,29 @@
     from { background-position: 200% 0; }
     to   { background-position: -200% 0; }
   }
+
+  /* The ivory scrim laid over the hero photograph so the headline stays
+     legible across the whole span. */
+  .hero-scrim {
+    background-image: linear-gradient(
+      to right,
+      var(--color-warm-ivory) 0%,
+      color-mix(in srgb, var(--color-warm-ivory) 82%, transparent) 42%,
+      transparent 78%
+    );
+  }
+  @media (max-width: 767px) {
+    .hero-scrim {
+      background-image: linear-gradient(
+        to bottom,
+        color-mix(in srgb, var(--color-warm-ivory) 88%, transparent) 0%,
+        color-mix(in srgb, var(--color-warm-ivory) 78%, transparent) 55%,
+        color-mix(in srgb, var(--color-warm-ivory) 94%, transparent) 100%
+      );
+    }
+  }
 }
 
-/* Reduced motion is respected globally: animations become instant rather than
-   merely shorter. Nothing here depends on motion to be understood. */
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after {
@@ -313,5 +326,5 @@
 @media print {
   .no-print { display: none !important; }
   body { background: #fff; }
-  .band-night { background: #fff !important; color: #000 !important; }
+  .band-navy, .band-ink { background: #fff !important; color: #000 !important; }
 }

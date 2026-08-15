@@ -14,7 +14,7 @@ import { cn } from '@/lib/utils';
  */
 export function TableShell({ children, className }: { children: React.ReactNode; className?: string }) {
   return (
-    <div className={cn('overflow-hidden rounded-[var(--radius-card)] border border-[var(--color-linen)] bg-white', className)}>
+    <div className={cn('overflow-hidden  border border-[var(--color-outline-variant)] bg-white', className)}>
       <div className="overflow-x-auto">{children}</div>
     </div>
   );
@@ -36,7 +36,7 @@ export function Th({ children, className, align = 'left' }: {
     <th
       scope="col"
       className={cn(
-        'whitespace-nowrap border-b border-[var(--color-linen)] bg-[var(--color-sand)] px-4 py-3 text-xs font-semibold uppercase tracking-[0.08em] text-[var(--color-stone)]',
+        'whitespace-nowrap border-b border-[var(--color-outline-variant)] bg-[var(--color-warm-ivory)] px-4 py-3 text-xs font-semibold uppercase tracking-[0.08em] text-[var(--color-on-surface-variant)]',
         align === 'right' ? 'text-right' : 'text-left',
         className,
       )}
@@ -57,7 +57,7 @@ export function Td({ children, className, align = 'left' }: {
 }
 
 export function Tbody({ children }: { children: React.ReactNode }) {
-  return <tbody className="divide-y divide-[var(--color-linen)]">{children}</tbody>;
+  return <tbody className="divide-y divide-[var(--color-outline-variant)]">{children}</tbody>;
 }
 
 export function FilterBar({ children }: { children: React.ReactNode }) {

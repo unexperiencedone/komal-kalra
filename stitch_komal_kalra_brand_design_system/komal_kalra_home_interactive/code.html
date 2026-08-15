@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Astrologer Komal Kalra | Silent Luxury Consultation</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600&amp;family=Playfair+Display:wght@500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+                  "primary-fixed": "#dee2f4",
+                  "tertiary-fixed": "#e6e2db",
+                  "on-primary-fixed": "#161b28",
+                  "on-surface-variant": "#45464c",
+                  "surface": "#fdf9f2",
+                  "inverse-surface": "#32302c",
+                  "on-primary": "#ffffff",
+                  "on-background": "#1d1c18",
+                  "secondary-fixed": "#ffdcc3",
+                  "inverse-on-surface": "#f5f0e9",
+                  "cosmic-navy": "#1a1f2c",
+                  "tertiary-fixed-dim": "#cac6bf",
+                  "tertiary": "#070604",
+                  "on-surface": "#1d1c18",
+                  "warm-ivory": "#fef9f2",
+                  "outline": "#76777c",
+                  "primary": "#030612",
+                  "on-secondary-fixed-variant": "#6e3900",
+                  "surface-container-low": "#f8f3ec",
+                  "secondary-container": "#fda861",
+                  "background": "#fdf9f2",
+                  "surface-container-lowest": "#ffffff",
+                  "surface-tint": "#595e6d",
+                  "error": "#ba1a1a",
+                  "linen-grey": "#ece7e1",
+                  "inverse-primary": "#c2c6d8",
+                  "on-secondary-container": "#743c00",
+                  "on-secondary": "#ffffff",
+                  "muted-gold": "#a45f1e",
+                  "secondary": "#8e4e0b",
+                  "on-error-container": "#93000a",
+                  "surface-variant": "#e6e2db",
+                  "on-tertiary": "#ffffff",
+                  "outline-variant": "#c6c6cc",
+                  "error-container": "#ffdad6",
+                  "on-primary-fixed-variant": "#424655",
+                  "primary-container": "#1a1f2c",
+                  "on-secondary-fixed": "#2f1500",
+                  "on-tertiary-fixed": "#1d1c18",
+                  "ink-black": "#17120e",
+                  "surface-container-high": "#ece8e1",
+                  "tertiary-container": "#201f1b",
+                  "on-error": "#ffffff",
+                  "surface-container": "#f2ede6",
+                  "on-tertiary-container": "#898681",
+                  "on-tertiary-fixed-variant": "#484742",
+                  "secondary-fixed-dim": "#ffb77e",
+                  "primary-fixed-dim": "#c2c6d8",
+                  "on-primary-container": "#828697",
+                  "surface-bright": "#fdf9f2",
+                  "surface-dim": "#ded9d3",
+                  "surface-container-highest": "#e6e2db"
+          },
+          "borderRadius": {
+                  "DEFAULT": "0.25rem",
+                  "lg": "0.5rem",
+                  "xl": "0.75rem",
+                  "full": "9999px"
+          },
+          "spacing": {
+                  "section-lg": "120px",
+                  "container-max": "1280px",
+                  "unit": "8px",
+                  "gutter": "24px",
+                  "section-md": "80px"
+          },
+          "fontFamily": {
+                  "body-lg": ["Public Sans"],
+                  "headline-h1-mobile": ["Playfair Display"],
+                  "body-base": ["Public Sans"],
+                  "display-lg": ["Playfair Display"],
+                  "label-small": ["Public Sans"],
+                  "headline-h2": ["Playfair Display"],
+                  "label-caps": ["Public Sans"],
+                  "display-lg-mobile": ["Playfair Display"],
+                  "headline-h1": ["Playfair Display"]
+          },
+          "fontSize": {
+                  "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                  "headline-h1-mobile": ["32px", {"lineHeight": "1.2", "fontWeight": "500"}],
+                  "body-base": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                  "display-lg": ["72px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                  "label-small": ["11px", {"lineHeight": "1.2", "fontWeight": "500"}],
+                  "headline-h2": ["36px", {"lineHeight": "1.3", "fontWeight": "500"}],
+                  "label-caps": ["12px", {"lineHeight": "1.2", "letterSpacing": "0.12em", "fontWeight": "600"}],
+                  "display-lg-mobile": ["40px", {"lineHeight": "1.15", "fontWeight": "600"}],
+                  "headline-h1": ["48px", {"lineHeight": "1.2", "fontWeight": "500"}]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    body { background-color: theme('colors.warm-ivory'); color: theme('colors.on-surface'); }
+    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fade-in-up {
+      animation: fadeInUp 0.8s ease-out forwards;
+      opacity: 0;
+    }
+  </style>
+</head>
+<body class="antialiased min-h-screen flex flex-col font-body-base text-body-base">
+<!-- TopNavBar (Shared Component) -->
+<nav class="fixed top-0 w-full z-50 bg-surface/92 backdrop-blur-md shadow-sm border-b border-muted-gold/20">
+<div class="max-w-container-max mx-auto px-6 md:px-12 flex justify-between items-center h-20">
+<div class="font-headline-h3 text-headline-h3 text-primary tracking-tight font-display-lg text-2xl">
+        Komal Kalra
+      </div>
+<div class="hidden md:flex space-x-8">
+<a class="text-on-surface-variant hover:text-primary transition-colors duration-300" href="#guidance">Guidance</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors duration-300" href="#coaching">Coaching</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors duration-300" href="#healing">Healing</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors duration-300" href="#about">About</a>
+</div>
+<div class="flex items-center space-x-6">
+<a class="hidden md:inline-flex items-center justify-center bg-cosmic-navy text-warm-ivory px-6 py-3 rounded-none font-label-caps text-label-caps uppercase tracking-widest hover:bg-opacity-90 transition" href="{{DATA:SCREEN:SCREEN_13}}">
+          Book Consultation
+        </a>
+<button class="text-primary hover:scale-95 duration-200 transition-transform">
+<span class="material-symbols-outlined">account_circle</span>
+</button>
+</div>
+</div>
+</nav>
+<main class="flex-grow pt-20">
+<!-- Hero Section: Cinematic & Professional -->
+<section class="relative w-full min-h-[819px] flex items-center justify-center bg-surface-container-low pt-section-md pb-section-md overflow-hidden">
+<div class="absolute inset-0 z-0">
+<img class="w-full h-full object-cover opacity-80 mix-blend-multiply filter grayscale-[30%]" data-alt="A highly professional, cinematic, medium-shot portrait of a mature woman dressed in elegant, understated attire, sitting in a serene, warmly lit study. The background is slightly blurred featuring neat bookshelves and soft, golden-hour light filtering through a window, conveying trust, wisdom, and an elevated 'Silent Luxury' aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBoLgpXUjC_IqXcGU1kH9GtAsF_4l_XguV2G8oFX2G4IIyZfBPb8NbAsQ02xD2fxpP-NR7vafxYGJlGEqyVdWqUppQ3_I3cE872UL2z7ETQunblgRtswLAAckdDOeHjEmPxeLjCltgEOrzchj1361vGsRfx6BucNocCDT_42SgYRoqqJNt7K7s32_FLMH7DiCxGPGAevzPe7ujWM8YkDk65Pm2Y34_cKnCtGFzBXZAGqB7T3C48RLon"/>
+<div class="absolute inset-0 bg-gradient-to-r from-warm-ivory via-warm-ivory/80 to-transparent"></div>
+</div>
+<div class="max-w-container-max mx-auto px-6 md:px-12 w-full relative z-10 grid grid-cols-1 md:grid-cols-12 gap-gutter">
+<div class="md:col-span-6 flex flex-col justify-center animate-fade-in-up">
+<span class="font-label-caps text-label-caps text-muted-gold uppercase tracking-widest mb-4 block">Trusted Guidance</span>
+<h1 class="font-display-lg-mobile text-display-lg-mobile md:font-display-lg md:text-display-lg text-cosmic-navy mb-6 leading-tight">
+            Clarity for the<br/>Curated Life
+          </h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant mb-10 max-w-md">
+            Professional astrological consultation and life coaching designed to provide precision, discretion, and profound insight.
+          </p>
+<div class="flex items-center space-x-6">
+<a class="inline-flex items-center justify-center bg-cosmic-navy text-warm-ivory px-8 py-4 rounded-none font-label-caps text-label-caps uppercase tracking-widest hover:bg-ink-black transition shadow-sm" href="{{DATA:SCREEN:SCREEN_13}}">
+              Book a Consultation
+            </a>
+</div>
+</div>
+</div>
+</section>
+<!-- Services Section: Bento/Glassmorphism Cards -->
+<section class="py-section-lg bg-warm-ivory" id="guidance">
+<div class="max-w-container-max mx-auto px-6 md:px-12">
+<div class="mb-16 md:w-1/2">
+<h2 class="font-headline-h2 text-headline-h2 text-cosmic-navy mb-4">Consultation Services</h2>
+<div class="w-12 h-px bg-muted-gold/40 mb-6"></div>
+<p class="text-on-surface-variant">A tailored approach to understanding your unique path, combining ancient wisdom with modern executive coaching.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+<!-- Card 1: Astrological Guidance (Large) -->
+<div class="md:col-span-8 bg-linen-grey p-10 border border-muted-gold/20 flex flex-col justify-between group hover:bg-surface-container hover:scale-[1.02] transform transition-all duration-500 hover:shadow-lg">
+<div>
+<span class="material-symbols-outlined text-muted-gold text-3xl mb-6">timeline</span>
+<h3 class="font-headline-h2 text-2xl text-cosmic-navy mb-3">Astrological Guidance</h3>
+<p class="text-on-surface-variant max-w-lg mb-8">Comprehensive chart analysis focusing on career trajectory, crucial life transitions, and underlying karmic patterns.</p>
+</div>
+<div class="flex justify-between items-end">
+<span class="font-label-small text-label-small text-on-surface-variant">01 / 05</span>
+<a class="text-cosmic-navy border-b border-cosmic-navy pb-1 font-label-caps text-label-caps hover:text-muted-gold hover:border-muted-gold transition" href="{{DATA:SCREEN:SCREEN_15}}">Explore</a>
+</div>
+</div>
+<!-- Card 2: Life Coaching -->
+<div class="md:col-span-4 bg-surface-container-high p-10 border border-muted-gold/20 flex flex-col justify-between group hover:bg-surface-container hover:scale-[1.02] transform transition-all duration-500 hover:shadow-lg">
+<div>
+<span class="material-symbols-outlined text-muted-gold text-3xl mb-6">psychology</span>
+<h3 class="font-headline-h2 text-2xl text-cosmic-navy mb-3">Life Coaching</h3>
+<p class="text-on-surface-variant mb-8">Strategic mentoring to align your daily actions with your broader cosmic intent.</p>
+</div>
+<div class="flex justify-between items-end">
+<span class="font-label-small text-label-small text-on-surface-variant">02 / 05</span>
+<a class="text-cosmic-navy border-b border-transparent pb-1 font-label-caps text-label-caps group-hover:border-cosmic-navy transition" href="{{DATA:SCREEN:SCREEN_121}}">Explore</a>
+</div>
+</div>
+<!-- Card 3: Healing -->
+<div class="md:col-span-4 bg-surface-container-high p-10 border border-muted-gold/20 flex flex-col justify-between group hover:bg-surface-container hover:scale-[1.02] transform transition-all duration-500 hover:shadow-lg">
+<div>
+<span class="material-symbols-outlined text-muted-gold text-3xl mb-6">self_improvement</span>
+<h3 class="font-headline-h2 text-2xl text-cosmic-navy mb-3">Healing</h3>
+<p class="text-on-surface-variant mb-8">Restorative sessions designed to clear energetic blockages and promote mental clarity.</p>
+</div>
+<div class="flex justify-between items-end">
+<span class="font-label-small text-label-small text-on-surface-variant">03 / 05</span>
+<a class="text-cosmic-navy border-b border-transparent pb-1 font-label-caps text-label-caps group-hover:border-cosmic-navy transition" href="{{DATA:SCREEN:SCREEN_118}}">Explore</a>
+</div>
+</div>
+<!-- Card 4: Counselling -->
+<div class="md:col-span-4 bg-linen-grey p-10 border border-muted-gold/20 flex flex-col justify-between group hover:bg-surface-container hover:scale-[1.02] transform transition-all duration-500 hover:shadow-lg">
+<div>
+<span class="material-symbols-outlined text-muted-gold text-3xl mb-6">forum</span>
+<h3 class="font-headline-h2 text-2xl text-cosmic-navy mb-3">Counselling</h3>
+<p class="text-on-surface-variant mb-8">Confidential, objective dialogue to navigate complex interpersonal or professional dilemmas.</p>
+</div>
+<div class="flex justify-between items-end">
+<span class="font-label-small text-label-small text-on-surface-variant">04 / 05</span>
+<a class="text-cosmic-navy border-b border-transparent pb-1 font-label-caps text-label-caps group-hover:border-cosmic-navy transition" href="{{DATA:SCREEN:SCREEN_122}}">Explore</a>
+</div>
+</div>
+<!-- Card 5: Kundli Milan -->
+<div class="md:col-span-4 bg-surface-container-high p-10 border border-muted-gold/20 flex flex-col justify-between group hover:bg-surface-container hover:scale-[1.02] transform transition-all duration-500 hover:shadow-lg">
+<div>
+<span class="material-symbols-outlined text-muted-gold text-3xl mb-6">join_inner</span>
+<h3 class="font-headline-h2 text-2xl text-cosmic-navy mb-3">Kundli Milan</h3>
+<p class="text-on-surface-variant mb-8">Sophisticated compatibility analysis for high-stakes personal and business partnerships.</p>
+</div>
+<div class="flex justify-between items-end">
+<span class="font-label-small text-label-small text-on-surface-variant">05 / 05</span>
+<a class="text-cosmic-navy border-b border-transparent pb-1 font-label-caps text-label-caps group-hover:border-cosmic-navy transition" href="{{DATA:SCREEN:SCREEN_115}}">Explore</a>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Trust & Authority Section -->
+<section class="py-section-lg bg-surface-container-low border-t border-muted-gold/10" id="about">
+<div class="max-w-container-max mx-auto px-6 md:px-12 grid grid-cols-1 md:grid-cols-12 gap-12 items-center">
+<div class="md:col-span-5">
+<img class="w-full aspect-[4/5] object-cover border border-muted-gold/20" data-alt="A minimalist still-life composition featuring a smooth, polished stone resting on a pristine, textured linen surface. The lighting is soft and directional, casting long, elegant shadows. A single, delicate, dried botanical stem lies nearby. The aesthetic is extremely clean, modern, and embodies 'Silent Luxury' and contemplative stillness." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDi7dnFcTB9ZrnQNYjE7FtldmoJa5Cp4qIuji9Fj2d1A3FZsPuFd0pjpMN9BDdCLEwl8V9khbhx8o1zABdf9S_g-K0g_O3S5JWw0TGehKvAv0FMTuRBCH9uC8R25mbkwl33Duh-1g0_n1YmsjZrX8VI_3uDStsVIpljIZ46PHsDuofXEmMw0CvqVobQXsuJuwEkud1DecYsgDABn7luWxJX1KRIqspunAha2BT9fvUjmf6pnfQ1CYDU"/>
+</div>
+<div class="md:col-span-6 md:col-start-7">
+<span class="font-label-caps text-label-caps text-muted-gold uppercase tracking-widest mb-4 block">The Approach</span>
+<h2 class="font-headline-h1-mobile text-headline-h1-mobile md:font-headline-h1 md:text-headline-h1 text-cosmic-navy mb-8">
+            Why Choose Komal Kalra
+          </h2>
+<div class="space-y-6 text-on-surface-variant font-body-base">
+<p>
+              The practice is built on a foundation of absolute discretion and profound analytical rigor. Moving away from esoteric clichés, the focus is on providing actionable intelligence derived from astrological systems.
+            </p>
+<p>
+              Every consultation is treated as a high-level executive briefing. You receive a structured, objective perspective on your current reality and upcoming cycles, empowering you to make decisions from a place of clarity rather than anxiety.
+            </p>
+<div class="pt-6 border-t border-muted-gold/20 mt-8">
+<ul class="space-y-4">
+<li class="flex items-center space-x-4">
+<span class="material-symbols-outlined text-muted-gold text-sm">check</span>
+<span>Strict Confidentiality Protocols</span>
+</li>
+<li class="flex items-center space-x-4">
+<span class="material-symbols-outlined text-muted-gold text-sm">check</span>
+<span>Evidence-Based Astrological Interpretations</span>
+</li>
+<li class="flex items-center space-x-4">
+<span class="material-symbols-outlined text-muted-gold text-sm">check</span>
+<span>Action-Oriented Coaching Methodologies</span>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Social Proof & Instagram -->
+<section class="py-section-md bg-warm-ivory">
+<div class="max-w-container-max mx-auto px-6 md:px-12">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-16">
+<!-- Testimonial -->
+<div class="flex flex-col justify-center border-l border-muted-gold/30 pl-8">
+<span class="material-symbols-outlined text-muted-gold text-4xl mb-6 opacity-50">format_quote</span>
+<p class="font-headline-h2 text-2xl text-cosmic-navy leading-relaxed mb-8 italic">
+              "The clarity I gained after a single session was unprecedented. It wasn't about fortune-telling; it was about strategic foresight. Highly recommended for any professional navigating complex transitions."
+            </p>
+<div>
+<p class="font-label-caps text-label-caps tracking-widest text-cosmic-navy uppercase">Executive Client</p>
+<p class="text-sm text-on-surface-variant">Technology Sector</p>
+</div>
+</div>
+<!-- Instagram Teaser -->
+<div class="bg-linen-grey p-10 border border-muted-gold/10 flex flex-col items-center text-center">
+<span class="material-symbols-outlined text-cosmic-navy text-3xl mb-4">photo_camera</span>
+<h3 class="font-headline-h2 text-xl text-cosmic-navy mb-4">Curated Insights</h3>
+<p class="text-on-surface-variant mb-8 max-w-sm">Follow for regular reflections on timing, energy management, and leading a conscious professional life.</p>
+<div class="grid grid-cols-2 gap-4 w-full mb-8">
+<div class="aspect-square bg-surface-container border border-muted-gold/10 overflow-hidden">
+<img class="w-full h-full object-cover opacity-80 hover:scale-105 transition duration-500" data-alt="A macro, detailed shot of an antique brass compass resting on top of complex architectural blueprints or minimalist architectural sketches. The lighting is crisp and moody, emphasizing the texture of the paper and the metallic sheen of the compass, conveying direction, precision, and high-end professional planning." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDA7otnExcjJnjKZrMUu7CNh4_mp2QHVAsqnrHs-1ryvIEMVrurgUXIkmjEIdcfwl_kUfFXAxABF8YwpAdeJAVZg9rnZ5JCxqlBcrd-vtusPjLFsghk5OYOtEnsSSuttHwDx3t9Yk7knQA7E6DDBLXLR7X-WfxUWMRS7Ek13BObRPVnIKJNmdZp5mkq1UGqJ_XyGaMghww9jLFi116WJ7ZAKIxTETEDq_VGockxtTuRg1HpxZEfgp9z"/>
+</div>
+<div class="aspect-square bg-surface-container border border-muted-gold/10 overflow-hidden">
+<img class="w-full h-full object-cover opacity-80 hover:scale-105 transition duration-500" data-alt="A serene, minimalist scene of a single lit white candle in a heavy, dark ceramic holder, placed on a clean wooden desk beside an open, high-quality leather-bound journal and a luxury fountain pen. The overall aesthetic is dark academia meets silent luxury, focusing on reflection and mindful journaling." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB77C7NNiTexJbXHor4GfrTHlPLzL5J59xAT2sSN9ZTuZpM3untgw13M9MVI_WvMGm7cWomrdZsx8cRGG0lu_MvZRaYvMNSOtqxQufX_jjeQY4nnpyVCT5cEVK4BFRWsOiuPSRmyLaZGzz7D0lSWwSwYzGxwUKuGF6ydX_7GOSgqdsvo8pi1SgJYoe5QytaAot4DazLPJsxBNm2d-DTGtN6OlGQIM5kE5bDAIes5ZnaHty_P--_A31N"/>
+</div>
+</div>
+<a class="text-cosmic-navy border-b border-cosmic-navy pb-1 font-label-caps text-label-caps hover:text-muted-gold hover:border-muted-gold transition inline-flex items-center space-x-2" href="#">
+<span>View Instagram</span>
+<span class="material-symbols-outlined text-sm">arrow_outward</span>
+</a>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer (Shared Component translated to HTML) -->
+<footer class="w-full py-section-gap-sm bg-cosmic-void dark:bg-cosmic-void border-t border-muted-gold/20 bg-ink-black text-warm-ivory py-16">
+<div class="max-w-container-max mx-auto px-6 md:px-12 grid grid-cols-1 md:grid-cols-3 gap-gutter">
+<div class="col-span-1">
+<h4 class="font-headline-h2 text-headline-h2 text-linen text-2xl mb-6">Komal Kalra</h4>
+<p class="text-surface-variant text-sm mb-6 max-w-xs opacity-70">
+          Precision astrology and executive life coaching.
+        </p>
+<p class="text-surface-variant text-xs opacity-50">
+          © 2024 Astrologer Komal Kalra. All rights reserved.
+        </p>
+</div>
+<div class="col-span-1 flex flex-col space-y-4">
+<a class="text-surface-variant hover:text-marigold transition-colors hover:text-warm-ivory opacity-80 hover:opacity-100 font-label-caps text-label-caps tracking-widest" href="#">Astrological Guidance</a>
+<a class="text-surface-variant hover:text-marigold transition-colors hover:text-warm-ivory opacity-80 hover:opacity-100 font-label-caps text-label-caps tracking-widest" href="#">Life Coaching</a>
+<a class="text-surface-variant hover:text-marigold transition-colors hover:text-warm-ivory opacity-80 hover:opacity-100 font-label-caps text-label-caps tracking-widest" href="#">Healing</a>
+</div>
+<div class="col-span-1 flex flex-col space-y-4 md:items-end">
+<span class="text-surface-variant opacity-80 font-label-caps text-label-caps tracking-widest">Contact: +91 98785 77077</span>
+<span class="text-surface-variant opacity-80 font-label-caps text-label-caps tracking-widest">Contact: +91 91151 77077</span>
+<a class="text-surface-variant hover:text-marigold transition-colors hover:text-warm-ivory opacity-80 hover:opacity-100 font-label-caps text-label-caps tracking-widest mt-4" href="#">Instagram</a>
+</div>
+</div>
+</footer>
+</body></html>

@@ -11,7 +11,7 @@ export default function PrivacyPage() {
   return (
     <article>
       <h1 className="text-[length:var(--text-h1)]">Privacy policy</h1>
-      <p className="mt-2 text-sm text-[var(--color-stone)]">Last updated: {LAST_UPDATED}</p>
+      <p className="mt-2 text-sm text-[var(--color-on-surface-variant)]">Last updated: {LAST_UPDATED}</p>
       <div className="mt-8"><PrivacyContent /></div>
     </article>
   );

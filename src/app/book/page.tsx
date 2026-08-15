@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { ArrowLeft } from 'lucide-react';
+import { X } from 'lucide-react';
 import { BookingFlow } from '@/components/booking/BookingFlow';
 import { getActiveServices } from '@/lib/booking/availability';
 import { getProfile } from '@/lib/auth/session';
@@ -36,44 +36,44 @@ export default async function BookPage(props: {
   const initial = services.find((s) => s.slug === requestedSlug)?.id;
 
   return (
-    <div className="min-h-dvh bg-[var(--color-sand)]">
-      <header className="border-b border-[var(--color-linen)] bg-[var(--color-sand)]">
-        <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-5 lg:px-8">
+    <div className="min-h-dvh bg-[var(--color-warm-ivory)]">
+      {/*
+        Booking chrome is deliberately stripped back — wordmark and an exit,
+        nothing else. The design removes the full navigation here because every
+        link in it is a way to abandon a checkout that already has a slot held.
+      */}
+      <header className="border-b border-[color-mix(in_srgb,var(--color-muted-gold)_20%,transparent)]">
+        <div className="shell flex h-20 items-center justify-between">
           <Link
             href="/"
-            className="inline-flex items-center gap-1.5 text-sm font-medium text-[var(--color-bark)] transition-colors hover:text-[var(--color-ink)]"
+            className="font-[family-name:var(--font-display)] text-2xl font-medium tracking-tight text-[var(--color-cosmic-navy)]"
           >
-            <ArrowLeft className="size-3.5" aria-hidden /> {BRAND.fullName}
+            {BRAND.name}
           </Link>
-          <a
-            href={`tel:${BRAND.phonesE164[0]}`}
-            className="text-sm font-medium text-[var(--color-bark)] hover:text-[var(--color-ink)]"
+          <Link
+            href="/"
+            className="label-caps inline-flex items-center gap-2 text-[var(--color-on-surface-variant)] transition-colors hover:text-[var(--color-cosmic-navy)]"
           >
-            {BRAND.phones[0]}
-          </a>
+            <X className="size-4" aria-hidden />
+            Exit Booking
+          </Link>
         </div>
       </header>
 
-      <main id="main" className="mx-auto max-w-6xl px-5 py-10 lg:px-8 lg:py-14">
-        <h1 className="text-[length:var(--text-h1)]">Book your consultation</h1>
-        <p className="mt-2 max-w-xl text-[15px] leading-relaxed text-[var(--color-bark)]">
-          Pick a time that suits you. Your slot is held while you complete the booking, and
-          you can cancel free of charge up to 24 hours beforehand.
-        </p>
+      <main id="main" className="shell py-12 lg:py-16">
+        <h1 className="sr-only">Book your consultation</h1>
 
-        <div className="mt-10">
-          <BookingFlow
-            services={services}
-            initialServiceId={initial}
-            signedIn={Boolean(profile)}
-            defaults={{
-              fullName: profile?.full_name ?? '',
-              email: profile?.email ?? '',
-              phone: profile?.phone ?? '',
-            }}
-            taxBps={Number(process.env.TAX_BPS ?? 0)}
-          />
-        </div>
+        <BookingFlow
+          services={services}
+          initialServiceId={initial}
+          signedIn={Boolean(profile)}
+          defaults={{
+            fullName: profile?.full_name ?? '',
+            email: profile?.email ?? '',
+            phone: profile?.phone ?? '',
+          }}
+          taxBps={Number(process.env.TAX_BPS ?? 0)}
+        />
       </main>
     </div>
   );

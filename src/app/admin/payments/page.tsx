@@ -79,7 +79,7 @@ export default async function AdminPaymentsPage(props: {
           <Field label="To" htmlFor="p-to" className="w-40">
             <Input name="to" type="date" defaultValue={to} />
           </Field>
-          <Button type="submit" variant="outline">Apply</Button>
+          <Button type="submit" variant="secondary">Apply</Button>
           {(status !== 'all' || from || to) && (
             <Button asChild variant="ghost"><Link href="/admin/payments">Clear</Link></Button>
           )}
@@ -104,31 +104,31 @@ export default async function AdminPaymentsPage(props: {
               </thead>
               <Tbody>
                 {payments.map((p) => (
-                  <tr key={p.id} className="hover:bg-[var(--color-sand)]">
+                  <tr key={p.id} className="hover:bg-[var(--color-warm-ivory)]">
                     <Td>
                       <span className="block text-xs">{formatDateTime(p.paid_at ?? p.created_at)}</span>
                     </Td>
                     <Td>
                       {p.profiles ? (
-                        <Link href={`/admin/clients/${p.profiles.id}`} className="block max-w-[160px] truncate text-sm font-medium hover:text-[var(--color-ember-text)]">
+                        <Link href={`/admin/clients/${p.profiles.id}`} className="block max-w-[160px] truncate text-sm font-medium hover:text-[var(--color-gold-deep)]">
                           {p.profiles.full_name ?? p.profiles.email}
                         </Link>
                       ) : '—'}
                     </Td>
                     <Td>
                       <span className="block max-w-[150px] truncate text-sm">{p.appointments?.service_title_snapshot ?? '—'}</span>
-                      <span className="block text-xs text-[var(--color-stone)]">{p.appointments?.reference}</span>
+                      <span className="block text-xs text-[var(--color-on-surface-variant)]">{p.appointments?.reference}</span>
                     </Td>
                     <Td>
-                      <span className="block max-w-[150px] truncate font-mono text-[11px] text-[var(--color-stone)]">
+                      <span className="block max-w-[150px] truncate font-mono text-[11px] text-[var(--color-on-surface-variant)]">
                         {p.provider_payment_id ?? p.provider_order_id ?? '—'}
                       </span>
-                      {p.method && <span className="block text-[11px] uppercase text-[var(--color-stone)]">{p.method}</span>}
+                      {p.method && <span className="block text-[11px] uppercase text-[var(--color-on-surface-variant)]">{p.method}</span>}
                     </Td>
                     <Td>
                       <PaymentStatusBadge status={p.status} />
                       {p.status === 'failed' && p.error_description && (
-                        <span className="mt-1 block max-w-[150px] truncate text-[11px] text-[var(--color-clay)]" title={p.error_description}>
+                        <span className="mt-1 block max-w-[150px] truncate text-[11px] text-[var(--color-error)]" title={p.error_description}>
                           {p.error_description}
                         </span>
                       )}
@@ -136,8 +136,8 @@ export default async function AdminPaymentsPage(props: {
                     <Td align="right"><span className="tabular text-sm font-medium">{formatPaisePrecise(p.amount_paise)}</span></Td>
                     <Td align="right">
                       {p.amount_refunded_paise > 0 ? (
-                        <span className="tabular text-sm text-[var(--color-indigo)]">{formatPaisePrecise(p.amount_refunded_paise)}</span>
-                      ) : <span className="text-xs text-[var(--color-stone)]">—</span>}
+                        <span className="tabular text-sm text-[var(--color-cosmic-navy)]">{formatPaisePrecise(p.amount_refunded_paise)}</span>
+                      ) : <span className="text-xs text-[var(--color-on-surface-variant)]">—</span>}
                     </Td>
                     <Td align="right">
                       <div className="flex items-center justify-end gap-2">
@@ -152,7 +152,7 @@ export default async function AdminPaymentsPage(props: {
                         {p.receipt_number && p.appointments && (
                           <Link
                             href={`/admin/appointments?ref=${p.appointments.reference}`}
-                            className="text-xs font-medium text-[var(--color-ember-text)] hover:underline"
+                            className="text-xs font-medium text-[var(--color-gold-deep)] hover:underline"
                           >
                             Booking
                           </Link>

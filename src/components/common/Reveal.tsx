@@ -36,8 +36,8 @@ export function Reveal({
   const ref = useRef<HTMLDivElement>(null);
   // Must start `false` on both server and client: the server never has
   // IntersectionObserver, so seeding this from `typeof IntersectionObserver`
-  // makes the very first client render disagree with the SSR output and
-  // React refuses to patch up the resulting hydration mismatch.
+  // would make the first client render disagree with the SSR output, and React
+  // refuses to patch up the resulting hydration mismatch.
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {

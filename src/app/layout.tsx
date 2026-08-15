@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next';
-import { Inter, Fraunces } from 'next/font/google';
+import { Public_Sans, Playfair_Display } from 'next/font/google';
 import { Toaster } from 'sonner';
 import { BRAND } from '@/lib/config';
 import './globals.css';
@@ -9,17 +9,18 @@ import './globals.css';
  * third-party CDN, no layout shift from a late swap, and no privacy question
  * about who is being told which pages a visitor loads.
  */
-const inter = Inter({
+const publicSans = Public_Sans({
   subsets: ['latin'],
-  variable: '--font-inter',
+  weight: ['400', '500', '600'],
+  variable: '--font-public-sans',
   display: 'swap',
 });
 
-const fraunces = Fraunces({
+const playfair = Playfair_Display({
   subsets: ['latin'],
-  variable: '--font-fraunces',
+  weight: ['500', '600'],
+  variable: '--font-playfair',
   display: 'swap',
-  axes: ['SOFT', 'WONK', 'opsz'],
 });
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000';
@@ -56,14 +57,14 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: '#FAF7F2',
+  themeColor: '#fef9f2',
   width: 'device-width',
   initialScale: 1,
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${inter.variable} ${fraunces.variable}`}>
+    <html lang="en" className={`${publicSans.variable} ${playfair.variable}`}>
       <body>
         {/* First focusable element on every page. */}
         <a href="#main" className="skip-link">Skip to content</a>
@@ -73,8 +74,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           toastOptions={{
             style: {
               background: '#fff',
-              border: '1px solid var(--color-linen)',
-              color: 'var(--color-ink)',
+              border: '1px solid var(--color-outline-variant)',
+              color: 'var(--color-cosmic-navy)',
             },
           }}
         />

@@ -30,6 +30,11 @@ def lum(h):
     return .2126*c[0]+.7152*c[1]+.0722*c[2]
 def ratio(a,b):
     la,lb=lum(a),lum(b); hi,lo=max(la,lb),min(la,lb); return (hi+.05)/(lo+.05)
+# Tokens that are BORDERS or DECORATION, never text. Measuring them as
+# foregrounds produces failures for things that are working as designed —
+# `outline` is a 3.9:1 hairline and is supposed to be.
+NON_TEXT = {'outline', 'outline-variant', 'muted-gold'}
+
 def resolve(t): return '#FFFFFF' if t=='white' else TOKENS.get(t)
 
 # The trailing (?!/) matters: `bg-white/[0.08]` is a TRANSLUCENT overlay whose
@@ -66,6 +71,7 @@ problems, checked = [], 0
 for p in sorted(root.rglob('*.tsx')):
     for m in cls_re.finditer(p.read_text()):
         for state, fgt, bgt in pairs_for(m.group(1)):
+            if fgt in NON_TEXT: continue
             fg, bg = resolve(fgt), resolve(bgt)
             if not (fg and bg): continue
             checked += 1

@@ -66,12 +66,12 @@ export default async function DashboardPage() {
 
       {/* Next appointment — the reason this page exists. */}
       <section aria-labelledby="next-heading" className="mt-8">
-        <h2 id="next-heading" className="font-sans text-sm font-semibold uppercase tracking-[0.1em] text-[var(--color-stone)]">
+        <h2 id="next-heading" className="font-sans text-sm font-semibold uppercase tracking-[0.1em] text-[var(--color-on-surface-variant)]">
           Next appointment
         </h2>
 
         {next ? (
-          <div className="mt-3 rounded-[var(--radius-card)] border border-[var(--color-ember)]/30 bg-white p-6">
+          <div className="mt-3  border border-[var(--color-muted-gold)]/30 bg-white p-6">
             <div className="flex flex-wrap items-start justify-between gap-4">
               <div>
                 <div className="flex items-center gap-3">
@@ -80,13 +80,13 @@ export default async function DashboardPage() {
                   </h3>
                   <AppointmentStatusBadge status={next.status} />
                 </div>
-                <p className="mt-2 text-[15px] text-[var(--color-bark)]">
+                <p className="mt-2 text-[15px] text-[var(--color-on-surface-variant)]">
                   {formatLongDay(next.starts_at)}
                 </p>
-                <p className="tabular mt-0.5 text-[15px] font-medium text-[var(--color-ink)]">
+                <p className="tabular mt-0.5 text-[15px] font-medium text-[var(--color-cosmic-navy)]">
                   {formatTime(next.starts_at)} – {formatTime(next.ends_at)} IST
                 </p>
-                <p className="mt-2 text-xs text-[var(--color-stone)]">
+                <p className="mt-2 text-xs text-[var(--color-on-surface-variant)]">
                   Reference {next.reference} · {relativeTime(next.starts_at)}
                 </p>
               </div>
@@ -99,7 +99,7 @@ export default async function DashboardPage() {
                     </a>
                   </Button>
                 )}
-                <Button asChild variant="outline" size="sm">
+                <Button asChild variant="secondary" size="sm">
                   <Link href={`/dashboard/appointments/${next.id}`}>
                     Manage booking <ArrowRight aria-hidden />
                   </Link>
@@ -137,22 +137,22 @@ export default async function DashboardPage() {
       <div className="mt-8 grid gap-6 lg:grid-cols-2">
         <section aria-labelledby="recent-heading">
           <div className="flex items-center justify-between">
-            <h2 id="recent-heading" className="font-sans text-sm font-semibold uppercase tracking-[0.1em] text-[var(--color-stone)]">
+            <h2 id="recent-heading" className="font-sans text-sm font-semibold uppercase tracking-[0.1em] text-[var(--color-on-surface-variant)]">
               Recent bookings
             </h2>
-            <Link href="/dashboard/appointments" className="text-sm font-medium text-[var(--color-ember-text)] hover:underline">
+            <Link href="/dashboard/appointments" className="text-sm font-medium text-[var(--color-gold-deep)] hover:underline">
               View all
             </Link>
           </div>
 
           {appointments.length > 0 ? (
-            <ul className="mt-3 divide-y divide-[var(--color-linen)] rounded-[var(--radius-card)] border border-[var(--color-linen)] bg-white">
+            <ul className="mt-3 divide-y divide-[var(--color-outline-variant)]  border border-[var(--color-outline-variant)] bg-white">
               {appointments.slice(0, 4).map((a) => (
                 <li key={a.id}>
-                  <Link href={`/dashboard/appointments/${a.id}`} className="flex items-center justify-between gap-4 px-5 py-3.5 hover:bg-[var(--color-sand)]">
+                  <Link href={`/dashboard/appointments/${a.id}`} className="flex items-center justify-between gap-4 px-5 py-3.5 hover:bg-[var(--color-warm-ivory)]">
                     <div className="min-w-0">
                       <p className="truncate text-sm font-medium">{a.service_title_snapshot}</p>
-                      <p className="mt-0.5 text-xs text-[var(--color-stone)]">{formatLongDay(a.starts_at)}</p>
+                      <p className="mt-0.5 text-xs text-[var(--color-on-surface-variant)]">{formatLongDay(a.starts_at)}</p>
                     </div>
                     <AppointmentStatusBadge status={a.status} />
                   </Link>
@@ -167,17 +167,17 @@ export default async function DashboardPage() {
         </section>
 
         <section aria-labelledby="notif-heading">
-          <h2 id="notif-heading" className="font-sans text-sm font-semibold uppercase tracking-[0.1em] text-[var(--color-stone)]">
+          <h2 id="notif-heading" className="font-sans text-sm font-semibold uppercase tracking-[0.1em] text-[var(--color-on-surface-variant)]">
             Notifications
           </h2>
 
           {notifications.length > 0 ? (
-            <ul className="mt-3 divide-y divide-[var(--color-linen)] rounded-[var(--radius-card)] border border-[var(--color-linen)] bg-white">
+            <ul className="mt-3 divide-y divide-[var(--color-outline-variant)]  border border-[var(--color-outline-variant)] bg-white">
               {notifications.map((n) => (
                 <li key={n.id} className="px-5 py-3.5">
                   <p className="text-sm font-medium">{n.title}</p>
-                  <p className="mt-0.5 text-xs leading-relaxed text-[var(--color-stone)]">{n.message}</p>
-                  <p className="mt-1 text-[11px] text-[var(--color-stone)]">{relativeTime(n.created_at)}</p>
+                  <p className="mt-0.5 text-xs leading-relaxed text-[var(--color-on-surface-variant)]">{n.message}</p>
+                  <p className="mt-1 text-[11px] text-[var(--color-on-surface-variant)]">{relativeTime(n.created_at)}</p>
                 </li>
               ))}
             </ul>

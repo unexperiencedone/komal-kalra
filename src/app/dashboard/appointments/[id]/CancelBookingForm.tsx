@@ -35,10 +35,10 @@ export function CancelBookingForm({
 
       {mode === 'idle' && (
         <div className="flex flex-wrap gap-3">
-          <Button variant="outline" size="sm" onClick={() => setMode('reschedule')}>
+          <Button variant="secondary" size="sm" onClick={() => setMode('reschedule')}>
             Request a different time
           </Button>
-          <Button variant="ghost" size="sm" onClick={() => setMode('cancel')} className="text-[var(--color-clay)]">
+          <Button variant="ghost" size="sm" onClick={() => setMode('cancel')} className="text-[var(--color-error)]">
             Cancel this booking
           </Button>
         </div>

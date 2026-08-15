@@ -45,10 +45,10 @@ export function HoldTimer({
   return (
     <div
       className={cn(
-        'flex items-center gap-2 rounded-[var(--radius-control)] border px-3.5 py-2 text-sm',
+        'flex items-center gap-2  border px-3.5 py-2 text-sm',
         urgent
-          ? 'border-[var(--color-amber-warn)]/30 bg-[var(--color-amber-tint)] text-[var(--color-amber-warn)]'
-          : 'border-[var(--color-linen)] bg-white text-[var(--color-bark)]',
+          ? 'border-[var(--color-warning)]/30 bg-[var(--color-warning-container)] text-[var(--color-warning)]'
+          : 'border-[var(--color-outline-variant)] bg-white text-[var(--color-on-surface-variant)]',
       )}
     >
       <Timer className="size-4 shrink-0" aria-hidden />

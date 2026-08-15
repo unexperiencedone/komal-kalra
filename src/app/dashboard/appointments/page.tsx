@@ -41,7 +41,7 @@ export default async function AppointmentsPage() {
           {Object.entries(groups).map(([label, list]) =>
             list.length === 0 ? null : (
               <section key={label} aria-labelledby={`group-${label}`}>
-                <h2 id={`group-${label}`} className="font-sans text-sm font-semibold uppercase tracking-[0.1em] text-[var(--color-stone)]">
+                <h2 id={`group-${label}`} className="font-sans text-sm font-semibold uppercase tracking-[0.1em] text-[var(--color-on-surface-variant)]">
                   {label} ({list.length})
                 </h2>
                 <ul className="mt-3 space-y-2.5">
@@ -49,17 +49,17 @@ export default async function AppointmentsPage() {
                     <li key={a.id}>
                       <Link
                         href={`/dashboard/appointments/${a.id}`}
-                        className="flex flex-wrap items-center justify-between gap-4 rounded-[var(--radius-card)] border border-[var(--color-linen)] bg-white px-5 py-4 transition-colors hover:border-[var(--color-ember)]/40"
+                        className="flex flex-wrap items-center justify-between gap-4  border border-[var(--color-outline-variant)] bg-white px-5 py-4 transition-colors hover:border-[var(--color-muted-gold)]/40"
                       >
                         <div className="min-w-0">
                           <div className="flex flex-wrap items-center gap-2.5">
                             <p className="font-sans text-[15px] font-semibold">{a.service_title_snapshot}</p>
                             <AppointmentStatusBadge status={a.status} />
                           </div>
-                          <p className="mt-1 text-sm text-[var(--color-bark)]">
+                          <p className="mt-1 text-sm text-[var(--color-on-surface-variant)]">
                             {formatLongDay(a.starts_at)} · <span className="tabular">{formatTime(a.starts_at)}</span>
                           </p>
-                          <p className="mt-0.5 text-xs text-[var(--color-stone)]">Reference {a.reference}</p>
+                          <p className="mt-0.5 text-xs text-[var(--color-on-surface-variant)]">Reference {a.reference}</p>
                         </div>
                         <p className="tabular text-sm font-semibold">{formatPaise(a.total_paise)}</p>
                       </Link>

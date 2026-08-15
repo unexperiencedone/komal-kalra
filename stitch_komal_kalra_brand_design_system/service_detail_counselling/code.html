@@ -1,0 +1,356 @@
+<!DOCTYPE html><html class="scroll-smooth" lang="en" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Counselling - Komal Kalra</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&amp;family=Public+Sans:wght@300;400;500;600&amp;display=swap" rel="stylesheet">
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Config -->
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "secondary-fixed": "#ffdcc3",
+                      "secondary-fixed-dim": "#ffb77e",
+                      "outline-variant": "#c6c6cc",
+                      "primary-container": "#1a1f2c",
+                      "warm-ivory": "#fef9f2",
+                      "secondary-container": "#fda861",
+                      "on-primary-fixed": "#161b28",
+                      "ink-black": "#17120e",
+                      "on-tertiary-fixed-variant": "#484742",
+                      "on-secondary-fixed-variant": "#6e3900",
+                      "on-primary-container": "#828697",
+                      "on-error": "#ffffff",
+                      "on-primary-fixed-variant": "#424655",
+                      "on-error-container": "#93000a",
+                      "secondary": "#8e4e0b",
+                      "tertiary-fixed": "#e6e2db",
+                      "on-tertiary": "#ffffff",
+                      "primary-fixed": "#dee2f4",
+                      "surface": "#fdf9f2",
+                      "error-container": "#ffdad6",
+                      "surface-variant": "#e6e2db",
+                      "inverse-primary": "#c2c6d8",
+                      "surface-container-low": "#f8f3ec",
+                      "error": "#ba1a1a",
+                      "on-secondary-container": "#743c00",
+                      "background": "#fdf9f2",
+                      "tertiary": "#070604",
+                      "primary-fixed-dim": "#c2c6d8",
+                      "outline": "#76777c",
+                      "tertiary-container": "#201f1b",
+                      "inverse-on-surface": "#f5f0e9",
+                      "surface-container-lowest": "#ffffff",
+                      "on-secondary": "#ffffff",
+                      "on-secondary-fixed": "#2f1500",
+                      "on-surface": "#1d1c18",
+                      "on-tertiary-container": "#898681",
+                      "cosmic-navy": "#1a1f2c",
+                      "tertiary-fixed-dim": "#cac6bf",
+                      "on-tertiary-fixed": "#1d1c18",
+                      "muted-gold": "#a45f1e",
+                      "surface-bright": "#fdf9f2",
+                      "inverse-surface": "#32302c",
+                      "on-primary": "#ffffff",
+                      "on-background": "#1d1c18",
+                      "on-surface-variant": "#45464c",
+                      "surface-container": "#f2ede6",
+                      "surface-tint": "#595e6d",
+                      "surface-container-highest": "#e6e2db",
+                      "surface-container-high": "#ece8e1",
+                      "surface-dim": "#ded9d3",
+                      "primary": "#030612",
+                      "linen-grey": "#ece7e1"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "section-lg": "120px",
+                      "unit": "8px",
+                      "section-md": "80px",
+                      "container-max": "1280px",
+                      "gutter": "24px"
+              },
+              "fontFamily": {
+                      "body-base": [
+                              "Public Sans"
+                      ],
+                      "display-lg": [
+                              "Playfair Display"
+                      ],
+                      "headline-h2": [
+                              "Playfair Display"
+                      ],
+                      "label-caps": [
+                              "Public Sans"
+                      ],
+                      "display-lg-mobile": [
+                              "Playfair Display"
+                      ],
+                      "headline-h1-mobile": [
+                              "Playfair Display"
+                      ],
+                      "headline-h1": [
+                              "Playfair Display"
+                      ],
+                      "label-small": [
+                              "Public Sans"
+                      ],
+                      "body-lg": [
+                              "Public Sans"
+                      ]
+              },
+              "fontSize": {
+                      "body-base": [
+                              "16px",
+                              {
+                                      "lineHeight": "1.6",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "display-lg": [
+                              "72px",
+                              {
+                                      "lineHeight": "1.1",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "headline-h2": [
+                              "36px",
+                              {
+                                      "lineHeight": "1.3",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "label-caps": [
+                              "12px",
+                              {
+                                      "lineHeight": "1.2",
+                                      "letterSpacing": "0.12em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "display-lg-mobile": [
+                              "40px",
+                              {
+                                      "lineHeight": "1.15",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "headline-h1-mobile": [
+                              "32px",
+                              {
+                                      "lineHeight": "1.2",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "headline-h1": [
+                              "48px",
+                              {
+                                      "lineHeight": "1.2",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "label-small": [
+                              "11px",
+                              {
+                                      "lineHeight": "1.2",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "body-lg": [
+                              "18px",
+                              {
+                                      "lineHeight": "1.6",
+                                      "fontWeight": "400"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+      </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface antialiased selection:bg-muted-gold selection:text-white">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 bg-surface/92 backdrop-blur-md dark:bg-cosmic-void/92 shadow-sm dark:shadow-none">
+<div class="max-w-container-max mx-auto px-6 md:px-12 lg:px-[48px] flex justify-between items-center h-20">
+<!-- Brand -->
+<a class="font-headline-h3 text-headline-h3 text-primary dark:text-primary-fixed-dim tracking-tight" href="#">Komal Kalra</a>
+<!-- Navigation Links (Desktop) -->
+<div class="hidden md:flex space-x-8 items-center font-body-base text-body-base">
+<a class="text-on-surface-variant dark:text-surface-variant hover:text-primary transition-colors duration-300" href="#">Guidance</a>
+<a class="text-on-surface-variant dark:text-surface-variant hover:text-primary transition-colors duration-300" href="#">Coaching</a>
+<!-- Active Link: Healing selected as closest semantic match for Counselling -->
+<a class="text-primary dark:text-primary-fixed-dim border-b-2 border-primary pb-1 hover:text-primary transition-colors duration-300" href="#">Healing</a>
+<a class="text-on-surface-variant dark:text-surface-variant hover:text-primary transition-colors duration-300" href="#">About</a>
+</div>
+<!-- Actions -->
+<div class="flex items-center space-x-6">
+<button class="hidden md:inline-flex items-center justify-center bg-cosmic-navy text-warm-ivory font-body-base text-body-base px-6 py-2 rounded-none hover:bg-ink-black transition-colors duration-300 scale-95 duration-200">
+                    Book Consultation
+                </button>
+<button class="text-primary dark:text-primary-fixed-dim hover:text-primary transition-colors duration-300">
+<span class="material-symbols-outlined" data-icon="account_circle">account_circle</span>
+</button>
+</div>
+</div>
+</nav>
+<!-- Main Content Canvas -->
+<main class="pt-32">
+<!-- Hero Section: Editorial Layout -->
+<section class="max-w-container-max mx-auto px-6 md:px-12 lg:px-[48px] mb-section-lg">
+<div class="grid grid-cols-1 md:grid-cols-12 gap-gutter items-center">
+<!-- Text Anchor (5 cols) -->
+<div class="md:col-span-5 flex flex-col space-y-6 z-10 py-12">
+<span class="font-label-caps text-label-caps text-muted-gold tracking-widest uppercase">Specialized Service</span>
+<h1 class="font-display-lg-mobile text-display-lg-mobile md:font-display-lg md:text-display-lg text-cosmic-navy leading-tight">
+                        Counselling
+                    </h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-md">
+                        A practice centered on compassionate dialogue. Here, silence is as profound as speech, designed to untangle complexity and restore clarity.
+                    </p>
+<div class="pt-4">
+<a class="inline-flex items-center space-x-2 text-cosmic-navy font-body-base text-body-base border-b border-cosmic-navy pb-1 hover:text-muted-gold hover:border-muted-gold transition-all duration-300" href="#booking">
+<span class="">Explore Details</span>
+<span class="material-symbols-outlined text-sm">arrow_downward</span>
+</a>
+</div>
+</div>
+<!-- High-End Image (7 cols) -->
+<div class="md:col-span-7 h-[600px] w-full relative group">
+<img alt="A premium hero image for a professional Counselling service. The style is 'Silent Luxury'—discreet, compassionate, and intellectual. The image captures the essence of a 'celestial consultation': a close-up of a hand-drawn, antique star chart on heavy, cream-colored parchment, with soft, warm light illuminating a specific constellation." class="w-full h-full object-cover grayscale-[20%] group-hover:grayscale-0 transition-all duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuApY59Sd3XLLXUEC-KNs4xQqSgxAmXx6du-ItzFys9yfWDL-4ViyXSKDi3BX27QcY6BlxVq1kIWFLPfUECYImApIpJXch9zI29l2mc-qDZv2W7jcEjvLkXpLR0KeTH8VJcl9itlBxAny_lweDsycm3ayUEgB205Zkeu2WgzVGumJ5SQ_qeAJVEHuTTt0O3qwkE18nnG4NMcxlAQoz2GZXUtsqn1l2Qkhxq0j08zQWEycVWm6AK8sT97">
+<!-- Subtle Frame -->
+<div class="absolute inset-0 border border-muted-gold/20 pointer-events-none"></div>
+</div>
+</div>
+</section>
+<!-- The Approach Section: Minimalist Grid -->
+<section class="bg-surface-container-low py-section-lg">
+<div class="max-w-container-max mx-auto px-6 md:px-12 lg:px-[48px]">
+<div class="flex flex-col md:flex-row justify-between items-end mb-16">
+<h2 class="font-headline-h2 text-headline-h2 text-cosmic-navy max-w-lg">
+                        The Architecture of <br><span class="italic text-muted-gold">Compassionate Dialogue</span>
+</h2>
+<p class="font-body-base text-body-base text-on-surface-variant max-w-sm mt-6 md:mt-0">
+                        Our methodology eschews clinical sterility for a curated environment of empathy, ensuring every session is rooted in deliberate growth.
+                    </p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+<!-- Pillar 1 -->
+<div class="border-t border-outline-variant pt-8 flex flex-col space-y-4 hover:border-cosmic-navy transition-colors duration-500 cursor-default group">
+<span class="font-label-caps text-label-caps text-muted-gold">01</span>
+<h3 class="font-headline-h2 text-[24px] text-cosmic-navy">Safe Space</h3>
+<p class="font-body-base text-body-base text-on-surface-variant group-hover:text-on-surface transition-colors duration-300">
+                            A rigorously protected environment where vulnerability is met with absolute non-judgment. The foundation of all meaningful therapeutic work.
+                        </p>
+</div>
+<!-- Pillar 2 -->
+<div class="border-t border-outline-variant pt-8 flex flex-col space-y-4 hover:border-cosmic-navy transition-colors duration-500 cursor-default group">
+<span class="font-label-caps text-label-caps text-muted-gold">02</span>
+<h3 class="font-headline-h2 text-[24px] text-cosmic-navy">Objective Insight</h3>
+<p class="font-body-base text-body-base text-on-surface-variant group-hover:text-on-surface transition-colors duration-300">
+                            Moving beyond mere listening to provide clear, structural perspectives on emotional patterns. Clarity achieved through quiet authority.
+                        </p>
+</div>
+<!-- Pillar 3 -->
+<div class="border-t border-outline-variant pt-8 flex flex-col space-y-4 hover:border-cosmic-navy transition-colors duration-500 cursor-default group">
+<span class="font-label-caps text-label-caps text-muted-gold">03</span>
+<h3 class="font-headline-h2 text-[24px] text-cosmic-navy">Curated Growth</h3>
+<p class="font-body-base text-body-base text-on-surface-variant group-hover:text-on-surface transition-colors duration-300">
+                            Translating insight into actionable architecture for your daily life. An elegant progression toward personal sovereignty and balance.
+                        </p>
+</div>
+</div>
+</div>
+</section>
+<!-- Pricing & Confidentiality: Asymmetric Bento -->
+<section class="max-w-container-max mx-auto px-6 md:px-12 lg:px-[48px] py-section-lg" id="booking">
+<div class="grid grid-cols-1 md:grid-cols-12 gap-gutter">
+<!-- Confidentiality Assurance (Left) -->
+<div class="md:col-span-5 md:col-start-1 flex flex-col justify-center space-y-6 pr-0 md:pr-12">
+<div class="w-12 h-12 rounded-full border border-muted-gold flex items-center justify-center text-muted-gold mb-4">
+<span class="material-symbols-outlined">lock</span>
+</div>
+<h2 class="font-headline-h2 text-[28px] text-cosmic-navy">Absolute Discretion</h2>
+<p class="font-body-base text-body-base text-on-surface-variant">
+                        In the realm of silent luxury, privacy is the ultimate currency. We guarantee absolute confidentiality, providing a hermetic seal around your personal narrative. What is spoken remains explicitly within the confines of our dialogue.
+                    </p>
+</div>
+<!-- Pricing Card (Right Bento) -->
+<div class="md:col-span-6 md:col-start-7 bg-warm-ivory border border-linen-grey p-10 flex flex-col justify-between min-h-[400px]">
+<div class="flex justify-between items-start border-b border-linen-grey pb-8">
+<div>
+<h3 class="font-headline-h2 text-cosmic-navy">Session Rate</h3>
+<p class="font-body-base text-body-base text-on-surface-variant mt-2">Comprehensive 60-minute dialogue.</p>
+</div>
+<div class="text-right">
+<span class="font-display-lg text-[48px] text-cosmic-navy block leading-none">$250</span>
+<span class="font-label-caps text-label-caps text-muted-gold uppercase mt-2 block">Per Hour</span>
+</div>
+</div>
+<div class="pt-8 flex flex-col space-y-6">
+<ul class="space-y-3 font-body-base text-body-base text-on-surface-variant">
+<li class="flex items-center space-x-3">
+<span class="material-symbols-outlined text-muted-gold text-sm">check</span>
+<span class="">In-person or secure digital consultation</span>
+</li>
+<li class="flex items-center space-x-3">
+<span class="material-symbols-outlined text-muted-gold text-sm">check</span>
+<span class="">Tailored therapeutic roadmap</span>
+</li>
+</ul>
+<button class="w-full bg-cosmic-navy text-warm-ivory font-body-base text-body-base py-4 rounded-none hover:bg-ink-black transition-colors duration-300 flex justify-center items-center space-x-2">
+<span class="">Reserve Time</span>
+<span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-cosmic-void dark:bg-cosmic-void w-full py-section-gap-sm">
+<!-- Using inline style overrides for the deeply dark cosmic-void background to ensure text visibility per design system -->
+<div class="bg-[#1a1f2c] pt-24 pb-12 border-t border-muted-gold/20">
+<div class="max-w-container-max mx-auto px-6 md:px-12 lg:px-[48px] grid grid-cols-1 md:grid-cols-3 gap-gutter items-center">
+<!-- Brand -->
+<div class="col-span-1">
+<span class="font-headline-h2 text-headline-h2 text-linen-grey block mb-2">Komal Kalra</span>
+</div>
+<!-- Links -->
+<div class="col-span-1 md:col-span-2 flex flex-wrap justify-end gap-x-8 gap-y-4 font-body-base text-body-base">
+<a class="text-surface-variant hover:text-muted-gold transition-colors opacity-80 hover:opacity-100" href="#">Astrological Guidance</a>
+<a class="text-surface-variant hover:text-muted-gold transition-colors opacity-80 hover:opacity-100" href="#">Life Coaching</a>
+<a class="text-surface-variant hover:text-muted-gold transition-colors opacity-80 hover:opacity-100" href="#">Healing</a>
+<a class="text-surface-variant hover:text-muted-gold transition-colors opacity-80 hover:opacity-100" href="#">Contact: +91 98785 77077</a>
+<a class="text-surface-variant hover:text-muted-gold transition-colors opacity-80 hover:opacity-100" href="#">Instagram</a>
+</div>
+</div>
+<div class="max-w-container-max mx-auto px-6 md:px-12 lg:px-[48px] mt-16 pt-8 border-t border-white/10 flex justify-between items-center text-on-surface-variant">
+<span class="font-body-base text-sm opacity-60">© 2024 Astrologer Komal Kalra. All rights reserved.</span>
+</div>
+</div>
+</footer>
+
+
+</body></html>

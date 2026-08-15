@@ -74,8 +74,8 @@ export default async function AdminLeadsPage(props: {
             aria-current={status === s ? 'page' : undefined}
             className={`rounded-full px-3.5 py-1.5 text-sm font-medium capitalize transition-colors ${
               status === s
-                ? 'bg-[var(--color-ink)] text-[var(--color-sand)]'
-                : 'bg-[var(--color-linen)] text-[var(--color-bark)] hover:bg-[var(--color-linen-hover)]'
+                ? 'bg-[var(--color-cosmic-navy)] text-[var(--color-warm-ivory)]'
+                : 'bg-[var(--color-outline-variant)] text-[var(--color-on-surface-variant)] hover:bg-[var(--color-surface-high)]'
             }`}
           >
             {s}
@@ -94,7 +94,7 @@ export default async function AdminLeadsPage(props: {
       ) : (
         <ul className="mt-8 space-y-3">
           {leads.map((lead) => (
-            <li key={lead.id} className="rounded-[var(--radius-card)] border border-[var(--color-linen)] bg-white p-5">
+            <li key={lead.id} className="border border-[var(--color-outline-variant)] bg-white p-5">
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div className="min-w-0">
                   <div className="flex flex-wrap items-center gap-2.5">
@@ -107,26 +107,26 @@ export default async function AdminLeadsPage(props: {
 
                   <div className="mt-2 flex flex-wrap gap-x-5 gap-y-1 text-sm">
                     {lead.phone && (
-                      <a href={`tel:${lead.phone}`} className="flex items-center gap-1.5 text-[var(--color-bark)] hover:text-[var(--color-ember-text)]">
+                      <a href={`tel:${lead.phone}`} className="flex items-center gap-1.5 text-[var(--color-on-surface-variant)] hover:text-[var(--color-gold-deep)]">
                         <Phone className="size-3.5" aria-hidden /> {lead.phone}
                       </a>
                     )}
                     {lead.email && (
-                      <a href={`mailto:${lead.email}`} className="flex items-center gap-1.5 text-[var(--color-bark)] hover:text-[var(--color-ember-text)]">
+                      <a href={`mailto:${lead.email}`} className="flex items-center gap-1.5 text-[var(--color-on-surface-variant)] hover:text-[var(--color-gold-deep)]">
                         <Mail className="size-3.5" aria-hidden /> {lead.email}
                       </a>
                     )}
                   </div>
 
                   {lead.message && (
-                    <p className="mt-3 max-w-2xl whitespace-pre-wrap text-sm leading-relaxed text-[var(--color-bark)]">
+                    <p className="mt-3 max-w-2xl whitespace-pre-wrap text-sm leading-relaxed text-[var(--color-on-surface-variant)]">
                       {lead.message}
                     </p>
                   )}
 
                   {/* Context that makes an abandoned booking actionable. */}
                   {lead.source === 'abandoned_booking' && (
-                    <p className="mt-3 rounded-[var(--radius-control)] bg-[var(--color-amber-tint)] px-3.5 py-2.5 text-xs leading-relaxed text-[var(--color-amber-warn)]">
+                    <p className="mt-3  bg-[var(--color-warning-container)] px-3.5 py-2.5 text-xs leading-relaxed text-[var(--color-warning)]">
                       Wanted <strong>{lead.services?.title ?? 'a consultation'}</strong>
                       {lead.intended_slot_at && <> on <strong>{formatLongDay(lead.intended_slot_at)}</strong></>}
                       {' '}but did not complete payment. Worth a call.
@@ -134,18 +134,18 @@ export default async function AdminLeadsPage(props: {
                   )}
 
                   {lead.assigned_note && (
-                    <p className="mt-3 border-l-2 border-[var(--color-linen)] pl-3 text-xs italic text-[var(--color-stone)]">
+                    <p className="mt-3 border-l-2 border-[var(--color-outline-variant)] pl-3 text-xs italic text-[var(--color-on-surface-variant)]">
                       {lead.assigned_note}
                     </p>
                   )}
 
-                  <p className="mt-3 text-xs text-[var(--color-stone)]">
+                  <p className="mt-3 text-xs text-[var(--color-on-surface-variant)]">
                     {formatDateTime(lead.created_at)} · {relativeTime(lead.created_at)}
                   </p>
                 </div>
               </div>
 
-              <form action={updateLead} className="mt-4 flex flex-wrap items-end gap-3 border-t border-[var(--color-linen)] pt-4">
+              <form action={updateLead} className="mt-4 flex flex-wrap items-end gap-3 border-t border-[var(--color-outline-variant)] pt-4">
                 <input type="hidden" name="leadId" value={lead.id} />
                 <Field label="Status" htmlFor={`s-${lead.id}`} className="w-40">
                   <Select name="status" defaultValue={lead.status}>
@@ -159,7 +159,7 @@ export default async function AdminLeadsPage(props: {
                 <Field label="Follow-up note" htmlFor={`n-${lead.id}`} className="min-w-[240px] flex-1">
                   <Textarea name="assignedNote" rows={2} defaultValue={lead.assigned_note ?? ''} placeholder="Called, left a message…" />
                 </Field>
-                <Button type="submit" size="sm" variant="outline">Update</Button>
+                <Button type="submit" size="sm" variant="secondary">Update</Button>
               </form>
             </li>
           ))}

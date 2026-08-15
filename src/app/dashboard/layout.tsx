@@ -34,9 +34,10 @@ export default async function DashboardLayout({ children }: { children: React.Re
   return (
     <AppShell
       nav={nav}
-      title="My account"
+      title="Your Account"
       user={{ name: profile.full_name, email: profile.email, role: profile.role }}
       signOutAction={signOut}
+      primaryAction={{ href: '/book', label: 'Book a Session' }}
     >
       {children}
     </AppShell>

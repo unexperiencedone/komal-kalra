@@ -59,8 +59,8 @@ real.
 |---|---|---|
 | Service prices (₹1,500 – ₹2,600) | `database/19_seed.sql`, marked `-- PLACEHOLDER` | Confirm with Komal, edit in Admin → Services |
 | Working hours (Mon–Sat 10–13, 16–19 IST) | `database/19_seed.sql` | Set the real hours in Admin → Availability |
-| Biography | `/about` and the homepage About block, with a visible on-page placeholder notice | Replace with Komal's own words and real credentials |
-| Portrait photograph | Homepage hero — renders a labelled placeholder box | Add `/public/komal-portrait.jpg` and replace the block |
+| Biography / "Why Choose" copy | `/about` and the homepage, taken from the design file | Replace with Komal's own words and real credentials |
+| Photography | 15 Stitch-hosted images via `src/lib/content/imagery.ts` | Run `npm run images:download`, set `USE_LOCAL_IMAGES = true` |
 | Email address | `src/lib/config.ts` → `BRAND.email` | Replace `consult@komalkalra.com` |
 | Legal pages | `src/lib/content/legal.tsx`, with a header comment stating they are drafts | Have an Indian lawyer review, especially DPDP Act obligations |
 

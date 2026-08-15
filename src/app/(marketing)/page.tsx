@@ -1,96 +1,58 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import type { Metadata } from 'next';
-import {
-  ArrowRight, CalendarDays, CheckCircle2, CreditCard, Languages,
-  MessageCircle, Phone, ShieldCheck, Sparkles,
-} from 'lucide-react';
+import { ArrowUpRight, Camera, Check, Quote } from 'lucide-react';
 import { createClient } from '@/lib/supabase/server';
 import { getActiveServices } from '@/lib/booking/availability';
-import { getRealStats } from '@/lib/marketing/stats';
-import { BRAND, POLICY } from '@/lib/config';
+import { BRAND } from '@/lib/config';
 import { Button } from '@/components/ui/button';
+import { SectionHeading } from '@/components/ui/card';
 import { Reveal } from '@/components/common/Reveal';
-import { ServiceCard } from '@/components/marketing/ServiceCard';
-import { QuickLinks } from '@/components/marketing/QuickLinks';
-import { TrustStrip } from '@/components/marketing/TrustStrip';
-import { GuidanceTopics } from '@/components/marketing/GuidanceTopics';
-import { StatsBand } from '@/components/marketing/StatsBand';
+import { ServiceGrid } from '@/components/marketing/ServiceGrid';
 import { Testimonials } from '@/components/marketing/Testimonials';
-import { ContactForm } from '@/components/marketing/ContactForm';
-import { FaqAccordion } from '@/components/marketing/FaqAccordion';
-import { StickyCta } from '@/components/marketing/StickyCta';
-import { BOOKING_FAQ } from '@/lib/content/faq';
+import { img } from '@/lib/content/imagery';
 import type { Testimonial } from '@/types/database';
 
 export const metadata: Metadata = {
-  title: 'Astrologer Komal Kalra — Clarity, Direction and Confidence',
+  title: 'Astrologer Komal Kalra — Clarity for the Curated Life',
   description:
-    'Private one-to-one consultations with Komal Kalra: astrological guidance, Kundli Milan, life coaching, healing and counselling. Book an online session at a time that suits you.',
+    'Professional astrological consultation and life coaching designed to provide precision, discretion, and profound insight. Book a private session with Komal Kalra.',
   alternates: { canonical: '/' },
 };
 
 /**
- * Landing page.
+ * Home — built to the `komal_kalra_home_interactive` design.
  *
- * A Server Component with zero client-side JavaScript for content. The only
- * interactive islands are the header menu, the stats counters, the FAQ
- * accordion, the contact form and the sticky mobile CTA.
+ * Section order and copy follow the design file. The one structural difference
+ * is that services are read from the DATABASE rather than hardcoded as five
+ * static tiles: prices, durations and titles are editable from the practitioner
+ * console, and a marketing page that hardcodes a price will eventually contradict
+ * what the checkout charges.
  *
- * SECTION ORDER — and why it is not the reference site's order.
- *
- * astroarunpandit.org leads with a product (a paid report), then a service
- * grid, then five separate lead-capture calculators. That works for a
- * multi-product content business selling to cold traffic.
- *
- * This is one practitioner with a finite calendar, so the order answers the
- * questions a visitor actually has, in the order they have them:
- *
- *   1. Hero            what is this, and can I act now
- *   2. Quick links     I already know what I want — let me go
- *   3. Trust strip     is this safe to pay for
- *   4. Guidance topics I have a problem, which session fits it   ← new
- *   5. About           who am I trusting
- *   6. Services        what exactly does it cost and how long
- *   7. How it works    what happens after I pay
- *   8. Stats           has anyone else done this                 ← real data only
- *   9. Testimonials    what did they say
- *  10. FAQ             my remaining objection
- *  11. Contact         I want to ask first
- *  12. Final CTA       decide
- *
- * CTAs sit at 1, 2, 6, 9 and 12 — each at a point where the visitor has just
- * acquired a reason to act (docs/research.md §3.2). Deliberately none after
- * "About": someone reading a biography is evaluating, not deciding.
+ * Still a Server Component with no client-side JavaScript for content — the
+ * only islands are the nav, the reveal observer and the testimonial carousel.
  */
 export default async function HomePage() {
   const supabase = await createClient();
 
-  const [services, stats, { data: testimonials }] = await Promise.all([
+  const [services, { data: testimonials }] = await Promise.all([
     getActiveServices(),
-    getRealStats(),
     supabase
       .from('testimonials')
       .select('*')
       .eq('approved', true)
       .order('featured', { ascending: false })
       .order('sort_order', { ascending: true })
-      .limit(6)
+      .limit(3)
       .returns<Testimonial[]>(),
   ]);
 
   const reviews = testimonials ?? [];
-  const averageRating = reviews.length
-    ? reviews.reduce((sum, t) => sum + t.rating, 0) / reviews.length
-    : 0;
+  const hero = img('heroPortrait');
+  const about = img('aboutStill');
+  const gramA = img('journalCompass');
+  const gramB = img('journalCandle');
 
-  const cheapest = services.length
-    ? Math.min(...services.map((s) => s.price_paise))
-    : null;
-
-  // Structured data. Prices come from the database, so a rich result can never
-  // drift out of sync with what the site actually charges. aggregateRating is
-  // included only when real approved reviews exist — Google penalises invented
-  // review markup, and inventing it would contradict the whole design.
   const jsonLd = {
     '@context': 'https://schema.org',
     '@graph': [
@@ -111,21 +73,16 @@ export default async function HomePage() {
         priceRange: '₹₹',
         areaServed: 'IN',
         availableLanguage: ['English', 'Hindi', 'Punjabi'],
+        // aggregateRating only when real approved reviews exist. Inventing
+        // review markup earns a manual action, and would contradict the rest
+        // of this build.
         ...(reviews.length > 0 && {
           aggregateRating: {
             '@type': 'AggregateRating',
-            ratingValue: averageRating.toFixed(1),
+            ratingValue: (reviews.reduce((s, t) => s + t.rating, 0) / reviews.length).toFixed(1),
             reviewCount: reviews.length,
           },
         }),
-      },
-      {
-        '@type': 'FAQPage',
-        mainEntity: BOOKING_FAQ.slice(0, 6).map((f) => ({
-          '@type': 'Question',
-          name: f.question,
-          acceptedAnswer: { '@type': 'Answer', text: f.answer },
-        })),
       },
     ],
   };
@@ -134,369 +91,251 @@ export default async function HomePage() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
-      {/* ============================ 1. HERO ============================ */}
-      <section className="band-dawn constellation-motif relative overflow-hidden">
-        <div className="mx-auto max-w-6xl px-5 pb-14 pt-12 sm:pb-20 sm:pt-16 lg:px-8">
-          <div className="grid items-center gap-12 lg:grid-cols-[1.05fr_0.95fr]">
-            <div>
-              <Reveal>
-                <p className="inline-flex items-center gap-2 rounded-full border border-[var(--color-ember)]/25 bg-white px-3.5 py-1.5 text-xs font-semibold text-[var(--color-ember-text)] shadow-[var(--shadow-resting)]">
-                  <Sparkles className="size-3.5 text-[var(--color-ember-text)]" aria-hidden />
-                  Private one-to-one consultations
-                </p>
-              </Reveal>
-
-              <Reveal delay={60}>
-                <h1 className="mt-6 text-[length:var(--text-display)]">
-                  Find clarity.
-                  <br />
-                  Choose your direction.
-                  <br />
-                  <span className="text-[var(--color-ember-text)]">Move forward with confidence.</span>
-                </h1>
-              </Reveal>
-
-              <Reveal delay={120}>
-                <p className="mt-6 max-w-xl text-[17px] leading-relaxed text-[var(--color-bark)]">
-                  Komal Kalra reads your chart properly, listens to what is actually happening,
-                  and gives you something you can act on. No vague predictions, no pressure —
-                  just an honest conversation about where you are and what comes next.
-                </p>
-              </Reveal>
-
-              <Reveal delay={180}>
-                <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-                  <Button asChild size="lg">
-                    <Link href="/book">
-                      Book a consultation <ArrowRight aria-hidden />
-                    </Link>
-                  </Button>
-                  <Button asChild size="lg" variant="outline">
-                    <Link href="/services">
-                      {cheapest ? `See services from ₹${Math.round(cheapest / 100).toLocaleString('en-IN')}` : 'Explore services'}
-                    </Link>
-                  </Button>
-                </div>
-              </Reveal>
-
-              <Reveal delay={240}>
-                {/*
-                  Language availability, taken from the reference site
-                  ("Available in Hindi and English"). It genuinely matters in
-                  this market and is a real question people hesitate over.
-                */}
-                <ul className="mt-7 flex flex-wrap items-center gap-x-5 gap-y-2.5 text-xs text-[var(--color-stone)]">
-                  <li className="flex items-center gap-1.5">
-                    <Languages className="size-3.5 text-[var(--color-indigo)]" aria-hidden />
-                    English, Hindi &amp; Punjabi
-                  </li>
-                  <li className="flex items-center gap-1.5">
-                    <CheckCircle2 className="size-3.5 text-[var(--color-jade)]" aria-hidden />
-                    Free cancellation up to 24 hours before
-                  </li>
-                  <li className="flex items-center gap-1.5">
-                    <ShieldCheck className="size-3.5 text-[var(--color-jade)]" aria-hidden />
-                    Confidential
-                  </li>
-                </ul>
-              </Reveal>
-            </div>
-
-            {/*
-              Portrait.
-              Left as a labelled placeholder rather than filled with a stock
-              image: the brief asks for authentic, personal photography, and a
-              stock portrait of someone who is not Komal would undermine exactly
-              the trust this page exists to establish.
-            */}
-            <Reveal delay={140} className="hidden lg:block">
-              <div className="relative">
-                <div className="band-night constellation-motif-dark relative aspect-[4/5] overflow-hidden rounded-[var(--radius-panel)] border border-[var(--color-indigo-light)]/30 shadow-[var(--shadow-lifted)]">
-                  <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 p-8 text-center">
-                    <span className="flex size-12 items-center justify-center rounded-full bg-white/10">
-                      <Sparkles className="size-5 text-[var(--color-marigold)]" aria-hidden />
-                    </span>
-                    <p className="mt-2 font-[family-name:var(--font-display)] text-lg font-semibold text-[var(--color-sand)]">
-                      Portrait of Komal
-                    </p>
-                    <p className="max-w-[24ch] text-xs leading-relaxed text-[var(--color-indigo-on-dark)]">
-                      PLACEHOLDER — add a real photograph at
-                      <code className="mx-1 rounded bg-white/15 px-1 py-0.5">/public/komal-portrait.jpg</code>
-                      and replace this block.
-                    </p>
-                  </div>
-                </div>
-
-                {/* Floating detail card — grounds the portrait and repeats the
-                    two facts that most often decide a booking. */}
-                <div className="absolute -bottom-5 -left-5 rounded-[var(--radius-card)] border border-[var(--color-linen)] border-l-4 border-l-[var(--color-ember)] bg-white p-4 shadow-[var(--shadow-overlay)]">
-                  <p className="text-[11px] uppercase tracking-[0.12em] text-[var(--color-stone)]">
-                    Every session
-                  </p>
-                  <p className="mt-1 text-sm font-semibold text-[var(--color-ink)]">
-                    One-to-one, unhurried
-                  </p>
-                  <p className="mt-0.5 text-xs text-[var(--color-stone)]">
-                    Never a call centre, never a script
-                  </p>
-                </div>
-              </div>
-            </Reveal>
-          </div>
+      {/* ========================= HERO — cinematic ========================= */}
+      <section className="band-low relative flex min-h-[calc(100svh-5rem)] items-center overflow-hidden py-20 md:min-h-[819px] md:py-[var(--spacing-section-md)]">
+        <div className="absolute inset-0 z-0">
+          <Image
+            src={hero.src}
+            alt={hero.alt}
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover opacity-80 mix-blend-multiply grayscale-[30%]"
+          />
+          {/* Ivory scrim — left-to-right on desktop, top-to-bottom on mobile
+              where the headline sits over the middle of the frame. */}
+          <div className="hero-scrim absolute inset-0" aria-hidden />
         </div>
-      </section>
 
-      {/* ========================= 2. QUICK LINKS ======================== */}
-      <QuickLinks />
-
-      {/* ========================= 3. TRUST STRIP ======================== */}
-      <TrustStrip reviewCount={reviews.length} averageRating={averageRating} />
-
-      {/* ======================= 4. GUIDANCE TOPICS ====================== */}
-      <GuidanceTopics services={services} />
-
-      {/* ============================ 5. ABOUT ========================== */}
-      <section aria-labelledby="about-heading" className="band-shell border-y border-[var(--color-linen)] py-20 sm:py-24">
-        <div className="mx-auto max-w-6xl px-5 lg:px-8">
-          <div className="grid gap-12 lg:grid-cols-[0.9fr_1.1fr]">
+        <div className="shell relative z-10 grid w-full grid-cols-1 gap-[var(--spacing-gutter)] md:grid-cols-12">
+          <div className="flex flex-col justify-center md:col-span-6">
             <Reveal>
-              <p className="accent-rule text-xs font-semibold uppercase tracking-[0.16em] text-[var(--color-ember-text)]">
-                About Komal
-              </p>
-              <h2 id="about-heading" className="mt-5 text-[length:var(--text-h2)]">
-                An honest reading, and a conversation that actually helps
-              </h2>
+              <p className="label-caps text-[var(--color-gold-deep)]">Trusted Guidance</p>
             </Reveal>
 
-            <Reveal delay={80}>
-              <div className="space-y-4 text-[16px] leading-relaxed text-[var(--color-bark)]">
-                {/* PLACEHOLDER BIO — replace with Komal's own words before launch. */}
-                <p>
-                  Komal Kalra works across astrology, coaching, healing and counselling. What
-                  connects them is a way of working rather than a technique: she starts by
-                  understanding what is genuinely going on for you, then uses whichever of
-                  those lenses is actually useful.
-                </p>
-                <p>
-                  Sessions are unhurried and private. You will not be told your life is cursed,
-                  sold a remedy you did not ask for, or given a prediction dressed up as
-                  certainty. Where the charts are clear, she will say so. Where they are not,
-                  she will say that too.
-                </p>
-                <p>
-                  People usually come at a turning point — a marriage under consideration, a
-                  career decision, a period that has not lifted. They leave with a clearer view
-                  of the situation and a next step they can actually take.
-                </p>
-                <p className="rounded-[var(--radius-control)] border-l-2 border-[var(--color-saffron)] bg-[var(--color-saffron-tint)] px-4 py-3 text-sm">
-                  <strong className="font-semibold">Note for launch:</strong> this biography is a
-                  placeholder written from the brief. Replace it with Komal&apos;s own words and
-                  credentials before going live.
-                </p>
+            <Reveal delay={100}>
+              <h1 className="mt-6 text-[length:var(--text-display-lg)]">
+                Clarity for the
+                <br />
+                Curated Life
+              </h1>
+            </Reveal>
+
+            <Reveal delay={200}>
+              <p className="mt-8 max-w-md text-lg leading-relaxed text-[var(--color-on-surface-variant)]">
+                Professional astrological consultation and life coaching designed to provide
+                precision, discretion, and profound insight.
+              </p>
+            </Reveal>
+
+            <Reveal delay={300}>
+              <div className="mt-10 flex flex-wrap items-center gap-6">
+                <Button asChild size="lg">
+                  <Link href="/book">Book a Consultation</Link>
+                </Button>
+                <Link
+                  href="/services"
+                  className="label-caps border-b border-[var(--color-cosmic-navy)] pb-1 text-[var(--color-cosmic-navy)] transition-colors duration-300 hover:border-[var(--color-muted-gold)] hover:text-[var(--color-gold-deep)]"
+                >
+                  Explore Services
+                </Link>
               </div>
             </Reveal>
           </div>
         </div>
       </section>
 
-      {/* =========================== 6. SERVICES ======================== */}
-      <section aria-labelledby="services-heading" className="band-sand py-20 sm:py-24">
-        <div className="mx-auto max-w-6xl px-5 lg:px-8">
+      {/* ====================== CONSULTATION SERVICES ====================== */}
+      <section aria-labelledby="services-heading" className="band-ivory py-[var(--spacing-section-lg)]">
+        <div className="shell">
           <Reveal>
-            <p className="accent-rule text-xs font-semibold uppercase tracking-[0.16em] text-[var(--color-ember-text)]">
-              Consultations
-            </p>
-            <h2 id="services-heading" className="mt-5 max-w-2xl text-[length:var(--text-h2)]">
-              Choose the conversation you need
-            </h2>
-            <p className="mt-4 max-w-xl text-[15px] leading-relaxed text-[var(--color-bark)]">
-              Every session is one-to-one and confidential. Prices and durations are shown
-              upfront — there is nothing added at checkout.
-            </p>
+            <div className="mb-16 md:w-1/2">
+              <h2 id="services-heading" className="text-[length:var(--text-h2)]">
+                Consultation Services
+              </h2>
+              <span className="gold-rule mt-6" aria-hidden />
+              <p className="mt-6 text-base leading-relaxed text-[var(--color-on-surface-variant)]">
+                A tailored approach to understanding your unique path, combining ancient wisdom
+                with modern executive coaching.
+              </p>
+            </div>
           </Reveal>
 
-          {services.length > 0 ? (
-            <ul className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-              {services.map((service, i) => (
-                <Reveal as="li" key={service.id} delay={i * 60}>
-                  <ServiceCard service={service} featured={service.featured} />
-                </Reveal>
+          <ServiceGrid services={services} />
+        </div>
+      </section>
+
+      {/* ===================== THE APPROACH / WHY CHOOSE ==================== */}
+      <section
+        aria-labelledby="about-heading"
+        className="band-low border-t border-[color-mix(in_srgb,var(--color-muted-gold)_15%,transparent)] py-[var(--spacing-section-lg)]"
+      >
+        <div className="shell grid grid-cols-1 items-center gap-12 md:grid-cols-12">
+          <Reveal className="md:col-span-5">
+            <Image
+              src={about.src}
+              alt={about.alt}
+              width={800}
+              height={1000}
+              sizes="(min-width: 768px) 40vw, 100vw"
+              className="aspect-[4/5] w-full border border-[color-mix(in_srgb,var(--color-muted-gold)_20%,transparent)] object-cover"
+            />
+          </Reveal>
+
+          <Reveal delay={120} className="md:col-span-6 md:col-start-7">
+            <p className="label-caps text-[var(--color-gold-deep)]">The Approach</p>
+            <h2 id="about-heading" className="mt-4 text-[length:var(--text-h1)]">
+              Why Choose Komal Kalra
+            </h2>
+
+            <div className="mt-8 space-y-6 text-base leading-relaxed text-[var(--color-on-surface-variant)]">
+              {/* PLACEHOLDER COPY — from the design file. Replace with Komal's
+                  own words and real credentials before launch. */}
+              <p>
+                The practice is built on a foundation of absolute discretion and profound
+                analytical rigor. Moving away from esoteric clichés, the focus is on providing
+                actionable intelligence derived from astrological systems.
+              </p>
+              <p>
+                Every consultation is treated as a high-level executive briefing. You receive a
+                structured, objective perspective on your current reality and upcoming cycles,
+                empowering you to make decisions from a place of clarity rather than anxiety.
+              </p>
+            </div>
+
+            <ul className="mt-10 space-y-4 border-t border-[color-mix(in_srgb,var(--color-muted-gold)_20%,transparent)] pt-8">
+              {[
+                'Strict Confidentiality Protocols',
+                'Evidence-Based Astrological Interpretations',
+                'Action-Oriented Coaching Methodologies',
+              ].map((item) => (
+                <li key={item} className="flex items-center gap-4 text-[var(--color-on-surface)]">
+                  <Check className="size-4 shrink-0 text-[var(--color-muted-gold)]" aria-hidden />
+                  {item}
+                </li>
               ))}
             </ul>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* ================= SOCIAL PROOF + CURATED INSIGHTS ================= */}
+      <section aria-labelledby="proof-heading" className="band-ivory py-[var(--spacing-section-md)]">
+        <h2 id="proof-heading" className="sr-only">What clients say, and where to follow along</h2>
+
+        <div className="shell grid grid-cols-1 gap-16 md:grid-cols-2">
+          {/*
+            Testimonial. Renders only when a real approved review exists —
+            there is no hardcoded fallback quote anywhere in this codebase, so
+            the section is simply absent until Komal approves one.
+          */}
+          {reviews.length > 0 ? (
+            <Reveal>
+              <figure className="flex h-full flex-col justify-center border-l border-[color-mix(in_srgb,var(--color-muted-gold)_30%,transparent)] pl-8">
+                <Quote className="size-9 text-[var(--color-muted-gold)] opacity-50" aria-hidden />
+                <blockquote className="mt-6 font-[family-name:var(--font-display)] text-2xl italic leading-relaxed text-[var(--color-cosmic-navy)]">
+                  &ldquo;{reviews[0].review}&rdquo;
+                </blockquote>
+                <figcaption className="mt-8">
+                  <p className="label-caps text-[var(--color-cosmic-navy)]">
+                    {reviews[0].display_initials_only
+                      ? reviews[0].author_name.split(/\s+/).map((p) => `${p[0]}.`).join(' ')
+                      : reviews[0].author_name}
+                  </p>
+                  {reviews[0].author_location && (
+                    <p className="mt-1 text-sm text-[var(--color-on-surface-variant)]">
+                      {reviews[0].author_location}
+                    </p>
+                  )}
+                </figcaption>
+              </figure>
+            </Reveal>
           ) : (
-            <p className="mt-12 rounded-[var(--radius-card)] border border-dashed border-[var(--color-linen)] p-10 text-center text-sm text-[var(--color-stone)]">
-              Services will appear here once they are added from the admin dashboard.
-            </p>
+            <Reveal>
+              <div className="flex h-full flex-col justify-center border-l border-[color-mix(in_srgb,var(--color-muted-gold)_30%,transparent)] pl-8">
+                <p className="label-caps text-[var(--color-gold-deep)]">In their words</p>
+                <p className="mt-6 max-w-md text-base leading-relaxed text-[var(--color-on-surface-variant)]">
+                  Client reflections appear here once they have been reviewed and approved.
+                  Nothing is published without Komal&apos;s explicit approval.
+                </p>
+              </div>
+            </Reveal>
           )}
 
-          {/* CTA — placed here because the visitor now knows the price. */}
+          {/* Curated Insights — Instagram teaser */}
           <Reveal delay={120}>
-            <div className="mt-10 flex justify-center">
-              <Button asChild size="lg">
-                <Link href="/book">
-                  Check available times <ArrowRight aria-hidden />
-                </Link>
-              </Button>
-            </div>
-          </Reveal>
-        </div>
-      </section>
+            <div className="flex h-full flex-col items-center border border-[color-mix(in_srgb,var(--color-muted-gold)_15%,transparent)] bg-[var(--color-linen-grey)] p-8 text-center sm:p-10">
+              <Camera className="size-7 text-[var(--color-cosmic-navy)]" aria-hidden />
+              <h3 className="mt-4 font-[family-name:var(--font-display)] text-xl font-medium">
+                Curated Insights
+              </h3>
+              <p className="mt-4 max-w-sm text-base leading-relaxed text-[var(--color-on-surface-variant)]">
+                Follow for regular reflections on timing, energy management, and leading a
+                conscious professional life.
+              </p>
 
-      {/* ========================= 7. HOW IT WORKS ======================= */}
-      <section aria-labelledby="how-heading" className="band-night constellation-motif-dark on-dark py-20 sm:py-24">
-        <div className="mx-auto max-w-6xl px-5 lg:px-8">
-          <Reveal>
-            <p className="accent-rule text-xs font-semibold uppercase tracking-[0.16em] text-[var(--color-marigold)]">
-              How it works
-            </p>
-            <h2 id="how-heading" className="mt-5 max-w-2xl text-[length:var(--text-h2)]">
-              Booked in about two minutes
-            </h2>
-          </Reveal>
-
-          {/* Cards sit on the night ground, so they use a translucent white
-              wash rather than a solid fill — a solid card here would read as a
-              hole punched in the section. */}
-          <ol className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {[
-              { icon: Sparkles, title: 'Choose a service', body: 'Pick the consultation that fits what you want to discuss.' },
-              { icon: CalendarDays, title: 'Pick a time', body: 'Live availability. Your slot is held while you check out.' },
-              { icon: CreditCard, title: 'Pay securely', body: 'UPI, card or netbanking through Razorpay. Instantly confirmed.' },
-              { icon: MessageCircle, title: 'Attend your session', body: 'A joining link arrives by email before your appointment.' },
-            ].map((step, i) => (
-              <Reveal as="li" key={step.title} delay={i * 70}>
-                <div className="flex h-full flex-col rounded-[var(--radius-card)] border border-white/12 bg-white/[0.06] p-6 backdrop-blur-[2px]">
-                  <div className="flex items-center gap-3">
-                    <span className="tabular flex size-8 items-center justify-center rounded-full bg-[var(--color-marigold)] text-sm font-semibold text-[var(--color-indigo-deep)]">
-                      {i + 1}
-                    </span>
-                    <step.icon className="size-4 text-[var(--color-marigold)]" aria-hidden />
+              <div className="mt-8 grid w-full grid-cols-2 gap-4">
+                {[gramA, gramB].map((g) => (
+                  <div
+                    key={g.src}
+                    className="aspect-square overflow-hidden border border-[color-mix(in_srgb,var(--color-muted-gold)_15%,transparent)] bg-[var(--color-surface-container)]"
+                  >
+                    <Image
+                      src={g.src}
+                      alt={g.alt}
+                      width={600}
+                      height={600}
+                      sizes="(min-width: 768px) 22vw, 45vw"
+                      className="size-full object-cover opacity-80 transition-transform duration-500 hover:scale-105"
+                    />
                   </div>
-                  <p className="mt-4 font-sans text-[15px] font-semibold text-[var(--color-sand)]">{step.title}</p>
-                  <p className="mt-1.5 text-sm leading-relaxed">{step.body}</p>
-                </div>
-              </Reveal>
-            ))}
-          </ol>
+                ))}
+              </div>
 
-          <Reveal delay={100}>
-            <p className="mx-auto mt-10 max-w-2xl rounded-[var(--radius-card)] border border-white/12 bg-white/[0.06] px-5 py-4 text-center text-sm leading-relaxed">
-              {POLICY.cancellationSummary}
-            </p>
-          </Reveal>
-        </div>
-      </section>
-
-      {/* ============================ 8. STATS ========================== */}
-      {/* Renders nothing until there is enough real data. See StatsBand. */}
-      <StatsBand stats={stats} />
-
-      {/* ========================= 9. TESTIMONIALS ====================== */}
-      <Testimonials testimonials={reviews} />
-
-      {/* ============================= 10. FAQ ========================== */}
-      <section aria-labelledby="faq-heading" className="band-cool py-20 sm:py-24">
-        <div className="mx-auto max-w-3xl px-5 lg:px-8">
-          <Reveal>
-            <p className="accent-rule text-xs font-semibold uppercase tracking-[0.16em] text-[var(--color-ember-text)]">
-              Questions
-            </p>
-            <h2 id="faq-heading" className="mt-5 text-[length:var(--text-h2)]">
-              Before you book
-            </h2>
-          </Reveal>
-          <Reveal delay={80}>
-            <div className="mt-8">
-              <FaqAccordion items={BOOKING_FAQ} />
+              <a
+                href={BRAND.instagram}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="label-caps mt-8 inline-flex items-center gap-2 border-b border-[var(--color-cosmic-navy)] pb-1 text-[var(--color-cosmic-navy)] transition-colors duration-300 hover:border-[var(--color-muted-gold)] hover:text-[var(--color-gold-deep)]"
+              >
+                View Instagram
+                <ArrowUpRight className="size-3.5" aria-hidden />
+              </a>
             </div>
           </Reveal>
         </div>
       </section>
 
-      {/* =========================== 11. CONTACT ======================== */}
-      {/*
-        Panel treatment adapted from the reference site's mid-page capture
-        block, which sits on a decorative background and is visually distinct
-        from the surrounding page. Theirs asks for seven fields to generate a
-        free report; this asks for three, because the goal is a reply from a
-        person rather than an automated lead magnet.
-      */}
-      <section aria-labelledby="contact-heading" className="band-sand py-20 sm:py-24">
-        <div className="mx-auto max-w-6xl px-5 lg:px-8">
-          <div className="constellation-motif overflow-hidden rounded-[var(--radius-panel)] border border-[var(--color-linen)] bg-white shadow-[var(--shadow-lifted)]">
-            <div className="grid gap-12 p-8 sm:p-12 lg:grid-cols-[0.85fr_1.15fr]">
-              <Reveal>
-                <p className="accent-rule text-xs font-semibold uppercase tracking-[0.16em] text-[var(--color-ember-text)]">
-                  Not sure yet?
-                </p>
-                <h2 id="contact-heading" className="mt-5 text-[length:var(--text-h2)]">
-                  Ask first. Book later.
-                </h2>
-                <p className="mt-4 text-[15px] leading-relaxed text-[var(--color-bark)]">
-                  If you are not sure which consultation fits, or you would rather speak to
-                  someone first, send a message or call. Komal reads every enquiry personally.
-                </p>
+      {/* Additional approved reviews, if there are more than the featured one. */}
+      <Testimonials testimonials={reviews.slice(1)} />
 
-                <ul className="mt-8 space-y-3">
-                  {BRAND.phones.map((phone, i) => (
-                    <li key={phone}>
-                      <a
-                        href={`tel:${BRAND.phonesE164[i]}`}
-                        className="flex items-center gap-3 rounded-[var(--radius-control)] border border-[var(--color-linen)] bg-[var(--color-saffron-tint)] px-4 py-3 text-[15px] font-medium text-[var(--color-ink)] transition-colors hover:border-[var(--color-ember)] hover:bg-white"
-                      >
-                        <Phone className="size-4 text-[var(--color-ember-text)]" aria-hidden />
-                        {phone}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
+      {/* ============================ FINAL CTA ============================ */}
+      <section className="band-navy py-[var(--spacing-section-md)]">
+        <div className="shell flex flex-col items-start justify-between gap-10 md:flex-row md:items-center">
+          <div>
+            <SectionHeading
+              eyebrow="Begin"
+              title="A single conversation is often enough"
+              onDark
+            />
+            <p className="mt-6 max-w-md text-base leading-relaxed text-[var(--color-on-primary-container)]">
+              Choose a time that suits you. Free cancellation up to 24 hours beforehand.
+            </p>
+          </div>
 
-                <p className="mt-5 text-xs leading-relaxed text-[var(--color-stone)]">
-                  Enquiries are usually answered within one working day. For anything urgent,
-                  calling is faster than the form.
-                </p>
-              </Reveal>
-
-              <Reveal delay={80}>
-                <ContactForm services={services} />
-              </Reveal>
-            </div>
+          <div className="flex flex-wrap items-center gap-4">
+            <Button asChild size="lg" variant="onDark">
+              <Link href="/book">Book a Consultation</Link>
+            </Button>
+            <a
+              href={`tel:${BRAND.phonesE164[0]}`}
+              className="label-caps border-b border-[var(--color-gold-light)] pb-1 text-[var(--color-gold-light)] transition-opacity hover:opacity-80"
+            >
+              {BRAND.phones[0]}
+            </a>
           </div>
         </div>
       </section>
-
-      {/* ========================== 12. FINAL CTA ======================== */}
-      <section className="band-night constellation-motif-dark on-dark py-20 text-center sm:py-24">
-        <div className="mx-auto max-w-2xl px-5">
-          <Reveal>
-            <h2 className="text-[length:var(--text-h2)]">
-              The answer is usually simpler than it feels
-            </h2>
-            <p className="mx-auto mt-4 max-w-lg text-[15px] leading-relaxed">
-              One conversation is often enough to see the situation clearly. Pick a time that
-              suits you — you can cancel free of charge up to 24 hours beforehand.
-            </p>
-            <div className="mt-9 flex flex-col justify-center gap-3 sm:flex-row">
-              <Button asChild size="lg">
-                <Link href="/book">
-                  Book a consultation <ArrowRight aria-hidden />
-                </Link>
-              </Button>
-              <Button
-                asChild
-                size="lg"
-                variant="onDark"
-              >
-                <a href={`tel:${BRAND.phonesE164[0]}`}>
-                  <Phone aria-hidden /> {BRAND.phones[0]}
-                </a>
-              </Button>
-            </div>
-          </Reveal>
-        </div>
-      </section>
-
-      <StickyCta />
     </>
   );
 }

@@ -1,23 +1,36 @@
 'use client';
 
-import { useMemo } from 'react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { useMemo, useState, useEffect } from 'react';
+import { CheckCircle2, ChevronLeft, ChevronRight } from 'lucide-react';
 import { formatTime } from '@/lib/date';
 import { cn } from '@/lib/utils';
 import { Skeleton, EmptyState } from '@/components/ui/states';
 import type { DaySlots } from '@/lib/booking/availability';
 
 /**
- * Date strip + time grid.
+ * Calendar + slot column, built to the booking design.
  *
- * Accessibility: the times are a real radiogroup, not a grid of divs with
- * onClick. That gives arrow-key navigation, a single tab stop, and correct
- * announcement of "3 of 12 selected" — all of which a div grid silently loses.
+ * Structure: a month grid on a Surface Low panel, and the chosen day's times
+ * listed beside it as full-width rows. Selected time takes a Muted Gold border
+ * with a Linen fill and a check — exactly the treatment in the design file.
  *
- * Times are rendered in the business timezone (Asia/Kolkata) regardless of the
- * visitor's device, because a booking confirmation that says a different time
- * from the calendar is the fastest possible way to create a no-show.
+ * ACCESSIBILITY. The calendar is a real `grid` with `gridcell` semantics and
+ * the time list is a `radiogroup`. Both matter more here than anywhere else in
+ * the product: this is the one screen a keyboard or screen-reader user cannot
+ * route around, because there is no other way to pick a time.
+ *
+ * Dates with no availability are rendered `disabled` rather than hidden, so the
+ * month keeps its shape and a visitor can see that (say) Sundays are simply not
+ * worked rather than wondering whether the calendar is broken.
  */
+
+const WEEKDAYS = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
+
+/** Local-date key (YYYY-MM-DD) — never toISOString(), which shifts to UTC. */
+function dateKey(d: Date) {
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+}
+
 export function SlotPicker({
   days,
   loading,
@@ -25,8 +38,6 @@ export function SlotPicker({
   selectedSlot,
   onSelectDate,
   onSelectSlot,
-  weekOffset,
-  onWeekChange,
   disabled,
 }: {
   days: DaySlots[];
@@ -35,138 +46,194 @@ export function SlotPicker({
   selectedSlot: string | null;
   onSelectDate: (date: string) => void;
   onSelectSlot: (startIso: string) => void;
-  weekOffset: number;
-  onWeekChange: (offset: number) => void;
+  weekOffset?: number;
+  onWeekChange?: (offset: number) => void;
   disabled?: boolean;
 }) {
-  const dayList = useMemo(() => days.filter((d) => d.slots.length > 0), [days]);
-  const active = dayList.find((d) => d.date === selectedDate) ?? dayList[0] ?? null;
+  const byDate = useMemo(() => new Map(days.map((d) => [d.date, d.slots])), [days]);
+  const firstAvailable = days.find((d) => d.slots.length > 0)?.date ?? null;
+  const active = selectedDate ?? firstAvailable;
+
+  const [cursor, setCursor] = useState(() => {
+    const base = active ? new Date(`${active}T00:00:00`) : new Date();
+    return new Date(base.getFullYear(), base.getMonth(), 1);
+  });
+
+  // Follow the selection into its month if it lands outside the shown one.
+  useEffect(() => {
+    if (!active) return;
+    const d = new Date(`${active}T00:00:00`);
+    setCursor((c) =>
+      c.getFullYear() === d.getFullYear() && c.getMonth() === d.getMonth()
+        ? c
+        : new Date(d.getFullYear(), d.getMonth(), 1),
+    );
+  }, [active]);
+
+  const grid = useMemo(() => {
+    const start = new Date(cursor.getFullYear(), cursor.getMonth(), 1);
+    const daysInMonth = new Date(cursor.getFullYear(), cursor.getMonth() + 1, 0).getDate();
+    const lead = start.getDay();
+    const cells: (Date | null)[] = Array.from({ length: lead }, () => null);
+    for (let i = 1; i <= daysInMonth; i++) {
+      cells.push(new Date(cursor.getFullYear(), cursor.getMonth(), i));
+    }
+    return cells;
+  }, [cursor]);
+
+  const monthLabel = cursor.toLocaleDateString('en-IN', { month: 'long', year: 'numeric' });
+  const slots = active ? byDate.get(active) ?? [] : [];
 
   if (loading) {
     return (
-      <div className="space-y-6" role="status" aria-label="Loading available times">
-        <div className="flex gap-2 overflow-hidden">
-          {Array.from({ length: 6 }).map((_, i) => <Skeleton key={i} className="h-[70px] w-[76px] shrink-0" />)}
-        </div>
-        <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 lg:grid-cols-4">
-          {Array.from({ length: 8 }).map((_, i) => <Skeleton key={i} className="h-11" />)}
+      <div className="grid gap-8 md:grid-cols-2" role="status" aria-label="Loading available times">
+        <Skeleton className="h-[420px] w-full" />
+        <div className="space-y-3">
+          {Array.from({ length: 5 }).map((_, i) => <Skeleton key={i} className="h-16 w-full" />)}
         </div>
         <span className="sr-only">Loading available times…</span>
       </div>
     );
   }
 
-  if (dayList.length === 0) {
+  if (days.every((d) => d.slots.length === 0)) {
     return (
-      <div className="space-y-4">
-        <WeekNav weekOffset={weekOffset} onWeekChange={onWeekChange} />
-        <EmptyState
-          title="No times available in this period"
-          description="Try looking further ahead, or call us and we will find a time that works."
-          action={{ label: 'Contact us', href: '/contact' }}
-        />
-      </div>
+      <EmptyState
+        title="No times available in this period"
+        description="Try looking further ahead, or call and we will find a time that works."
+        action={{ label: 'Contact us', href: '/contact' }}
+      />
     );
   }
 
   return (
-    <div className="space-y-6">
-      <WeekNav weekOffset={weekOffset} onWeekChange={onWeekChange} />
-
-      {/* Date strip */}
-      <div role="radiogroup" aria-label="Choose a date" className="-mx-1 flex gap-2 overflow-x-auto px-1 pb-2">
-        {dayList.map((day) => {
-          const date = new Date(`${day.date}T00:00:00`);
-          const isActive = active?.date === day.date;
-          return (
+    <div className="grid gap-10 md:grid-cols-2">
+      {/* ------------------------------ Calendar ------------------------------ */}
+      <div className="bg-[var(--color-surface-low)] p-6 sm:p-8">
+        <div className="flex items-center justify-between">
+          <h3 className="font-[family-name:var(--font-display)] text-xl font-medium text-[var(--color-cosmic-navy)]">
+            {monthLabel}
+          </h3>
+          <div className="flex items-center gap-1">
             <button
-              key={day.date}
               type="button"
-              role="radio"
-              aria-checked={isActive}
-              disabled={disabled}
-              onClick={() => onSelectDate(day.date)}
-              className={cn(
-                'flex w-[76px] shrink-0 flex-col items-center rounded-[var(--radius-control)] border px-2 py-2.5 transition-colors disabled:opacity-50',
-                isActive
-                  ? 'border-[var(--color-saffron)] bg-[var(--color-saffron-tint)]'
-                  : 'border-[var(--color-linen)] bg-white hover:border-[var(--color-edge-hover)]',
-              )}
+              aria-label="Previous month"
+              onClick={() => setCursor((c) => new Date(c.getFullYear(), c.getMonth() - 1, 1))}
+              className="flex size-9 items-center justify-center text-[var(--color-cosmic-navy)] transition-colors hover:bg-[var(--color-linen-grey)]"
             >
-              <span className="text-[11px] font-medium uppercase tracking-wide text-[var(--color-stone)]">
-                {date.toLocaleDateString('en-IN', { weekday: 'short' })}
-              </span>
-              <span className={cn('tabular mt-0.5 text-lg font-semibold', isActive ? 'text-[var(--color-ember)]' : 'text-[var(--color-ink)]')}>
-                {date.getDate()}
-              </span>
-              <span className="text-[10px] text-[var(--color-stone)]">
-                {day.slots.length} {day.slots.length === 1 ? 'slot' : 'slots'}
-              </span>
+              <ChevronLeft className="size-5" aria-hidden />
             </button>
-          );
-        })}
-      </div>
+            <button
+              type="button"
+              aria-label="Next month"
+              onClick={() => setCursor((c) => new Date(c.getFullYear(), c.getMonth() + 1, 1))}
+              className="flex size-9 items-center justify-center text-[var(--color-cosmic-navy)] transition-colors hover:bg-[var(--color-linen-grey)]"
+            >
+              <ChevronRight className="size-5" aria-hidden />
+            </button>
+          </div>
+        </div>
 
-      {/* Times */}
-      {active && (
-        <fieldset disabled={disabled}>
-          <legend className="mb-3 text-sm font-medium text-[var(--color-ink)]">
-            Available times on{' '}
-            {new Date(`${active.date}T00:00:00`).toLocaleDateString('en-IN', {
-              weekday: 'long', day: 'numeric', month: 'long',
-            })}
-          </legend>
+        <div role="grid" aria-label={`Dates in ${monthLabel}`} className="mt-8">
+          <div role="row" className="grid grid-cols-7">
+            {WEEKDAYS.map((w) => (
+              <div
+                key={w}
+                role="columnheader"
+                className="label-small pb-4 text-center uppercase text-[var(--color-on-surface-variant)]"
+              >
+                {w}
+              </div>
+            ))}
+          </div>
 
-          <div role="radiogroup" aria-label="Choose a time" className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 lg:grid-cols-4">
-            {active.slots.map((slot) => {
-              const isSelected = selectedSlot === slot.start;
+          <div role="rowgroup" className="grid grid-cols-7 gap-y-1">
+            {grid.map((date, i) => {
+              if (!date) return <div key={`pad-${i}`} role="gridcell" aria-hidden />;
+
+              const key = dateKey(date);
+              const has = (byDate.get(key)?.length ?? 0) > 0;
+              const isActive = active === key;
+
               return (
-                <button
-                  key={slot.start}
-                  type="button"
-                  role="radio"
-                  aria-checked={isSelected}
-                  onClick={() => onSelectSlot(slot.start)}
-                  className={cn(
-                    'tabular h-11 rounded-[var(--radius-control)] border text-sm font-medium transition-colors disabled:opacity-50',
-                    isSelected
-                      ? 'border-[var(--color-saffron)] bg-[var(--color-ember)] text-white'
-                      : 'border-[var(--color-linen)] bg-white text-[var(--color-ink)] hover:border-[var(--color-ember)] hover:text-[var(--color-ember-text)]',
-                  )}
-                >
-                  {formatTime(slot.start)}
-                </button>
+                <div key={key} role="gridcell" className="flex justify-center">
+                  <button
+                    type="button"
+                    disabled={!has || disabled}
+                    aria-pressed={isActive}
+                    aria-label={
+                      has
+                        ? `${date.toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long' })} — ${byDate.get(key)!.length} times available`
+                        : `${date.toLocaleDateString('en-IN', { day: 'numeric', month: 'long' })} — unavailable`
+                    }
+                    onClick={() => onSelectDate(key)}
+                    className={cn(
+                      'tabular flex size-10 items-center justify-center text-base transition-colors',
+                      isActive
+                        ? 'bg-[var(--color-cosmic-navy)] text-[var(--color-warm-ivory)]'
+                        : has
+                          ? 'text-[var(--color-on-surface)] hover:bg-[var(--color-linen-grey)]'
+                          : 'cursor-not-allowed text-[var(--color-outline-variant)]',
+                    )}
+                  >
+                    {date.getDate()}
+                  </button>
+                </div>
               );
             })}
           </div>
-          <p className="mt-3 text-xs text-[var(--color-stone)]">All times shown in India Standard Time (IST).</p>
-        </fieldset>
-      )}
-    </div>
-  );
-}
+        </div>
+      </div>
 
-function WeekNav({ weekOffset, onWeekChange }: { weekOffset: number; onWeekChange: (o: number) => void }) {
-  return (
-    <div className="flex items-center justify-between">
-      <button
-        type="button"
-        onClick={() => onWeekChange(Math.max(0, weekOffset - 1))}
-        disabled={weekOffset === 0}
-        className="inline-flex items-center gap-1 rounded-[var(--radius-control)] px-2 py-1.5 text-sm font-medium text-[var(--color-bark)] transition-colors hover:bg-[var(--color-linen)] disabled:opacity-40 disabled:hover:bg-transparent"
-      >
-        <ChevronLeft className="size-4" aria-hidden /> Earlier
-      </button>
-      <span className="text-sm text-[var(--color-stone)]">
-        {weekOffset === 0 ? 'Next 2 weeks' : `${weekOffset * 14} days ahead`}
-      </span>
-      <button
-        type="button"
-        onClick={() => onWeekChange(weekOffset + 1)}
-        className="inline-flex items-center gap-1 rounded-[var(--radius-control)] px-2 py-1.5 text-sm font-medium text-[var(--color-bark)] transition-colors hover:bg-[var(--color-linen)]"
-      >
-        Later <ChevronRight className="size-4" aria-hidden />
-      </button>
+      {/* ------------------------------- Times -------------------------------- */}
+      <div>
+        <h3 className="font-[family-name:var(--font-display)] text-xl font-medium text-[var(--color-cosmic-navy)]">
+          {active
+            ? new Date(`${active}T00:00:00`).toLocaleDateString('en-IN', {
+                weekday: 'long', day: 'numeric', month: 'long',
+              })
+            : 'Select a date'}
+        </h3>
+
+        <div
+          role="radiogroup"
+          aria-label="Available times"
+          className="mt-6 max-h-[420px] space-y-3 overflow-y-auto pr-1"
+        >
+          {slots.map((slot) => {
+            const isSelected = selectedSlot === slot.start;
+            return (
+              <button
+                key={slot.start}
+                type="button"
+                role="radio"
+                aria-checked={isSelected}
+                disabled={disabled}
+                onClick={() => onSelectSlot(slot.start)}
+                className={cn(
+                  'flex w-full items-center justify-between border px-6 py-5 text-left text-base transition-colors disabled:opacity-50',
+                  isSelected
+                    ? 'border-[var(--color-muted-gold)] bg-[var(--color-linen-grey)] text-[var(--color-gold-deep)]'
+                    : 'border-[var(--color-outline-variant)] text-[var(--color-on-surface)] hover:border-[var(--color-cosmic-navy)]',
+                )}
+              >
+                <span className="tabular">{formatTime(slot.start)}</span>
+                {isSelected && <CheckCircle2 className="size-5" aria-hidden />}
+              </button>
+            );
+          })}
+
+          {slots.length === 0 && (
+            <p className="border border-dashed border-[var(--color-outline-variant)] px-6 py-8 text-center text-sm text-[var(--color-on-surface-variant)]">
+              No times remaining on this date. Choose another from the calendar.
+            </p>
+          )}
+        </div>
+
+        <p className="mt-4 text-xs text-[var(--color-on-surface-variant)]">
+          All times shown in India Standard Time (IST).
+        </p>
+      </div>
     </div>
   );
 }

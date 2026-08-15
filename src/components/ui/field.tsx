@@ -1,16 +1,19 @@
 'use client';
 
 import * as React from 'react';
-import { AlertCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 /**
- * Form field primitives.
+ * Form fields — "Minimalist Frames".
  *
- * Accessibility is wired in here rather than left to each form, so it cannot be
- * forgotten: every input gets a real <label htmlFor>, errors are linked with
- * aria-describedby, invalid inputs carry aria-invalid, and the error text has
- * role="alert" so it is announced when it appears.
+ * Per the spec: inputs carry only a bottom border at rest and become a full
+ * sharp box on focus, with the border transitioning to Muted Gold. Zero radius
+ * throughout.
+ *
+ * Accessibility is wired here rather than left to each form so it cannot be
+ * forgotten: real <label htmlFor>, aria-describedby linking hint and error,
+ * aria-invalid, and role="alert" on the error so it is announced when it
+ * appears.
  */
 
 interface FieldProps {
@@ -28,15 +31,20 @@ export function Field({ label, htmlFor, error, hint, required, className, childr
   const errorId = error ? `${htmlFor}-error` : undefined;
 
   return (
-    <div className={cn('space-y-1.5', className)}>
-      <label htmlFor={htmlFor} className="block text-sm font-medium text-[var(--color-ink)]">
+    <div className={cn('space-y-2', className)}>
+      <label
+        htmlFor={htmlFor}
+        className="label-caps block text-[var(--color-on-surface-variant)]"
+      >
         {label}
-        {required && <span className="ml-0.5 text-[var(--color-clay)]" aria-hidden>*</span>}
-        {!required && <span className="ml-1.5 text-xs font-normal text-[var(--color-stone)]">Optional</span>}
+        {required && <span className="ml-1 text-[var(--color-error)]" aria-hidden>*</span>}
+        {!required && <span className="ml-2 normal-case tracking-normal opacity-60">Optional</span>}
       </label>
 
       {hint && (
-        <p id={hintId} className="text-xs leading-relaxed text-[var(--color-stone)]">{hint}</p>
+        <p id={hintId} className="text-xs leading-relaxed text-[var(--color-on-surface-variant)] opacity-80">
+          {hint}
+        </p>
       )}
 
       {React.isValidElement(children)
@@ -48,8 +56,7 @@ export function Field({ label, htmlFor, error, hint, required, className, childr
         : children}
 
       {error && (
-        <p id={errorId} role="alert" className="flex items-start gap-1.5 text-xs font-medium text-[var(--color-clay)]">
-          <AlertCircle className="mt-px size-3.5 shrink-0" aria-hidden />
+        <p id={errorId} role="alert" className="text-xs font-medium text-[var(--color-error)]">
           {error}
         </p>
       )}
@@ -57,26 +64,29 @@ export function Field({ label, htmlFor, error, hint, required, className, childr
   );
 }
 
-const controlBase =
-  'w-full rounded-[var(--radius-control)] border border-[var(--color-linen)] bg-white px-3.5 text-[15px] text-[var(--color-ink)] placeholder:text-[var(--color-placeholder)] transition-colors hover:border-[var(--color-edge-hover)] focus:border-[var(--color-ember)] disabled:cursor-not-allowed disabled:bg-[var(--color-sand)] disabled:opacity-70 aria-[invalid=true]:border-[var(--color-clay)]';
+const control =
+  'field-underline w-full px-0 py-2.5 text-base text-[var(--color-on-surface)] placeholder:text-[var(--color-outline)] disabled:cursor-not-allowed disabled:opacity-50 aria-[invalid=true]:border-b-[var(--color-error)]';
+
+/** Focus draws the full box — hence the horizontal padding on focus. */
+const focusBox = 'focus:px-3';
 
 export const Input = React.forwardRef<HTMLInputElement, React.InputHTMLAttributes<HTMLInputElement>>(
   ({ className, ...props }, ref) => (
-    <input ref={ref} className={cn(controlBase, 'h-11', className)} {...props} />
+    <input ref={ref} className={cn(control, focusBox, 'h-11', className)} {...props} />
   ),
 );
 Input.displayName = 'Input';
 
 export const Textarea = React.forwardRef<HTMLTextAreaElement, React.TextareaHTMLAttributes<HTMLTextAreaElement>>(
   ({ className, ...props }, ref) => (
-    <textarea ref={ref} className={cn(controlBase, 'min-h-28 resize-y py-2.5 leading-relaxed', className)} {...props} />
+    <textarea ref={ref} className={cn(control, 'focus:px-3 min-h-28 resize-y leading-relaxed', className)} {...props} />
   ),
 );
 Textarea.displayName = 'Textarea';
 
 export const Select = React.forwardRef<HTMLSelectElement, React.SelectHTMLAttributes<HTMLSelectElement>>(
   ({ className, ...props }, ref) => (
-    <select ref={ref} className={cn(controlBase, 'h-11 pr-9', className)} {...props} />
+    <select ref={ref} className={cn(control, focusBox, 'h-11 pr-8', className)} {...props} />
   ),
 );
 Select.displayName = 'Select';
@@ -85,11 +95,15 @@ export function Checkbox({
   label, className, id, ...props
 }: React.InputHTMLAttributes<HTMLInputElement> & { label: React.ReactNode }) {
   return (
-    <label htmlFor={id} className={cn('flex cursor-pointer items-start gap-2.5 text-sm text-[var(--color-bark)]', className)}>
+    <label
+      htmlFor={id}
+      className={cn('flex cursor-pointer items-start gap-3 text-sm text-[var(--color-on-surface-variant)]', className)}
+    >
+      {/* Square, like everything else. */}
       <input
         id={id}
         type="checkbox"
-        className="mt-0.5 size-4 shrink-0 cursor-pointer rounded-[3px] border-[var(--color-stone)] accent-[var(--color-ember)]"
+        className="mt-0.5 size-4 shrink-0 cursor-pointer rounded-none border border-[var(--color-outline)] accent-[var(--color-cosmic-navy)]"
         {...props}
       />
       <span className="leading-relaxed">{label}</span>

@@ -13,20 +13,20 @@ export interface FaqItem { question: string; answer: string }
  */
 export function FaqAccordion({ items }: { items: FaqItem[] }) {
   return (
-    <Accordion.Root type="single" collapsible className="divide-y divide-[var(--color-linen)]">
+    <Accordion.Root type="single" collapsible className="divide-y divide-[var(--color-outline-variant)]">
       {items.map((item, i) => (
         <Accordion.Item key={i} value={`item-${i}`}>
           <Accordion.Header>
             <Accordion.Trigger className="group flex w-full items-start justify-between gap-4 py-5 text-left">
-              <span className="text-[15px] font-medium text-[var(--color-ink)]">{item.question}</span>
+              <span className="text-[15px] font-medium text-[var(--color-cosmic-navy)]">{item.question}</span>
               <ChevronDown
-                className="mt-0.5 size-4 shrink-0 text-[var(--color-stone)] transition-transform duration-200 group-data-[state=open]:rotate-180"
+                className="mt-0.5 size-4 shrink-0 text-[var(--color-on-surface-variant)] transition-transform duration-200 group-data-[state=open]:rotate-180"
                 aria-hidden
               />
             </Accordion.Trigger>
           </Accordion.Header>
           <Accordion.Content className="overflow-hidden data-[state=closed]:animate-none">
-            <p className="pb-5 pr-8 text-sm leading-relaxed text-[var(--color-bark)]">{item.answer}</p>
+            <p className="pb-5 pr-8 text-sm leading-relaxed text-[var(--color-on-surface-variant)]">{item.answer}</p>
           </Accordion.Content>
         </Accordion.Item>
       ))}

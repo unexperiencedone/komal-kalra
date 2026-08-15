@@ -38,26 +38,26 @@ export default async function ClientDetailPage(props: { params: Promise<{ id: st
 
   return (
     <div className="mx-auto max-w-5xl px-5 py-8 lg:px-10 lg:py-12">
-      <Link href="/admin/clients" className="inline-flex items-center gap-1.5 text-sm font-medium text-[var(--color-bark)] hover:text-[var(--color-ink)]">
+      <Link href="/admin/clients" className="inline-flex items-center gap-1.5 text-sm font-medium text-[var(--color-on-surface-variant)] hover:text-[var(--color-cosmic-navy)]">
         <ArrowLeft className="size-3.5" aria-hidden /> All clients
       </Link>
 
-      <header className="mt-6 flex flex-wrap items-start justify-between gap-4 border-b border-[var(--color-linen)] pb-6">
+      <header className="mt-6 flex flex-wrap items-start justify-between gap-4 border-b border-[var(--color-outline-variant)] pb-6">
         <div>
           <h1 className="font-[family-name:var(--font-display)] text-[28px] font-semibold tracking-tight">
             {client.full_name ?? 'Unnamed client'}
           </h1>
-          <div className="mt-2 flex flex-wrap gap-x-5 gap-y-1.5 text-sm text-[var(--color-bark)]">
-            <a href={`mailto:${client.email}`} className="flex items-center gap-1.5 hover:text-[var(--color-ember-text)]">
+          <div className="mt-2 flex flex-wrap gap-x-5 gap-y-1.5 text-sm text-[var(--color-on-surface-variant)]">
+            <a href={`mailto:${client.email}`} className="flex items-center gap-1.5 hover:text-[var(--color-gold-deep)]">
               <Mail className="size-3.5" aria-hidden /> {client.email}
             </a>
             {client.phone && (
-              <a href={`tel:${client.phone}`} className="flex items-center gap-1.5 hover:text-[var(--color-ember-text)]">
+              <a href={`tel:${client.phone}`} className="flex items-center gap-1.5 hover:text-[var(--color-gold-deep)]">
                 <Phone className="size-3.5" aria-hidden /> {client.phone}
               </a>
             )}
           </div>
-          <p className="mt-1.5 text-xs text-[var(--color-stone)]">Client since {formatDate(client.created_at)}</p>
+          <p className="mt-1.5 text-xs text-[var(--color-on-surface-variant)]">Client since {formatDate(client.created_at)}</p>
         </div>
       </header>
 
@@ -70,22 +70,22 @@ export default async function ClientDetailPage(props: { params: Promise<{ id: st
       {/* Birth details — the sensitive block, visually separated and labelled. */}
       {(client.birth_date || client.birth_place) && (
         <section aria-labelledby="birth-heading" className="mt-8">
-          <h2 id="birth-heading" className="flex items-center gap-1.5 font-sans text-sm font-semibold uppercase tracking-[0.1em] text-[var(--color-stone)]">
+          <h2 id="birth-heading" className="flex items-center gap-1.5 font-sans text-sm font-semibold uppercase tracking-[0.1em] text-[var(--color-on-surface-variant)]">
             <Lock className="size-3" aria-hidden /> Birth details
           </h2>
-          <dl className="mt-3 grid gap-4 rounded-[var(--radius-card)] border border-[var(--color-linen)] bg-white p-5 sm:grid-cols-3">
+          <dl className="mt-3 grid gap-4  border border-[var(--color-outline-variant)] bg-white p-5 sm:grid-cols-3">
             <div>
-              <dt className="text-xs text-[var(--color-stone)]">Date</dt>
+              <dt className="text-xs text-[var(--color-on-surface-variant)]">Date</dt>
               <dd className="mt-0.5 text-sm font-medium">{client.birth_date ? formatDate(client.birth_date) : '—'}</dd>
             </div>
             <div>
-              <dt className="text-xs text-[var(--color-stone)]">Time</dt>
+              <dt className="text-xs text-[var(--color-on-surface-variant)]">Time</dt>
               <dd className="tabular mt-0.5 text-sm font-medium">
                 {client.birth_time_known ? (client.birth_time ?? '—') : 'Not known'}
               </dd>
             </div>
             <div>
-              <dt className="text-xs text-[var(--color-stone)]">Place</dt>
+              <dt className="text-xs text-[var(--color-on-surface-variant)]">Place</dt>
               <dd className="mt-0.5 text-sm font-medium">{client.birth_place ?? '—'}</dd>
             </div>
           </dl>
@@ -94,24 +94,24 @@ export default async function ClientDetailPage(props: { params: Promise<{ id: st
 
       <div className="mt-8 grid gap-8 lg:grid-cols-2">
         <section aria-labelledby="history-heading">
-          <h2 id="history-heading" className="font-sans text-sm font-semibold uppercase tracking-[0.1em] text-[var(--color-stone)]">
+          <h2 id="history-heading" className="font-sans text-sm font-semibold uppercase tracking-[0.1em] text-[var(--color-on-surface-variant)]">
             Consultation history
           </h2>
           {appointments && appointments.length > 0 ? (
-            <ul className="mt-3 divide-y divide-[var(--color-linen)] rounded-[var(--radius-card)] border border-[var(--color-linen)] bg-white">
+            <ul className="mt-3 divide-y divide-[var(--color-outline-variant)]  border border-[var(--color-outline-variant)] bg-white">
               {appointments.map((a) => (
                 <li key={a.id} className="px-5 py-3.5">
                   <div className="flex items-start justify-between gap-3">
                     <div className="min-w-0">
                       <p className="truncate text-sm font-medium">{a.service_title_snapshot}</p>
-                      <p className="mt-0.5 text-xs text-[var(--color-stone)]">
+                      <p className="mt-0.5 text-xs text-[var(--color-on-surface-variant)]">
                         {formatLongDay(a.starts_at)} · <span className="tabular">{formatTime(a.starts_at)}</span>
                       </p>
                     </div>
                     <AppointmentStatusBadge status={a.status} />
                   </div>
                   {a.client_question && (
-                    <p className="mt-2 line-clamp-2 text-xs italic leading-relaxed text-[var(--color-bark)]">
+                    <p className="mt-2 line-clamp-2 text-xs italic leading-relaxed text-[var(--color-on-surface-variant)]">
                       &ldquo;{a.client_question}&rdquo;
                     </p>
                   )}
@@ -124,16 +124,16 @@ export default async function ClientDetailPage(props: { params: Promise<{ id: st
         </section>
 
         <section aria-labelledby="payments-heading">
-          <h2 id="payments-heading" className="font-sans text-sm font-semibold uppercase tracking-[0.1em] text-[var(--color-stone)]">
+          <h2 id="payments-heading" className="font-sans text-sm font-semibold uppercase tracking-[0.1em] text-[var(--color-on-surface-variant)]">
             Payment history
           </h2>
           {payments && payments.length > 0 ? (
-            <ul className="mt-3 divide-y divide-[var(--color-linen)] rounded-[var(--radius-card)] border border-[var(--color-linen)] bg-white">
+            <ul className="mt-3 divide-y divide-[var(--color-outline-variant)]  border border-[var(--color-outline-variant)] bg-white">
               {payments.map((p) => (
                 <li key={p.id} className="flex items-center justify-between gap-3 px-5 py-3.5">
                   <div className="min-w-0">
                     <p className="tabular text-sm font-medium">{formatPaisePrecise(p.amount_paise)}</p>
-                    <p className="mt-0.5 text-xs text-[var(--color-stone)]">
+                    <p className="mt-0.5 text-xs text-[var(--color-on-surface-variant)]">
                       {formatDateTime(p.paid_at ?? p.created_at)}
                     </p>
                   </div>

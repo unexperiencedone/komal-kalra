@@ -1,7 +1,9 @@
 import { Suspense } from 'react';
 import Link from 'next/link';
 import type { Metadata } from 'next';
-import { ArrowLeft, Lock } from 'lucide-react';
+import Image from 'next/image';
+import { Lock } from 'lucide-react';
+import { img } from '@/lib/content/imagery';
 import { LoginForm } from './LoginForm';
 import { Skeleton } from '@/components/ui/states';
 import { BRAND } from '@/lib/config';
@@ -14,18 +16,20 @@ export const metadata: Metadata = {
 };
 
 export default function LoginPage() {
+  const portrait = img('practitionerPortrait');
+
   return (
     <div className="grid min-h-dvh lg:grid-cols-2">
-      {/* Form column */}
-      <div className="flex flex-col px-5 py-8 sm:px-10 lg:px-16">
+      {/* --------------------------- Form column --------------------------- */}
+      <div className="flex flex-col px-6 py-8 sm:px-12 lg:px-20">
         <Link
           href="/"
-          className="inline-flex items-center gap-1.5 text-sm font-medium text-[var(--color-bark)] transition-colors hover:text-[var(--color-ink)]"
+          className="font-[family-name:var(--font-display)] text-2xl font-medium tracking-tight text-[var(--color-cosmic-navy)]"
         >
-          <ArrowLeft className="size-3.5" aria-hidden /> Back to site
+          {BRAND.name}
         </Link>
 
-        <main id="main" className="flex flex-1 items-center py-12">
+        <main id="main" className="flex flex-1 items-center py-16">
           <div className="mx-auto w-full max-w-sm">
             <Suspense fallback={<LoginSkeleton />}>
               <LoginForm />
@@ -33,28 +37,33 @@ export default function LoginPage() {
           </div>
         </main>
 
-        <p className="flex items-center gap-1.5 text-xs text-[var(--color-stone)]">
+        <p className="label-small flex items-center gap-2 text-[var(--color-on-surface-variant)]">
           <Lock className="size-3" aria-hidden />
           Your details are encrypted in transit and never shared.
         </p>
       </div>
 
-      {/* Brand column — decorative, hidden on mobile where it would only push
-          the form below the fold. */}
-      <aside
-        aria-hidden
-        className="band-night constellation-motif-dark relative hidden flex-col justify-between p-16 lg:flex"
-      >
-        <p className="font-[family-name:var(--font-display)] text-xl font-semibold text-[var(--color-sand)]">
-          {BRAND.fullName}
-        </p>
-        <div>
-          <blockquote className="max-w-md font-[family-name:var(--font-display)] text-[28px] leading-snug text-[var(--color-sand)]">
-            &ldquo;{BRAND.tagline}&rdquo;
+      {/*
+        Brand column. Hidden below lg — on a phone it would push the form below
+        the fold, and the form is the only thing on this page that does a job.
+      */}
+      <aside aria-hidden className="relative hidden overflow-hidden lg:block">
+        <Image
+          src={portrait.src}
+          alt=""
+          fill
+          sizes="50vw"
+          className="object-cover grayscale-[20%]"
+        />
+        <div className="absolute inset-0 bg-[var(--color-cosmic-navy)]/70" />
+        <div className="relative flex h-full flex-col justify-end p-16">
+          <span className="gold-rule" />
+          <blockquote className="mt-8 max-w-md font-[family-name:var(--font-display)] text-3xl leading-snug text-[var(--color-warm-ivory)]">
+            {BRAND.tagline}
           </blockquote>
-          <p className="mt-6 max-w-md text-sm leading-relaxed">
-            Sign in to see your upcoming consultations, download receipts, and manage
-            your bookings.
+          <p className="mt-6 max-w-md text-base leading-relaxed text-[var(--color-on-primary-container)]">
+            Sign in to see your upcoming consultations, download receipts and manage your
+            bookings.
           </p>
         </div>
       </aside>

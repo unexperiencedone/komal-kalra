@@ -1,0 +1,438 @@
+<!DOCTYPE html><html class="scroll-smooth" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Healing Service - Komal Kalra</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&amp;family=Public+Sans:ital,wght@0,100..900;1,100..900&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "secondary-fixed": "#ffdcc3",
+                      "secondary-fixed-dim": "#ffb77e",
+                      "outline-variant": "#c6c6cc",
+                      "primary-container": "#1a1f2c",
+                      "warm-ivory": "#fef9f2",
+                      "secondary-container": "#fda861",
+                      "on-primary-fixed": "#161b28",
+                      "ink-black": "#17120e",
+                      "on-tertiary-fixed-variant": "#484742",
+                      "on-secondary-fixed-variant": "#6e3900",
+                      "on-primary-container": "#828697",
+                      "on-error": "#ffffff",
+                      "on-primary-fixed-variant": "#424655",
+                      "on-error-container": "#93000a",
+                      "secondary": "#8e4e0b",
+                      "tertiary-fixed": "#e6e2db",
+                      "on-tertiary": "#ffffff",
+                      "primary-fixed": "#dee2f4",
+                      "surface": "#fdf9f2",
+                      "error-container": "#ffdad6",
+                      "surface-variant": "#e6e2db",
+                      "inverse-primary": "#c2c6d8",
+                      "surface-container-low": "#f8f3ec",
+                      "error": "#ba1a1a",
+                      "on-secondary-container": "#743c00",
+                      "background": "#fdf9f2",
+                      "tertiary": "#070604",
+                      "primary-fixed-dim": "#c2c6d8",
+                      "outline": "#76777c",
+                      "tertiary-container": "#201f1b",
+                      "inverse-on-surface": "#f5f0e9",
+                      "surface-container-lowest": "#ffffff",
+                      "on-secondary": "#ffffff",
+                      "on-secondary-fixed": "#2f1500",
+                      "on-surface": "#1d1c18",
+                      "on-tertiary-container": "#898681",
+                      "cosmic-navy": "#1a1f2c",
+                      "tertiary-fixed-dim": "#cac6bf",
+                      "on-tertiary-fixed": "#1d1c18",
+                      "muted-gold": "#a45f1e",
+                      "surface-bright": "#fdf9f2",
+                      "inverse-surface": "#32302c",
+                      "on-primary": "#ffffff",
+                      "on-background": "#1d1c18",
+                      "on-surface-variant": "#45464c",
+                      "surface-container": "#f2ede6",
+                      "surface-tint": "#595e6d",
+                      "surface-container-highest": "#e6e2db",
+                      "surface-container-high": "#ece8e1",
+                      "surface-dim": "#ded9d3",
+                      "primary": "#030612",
+                      "linen-grey": "#ece7e1"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "section-lg": "120px",
+                      "unit": "8px",
+                      "section-md": "80px",
+                      "container-max": "1280px",
+                      "gutter": "24px"
+              },
+              "fontFamily": {
+                      "body-base": [
+                              "Public Sans"
+                      ],
+                      "display-lg": [
+                              "Playfair Display"
+                      ],
+                      "headline-h2": [
+                              "Playfair Display"
+                      ],
+                      "label-caps": [
+                              "Public Sans"
+                      ],
+                      "display-lg-mobile": [
+                              "Playfair Display"
+                      ],
+                      "headline-h1-mobile": [
+                              "Playfair Display"
+                      ],
+                      "headline-h1": [
+                              "Playfair Display"
+                      ],
+                      "label-small": [
+                              "Public Sans"
+                      ],
+                      "body-lg": [
+                              "Public Sans"
+                      ]
+              },
+              "fontSize": {
+                      "body-base": [
+                              "16px",
+                              {
+                                      "lineHeight": "1.6",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "display-lg": [
+                              "72px",
+                              {
+                                      "lineHeight": "1.1",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "headline-h2": [
+                              "36px",
+                              {
+                                      "lineHeight": "1.3",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "label-caps": [
+                              "12px",
+                              {
+                                      "lineHeight": "1.2",
+                                      "letterSpacing": "0.12em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "display-lg-mobile": [
+                              "40px",
+                              {
+                                      "lineHeight": "1.15",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "headline-h1-mobile": [
+                              "32px",
+                              {
+                                      "lineHeight": "1.2",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "headline-h1": [
+                              "48px",
+                              {
+                                      "lineHeight": "1.2",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "label-small": [
+                              "11px",
+                              {
+                                      "lineHeight": "1.2",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "body-lg": [
+                              "18px",
+                              {
+                                      "lineHeight": "1.6",
+                                      "fontWeight": "400"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+      </script>
+<style>
+        .fade-in-up {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+        .fade-in-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+      </style>
+</head>
+<body class="bg-warm-ivory text-on-surface font-body-base antialiased">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 bg-surface/92 backdrop-blur-md shadow-sm transition-all duration-300">
+<div class="max-w-container-max mx-auto px-6 md:px-12 flex justify-between items-center h-20">
+<!-- Brand -->
+<a class="font-headline-h3 text-headline-h3 text-primary tracking-tight" href="#">
+                Komal Kalra
+            </a>
+<!-- Navigation Links (Desktop) -->
+<div class="hidden md:flex space-x-8 items-center">
+<a class="font-body-base text-body-base text-on-surface-variant hover:text-primary transition-colors duration-300" href="#">Guidance</a>
+<a class="font-body-base text-body-base text-on-surface-variant hover:text-primary transition-colors duration-300" href="#">Coaching</a>
+<a class="font-body-base text-body-base text-primary border-b-2 border-primary pb-1" href="#">Healing</a>
+<a class="font-body-base text-body-base text-on-surface-variant hover:text-primary transition-colors duration-300" href="#">About</a>
+</div>
+<!-- Actions -->
+<div class="flex items-center space-x-4">
+<button class="hidden md:block bg-cosmic-navy text-warm-ivory px-6 py-3 font-label-caps text-label-caps rounded-none hover:bg-opacity-90 transition-all">Book Consultation</button>
+<button class="text-primary hover:text-muted-gold transition-colors duration-300">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">account_circle</span>
+</button>
+<!-- Mobile Menu Toggle -->
+<button class="md:hidden text-primary">
+<span class="material-symbols-outlined">menu</span>
+</button>
+</div>
+</div>
+</nav>
+<main class="pt-28 md:pt-40 pb-section-lg">
+<!-- Hero Section -->
+<section class="max-w-container-max mx-auto px-6 md:px-12 mb-section-lg fade-in-up visible">
+<div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
+<div class="md:col-span-5 z-10 relative">
+<span class="font-label-caps text-label-caps text-muted-gold tracking-widest uppercase mb-4 block">Healing Service</span>
+<h1 class="font-display-lg-mobile text-display-lg-mobile md:font-display-lg md:text-display-lg text-primary mb-6">Restore Your Inner Balance.</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant mb-10 max-w-md">A deeply intuitive energetic alignment designed to clear blockages and recalibrate your vital life force. Experience profound tranquility and restored clarity.</p>
+<button class="bg-cosmic-navy text-warm-ivory px-8 py-4 font-label-caps text-label-caps rounded-none hover:bg-opacity-90 transition-all flex items-center space-x-2">
+<span class="">Begin Your Journey</span>
+<span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+<div class="md:col-span-7 relative">
+<div class="aspect-[4/5] md:aspect-[3/2] w-full relative bg-linen-grey">
+<img class="object-cover w-full h-full grayscale-[20%] contrast-[1.1]" alt="A premium hero image for an Energy Healing service. The style is 'Silent Luxury'—calm, restorative, and sophisticated. The image captures the essence of 'inner balance': a close-up of a single, perfectly smooth dark river stone resting on a textured linen cloth, with a very subtle, soft glow emanating from behind it." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAM2mCYzi6jUOps-RHyjqc4naWYiSa_LCOzulqxk3S4DnFxTPNQ49BVzvEMwH8CViG5gPwG7tNmodxTtPo9OVrFWz3CsJKfmVvmse_wJIVdI1H4dTQHBw0CfECoeXtkwFwwnjZB7qySAELju67qEW6H5utujfY5Y5N1EZuSXCcF4er5-cXvJIVlkFv9jLZF5gw_sB32CNr1codrULXFJOrjbmpK0FQyDApNj0bqDzG6XnOoM4i92GTA">
+<div class="absolute inset-0 border border-muted-gold/30 pointer-events-none transform translate-x-4 translate-y-4"></div>
+</div>
+</div>
+</div>
+</section>
+<!-- Divider -->
+<div class="max-w-container-max mx-auto px-6 md:px-12">
+<div class="h-px w-full bg-muted-gold/20 mb-section-lg"></div>
+</div>
+<!-- The Healing Journey -->
+<section class="max-w-container-max mx-auto px-6 md:px-12 mb-section-lg">
+<div class="text-center max-w-2xl mx-auto mb-16 fade-in-up visible">
+<h2 class="font-headline-h2 text-headline-h2 text-primary mb-4">The Healing Journey</h2>
+<p class="font-body-base text-body-base text-on-surface-variant">A curated three-phase protocol designed to gently guide you back to your natural state of equilibrium.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+<!-- Phase 1 -->
+<div class="flex flex-col fade-in-up visible" style="transition-delay: 100ms;">
+<div class="text-muted-gold font-label-caps text-label-caps mb-4">01</div>
+<div class="aspect-square bg-linen-grey mb-6 relative group overflow-hidden">
+<img class="object-cover w-full h-full group-hover:scale-105 transition-transform duration-700" data-alt="A macro, abstract photograph of smooth, rounded river stones stacked delicately in a minimalist composition. The lighting is soft and diffused, creating a serene, calm atmosphere in a light-mode 'Silent Luxury' aesthetic. Tones of warm ivory and muted grey dominate, symbolizing grounded intention and quiet authority." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBp4-018_fOKU7q_L_2vxjnA8aRapEXPMJcLa4sNXCHH6TwtpkJPcZZmjBSzbklM7CLvgZ9Vi_inTLeklIQt6raeomrEzrqYbsJMXN7Ed2Y62B2nkgU4CbZomKLh8W2zx-CVJQC3hHwwhtW6F9zRV9GAdhMOBUslAwscctCgEuXX3xiEhM-NnEQtDtTUJIfUmYMP9eeKPi9U3D-ruk5qxadSGa6cU8iwxigszRH6twA8qRlFYNevkYj">
+</div>
+<h3 class="font-headline-h2 text-headline-h2 text-primary mb-3 text-2xl">Intention</h3>
+<p class="font-body-base text-body-base text-on-surface-variant">We begin by identifying the energetic dissonances within your field, setting a precise and powerful anchor for the session.</p>
+</div>
+<!-- Phase 2 -->
+<div class="flex flex-col fade-in-up visible" style="transition-delay: 200ms;">
+<div class="text-muted-gold font-label-caps text-label-caps mb-4">02</div>
+<div class="aspect-square bg-linen-grey mb-6 relative group overflow-hidden">
+<img class="object-cover w-full h-full group-hover:scale-105 transition-transform duration-700" data-alt="An ethereal, minimalist photograph capturing the subtle movement of incense smoke against a soft, creamy background. The light-mode composition relies on fluid, organic lines and quiet whitespace, embodying the concept of release. The palette is strictly warm ivory and delicate grey, maintaining a high-end editorial feel." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC4HkLwCxb4iCRapwFJDraNXLD6oyIKGP3nhuTkKyfBY9HFGDwf7P7cVFamm3digXz6-vK4qM3bife-kdETYvxWBGv51Vn0AOTAGZalbvhlOqFshXczGB3TemxZdPQ1cv4TNRA04SjQHpqtLN5FtM31wPFsxWvcvHI4QhC9aacV_V3QU44G_O0XPvEHLXjJJ3U8s2uKipgcttDgcg2ZRVIf_VZwzIsxVmgLWWKlcZFataqJlK8p_cbt">
+</div>
+<h3 class="font-headline-h2 text-headline-h2 text-primary mb-3 text-2xl">Release</h3>
+<p class="font-body-base text-body-base text-on-surface-variant">Through focused modality techniques, we systematically clear stagnant energy, creating vast internal space for renewal.</p>
+</div>
+<!-- Phase 3 -->
+<div class="flex flex-col fade-in-up visible" style="transition-delay: 300ms;">
+<div class="text-muted-gold font-label-caps text-label-caps mb-4">03</div>
+<div class="aspect-square bg-linen-grey mb-6 relative group overflow-hidden">
+<img class="object-cover w-full h-full group-hover:scale-105 transition-transform duration-700" data-alt="A refined, editorial image showing a single, perfectly illuminated drop of water creating expanding ripples on a calm, bright surface. The visual language is pure 'Silent Luxury', utilizing negative space, high contrast in light tones, and architectural precision. It represents clarity and integration in a sophisticated, calm palette." src="https://lh3.googleusercontent.com/aida-public/AB6AXuALPhVEgCi9v-nzWS_UeTz6MeKo4PXpqq-amMiDVwJETJZlphlwpG3mMu0G7uKDLUHsIn-jioL3RuwQEgk8MDi80y3BA1ReNBPADjC9ShXOCu5SlC_HE5HY7cW-eXvb450wnfK1dB0bpZVT2L018WANOHCLMKSd47qMcbxEmCsU7HB5R_HDCSSHfz05v9UtmqtuvD3AbYR4RkE1EQJ-t3DXfF53JFW-SkTJIO6mVIeBbizgWkUy5V__">
+</div>
+<h3 class="font-headline-h2 text-headline-h2 text-primary mb-3 text-2xl">Integration</h3>
+<p class="font-body-base text-body-base text-on-surface-variant">The final phase seals the new energetic pathways, ensuring the shifts are grounded into your daily physical reality.</p>
+</div>
+</div>
+</section>
+<!-- Pricing & Details (Bento-inspired) -->
+<section class="max-w-container-max mx-auto px-6 md:px-12 mb-section-lg fade-in-up visible">
+<div class="grid grid-cols-1 md:grid-cols-12 gap-1">
+<!-- Main Pricing Card -->
+<div class="md:col-span-8 bg-surface-container-low p-10 md:p-16 flex flex-col justify-center relative overflow-hidden">
+<div class="relative z-10">
+<h2 class="font-headline-h2 text-headline-h2 text-primary mb-2">Session Investment</h2>
+<p class="font-body-base text-body-base text-on-surface-variant mb-8 max-w-md">A comprehensive 60-minute immersive experience tailored entirely to your current energetic signature.</p>
+<div class="flex items-baseline space-x-2 mb-8">
+<span class="font-display-lg text-display-lg text-primary">$300</span>
+<span class="font-body-base text-body-base text-on-surface-variant">/ 60 mins</span>
+</div>
+<ul class="space-y-4 mb-10">
+<li class="flex items-center space-x-3 text-on-surface-variant">
+<span class="material-symbols-outlined text-muted-gold text-sm">check_circle</span>
+<span class="font-body-base text-body-base">Pre-session consultation (15 mins)</span>
+</li>
+<li class="flex items-center space-x-3 text-on-surface-variant">
+<span class="material-symbols-outlined text-muted-gold text-sm">check_circle</span>
+<span class="font-body-base text-body-base">Deep energetic clearing protocol</span>
+</li>
+<li class="flex items-center space-x-3 text-on-surface-variant">
+<span class="material-symbols-outlined text-muted-gold text-sm">check_circle</span>
+<span class="font-body-base text-body-base">Post-session integration guide</span>
+</li>
+</ul>
+<button class="border border-cosmic-navy text-cosmic-navy px-8 py-4 font-label-caps text-label-caps hover:bg-cosmic-navy hover:text-warm-ivory transition-colors duration-300">Reserve Your Time</button>
+</div>
+<!-- Decorative element -->
+<div class="absolute -right-20 -bottom-20 w-64 h-64 border border-muted-gold/10 rounded-full pointer-events-none"></div>
+</div>
+<!-- Secondary Info Cards -->
+<div class="md:col-span-4 flex flex-col gap-1">
+<div class="bg-linen-grey p-10 flex-grow flex flex-col justify-center">
+<span class="material-symbols-outlined text-muted-gold mb-4 text-3xl">location_on</span>
+<h4 class="font-headline-h2 text-headline-h2 text-primary text-xl mb-2">Location</h4>
+<p class="font-body-base text-body-base text-on-surface-variant">Available both virtually via secure link, or in-person at the Sanctuary Studio in New York.</p>
+</div>
+<div class="bg-primary p-10 flex-grow flex flex-col justify-center text-warm-ivory">
+<span class="material-symbols-outlined text-muted-gold mb-4 text-3xl">schedule</span>
+<h4 class="font-headline-h2 text-headline-h2 text-warm-ivory text-xl mb-2">Preparation</h4>
+<p class="font-body-base text-body-base text-surface-variant opacity-80">Please ensure you have a quiet, undisturbed space and comfortable clothing for the duration of the session.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- FAQ -->
+<section class="max-w-container-max mx-auto px-6 md:px-12 fade-in-up visible">
+<div class="grid grid-cols-1 md:grid-cols-12 gap-12">
+<div class="md:col-span-4">
+<h2 class="font-headline-h2 text-headline-h2 text-primary mb-4">Expectations</h2>
+<p class="font-body-base text-body-base text-on-surface-variant">Clarity on the process to ensure you feel secure and prepared.</p>
+</div>
+<div class="md:col-span-8 space-y-6">
+<!-- FAQ Item 1 -->
+<div class="border-b border-muted-gold/20 pb-6 group cursor-pointer faq-toggle">
+<div class="flex justify-between items-center">
+<h4 class="font-body-lg text-body-lg text-primary group-hover:text-muted-gold transition-colors">What should I feel during the session?</h4>
+<span class="material-symbols-outlined text-muted-gold transition-transform duration-300">add</span>
+</div>
+<div class="mt-4 font-body-base text-body-base text-on-surface-variant hidden">
+                            Experiences vary wildly. Some feel profound physical warmth or tingling, while others experience deep emotional release or simply a profound sense of heavy, restorative sleep. All responses are valid and part of the clearing.
+                        </div>
+</div>
+<!-- FAQ Item 2 -->
+<div class="border-b border-muted-gold/20 pb-6 group cursor-pointer faq-toggle">
+<div class="flex justify-between items-center">
+<h4 class="font-body-lg text-body-lg text-primary group-hover:text-muted-gold transition-colors">How many sessions are recommended?</h4>
+<span class="material-symbols-outlined text-muted-gold transition-transform duration-300">add</span>
+</div>
+<div class="mt-4 font-body-base text-body-base text-on-surface-variant hidden">
+                            While a single session can provide significant relief, a foundational series of three sessions spaced out over six weeks is often recommended for deep, lasting recalibration.
+                        </div>
+</div>
+<!-- FAQ Item 3 -->
+<div class="border-b border-muted-gold/20 pb-6 group cursor-pointer faq-toggle">
+<div class="flex justify-between items-center">
+<h4 class="font-body-lg text-body-lg text-primary group-hover:text-muted-gold transition-colors">Is virtual healing as effective?</h4>
+<span class="material-symbols-outlined text-muted-gold transition-transform duration-300">add</span>
+</div>
+<div class="mt-4 font-body-base text-body-base text-on-surface-variant hidden">
+                            Yes. Energy is not bound by physical proximity. Virtual sessions allow you to remain in the comfort of your own environment, which often facilitates an even deeper state of relaxation.
+                        </div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-cosmic-void bg-primary text-on-primary-container font-body-base text-body-base w-full py-20 mt-section-lg">
+<div class="max-w-container-max mx-auto px-6 md:px-12">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-12 mb-16">
+<!-- Brand -->
+<div>
+<h2 class="font-headline-h2 text-headline-h2 text-warm-ivory mb-6">Komal Kalra</h2>
+<p class="text-surface-variant max-w-xs">Guiding you toward clarity, alignment, and profound internal quiet.</p>
+</div>
+<!-- Links -->
+<div class="flex flex-col space-y-4">
+<a class="text-surface-variant hover:text-muted-gold transition-colors w-fit" href="#">Astrological Guidance</a>
+<a class="text-surface-variant hover:text-muted-gold transition-colors w-fit" href="#">Life Coaching</a>
+<a class="text-muted-gold font-bold w-fit" href="#">Healing</a>
+</div>
+<!-- Contact -->
+<div class="flex flex-col space-y-4">
+<a class="text-surface-variant hover:text-muted-gold transition-colors w-fit" href="#">Contact: +91 98785 77077</a>
+<a class="text-surface-variant hover:text-muted-gold transition-colors w-fit" href="#">Instagram</a>
+</div>
+</div>
+<!-- Divider & Copyright -->
+<div class="border-t border-surface-variant/20 pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-surface-variant">
+<p class="">© 2024 Astrologer Komal Kalra. All rights reserved.</p>
+</div>
+</div>
+</footer>
+<script>
+        // Simple Intersection Observer for fade-in animations
+        document.addEventListener("DOMContentLoaded", () => {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, {
+                threshold: 0.1,
+                rootMargin: "0px 0px -50px 0px"
+            });
+
+            document.querySelectorAll('.fade-in-up').forEach((el) => {
+                observer.observe(el);
+            });
+
+            // FAQ Toggle
+            document.querySelectorAll('.faq-toggle').forEach(item => {
+                item.addEventListener('click', () => {
+                    const content = item.querySelector('.hidden');
+                    const icon = item.querySelector('.material-symbols-outlined');
+                    
+                    if(content.classList.contains('hidden')) {
+                        content.classList.remove('hidden');
+                        content.classList.add('block');
+                        icon.textContent = 'remove';
+                        icon.style.transform = 'rotate(180deg)';
+                    } else {
+                        content.classList.add('hidden');
+                        content.classList.remove('block');
+                        icon.textContent = 'add';
+                        icon.style.transform = 'rotate(0deg)';
+                    }
+                });
+            });
+        });
+    </script>
+
+
+</body></html>

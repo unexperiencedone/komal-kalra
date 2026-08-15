@@ -88,7 +88,7 @@ export function ServiceEditor({ services }: { services: Service[] }) {
             <Input name="sortOrder" type="number" min={0} max={999} required defaultValue={s?.sort_order ?? 0} />
           </Field>
 
-          <fieldset className="space-y-3 rounded-[var(--radius-card)] border border-[var(--color-linen)] bg-white p-5">
+          <fieldset className="space-y-3  border border-[var(--color-outline-variant)] bg-white p-5">
             <legend className="px-1.5 text-sm font-semibold">Visibility</legend>
             <Checkbox id="s-active" name="active" defaultChecked={s?.active ?? true}
               label="Active — visible on the website" />
@@ -119,7 +119,7 @@ export function ServiceEditor({ services }: { services: Service[] }) {
 
       <ul className="mt-6 space-y-3">
         {services.map((s) => (
-          <li key={s.id} className="flex flex-wrap items-center justify-between gap-4 rounded-[var(--radius-card)] border border-[var(--color-linen)] bg-white p-5">
+          <li key={s.id} className="flex flex-wrap items-center justify-between gap-4  border border-[var(--color-outline-variant)] bg-white p-5">
             <div className="min-w-0">
               <div className="flex flex-wrap items-center gap-2.5">
                 <p className="font-sans text-[15px] font-semibold">{s.title}</p>
@@ -127,11 +127,11 @@ export function ServiceEditor({ services }: { services: Service[] }) {
                 {s.featured && <Badge tone="accent">Featured</Badge>}
                 {!s.bookable_online && <Badge tone="warning">Enquiry only</Badge>}
               </div>
-              <p className="mt-1 text-sm text-[var(--color-stone)]">
+              <p className="mt-1 text-sm text-[var(--color-on-surface-variant)]">
                 {s.duration_minutes} min · <span className="tabular">{formatPaise(s.price_paise)}</span> · /services/{s.slug}
               </p>
             </div>
-            <Button variant="outline" size="sm" onClick={() => setEditing(s)}>
+            <Button variant="secondary" size="sm" onClick={() => setEditing(s)}>
               <Pencil aria-hidden /> Edit
             </Button>
           </li>
@@ -139,7 +139,7 @@ export function ServiceEditor({ services }: { services: Service[] }) {
       </ul>
 
       {services.length === 0 && (
-        <p className="mt-6 rounded-[var(--radius-card)] border border-dashed border-[var(--color-linen)] p-10 text-center text-sm text-[var(--color-stone)]">
+        <p className="mt-6  border border-dashed border-[var(--color-outline-variant)] p-10 text-center text-sm text-[var(--color-on-surface-variant)]">
           No services yet. Create your first one to open bookings.
         </p>
       )}

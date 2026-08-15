@@ -43,9 +43,10 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   return (
     <AppShell
       nav={nav}
-      title="Admin console"
+      title="Practitioner Console"
       user={{ name: profile.full_name, email: profile.email, role: profile.role }}
       signOutAction={signOut}
+      primaryAction={{ href: '/admin/appointments', label: 'Start Session' }}
     >
       {children}
     </AppShell>

@@ -15,6 +15,8 @@ import { Button } from '@/components/ui/button';
 import { Field, Input, Textarea, Checkbox } from '@/components/ui/field';
 import { InlineAlert, ErrorState } from '@/components/ui/states';
 import { SlotPicker } from './SlotPicker';
+import { BookingStepper, type BookingStepName } from './BookingStepper';
+import { BookingSummary } from './BookingSummary';
 import { HoldTimer } from './HoldTimer';
 import { cn } from '@/lib/utils';
 import type { DaySlots } from '@/lib/booking/availability';
@@ -42,6 +44,18 @@ import type { RazorpayHandlerResponse } from '@/types/razorpay';
  */
 
 type Step = 'time' | 'details' | 'paying';
+
+/**
+ * The design shows four steps; this flow has three internal states because
+ * service selection and time selection happen on the same screen. Mapping here
+ * rather than adding a fourth state keeps the state machine honest — there is
+ * no separate "selection" step to be in.
+ */
+const STEP_LABEL: Record<Step, BookingStepName> = {
+  time: 'Schedule',
+  details: 'Details',
+  paying: 'Payment',
+};
 
 interface HoldState { id: string; startsAt: string; endsAt: string; expiresAt: string }
 
@@ -316,7 +330,7 @@ export function BookingFlow({
       <div className="grid gap-10 lg:grid-cols-[1fr_380px] lg:items-start">
         {/* ------------------------------ MAIN ------------------------------ */}
         <div>
-          <Stepper step={step} />
+          <BookingStepper current={STEP_LABEL[step]} />
 
           {error && (
             <div className="mt-6">
@@ -336,14 +350,14 @@ export function BookingFlow({
                       onClick={() => setServiceId(s.id)}
                       aria-pressed={s.id === serviceId}
                       className={cn(
-                        'rounded-[var(--radius-control)] border p-4 text-left transition-colors',
+                        ' border p-4 text-left transition-colors',
                         s.id === serviceId
-                          ? 'border-[var(--color-saffron)] bg-[var(--color-saffron-tint)]'
-                          : 'border-[var(--color-linen)] bg-white hover:border-[var(--color-edge-hover)]',
+                          ? 'border-[var(--color-muted-gold)] bg-[var(--color-linen-grey)]'
+                          : 'border-[var(--color-outline-variant)] bg-white hover:border-[var(--color-outline-variant)]',
                       )}
                     >
-                      <span className="block text-sm font-semibold text-[var(--color-ink)]">{s.title}</span>
-                      <span className="mt-1 block text-xs text-[var(--color-stone)]">
+                      <span className="block text-sm font-semibold text-[var(--color-cosmic-navy)]">{s.title}</span>
+                      <span className="mt-1 block text-xs text-[var(--color-on-surface-variant)]">
                         {s.duration_minutes} min · {formatPaise(s.price_paise)}
                       </span>
                     </button>
@@ -386,7 +400,7 @@ export function BookingFlow({
               <button
                 type="button"
                 onClick={() => void releaseAndGoBack()}
-                className="mb-5 inline-flex items-center gap-1.5 text-sm font-medium text-[var(--color-bark)] hover:text-[var(--color-ink)]"
+                className="mb-5 inline-flex items-center gap-1.5 text-sm font-medium text-[var(--color-on-surface-variant)] hover:text-[var(--color-cosmic-navy)]"
               >
                 <ArrowLeft className="size-3.5" aria-hidden /> Choose a different time
               </button>
@@ -413,9 +427,9 @@ export function BookingFlow({
                   </div>
                 </fieldset>
 
-                <fieldset disabled={step === 'paying'} className="space-y-5 rounded-[var(--radius-card)] border border-[var(--color-linen)] bg-white p-5">
+                <fieldset disabled={step === 'paying'} className="space-y-5  border border-[var(--color-outline-variant)] bg-white p-5">
                   <legend className="px-1.5 text-sm font-semibold">Birth details</legend>
-                  <p className="text-xs leading-relaxed text-[var(--color-stone)]">
+                  <p className="text-xs leading-relaxed text-[var(--color-on-surface-variant)]">
                     Optional, but the more Komal has beforehand the more useful the session
                     will be. These details are private and visible only to her.
                   </p>
@@ -474,18 +488,18 @@ export function BookingFlow({
                       label={
                         <>
                           I have read the{' '}
-                          <Link href="/legal/refunds" target="_blank" className="underline hover:text-[var(--color-ember-text)]">
+                          <Link href="/legal/refunds" target="_blank" className="underline hover:text-[var(--color-gold-deep)]">
                             cancellation and refund policy
                           </Link>{' '}
                           and the{' '}
-                          <Link href="/legal/terms" target="_blank" className="underline hover:text-[var(--color-ember-text)]">
+                          <Link href="/legal/terms" target="_blank" className="underline hover:text-[var(--color-gold-deep)]">
                             terms of service
                           </Link>.
                         </>
                       }
                     />
                     {form.formState.errors.acceptTerms && (
-                      <p role="alert" className="mt-1.5 text-xs font-medium text-[var(--color-clay)]">
+                      <p role="alert" className="mt-1.5 text-xs font-medium text-[var(--color-error)]">
                         {form.formState.errors.acceptTerms.message}
                       </p>
                     )}
@@ -503,7 +517,7 @@ export function BookingFlow({
                   {signedIn ? `Pay ${formatPaise(total)} securely` : 'Sign in to continue'}
                 </Button>
 
-                <p className="flex items-center justify-center gap-1.5 text-xs text-[var(--color-stone)]">
+                <p className="flex items-center justify-center gap-1.5 text-xs text-[var(--color-on-surface-variant)]">
                   <Lock className="size-3" aria-hidden />
                   Payment is processed by Razorpay. Your card details never reach our servers.
                 </p>
@@ -513,136 +527,26 @@ export function BookingFlow({
         </div>
 
         {/* --------------------------- SUMMARY ---------------------------- */}
-        <aside className="lg:sticky lg:top-24">
-          <div className="rounded-[var(--radius-card)] border border-[var(--color-linen)] bg-white p-5">
-            <h2 className="font-sans text-sm font-semibold uppercase tracking-[0.1em] text-[var(--color-stone)]">
-              Your booking
-            </h2>
-
-            <p className="mt-4 font-[family-name:var(--font-display)] text-xl font-semibold">{service.title}</p>
-
-            <dl className="mt-4 space-y-2.5 text-sm">
-              <div className="flex items-center gap-2 text-[var(--color-bark)]">
-                <dt className="sr-only">Duration</dt>
-                <Clock className="size-3.5 text-[var(--color-stone)]" aria-hidden />
-                <dd>{service.duration_minutes} minutes</dd>
-              </div>
-              <div className="flex items-center gap-2 text-[var(--color-bark)]">
-                <dt className="sr-only">Format</dt>
-                <ModeIcon className="size-3.5 text-[var(--color-stone)]" aria-hidden />
-                <dd>{service.mode === 'video' ? 'Video call' : service.mode === 'phone' ? 'Phone call' : 'In person'}</dd>
-              </div>
-            </dl>
-
-            {hold ? (
-              <div className="mt-4 rounded-[var(--radius-control)] bg-[var(--color-saffron-tint)] px-4 py-3">
-                <p className="text-sm font-semibold text-[var(--color-ink)]">{formatLongDay(hold.startsAt)}</p>
-                <p className="tabular mt-0.5 text-sm text-[var(--color-bark)]">
-                  {formatTime(hold.startsAt)} – {formatTime(hold.endsAt)} IST
-                </p>
-              </div>
-            ) : (
-              <p className="mt-4 rounded-[var(--radius-control)] border border-dashed border-[var(--color-linen)] px-4 py-3 text-sm text-[var(--color-stone)]">
-                No time selected yet
-              </p>
-            )}
-
-            {/*
-              Total shown up front, with tax broken out. Hidden costs revealed
-              late are a top-three abandonment cause (research §3.1), so there
-              is nothing added after this point.
-            */}
-            <dl className="mt-5 space-y-2 border-t border-[var(--color-linen)] pt-4 text-sm">
-              <div className="flex justify-between">
-                <dt className="text-[var(--color-bark)]">Consultation fee</dt>
-                <dd className="tabular font-medium">{formatPaise(net)}</dd>
-              </div>
-              {tax > 0 && (
-                <div className="flex justify-between">
-                  <dt className="text-[var(--color-bark)]">GST ({(taxBps / 100).toFixed(0)}%)</dt>
-                  <dd className="tabular font-medium">{formatPaise(tax)}</dd>
-                </div>
-              )}
-              <div className="flex justify-between border-t border-[var(--color-linen)] pt-2.5">
-                <dt className="font-semibold">Total payable</dt>
-                <dd className="tabular font-[family-name:var(--font-display)] text-lg font-semibold">
-                  {formatPaise(total)}
-                </dd>
-              </div>
-              {tax === 0 && (
-                <p className="text-xs text-[var(--color-stone)]">Taxes included. Nothing further is added at checkout.</p>
-              )}
-            </dl>
-
-            {/* Trust signals sit adjacent to the payment decision, which is
-                where they measurably help (research §3.1). */}
-            <ul className="mt-5 space-y-2 border-t border-[var(--color-linen)] pt-4 text-xs text-[var(--color-stone)]">
-              <li className="flex gap-2">
-                <ShieldCheck className="size-3.5 shrink-0 text-[var(--color-jade)]" aria-hidden />
-                <span>{POLICY.cancellationSummary}</span>
-              </li>
-              <li className="flex gap-2">
-                <Lock className="size-3.5 shrink-0 text-[var(--color-jade)]" aria-hidden />
-                <span>Secured by Razorpay. We never see or store your card details.</span>
-              </li>
-            </ul>
-
-            <p className="mt-4 border-t border-[var(--color-linen)] pt-4 text-xs text-[var(--color-stone)]">
-              Prefer to speak to someone?{' '}
-              <a href={`tel:${BRAND.phonesE164[0]}`} className="font-medium text-[var(--color-ember-text)] hover:underline">
-                Call {BRAND.phones[0]}
-              </a>
-            </p>
-          </div>
-        </aside>
+        <BookingSummary
+          service={service}
+          startsAt={hold?.startsAt}
+          endsAt={hold?.endsAt}
+          totalPaise={total}
+          taxPaise={tax}
+        />
       </div>
     </>
   );
 }
 
-function Stepper({ step }: { step: Step }) {
-  const steps = [
-    { key: 'time', label: 'Time' },
-    { key: 'details', label: 'Details' },
-    { key: 'paying', label: 'Payment' },
-  ] as const;
-  const activeIndex = steps.findIndex((s) => s.key === step);
-
-  return (
-    <ol className="flex items-center gap-2" aria-label="Booking progress">
-      {steps.map((s, i) => (
-        <li key={s.key} className="flex flex-1 items-center gap-2">
-          <span
-            aria-current={i === activeIndex ? 'step' : undefined}
-            className={cn(
-              'flex size-6 shrink-0 items-center justify-center rounded-full text-xs font-semibold',
-              i <= activeIndex
-                ? 'bg-[var(--color-ember)] text-white'
-                : 'bg-[var(--color-linen)] text-[var(--color-bark)]',
-            )}
-          >
-            {i + 1}
-          </span>
-          <span className={cn('text-xs font-medium', i <= activeIndex ? 'text-[var(--color-ink)]' : 'text-[var(--color-stone)]')}>
-            {s.label}
-          </span>
-          {i < steps.length - 1 && (
-            <span className={cn('h-px flex-1', i < activeIndex ? 'bg-[var(--color-saffron)]' : 'bg-[var(--color-linen)]')} />
-          )}
-        </li>
-      ))}
-    </ol>
-  );
-}
-
 function EmptyServices() {
   return (
-    <div className="rounded-[var(--radius-card)] border border-dashed border-[var(--color-linen)] p-12 text-center">
+    <div className="border border-dashed border-[var(--color-outline-variant)] p-12 text-center">
       <p className="font-sans text-[15px] font-semibold">No consultations are open for booking</p>
-      <p className="mx-auto mt-2 max-w-sm text-sm leading-relaxed text-[var(--color-stone)]">
+      <p className="mx-auto mt-2 max-w-sm text-sm leading-relaxed text-[var(--color-on-surface-variant)]">
         Please call us and we will arrange a time directly.
       </p>
-      <Button asChild variant="outline" size="sm" className="mt-5">
+      <Button asChild variant="secondary" size="sm" className="mt-5">
         <a href={`tel:${BRAND.phonesE164[0]}`}>Call {BRAND.phones[0]}</a>
       </Button>
     </div>

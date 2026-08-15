@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Astrological Guidance - Komal Kalra</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&amp;family=Public+Sans:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary-fixed": "#161b28",
+                        "error-container": "#ffdad6",
+                        "on-tertiary": "#ffffff",
+                        "inverse-surface": "#32302c",
+                        "muted-gold": "#a45f1e",
+                        "linen-grey": "#ece7e1",
+                        "surface-container-high": "#ece8e1",
+                        "surface": "#fdf9f2",
+                        "on-background": "#1d1c18",
+                        "on-surface": "#1d1c18",
+                        "on-error": "#ffffff",
+                        "surface-container-low": "#f8f3ec",
+                        "surface-dim": "#ded9d3",
+                        "secondary-container": "#fda861",
+                        "background": "#fdf9f2",
+                        "on-primary-container": "#828697",
+                        "surface-variant": "#e6e2db",
+                        "on-tertiary-container": "#898681",
+                        "tertiary-fixed-dim": "#cac6bf",
+                        "primary-container": "#1a1f2c",
+                        "on-tertiary-fixed": "#1d1c18",
+                        "surface-tint": "#595e6d",
+                        "surface-bright": "#fdf9f2",
+                        "surface-container-highest": "#e6e2db",
+                        "outline-variant": "#c6c6cc",
+                        "surface-container-lowest": "#ffffff",
+                        "outline": "#76777c",
+                        "inverse-primary": "#c2c6d8",
+                        "on-primary-fixed-variant": "#424655",
+                        "on-primary": "#ffffff",
+                        "primary-fixed": "#dee2f4",
+                        "warm-ivory": "#fef9f2",
+                        "on-surface-variant": "#45464c",
+                        "ink-black": "#17120e",
+                        "tertiary-container": "#201f1b",
+                        "inverse-on-surface": "#f5f0e9",
+                        "tertiary-fixed": "#e6e2db",
+                        "on-secondary-fixed": "#2f1500",
+                        "on-secondary": "#ffffff",
+                        "secondary": "#8e4e0b",
+                        "on-tertiary-fixed-variant": "#484742",
+                        "secondary-fixed": "#ffdcc3",
+                        "on-secondary-container": "#743c00",
+                        "cosmic-navy": "#1a1f2c",
+                        "on-error-container": "#93000a",
+                        "tertiary": "#070604",
+                        "primary": "#030612",
+                        "on-secondary-fixed-variant": "#6e3900",
+                        "primary-fixed-dim": "#c2c6d8",
+                        "secondary-fixed-dim": "#ffb77e",
+                        "surface-container": "#f2ede6",
+                        "error": "#ba1a1a"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "section-lg": "120px",
+                        "container-max": "1280px",
+                        "section-md": "80px",
+                        "unit": "8px",
+                        "gutter": "24px"
+                    },
+                    "fontFamily": {
+                        "headline-h1": ["Playfair Display"],
+                        "label-small": ["Public Sans"],
+                        "display-lg-mobile": ["Playfair Display"],
+                        "label-caps": ["Public Sans"],
+                        "headline-h2": ["Playfair Display"],
+                        "headline-h1-mobile": ["Playfair Display"],
+                        "display-lg": ["Playfair Display"],
+                        "body-lg": ["Public Sans"],
+                        "body-base": ["Public Sans"]
+                    },
+                    "fontSize": {
+                        "headline-h1": ["48px", { "lineHeight": "1.2", "fontWeight": "500" }],
+                        "label-small": ["11px", { "lineHeight": "1.2", "fontWeight": "500" }],
+                        "display-lg-mobile": ["40px", { "lineHeight": "1.15", "fontWeight": "600" }],
+                        "label-caps": ["12px", { "lineHeight": "1.2", "letterSpacing": "0.12em", "fontWeight": "600" }],
+                        "headline-h2": ["36px", { "lineHeight": "1.3", "fontWeight": "500" }],
+                        "headline-h1-mobile": ["32px", { "lineHeight": "1.2", "fontWeight": "500" }],
+                        "display-lg": ["72px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+                        "body-lg": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "body-base": ["16px", { "lineHeight": "1.6", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-base antialiased">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 bg-surface/92 backdrop-blur-md shadow-sm transition-transform duration-200">
+<div class="max-w-container-max mx-auto px-12 md:px-12 flex justify-between items-center h-20">
+<div class="font-headline-h3 text-headline-h3 text-primary tracking-tight">Komal Kalra</div>
+<div class="hidden md:flex space-x-8 items-center">
+<a class="font-body-base text-body-base text-primary border-b-2 border-primary pb-1 hover:text-primary transition-colors duration-300" href="#">Guidance</a>
+<a class="font-body-base text-body-base text-on-surface-variant hover:text-primary transition-colors duration-300" href="#">Coaching</a>
+<a class="font-body-base text-body-base text-on-surface-variant hover:text-primary transition-colors duration-300" href="#">Healing</a>
+<a class="font-body-base text-body-base text-on-surface-variant hover:text-primary transition-colors duration-300" href="#">About</a>
+</div>
+<div class="flex items-center space-x-6">
+<button class="hidden md:inline-flex bg-cosmic-navy text-warm-ivory font-label-caps text-label-caps px-6 py-3 rounded-none hover:bg-ink-black transition-colors">
+                    Book Consultation
+                </button>
+<button class="text-primary hover:text-muted-gold transition-colors">
+<span class="material-symbols-outlined" data-icon="account_circle">account_circle</span>
+</button>
+</div>
+</div>
+</nav>
+<main class="pt-24 md:pt-32 pb-section-lg">
+<!-- Hero Section -->
+<section class="max-w-container-max mx-auto px-6 md:px-12 mb-section-lg">
+<div class="grid grid-cols-1 md:grid-cols-12 gap-gutter items-center">
+<div class="md:col-span-7 space-y-8 pr-0 md:pr-12">
+<span class="font-label-caps text-label-caps text-muted-gold block">Astrological Guidance</span>
+<h1 class="font-display-lg-mobile text-display-lg-mobile md:font-display-lg md:text-display-lg text-primary">
+                        Navigate Your Life Path with Precision
+                    </h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl">
+                        A profound exploration of your cosmic blueprint. Uncover hidden potentials, understand life cycles, and gain clarity on your journey through precise, ancient astrological techniques applied to modern challenges.
+                    </p>
+<div class="pt-4">
+<button class="bg-cosmic-navy text-warm-ivory font-label-caps text-label-caps px-8 py-4 rounded-none hover:bg-ink-black transition-colors inline-flex items-center space-x-2">
+<span>Book Your Session</span>
+<span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+</div>
+</div>
+<div class="md:col-span-5 mt-12 md:mt-0 relative aspect-[3/4]">
+<img class="w-full h-full object-cover object-center rounded-sm" data-alt="A sophisticated, high-end editorial photograph of an antique brass astrolabe resting on a dark walnut table. The lighting is moody and dramatic, with soft, warm golden light illuminating the intricate details of the instrument against a deeply shadowed background. The aesthetic conveys ancient wisdom, precision, and timeless silent luxury, fitting for a premium astrological service." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAIwWf65E-H6pxKgXQQ0UDvE4KPbGy816r7G_fPYoWdAO_iZ2vixHBL8XUnOBSV06WnrtLar_CDRdNmAVUtpq_37qphszJG5UCt292Fm4xODpxHflkA0xNLoWr_Zil4KlCmdIDPiB8qfOWqjJ7twiwuBf8syp0_RPejTt2U0IPZTU6TLb9stF_H3HLxC_2zNYVBx_Ta_RZhi-WacfUy0NDKbkzYaBM8fQcDU3BD7KlzMfWWMw-uTNTD"/>
+</div>
+</div>
+</section>
+<!-- Divider -->
+<div class="max-w-container-max mx-auto px-6 md:px-12">
+<div class="w-full h-px bg-muted-gold/20 mb-section-md"></div>
+</div>
+<!-- The Process -->
+<section class="max-w-container-max mx-auto px-6 md:px-12 mb-section-lg">
+<div class="text-center mb-16">
+<h2 class="font-headline-h2 text-headline-h2 text-primary mb-4">The Consultation Process</h2>
+<p class="font-body-base text-body-base text-on-surface-variant max-w-xl mx-auto">A structured approach to uncovering your celestial narrative.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+<!-- Step 1 -->
+<div class="bg-surface-container-low p-10 border border-muted-gold/10 hover:border-muted-gold/30 transition-colors duration-300">
+<div class="text-muted-gold font-headline-h2 text-headline-h2 mb-6">01</div>
+<h3 class="font-headline-h2 text-[24px] leading-tight text-primary mb-4">The Chart</h3>
+<p class="font-body-base text-body-base text-on-surface-variant">
+                        We begin by casting an exact natal chart based on your precise birth details. This foundational map outlines the planetary positions that define your inherent strengths and challenges.
+                    </p>
+</div>
+<!-- Step 2 -->
+<div class="bg-surface-container-low p-10 border border-muted-gold/10 hover:border-muted-gold/30 transition-colors duration-300">
+<div class="text-muted-gold font-headline-h2 text-headline-h2 mb-6">02</div>
+<h3 class="font-headline-h2 text-[24px] leading-tight text-primary mb-4">The Analysis</h3>
+<p class="font-body-base text-body-base text-on-surface-variant">
+                        A deep dive into current transits, progressions, and dasha systems. We analyze how the current celestial climate is interacting with your natal blueprint to highlight immediate opportunities.
+                    </p>
+</div>
+<!-- Step 3 -->
+<div class="bg-surface-container-low p-10 border border-muted-gold/10 hover:border-muted-gold/30 transition-colors duration-300">
+<div class="text-muted-gold font-headline-h2 text-headline-h2 mb-6">03</div>
+<h3 class="font-headline-h2 text-[24px] leading-tight text-primary mb-4">The Guidance</h3>
+<p class="font-body-base text-body-base text-on-surface-variant">
+                        Synthesizing the data into actionable, practical advice. You receive strategic counsel on timing, career shifts, relationships, and personal development tailored to your unique path.
+                    </p>
+</div>
+</div>
+</section>
+<!-- What to Expect & Pricing -->
+<section class="bg-surface-container-low py-section-md">
+<div class="max-w-container-max mx-auto px-6 md:px-12">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-gutter md:gap-24 items-start">
+<div>
+<h2 class="font-headline-h2 text-headline-h2 text-primary mb-8">What to Expect</h2>
+<ul class="space-y-6">
+<li class="flex items-start">
+<span class="material-symbols-outlined text-muted-gold mr-4 mt-1 text-[20px]">check</span>
+<span class="font-body-base text-body-base text-on-surface-variant">A 60-minute intensive one-on-one session via Zoom or in person.</span>
+</li>
+<li class="flex items-start">
+<span class="material-symbols-outlined text-muted-gold mr-4 mt-1 text-[20px]">check</span>
+<span class="font-body-base text-body-base text-on-surface-variant">Comprehensive analysis of your natal chart and major planetary periods.</span>
+</li>
+<li class="flex items-start">
+<span class="material-symbols-outlined text-muted-gold mr-4 mt-1 text-[20px]">check</span>
+<span class="font-body-base text-body-base text-on-surface-variant">Identification of key life themes: career trajectory, relationship dynamics, and karmic patterns.</span>
+</li>
+<li class="flex items-start">
+<span class="material-symbols-outlined text-muted-gold mr-4 mt-1 text-[20px]">check</span>
+<span class="font-body-base text-body-base text-on-surface-variant">Specific timelines for major life events and strategic periods for action or rest.</span>
+</li>
+<li class="flex items-start">
+<span class="material-symbols-outlined text-muted-gold mr-4 mt-1 text-[20px]">check</span>
+<span class="font-body-base text-body-base text-on-surface-variant">A recorded copy of the session and a digital summary of key insights.</span>
+</li>
+</ul>
+</div>
+<div class="bg-warm-ivory p-10 border border-muted-gold/20 mt-12 md:mt-0">
+<div class="mb-8">
+<h3 class="font-headline-h2 text-[28px] text-primary mb-2">Comprehensive Reading</h3>
+<p class="font-body-base text-body-base text-on-surface-variant">Ideal for first-time clients seeking deep foundational insight.</p>
+</div>
+<div class="flex items-end mb-8">
+<span class="font-display-lg-mobile text-display-lg-mobile text-primary leading-none">$350</span>
+<span class="font-body-base text-body-base text-on-surface-variant ml-2 pb-1">/ 60 mins</span>
+</div>
+<div class="space-y-4">
+<button class="w-full bg-cosmic-navy text-warm-ivory font-label-caps text-label-caps px-8 py-4 rounded-none hover:bg-ink-black transition-colors text-center">
+                                Schedule Appointment
+                            </button>
+<p class="font-label-small text-label-small text-on-surface-variant text-center">
+                                Requires exact birth time, date, and location.
+                            </p>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-cosmic-void w-full py-16 px-6 md:px-12 bg-cosmic-navy text-warm-ivory">
+<div class="max-w-container-max mx-auto grid grid-cols-1 md:grid-cols-3 gap-gutter items-center">
+<div>
+<div class="font-headline-h2 text-headline-h2 text-linen-grey mb-2">Komal Kalra</div>
+<div class="font-body-base text-body-base text-on-primary-container">Astrologer &amp; Life Coach</div>
+</div>
+<div class="flex flex-col space-y-3">
+<a class="font-body-base text-body-base text-surface-variant hover:text-muted-gold transition-colors duration-300" href="#">Astrological Guidance</a>
+<a class="font-body-base text-body-base text-surface-variant hover:text-muted-gold transition-colors duration-300" href="#">Life Coaching</a>
+<a class="font-body-base text-body-base text-surface-variant hover:text-muted-gold transition-colors duration-300" href="#">Healing</a>
+</div>
+<div class="flex flex-col space-y-3 md:items-end">
+<span class="font-body-base text-body-base text-surface-variant">Contact: +91 98785 77077</span>
+<a class="font-body-base text-body-base text-surface-variant hover:text-muted-gold transition-colors duration-300" href="#">Instagram</a>
+</div>
+</div>
+<div class="max-w-container-max mx-auto mt-12 pt-8 border-t border-muted-gold/20 flex flex-col md:flex-row justify-between items-center">
+<p class="font-label-small text-label-small text-on-primary-container">
+                © 2024 Astrologer Komal Kalra. All rights reserved.
+            </p>
+</div>
+</footer>
+</body></html>

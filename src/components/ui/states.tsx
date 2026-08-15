@@ -17,7 +17,7 @@ import { Button } from './button';
  */
 
 export function Skeleton({ className }: { className?: string }) {
-  return <div className={cn('shimmer rounded-[var(--radius-control)]', className)} aria-hidden />;
+  return <div className={cn('shimmer ', className)} aria-hidden />;
 }
 
 export function SkeletonText({ lines = 3, className }: { lines?: number; className?: string }) {
@@ -32,7 +32,7 @@ export function SkeletonText({ lines = 3, className }: { lines?: number; classNa
 
 export function SkeletonRows({ rows = 5, cols = 4 }: { rows?: number; cols?: number }) {
   return (
-    <div className="divide-y divide-[var(--color-linen)]" role="status" aria-label="Loading">
+    <div className="divide-y divide-[var(--color-linen-grey)]" role="status" aria-label="Loading">
       {Array.from({ length: rows }).map((_, r) => (
         <div key={r} className="grid gap-4 px-4 py-3.5" style={{ gridTemplateColumns: `repeat(${cols}, minmax(0,1fr))` }}>
           {Array.from({ length: cols }).map((_, c) => (
@@ -54,16 +54,16 @@ export function EmptyState({
   action?: { label: string; href: string };
 }) {
   return (
-    <div className="flex flex-col items-center justify-center rounded-[var(--radius-card)] border border-dashed border-[var(--color-linen)] bg-white/60 px-6 py-14 text-center">
-      <div className="mb-4 flex size-11 items-center justify-center rounded-full bg-[var(--color-linen)]">
-        <Icon className="size-5 text-[var(--color-stone)]" />
+    <div className="flex flex-col items-center justify-center  border border-dashed border-[var(--color-linen-grey)] bg-[var(--color-surface-low)] px-6 py-14 text-center">
+      <div className="mb-4 flex size-11 items-center justify-center rounded-full bg-[var(--color-linen-grey)]">
+        <Icon className="size-5 text-[var(--color-on-surface-variant)]" />
       </div>
-      <p className="font-sans text-[15px] font-semibold text-[var(--color-ink)]">{title}</p>
+      <p className="font-sans text-[15px] font-semibold text-[var(--color-cosmic-navy)]">{title}</p>
       {description && (
-        <p className="mt-1.5 max-w-sm text-sm leading-relaxed text-[var(--color-stone)]">{description}</p>
+        <p className="mt-1.5 max-w-sm text-sm leading-relaxed text-[var(--color-on-surface-variant)]">{description}</p>
       )}
       {action && (
-        <Button asChild variant="outline" size="sm" className="mt-5">
+        <Button asChild variant="secondary" size="sm" className="mt-5">
           <Link href={action.href}>{action.label}</Link>
         </Button>
       )}
@@ -89,14 +89,14 @@ export function ErrorState({
   return (
     <div
       role="alert"
-      className="flex flex-col items-center justify-center rounded-[var(--radius-card)] border border-[var(--color-clay)]/25 bg-[var(--color-clay-tint)] px-6 py-12 text-center"
+      className="flex flex-col items-center justify-center  border border-[var(--color-error)]/25 bg-[var(--color-error-container)] px-6 py-12 text-center"
     >
-      <AlertTriangle className="mb-3 size-6 text-[var(--color-clay)]" aria-hidden />
-      <p className="font-sans text-[15px] font-semibold text-[var(--color-ink)]">{title}</p>
-      <p className="mt-1.5 max-w-sm text-sm leading-relaxed text-[var(--color-bark)]">{description}</p>
+      <AlertTriangle className="mb-3 size-6 text-[var(--color-error)]" aria-hidden />
+      <p className="font-sans text-[15px] font-semibold text-[var(--color-cosmic-navy)]">{title}</p>
+      <p className="mt-1.5 max-w-sm text-sm leading-relaxed text-[var(--color-on-surface-variant)]">{description}</p>
       <div className="mt-5 flex gap-3">
         {onRetry && (
-          <Button variant="outline" size="sm" onClick={onRetry}>
+          <Button variant="secondary" size="sm" onClick={onRetry}>
             <RefreshCw aria-hidden /> Try again
           </Button>
         )}
@@ -114,18 +114,18 @@ export function InlineAlert({
   children: React.ReactNode;
 }) {
   const tones = {
-    info: 'border-[var(--color-indigo)]/20 bg-[var(--color-indigo-tint)] text-[var(--color-indigo)]',
-    success: 'border-[var(--color-jade)]/25 bg-[var(--color-jade-tint)] text-[var(--color-jade)]',
-    warning: 'border-[var(--color-amber-warn)]/25 bg-[var(--color-amber-tint)] text-[var(--color-amber-warn)]',
-    danger: 'border-[var(--color-clay)]/25 bg-[var(--color-clay-tint)] text-[var(--color-clay)]',
+    info: 'border-[var(--color-cosmic-navy)]/20 bg-[var(--color-surface-low)] text-[var(--color-cosmic-navy)]',
+    success: 'border-[var(--color-success)]/25 bg-[var(--color-success-container)] text-[var(--color-success)]',
+    warning: 'border-[var(--color-warning)]/25 bg-[var(--color-warning-container)] text-[var(--color-warning)]',
+    danger: 'border-[var(--color-error)]/25 bg-[var(--color-error-container)] text-[var(--color-error)]',
   };
   return (
     <div
       role={tone === 'danger' ? 'alert' : 'status'}
-      className={cn('rounded-[var(--radius-control)] border px-4 py-3 text-sm leading-relaxed', tones[tone])}
+      className={cn(' border px-4 py-3 text-sm leading-relaxed', tones[tone])}
     >
       {title && <p className="font-semibold">{title}</p>}
-      <div className={cn(title && 'mt-0.5', 'text-[var(--color-bark)]')}>{children}</div>
+      <div className={cn(title && 'mt-0.5', 'text-[var(--color-on-surface-variant)]')}>{children}</div>
     </div>
   );
 }

@@ -15,19 +15,19 @@ export const metadata: Metadata = {
 export default function AboutPage() {
   return (
     <>
-      <section className="band-dawn constellation-motif border-b border-[var(--color-linen)] py-16 sm:py-20">
-        <div className="mx-auto max-w-3xl px-5 lg:px-8">
+      <section className="band-low border-b border-[color-mix(in srgb, var(--color-muted-gold) 20%, transparent)] py-16 sm:py-20">
+        <div className="shell max-w-3xl">
           <Reveal>
             <h1 className="text-[length:var(--text-h1)]">About Komal Kalra</h1>
-            <p className="mt-5 text-[17px] leading-relaxed text-[var(--color-bark)]">
+            <p className="mt-5 text-[17px] leading-relaxed text-[var(--color-on-surface-variant)]">
               {BRAND.tagline}
             </p>
           </Reveal>
         </div>
       </section>
 
-      <section className="band-sand py-16 sm:py-20">
-        <div className="mx-auto max-w-3xl px-5 lg:px-8">
+      <section className="band-ivory py-16 sm:py-20">
+        <div className="shell max-w-3xl">
           {/*
             PLACEHOLDER BIOGRAPHY.
             Written from the brief so the page is complete and well-structured,
@@ -37,7 +37,7 @@ export default function AboutPage() {
             credentials would be both dishonest and legally risky.
           */}
           <Reveal>
-            <div className="rounded-[var(--radius-control)] border-l-2 border-[var(--color-saffron)] bg-[var(--color-saffron-tint)] px-4 py-3 text-sm">
+            <div className="border-l-2 border-[var(--color-muted-gold)] bg-[var(--color-linen-grey)] px-4 py-3 text-sm">
               <strong className="font-semibold">Placeholder content.</strong> This biography
               was written from the project brief. Replace it with Komal&apos;s own words,
               training and credentials before going live.
@@ -45,7 +45,7 @@ export default function AboutPage() {
           </Reveal>
 
           <Reveal delay={60}>
-            <div className="mt-10 space-y-5 text-[16px] leading-relaxed text-[var(--color-bark)]">
+            <div className="mt-10 space-y-5 text-[16px] leading-relaxed text-[var(--color-on-surface-variant)]">
               <p>
                 Komal Kalra works across four disciplines — astrology, life coaching, healing
                 and counselling. They sound like separate practices, and in most places they
@@ -93,9 +93,9 @@ export default function AboutPage() {
           </Reveal>
 
           <Reveal delay={100}>
-            <div className="band-night constellation-motif-dark on-dark mt-14 rounded-[var(--radius-panel)] border border-[var(--color-indigo-light)]/25 p-8 text-center shadow-[var(--shadow-lifted)]">
+            <div className="band-navy mt-14  border border-[var(--color-outline)]/25 p-8 text-center">
               <h2 className="text-[length:var(--text-h3)]">Ready when you are</h2>
-              <p className="mx-auto mt-3 max-w-md text-[15px] leading-relaxed text-[var(--color-bark)]">
+              <p className="mx-auto mt-3 max-w-md text-[15px] leading-relaxed text-[var(--color-on-surface-variant)]">
                 Pick a time that suits you, or call first if you would rather talk it through.
               </p>
               <div className="mt-6 flex flex-col justify-center gap-3 sm:flex-row">

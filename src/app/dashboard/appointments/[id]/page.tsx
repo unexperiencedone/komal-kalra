@@ -40,7 +40,7 @@ export default async function AppointmentDetailPage(props: { params: Promise<{ i
     <div className="mx-auto max-w-3xl px-5 py-8 lg:px-10 lg:py-12">
       <Link
         href="/dashboard/appointments"
-        className="inline-flex items-center gap-1.5 text-sm font-medium text-[var(--color-bark)] hover:text-[var(--color-ink)]"
+        className="inline-flex items-center gap-1.5 text-sm font-medium text-[var(--color-on-surface-variant)] hover:text-[var(--color-cosmic-navy)]"
       >
         <ArrowLeft className="size-3.5" aria-hidden /> All appointments
       </Link>
@@ -50,7 +50,7 @@ export default async function AppointmentDetailPage(props: { params: Promise<{ i
           <h1 className="font-[family-name:var(--font-display)] text-[28px] font-semibold tracking-tight">
             {appointment.service_title_snapshot}
           </h1>
-          <p className="mt-1.5 text-sm text-[var(--color-stone)]">Reference {appointment.reference}</p>
+          <p className="mt-1.5 text-sm text-[var(--color-on-surface-variant)]">Reference {appointment.reference}</p>
         </div>
         <AppointmentStatusBadge status={appointment.status} />
       </div>
@@ -72,8 +72,8 @@ export default async function AppointmentDetailPage(props: { params: Promise<{ i
         </div>
       )}
 
-      <section aria-label="Appointment details" className="mt-8 rounded-[var(--radius-card)] border border-[var(--color-linen)] bg-white">
-        <dl className="divide-y divide-[var(--color-linen)]">
+      <section aria-label="Appointment details" className="mt-8  border border-[var(--color-outline-variant)] bg-white">
+        <dl className="divide-y divide-[var(--color-outline-variant)]">
           <Row label="Date">{formatLongDay(appointment.starts_at)}</Row>
           <Row label="Time">
             <span className="tabular">{formatTime(appointment.starts_at)} – {formatTime(appointment.ends_at)} IST</span>
@@ -88,8 +88,7 @@ export default async function AppointmentDetailPage(props: { params: Promise<{ i
             <Row label="Birth details">
               {formatDate(appointment.subject_birth_date)}
               {appointment.subject_birth_time_known && appointment.subject_birth_time
-                ? ` at ${appointment.subject_birth_time}`
-                : ' (time not known)'}
+                ? ` at ${appointment.subject_birth_time}`: ' (time not known)'}
               {appointment.subject_birth_place ? ` · ${appointment.subject_birth_place}` : ''}
             </Row>
           )}
@@ -107,17 +106,17 @@ export default async function AppointmentDetailPage(props: { params: Promise<{ i
       )}
 
       <section aria-labelledby="payment-heading" className="mt-8">
-        <h2 id="payment-heading" className="font-sans text-sm font-semibold uppercase tracking-[0.1em] text-[var(--color-stone)]">
+        <h2 id="payment-heading" className="font-sans text-sm font-semibold uppercase tracking-[0.1em] text-[var(--color-on-surface-variant)]">
           Payment
         </h2>
-        <div className="mt-3 rounded-[var(--radius-card)] border border-[var(--color-linen)] bg-white">
-          <dl className="divide-y divide-[var(--color-linen)]">
+        <div className="mt-3  border border-[var(--color-outline-variant)] bg-white">
+          <dl className="divide-y divide-[var(--color-outline-variant)]">
             <Row label="Consultation fee">
               <span className="tabular">{formatPaise(appointment.price_paise)}</span>
             </Row>
             {appointment.discount_paise > 0 && (
               <Row label="Discount">
-                <span className="tabular text-[var(--color-jade)]">−{formatPaise(appointment.discount_paise)}</span>
+                <span className="tabular text-[var(--color-success)]">−{formatPaise(appointment.discount_paise)}</span>
               </Row>
             )}
             {appointment.tax_paise > 0 && (
@@ -132,7 +131,7 @@ export default async function AppointmentDetailPage(props: { params: Promise<{ i
             {payment?.receipt_number && <Row label="Receipt">{payment.receipt_number}</Row>}
             {payment && payment.amount_refunded_paise > 0 && (
               <Row label="Refunded">
-                <span className="tabular text-[var(--color-indigo)]">
+                <span className="tabular text-[var(--color-cosmic-navy)]">
                   {formatPaisePrecise(payment.amount_refunded_paise)}
                 </span>
               </Row>
@@ -143,14 +142,13 @@ export default async function AppointmentDetailPage(props: { params: Promise<{ i
 
       {canCancel && (
         <section aria-labelledby="manage-heading" className="mt-8">
-          <h2 id="manage-heading" className="font-sans text-sm font-semibold uppercase tracking-[0.1em] text-[var(--color-stone)]">
+          <h2 id="manage-heading" className="font-sans text-sm font-semibold uppercase tracking-[0.1em] text-[var(--color-on-surface-variant)]">
             Manage this booking
           </h2>
-          <div className="mt-3 rounded-[var(--radius-card)] border border-[var(--color-linen)] bg-white p-5">
-            <p className="text-sm leading-relaxed text-[var(--color-bark)]">
+          <div className="mt-3  border border-[var(--color-outline-variant)] bg-white p-5">
+            <p className="text-sm leading-relaxed text-[var(--color-on-surface-variant)]">
               {refundEligible
-                ? `Cancelling now is free and a full refund will be requested. ${POLICY.refundTiming}`
-                : `Your session is within ${windowHours} hours, so the fee is non-refundable. You can still cancel, or ask us to reschedule instead.`}
+                ? `Cancelling now is free and a full refund will be requested. ${POLICY.refundTiming}`: `Your session is within ${windowHours} hours, so the fee is non-refundable. You can still cancel, or ask us to reschedule instead.`}
             </p>
             <CancelBookingForm appointmentId={appointment.id} refundEligible={refundEligible} />
           </div>
@@ -163,8 +161,8 @@ export default async function AppointmentDetailPage(props: { params: Promise<{ i
 function Row({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div className="flex flex-wrap items-start justify-between gap-4 px-5 py-3.5">
-      <dt className="text-sm text-[var(--color-stone)]">{label}</dt>
-      <dd className="max-w-md text-right text-sm text-[var(--color-ink)]">{children}</dd>
+      <dt className="text-sm text-[var(--color-on-surface-variant)]">{label}</dt>
+      <dd className="max-w-md text-right text-sm text-[var(--color-cosmic-navy)]">{children}</dd>
     </div>
   );
 }

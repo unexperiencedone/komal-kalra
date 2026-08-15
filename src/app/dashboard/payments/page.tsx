@@ -40,7 +40,7 @@ export default async function PaymentsPage() {
       ) : (
         <ul className="mt-8 space-y-2.5">
           {payments.map((p) => (
-            <li key={p.id} className="rounded-[var(--radius-card)] border border-[var(--color-linen)] bg-white p-5">
+            <li key={p.id} className="border border-[var(--color-outline-variant)] bg-white p-5">
               <div className="flex flex-wrap items-start justify-between gap-4">
                 <div className="min-w-0">
                   <div className="flex flex-wrap items-center gap-2.5">
@@ -49,16 +49,16 @@ export default async function PaymentsPage() {
                     </p>
                     <PaymentStatusBadge status={p.status} />
                   </div>
-                  <p className="mt-1 text-xs text-[var(--color-stone)]">
+                  <p className="mt-1 text-xs text-[var(--color-on-surface-variant)]">
                     {formatDateTime(p.created_at)}
                     {p.appointments?.reference && ` · ${p.appointments.reference}`}
                     {p.method && ` · ${p.method.toUpperCase()}`}
                   </p>
                   {p.receipt_number && (
-                    <p className="mt-0.5 text-xs text-[var(--color-stone)]">Receipt {p.receipt_number}</p>
+                    <p className="mt-0.5 text-xs text-[var(--color-on-surface-variant)]">Receipt {p.receipt_number}</p>
                   )}
                   {p.status === 'failed' && p.error_description && (
-                    <p className="mt-1.5 text-xs text-[var(--color-clay)]">{p.error_description}</p>
+                    <p className="mt-1.5 text-xs text-[var(--color-error)]">{p.error_description}</p>
                   )}
                 </div>
 
@@ -67,14 +67,14 @@ export default async function PaymentsPage() {
                     {formatPaisePrecise(p.amount_paise)}
                   </p>
                   {p.amount_refunded_paise > 0 && (
-                    <p className="tabular mt-0.5 text-xs text-[var(--color-indigo)]">
+                    <p className="tabular mt-0.5 text-xs text-[var(--color-cosmic-navy)]">
                       {formatPaisePrecise(p.amount_refunded_paise)} refunded
                     </p>
                   )}
                   {['paid', 'partially_refunded', 'refunded'].includes(p.status) && (
                     <Link
                       href={`/dashboard/payments/${p.id}/receipt`}
-                      className="mt-2 inline-flex items-center gap-1 text-xs font-medium text-[var(--color-ember-text)] hover:underline"
+                      className="mt-2 inline-flex items-center gap-1 text-xs font-medium text-[var(--color-gold-deep)] hover:underline"
                     >
                       <Download className="size-3" aria-hidden /> Receipt
                     </Link>

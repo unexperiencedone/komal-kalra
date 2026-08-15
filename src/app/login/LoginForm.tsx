@@ -42,13 +42,13 @@ export function LoginForm() {
         <button
           type="button"
           onClick={() => setMode('signin')}
-          className="mb-6 inline-flex items-center gap-1.5 text-sm font-medium text-[var(--color-bark)] hover:text-[var(--color-ink)]"
+          className="mb-6 inline-flex items-center gap-1.5 text-sm font-medium text-[var(--color-on-surface-variant)] hover:text-[var(--color-cosmic-navy)]"
         >
           <ArrowLeft className="size-3.5" aria-hidden /> Back to sign in
         </button>
 
         <h1 className="text-[length:var(--text-h2)]">Reset your password</h1>
-        <p className="mt-2 text-sm leading-relaxed text-[var(--color-bark)]">
+        <p className="mt-2 text-sm leading-relaxed text-[var(--color-on-surface-variant)]">
           Enter your email and we will send you a link to set a new password.
         </p>
 
@@ -73,7 +73,7 @@ export function LoginForm() {
       <h1 className="text-[length:var(--text-h2)]">
         {mode === 'signin' ? 'Welcome back' : 'Create your account'}
       </h1>
-      <p className="mt-2 text-sm leading-relaxed text-[var(--color-bark)]">
+      <p className="mt-2 text-sm leading-relaxed text-[var(--color-on-surface-variant)]">
         {mode === 'signin'
           ? 'Sign in to see your consultations, receipts and upcoming sessions.'
           : 'You need an account to confirm a booking and keep your session history.'}
@@ -83,7 +83,7 @@ export function LoginForm() {
       <div
         role="tablist"
         aria-label="Sign in or create an account"
-        className="mt-7 grid grid-cols-2 gap-1 rounded-[var(--radius-control)] bg-[var(--color-linen)] p-1"
+        className="mt-7 grid grid-cols-2 gap-1  bg-[var(--color-outline-variant)] p-1"
       >
         {(['signin', 'signup'] as const).map((m) => (
           <button
@@ -93,8 +93,8 @@ export function LoginForm() {
             aria-selected={mode === m}
             onClick={() => setMode(m)}
             className={cn(
-              'rounded-[calc(var(--radius-control)-2px)] py-2 text-sm font-medium transition-colors',
-              mode === m ? 'bg-white text-[var(--color-ink)] shadow-[var(--shadow-resting)]' : 'text-[var(--color-bark)]',
+              ' py-2 text-sm font-medium transition-colors',
+              mode === m ? 'bg-white text-[var(--color-cosmic-navy)] ' : 'text-[var(--color-on-surface-variant)]',
             )}
           >
             {m === 'signin' ? 'Sign in' : 'Create account'}
@@ -128,7 +128,7 @@ export function LoginForm() {
           <button
             type="button"
             onClick={() => setMode('reset')}
-            className="text-sm font-medium text-[var(--color-ember-text)] hover:underline"
+            className="text-sm font-medium text-[var(--color-gold-deep)] hover:underline"
           >
             Forgotten your password?
           </button>
@@ -175,10 +175,10 @@ export function LoginForm() {
             Create account
           </Button>
 
-          <p className="text-xs leading-relaxed text-[var(--color-stone)]">
+          <p className="text-xs leading-relaxed text-[var(--color-on-surface-variant)]">
             By creating an account you agree to our{' '}
-            <Link href="/legal/terms" className="underline hover:text-[var(--color-ember-text)]">terms</Link> and{' '}
-            <Link href="/legal/privacy" className="underline hover:text-[var(--color-ember-text)]">privacy policy</Link>.
+            <Link href="/legal/terms" className="underline hover:text-[var(--color-gold-deep)]">terms</Link> and{' '}
+            <Link href="/legal/privacy" className="underline hover:text-[var(--color-gold-deep)]">privacy policy</Link>.
           </p>
         </form>
       )}

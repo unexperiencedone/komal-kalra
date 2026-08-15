@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
-    "audit:contrast": "python3 scripts/contrast-audit.py"
+    "audit:contrast": "python3 scripts/contrast-audit.py",
+    "images:download": "node scripts/download-images.js"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.1",

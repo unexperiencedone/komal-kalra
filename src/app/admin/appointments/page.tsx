@@ -67,7 +67,7 @@ export default async function AdminAppointmentsPage(props: {
             <Input name="ref" defaultValue={search} placeholder="KK-100123" />
           </Field>
 
-          <Button type="submit" variant="outline">Apply</Button>
+          <Button type="submit" variant="secondary">Apply</Button>
           {(status !== 'all' || from || search) && (
             <Button asChild variant="ghost"><Link href="/admin/appointments">Clear</Link></Button>
           )}
@@ -95,30 +95,30 @@ export default async function AdminAppointmentsPage(props: {
               </thead>
               <Tbody>
                 {appointments.map((a) => (
-                  <tr key={a.id} className="hover:bg-[var(--color-sand)]">
+                  <tr key={a.id} className="hover:bg-[var(--color-warm-ivory)]">
                     <Td>
                       <span className="block text-sm font-medium">{formatDate(a.starts_at)}</span>
-                      <span className="tabular block text-xs text-[var(--color-stone)]">
+                      <span className="tabular block text-xs text-[var(--color-on-surface-variant)]">
                         {formatTime(a.starts_at)}
                       </span>
                     </Td>
                     <Td>
                       {a.profiles ? (
                         <Link href={`/admin/clients/${a.profiles.id}`} className="block max-w-[180px]">
-                          <span className="block truncate text-sm font-medium hover:text-[var(--color-ember-text)]">
+                          <span className="block truncate text-sm font-medium hover:text-[var(--color-gold-deep)]">
                             {a.profiles.full_name ?? 'Unnamed'}
                           </span>
-                          <span className="block truncate text-xs text-[var(--color-stone)]">
+                          <span className="block truncate text-xs text-[var(--color-on-surface-variant)]">
                             {a.profiles.phone ?? a.profiles.email}
                           </span>
                         </Link>
                       ) : (
-                        <span className="text-sm text-[var(--color-stone)]">—</span>
+                        <span className="text-sm text-[var(--color-on-surface-variant)]">—</span>
                       )}
                     </Td>
                     <Td>
                       <span className="block max-w-[160px] truncate text-sm">{a.service_title_snapshot}</span>
-                      <span className="block text-xs text-[var(--color-stone)]">{a.reference}</span>
+                      <span className="block text-xs text-[var(--color-on-surface-variant)]">{a.reference}</span>
                     </Td>
                     <Td><AppointmentStatusBadge status={a.status} /></Td>
                     <Td><PaymentStatusBadge status={a.payment_status} /></Td>

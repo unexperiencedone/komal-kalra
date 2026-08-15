@@ -27,10 +27,10 @@ export function ClientNotes({
 
   return (
     <section aria-labelledby="notes-heading" className="mt-8">
-      <h2 id="notes-heading" className="flex items-center gap-1.5 font-sans text-sm font-semibold uppercase tracking-[0.1em] text-[var(--color-stone)]">
+      <h2 id="notes-heading" className="flex items-center gap-1.5 font-sans text-sm font-semibold uppercase tracking-[0.1em] text-[var(--color-on-surface-variant)]">
         <Lock className="size-3" aria-hidden /> Private notes
       </h2>
-      <p className="mt-1.5 text-xs text-[var(--color-stone)]">
+      <p className="mt-1.5 text-xs text-[var(--color-on-surface-variant)]">
         Visible only to you. The client can never see these.
       </p>
 
@@ -51,14 +51,14 @@ export function ClientNotes({
 
       {sessionNotes.length > 0 && (
         <div className="mt-6">
-          <h3 className="text-xs font-semibold uppercase tracking-[0.1em] text-[var(--color-stone)]">
+          <h3 className="text-xs font-semibold uppercase tracking-[0.1em] text-[var(--color-on-surface-variant)]">
             Session notes
           </h3>
           <ul className="mt-2 space-y-2">
             {sessionNotes.map((n) => (
-              <li key={n.id} className="rounded-[var(--radius-card)] border border-[var(--color-linen)] bg-white p-4">
-                <p className="whitespace-pre-wrap text-sm leading-relaxed text-[var(--color-bark)]">{n.body}</p>
-                <p className="mt-2 text-[11px] text-[var(--color-stone)]">{formatDateTime(n.created_at)}</p>
+              <li key={n.id} className="border border-[var(--color-outline-variant)] bg-white p-4">
+                <p className="whitespace-pre-wrap text-sm leading-relaxed text-[var(--color-on-surface-variant)]">{n.body}</p>
+                <p className="mt-2 text-[11px] text-[var(--color-on-surface-variant)]">{formatDateTime(n.created_at)}</p>
               </li>
             ))}
           </ul>

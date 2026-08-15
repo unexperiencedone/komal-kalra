@@ -39,7 +39,7 @@ export function RevenueChart({ data }: { data: { day: string; net_paise: number;
   if (total === 0) {
     return (
       <div className="flex h-64 items-center justify-center text-center">
-        <p className="max-w-xs text-sm leading-relaxed text-[var(--color-stone)]">
+        <p className="max-w-xs text-sm leading-relaxed text-[var(--color-on-surface-variant)]">
           No revenue recorded in this period. The chart will fill in as bookings are paid for.
         </p>
       </div>
@@ -61,18 +61,18 @@ export function RevenueChart({ data }: { data: { day: string; net_paise: number;
         <AreaChart data={chartData} margin={{ top: 8, right: 8, left: -12, bottom: 0 }}>
           <defs>
             <linearGradient id="revenueFill" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#C2762B" stopOpacity={0.24} />
-              <stop offset="100%" stopColor="#C2762B" stopOpacity={0.02} />
+              <stop offset="0%" stopColor="#a45f1e" stopOpacity={0.24} />
+              <stop offset="100%" stopColor="#a45f1e" stopOpacity={0.02} />
             </linearGradient>
           </defs>
-          <CartesianGrid strokeDasharray="3 3" stroke="#F1EAE0" vertical={false} />
-          <XAxis dataKey="date" tick={{ fontSize: 11, fill: '#6B5E54' }} tickLine={false} axisLine={false} minTickGap={24} />
-          <YAxis tick={{ fontSize: 11, fill: '#6B5E54' }} tickLine={false} axisLine={false}
+          <CartesianGrid strokeDasharray="3 3" stroke="#ece7e1" vertical={false} />
+          <XAxis dataKey="date" tick={{ fontSize: 11, fill: '#45464c' }} tickLine={false} axisLine={false} minTickGap={24} />
+          <YAxis tick={{ fontSize: 11, fill: '#45464c' }} tickLine={false} axisLine={false}
             tickFormatter={(v: number) => (v >= 1000 ? `${v / 1000}k` : String(v))} />
           <Tooltip
             contentStyle={{
-              borderRadius: 8, border: '1px solid #F1EAE0', fontSize: 13,
-              boxShadow: '0 10px 15px -3px rgb(20 16 14 / 0.08)',
+              borderRadius: 0, border: '1px solid #ece7e1', fontSize: 13,
+              boxShadow: 'none',
             }}
             // Recharts types the formatter value as a broad ValueType union, so
             // narrow rather than asserting.
@@ -81,7 +81,7 @@ export function RevenueChart({ data }: { data: { day: string; net_paise: number;
               'Revenue',
             ]}
           />
-          <Area type="monotone" dataKey="revenue" stroke="#C2762B" strokeWidth={2} fill="url(#revenueFill)" />
+          <Area type="monotone" dataKey="revenue" stroke="#a45f1e" strokeWidth={2} fill="url(#revenueFill)" />
         </AreaChart>
       </ResponsiveContainer>
     </div>

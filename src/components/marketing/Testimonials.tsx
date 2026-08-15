@@ -1,60 +1,47 @@
-import { Star } from 'lucide-react';
+import { Quote } from 'lucide-react';
 import { Reveal } from '@/components/common/Reveal';
 import type { Testimonial } from '@/types/database';
 
 /**
- * Testimonials.
+ * Secondary testimonials.
  *
- * Renders NOTHING when there are no approved reviews. That is deliberate and is
- * the mechanism by which this site cannot ship fake social proof: there is no
- * hardcoded fallback array anywhere in the codebase. An empty section is
- * honest; an invented one is the fastest way to lose the trust the rest of the
- * design is working to build.
+ * The home design gives the lead review a full editorial treatment; this
+ * renders any remaining approved reviews beneath it as quieter editorial
+ * cards.
  *
- * `display_initials_only` exists because astrology clients frequently want the
- * consultation kept private but are still happy to vouch for it.
+ * Renders NOTHING when the list is empty, and there is no hardcoded fallback
+ * anywhere in the codebase. That is structural rather than a promise: the site
+ * cannot display a testimonial Komal has not approved.
  */
 export function Testimonials({ testimonials }: { testimonials: Testimonial[] }) {
   if (testimonials.length === 0) return null;
 
   return (
-    <section aria-labelledby="testimonials-heading" className="band-shell border-t border-[var(--color-linen)] py-20 sm:py-24">
-      <div className="mx-auto max-w-6xl px-5 lg:px-8">
-        <Reveal>
-          <p className="accent-rule text-xs font-semibold uppercase tracking-[0.16em] text-[var(--color-ember-text)]">
-            In their words
-          </p>
-          <h2 id="testimonials-heading" className="mt-5 max-w-2xl text-[length:var(--text-h2)]">
-            What people say after a session
-          </h2>
-        </Reveal>
+    <section
+      aria-labelledby="more-reviews"
+      className="band-low border-t border-[color-mix(in_srgb,var(--color-muted-gold)_15%,transparent)] py-[var(--spacing-section-md)]"
+    >
+      <div className="shell">
+        <h2 id="more-reviews" className="label-caps text-[var(--color-gold-deep)]">
+          More reflections
+        </h2>
 
-        <ul className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+        <ul className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {testimonials.map((t, i) => (
-            <Reveal as="li" key={t.id} delay={i * 60}>
-              <figure className="flex h-full flex-col rounded-[var(--radius-card)] border border-[var(--color-linen)] bg-[var(--color-saffron-tint)] p-6">
-                <div className="flex gap-0.5" role="img" aria-label={`${t.rating} out of 5 stars`}>
-                  {Array.from({ length: 5 }).map((_, s) => (
-                    <Star
-                      key={s}
-                      className={`size-3.5 ${s < t.rating ? 'fill-[var(--color-saffron)] text-[var(--color-saffron)]' : 'text-[var(--color-linen)]'}`}
-                      aria-hidden
-                    />
-                  ))}
-                </div>
-
-                <blockquote className="mt-4 flex-1 text-[15px] leading-relaxed text-[var(--color-bark)]">
+            <Reveal as="li" key={t.id} delay={i * 80}>
+              <figure className="flex h-full flex-col border border-[color-mix(in_srgb,var(--color-muted-gold)_20%,transparent)] bg-[var(--color-warm-ivory)] p-8">
+                <Quote className="size-6 text-[var(--color-muted-gold)] opacity-50" aria-hidden />
+                <blockquote className="mt-5 flex-1 text-base leading-relaxed text-[var(--color-on-surface-variant)]">
                   {t.review}
                 </blockquote>
-
-                <figcaption className="mt-5 border-t border-[var(--color-linen)] pt-4 text-sm">
-                  <span className="font-semibold text-[var(--color-ink)]">
+                <figcaption className="mt-6 border-t border-[color-mix(in_srgb,var(--color-muted-gold)_20%,transparent)] pt-5">
+                  <p className="label-caps text-[var(--color-cosmic-navy)]">
                     {t.display_initials_only
                       ? t.author_name.split(/\s+/).map((p) => `${p[0]}.`).join(' ')
                       : t.author_name}
-                  </span>
+                  </p>
                   {t.author_location && (
-                    <span className="text-[var(--color-stone)]"> · {t.author_location}</span>
+                    <p className="mt-1 text-sm text-[var(--color-on-surface-variant)]">{t.author_location}</p>
                   )}
                 </figcaption>
               </figure>

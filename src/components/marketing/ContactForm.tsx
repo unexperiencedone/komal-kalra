@@ -58,12 +58,12 @@ export function ContactForm({ services = [] }: { services?: Service[] }) {
 
   if (state === 'sent') {
     return (
-      <div className="rounded-[var(--radius-card)] border border-[var(--color-jade)]/25 bg-[var(--color-jade-tint)] p-8 text-center">
-        <div className="mx-auto flex size-11 items-center justify-center rounded-full bg-[var(--color-sage)]">
+      <div className="border border-[var(--color-success)]/25 bg-[var(--color-success-container)] p-8 text-center">
+        <div className="mx-auto flex size-11 items-center justify-center rounded-full bg-[var(--color-success)]">
           <Check className="size-5 text-white" aria-hidden />
         </div>
         <p className="mt-4 font-[family-name:var(--font-display)] text-xl font-semibold">Message sent</p>
-        <p className="mt-2 text-sm leading-relaxed text-[var(--color-bark)]">
+        <p className="mt-2 text-sm leading-relaxed text-[var(--color-on-surface-variant)]">
           Thank you. Komal reads every enquiry personally and will come back to you shortly.
         </p>
         <Button variant="ghost" size="sm" className="mt-5" onClick={() => setState('idle')}>
@@ -89,7 +89,7 @@ export function ContactForm({ services = [] }: { services?: Service[] }) {
           <Input {...register('phone')} type="tel" autoComplete="tel" placeholder="98765 43210" inputMode="tel" />
         </Field>
       </div>
-      <p className="-mt-2 text-xs text-[var(--color-stone)]">Leave whichever you would prefer to be contacted on.</p>
+      <p className="-mt-2 text-xs text-[var(--color-on-surface-variant)]">Leave whichever you would prefer to be contacted on.</p>
 
       {services.length > 0 && (
         <Field label="What is this about?" htmlFor="contact-service" error={errors.serviceId?.message}>
@@ -122,7 +122,7 @@ export function ContactForm({ services = [] }: { services?: Service[] }) {
         <Send aria-hidden /> Send message
       </Button>
 
-      <p className="text-xs leading-relaxed text-[var(--color-stone)]">
+      <p className="text-xs leading-relaxed text-[var(--color-on-surface-variant)]">
         Your details are used only to reply to this enquiry. They are never shared or sold.
       </p>
     </form>

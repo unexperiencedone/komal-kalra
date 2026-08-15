@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Practitioner Console - Clients</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&amp;family=Public+Sans:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Config -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary-container": "#1a1f2c",
+                        "surface-tint": "#595e6d",
+                        "on-background": "#1d1c18",
+                        "tertiary-fixed": "#e6e2db",
+                        "on-primary-fixed-variant": "#424655",
+                        "surface-dim": "#ded9d3",
+                        "inverse-surface": "#32302c",
+                        "surface-bright": "#fdf9f2",
+                        "secondary": "#8e4e0b",
+                        "on-primary": "#ffffff",
+                        "on-surface-variant": "#45464c",
+                        "primary-fixed-dim": "#c2c6d8",
+                        "outline": "#76777c",
+                        "background": "#fdf9f2",
+                        "secondary-container": "#fda861",
+                        "surface-container-low": "#f8f3ec",
+                        "secondary-fixed": "#ffdcc3",
+                        "on-tertiary-fixed-variant": "#484742",
+                        "inverse-primary": "#c2c6d8",
+                        "primary-fixed": "#dee2f4",
+                        "secondary-fixed-dim": "#ffb77e",
+                        "error": "#ba1a1a",
+                        "error-container": "#ffdad6",
+                        "surface-variant": "#e6e2db",
+                        "inverse-on-surface": "#f5f0e9",
+                        "on-secondary-fixed": "#2f1500",
+                        "tertiary-container": "#201f1b",
+                        "on-tertiary": "#ffffff",
+                        "tertiary": "#070604",
+                        "on-tertiary-container": "#898681",
+                        "warm-ivory": "#fef9f2",
+                        "surface-container-lowest": "#ffffff",
+                        "outline-variant": "#c6c6cc",
+                        "on-tertiary-fixed": "#1d1c18",
+                        "on-surface": "#1d1c18",
+                        "on-primary-container": "#828697",
+                        "muted-gold": "#a45f1e",
+                        "on-secondary": "#ffffff",
+                        "surface": "#fdf9f2",
+                        "cosmic-navy": "#1a1f2c",
+                        "surface-container": "#f2ede6",
+                        "linen-grey": "#ece7e1",
+                        "on-error-container": "#93000a",
+                        "primary": "#030612",
+                        "surface-container-high": "#ece8e1",
+                        "on-secondary-fixed-variant": "#6e3900",
+                        "surface-container-highest": "#e6e2db",
+                        "on-secondary-container": "#743c00",
+                        "on-error": "#ffffff",
+                        "on-primary-fixed": "#161b28",
+                        "tertiary-fixed-dim": "#cac6bf",
+                        "ink-black": "#17120e"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "unit": "8px",
+                        "gutter": "24px",
+                        "section-lg": "120px",
+                        "container-max": "1280px",
+                        "section-md": "80px"
+                    },
+                    "fontFamily": {
+                        "headline-h1": ["Playfair Display"],
+                        "label-caps": ["Public Sans"],
+                        "headline-h1-mobile": ["Playfair Display"],
+                        "headline-h2": ["Playfair Display"],
+                        "body-base": ["Public Sans"],
+                        "body-lg": ["Public Sans"],
+                        "label-small": ["Public Sans"],
+                        "display-lg-mobile": ["Playfair Display"],
+                        "display-lg": ["Playfair Display"]
+                    },
+                    "fontSize": {
+                        "headline-h1": ["48px", { "lineHeight": "1.2", "fontWeight": "500" }],
+                        "label-caps": ["12px", { "lineHeight": "1.2", "letterSpacing": "0.12em", "fontWeight": "600" }],
+                        "headline-h1-mobile": ["32px", { "lineHeight": "1.2", "fontWeight": "500" }],
+                        "headline-h2": ["36px", { "lineHeight": "1.3", "fontWeight": "500" }],
+                        "body-base": ["16px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "body-lg": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "label-small": ["11px", { "lineHeight": "1.2", "fontWeight": "500" }],
+                        "display-lg-mobile": ["40px", { "lineHeight": "1.15", "fontWeight": "600" }],
+                        "display-lg": ["72px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-surface text-on-surface font-body-base antialiased min-h-screen flex selection:bg-muted-gold/20">
+<!-- SideNavBar (from JSON) -->
+<aside class="bg-surface-container-low h-screen w-64 fixed left-0 top-0 shadow-md flex flex-col p-6 space-y-4 z-40 border-r border-linen-grey/50">
+<!-- Brand/Header -->
+<div class="mb-8 px-2 pt-4">
+<h2 class="font-headline-h3 text-headline-h2 text-on-surface tracking-tight mb-1">Practitioner Console</h2>
+<p class="font-label-small text-label-small text-on-surface-variant uppercase tracking-wider">Vedic Insights Admin</p>
+</div>
+<!-- Navigation Links -->
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-highest transition-all rounded-lg font-body-medium text-body-base" href="#">
+<span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 0;">dashboard</span>
+<span>Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-highest transition-all rounded-lg font-body-medium text-body-base" href="#">
+<span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 0;">event_note</span>
+<span>Appointments</span>
+</a>
+<!-- ACTIVE TAB -->
+<a class="flex items-center gap-3 px-4 py-3 bg-primary-container text-on-primary-container rounded-lg font-bold font-body-medium text-body-base transition-all" href="#">
+<span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 1;">group</span>
+<span>Clients</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-highest transition-all rounded-lg font-body-medium text-body-base" href="#">
+<span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 0;">analytics</span>
+<span>Analytics</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-highest transition-all rounded-lg font-body-medium text-body-base" href="#">
+<span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 0;">settings</span>
+<span>Settings</span>
+</a>
+</nav>
+<!-- CTA & Footer -->
+<div class="pt-6 border-t border-linen-grey/50 space-y-2">
+<button class="w-full bg-cosmic-navy text-warm-ivory py-3 rounded DEFAULT font-body-base hover:opacity-90 transition-opacity mb-4">
+                Start Session
+            </button>
+<a class="flex items-center gap-3 px-4 py-2 text-on-surface-variant hover:bg-surface-container-highest transition-all rounded-lg font-body-medium text-body-base" href="#">
+<span class="material-symbols-outlined text-lg">help</span>
+<span>Support</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-2 text-on-surface-variant hover:bg-surface-container-highest transition-all rounded-lg font-body-medium text-body-base" href="#">
+<span class="material-symbols-outlined text-lg">logout</span>
+<span>Logout</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="flex-1 ml-64 p-8 md:p-12 lg:p-16 max-w-container-max">
+<!-- Page Header -->
+<header class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+<div>
+<h1 class="font-headline-h1 text-headline-h1 text-primary tracking-tight">Client Roster</h1>
+<p class="font-body-base text-body-base text-surface-tint mt-2 max-w-lg">Manage your consultations, view historical session data, and maintain client profiles in one curated space.</p>
+</div>
+<button class="bg-cosmic-navy text-warm-ivory px-6 py-3 rounded DEFAULT flex items-center gap-2 hover:bg-ink-black transition-colors self-start md:self-auto shadow-sm">
+<span class="material-symbols-outlined text-sm">add</span>
+<span class="font-body-base text-body-base">New Client</span>
+</button>
+</header>
+<!-- Toolbar: Search & Filters -->
+<div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 mb-8 pb-6 border-b border-linen-grey">
+<!-- Search -->
+<div class="relative w-full lg:w-96 group">
+<span class="material-symbols-outlined absolute left-0 top-1/2 -translate-y-1/2 text-surface-tint transition-colors group-focus-within:text-muted-gold">search</span>
+<input class="w-full bg-transparent border-0 border-b border-outline pl-8 py-2 font-body-base text-body-base text-primary placeholder-surface-tint focus:ring-0 focus:border-muted-gold transition-colors" placeholder="Search by name or ID..." type="text"/>
+</div>
+<!-- Filters -->
+<div class="flex flex-wrap gap-4 w-full lg:w-auto">
+<div class="relative">
+<select class="appearance-none bg-transparent border border-linen-grey rounded DEFAULT py-2 pl-4 pr-10 font-body-base text-body-base text-primary focus:border-muted-gold focus:ring-0 cursor-pointer hover:bg-surface-container-lowest transition-colors">
+<option value="all">All Services</option>
+<option value="astrology">Astrological Guidance</option>
+<option value="coaching">Life Coaching</option>
+<option value="healing">Healing Sessions</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-surface-tint text-sm">expand_more</span>
+</div>
+<div class="relative">
+<select class="appearance-none bg-transparent border border-linen-grey rounded DEFAULT py-2 pl-4 pr-10 font-body-base text-body-base text-primary focus:border-muted-gold focus:ring-0 cursor-pointer hover:bg-surface-container-lowest transition-colors">
+<option value="all">All Statuses</option>
+<option value="active">Active</option>
+<option value="inactive">Inactive</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-surface-tint text-sm">expand_more</span>
+</div>
+</div>
+</div>
+<!-- Data Table (Boutique Style) -->
+<div class="bg-surface-container-lowest rounded-lg border border-linen-grey overflow-hidden">
+<table class="w-full text-left border-collapse whitespace-nowrap">
+<thead>
+<tr class="border-b border-linen-grey bg-surface-container-low/50">
+<th class="py-5 px-6 font-label-caps text-label-caps text-surface-tint font-medium">Client Profile</th>
+<th class="py-5 px-6 font-label-caps text-label-caps text-surface-tint font-medium">Last Consultation</th>
+<th class="py-5 px-6 font-label-caps text-label-caps text-surface-tint font-medium">Total Sessions</th>
+<th class="py-5 px-6 font-label-caps text-label-caps text-surface-tint font-medium">Status</th>
+<th class="py-5 px-6 font-label-caps text-label-caps text-surface-tint font-medium text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-linen-grey">
+<!-- Row 1 -->
+<tr class="group hover:bg-surface-container-low/30 transition-colors">
+<td class="py-4 px-6">
+<div class="flex items-center gap-4">
+<img class="w-10 h-10 rounded-full object-cover border border-linen-grey" data-alt="A sophisticated professional headshot of an elegant woman in a minimalist, naturally lit studio setting. The lighting is soft and diffused, emphasizing a refined, serene expression. She wears a tailored neutral-toned blazer. The background is a stark, clean warm ivory surface, perfectly aligning with a high-end luxury editorial aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCRVNnCH0xrwMkEWJQhRnOJ_DH9ZlcbleArvbgoDIZ6WBBJyF0CHEDgvIj0KjBxHOMP7AM1NZuhQLOWRBT7GcTMEKtQe78WqFVbx3eMEgobpQ6M_rUxlG2p7utMej5Ky9Bqk6SXBs0gBFLhzJkc0oVop53LkTHzkf28hwAzaGrQZyn8yElxBfKvu4QZacNfFqAEOsy5XaqqUxWqONwdKXCsxZUTt68JYdrhHuEOCrK-YV9EbNOMs7Y-"/>
+<div>
+<p class="font-body-base text-body-base font-medium text-primary">Eleanor Vance</p>
+<p class="font-label-small text-label-small text-surface-tint">ID: #C-1042</p>
+</div>
+</div>
+</td>
+<td class="py-4 px-6 font-body-base text-body-base text-on-surface-variant">Oct 12, 2023</td>
+<td class="py-4 px-6 font-body-base text-body-base text-on-surface-variant">4 Sessions</td>
+<td class="py-4 px-6">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container border border-outline-variant font-label-small text-label-small text-primary">
+<span class="w-1.5 h-1.5 rounded-full bg-muted-gold"></span> Active
+                            </span>
+</td>
+<td class="py-4 px-6 text-right">
+<button class="text-surface-tint hover:text-muted-gold transition-colors p-2">
+<span class="material-symbols-outlined text-lg">more_horiz</span>
+</button>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="group hover:bg-surface-container-low/30 transition-colors">
+<td class="py-4 px-6">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-tertiary-fixed flex items-center justify-center border border-linen-grey">
+<span class="font-body-base text-body-base font-medium text-on-tertiary-fixed-variant">JT</span>
+</div>
+<div>
+<p class="font-body-base text-body-base font-medium text-primary">Julian Thorne</p>
+<p class="font-label-small text-label-small text-surface-tint">ID: #C-0988</p>
+</div>
+</div>
+</td>
+<td class="py-4 px-6 font-body-base text-body-base text-on-surface-variant">Sep 28, 2023</td>
+<td class="py-4 px-6 font-body-base text-body-base text-on-surface-variant">12 Sessions</td>
+<td class="py-4 px-6">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface border border-linen-grey font-label-small text-label-small text-surface-tint">
+<span class="w-1.5 h-1.5 rounded-full bg-outline-variant"></span> Inactive
+                            </span>
+</td>
+<td class="py-4 px-6 text-right">
+<button class="text-surface-tint hover:text-muted-gold transition-colors p-2">
+<span class="material-symbols-outlined text-lg">more_horiz</span>
+</button>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="group hover:bg-surface-container-low/30 transition-colors">
+<td class="py-4 px-6">
+<div class="flex items-center gap-4">
+<img class="w-10 h-10 rounded-full object-cover border border-linen-grey" data-alt="A portrait of a distinguished man in his late 40s, captured in a quiet, moody architectural space. The lighting features striking chiaroscuro with a palette of deep cosmic navy shadows and sharp, clean highlights. He gazes thoughtfully away from the camera. The mood is authoritative yet deeply introspective, fitting an elevated professional profile." src="https://lh3.googleusercontent.com/aida-public/AB6AXuACHbx57XBT0aNZCvrjCxg_1ZlS5vRmE9_gZmyPlkICxuU7YEJcb9J3uYfbV0amjT8TsCYNv_BAPUapu4xDwtj0jErngDwpjNdTEIH2PNIlDsrJM-MGMgu_Sctcn4muoG2nDm3kumouDT1VKwgllbQQS5-59kTJC5K34XOwgDrJ0aFhEOumf1_YaGe0yteMf9hIBrEfSN1n1QI31qtjuJ1I41OkfjP4ETZXZz4l_Imyqp8TkUfyr7oF"/>
+<div>
+<p class="font-body-base text-body-base font-medium text-primary">Marcus Sterling</p>
+<p class="font-label-small text-label-small text-surface-tint">ID: #C-1105</p>
+</div>
+</div>
+</td>
+<td class="py-4 px-6 font-body-base text-body-base text-on-surface-variant">Nov 02, 2023</td>
+<td class="py-4 px-6 font-body-base text-body-base text-on-surface-variant">1 Session</td>
+<td class="py-4 px-6">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container border border-outline-variant font-label-small text-label-small text-primary">
+<span class="w-1.5 h-1.5 rounded-full bg-muted-gold"></span> Active
+                            </span>
+</td>
+<td class="py-4 px-6 text-right">
+<button class="text-surface-tint hover:text-muted-gold transition-colors p-2">
+<span class="material-symbols-outlined text-lg">more_horiz</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+<!-- Pagination Footer -->
+<div class="px-6 py-4 border-t border-linen-grey bg-surface-container-lowest flex items-center justify-between">
+<span class="font-body-base text-label-small text-surface-tint">Showing 1 to 3 of 45 clients</span>
+<div class="flex gap-2">
+<button class="w-8 h-8 flex items-center justify-center border border-linen-grey rounded text-surface-tint hover:border-muted-gold transition-colors disabled:opacity-50" disabled="">
+<span class="material-symbols-outlined text-sm">chevron_left</span>
+</button>
+<button class="w-8 h-8 flex items-center justify-center border border-linen-grey rounded text-surface-tint hover:border-muted-gold hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-sm">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</main>
+</body></html>

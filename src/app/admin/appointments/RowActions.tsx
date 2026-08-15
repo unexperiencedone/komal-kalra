@@ -54,7 +54,7 @@ export function AppointmentRowActions({ appointment }: { appointment: Appointmen
             <form action={updateAppointmentStatus}>
               <input type="hidden" name="appointmentId" value={appointment.id} />
               <input type="hidden" name="status" value="completed" />
-              <Button type="submit" size="sm" variant="ghost" className="text-[var(--color-jade)]">
+              <Button type="submit" size="sm" variant="ghost" className="text-[var(--color-success)]">
                 <Check aria-hidden /> Done
               </Button>
             </form>
@@ -64,7 +64,7 @@ export function AppointmentRowActions({ appointment }: { appointment: Appointmen
             <form action={updateAppointmentStatus}>
               <input type="hidden" name="appointmentId" value={appointment.id} />
               <input type="hidden" name="status" value="cancelled" />
-              <Button type="submit" size="sm" variant="ghost" className="text-[var(--color-clay)]">
+              <Button type="submit" size="sm" variant="ghost" className="text-[var(--color-error)]">
                 <X aria-hidden /> Cancel
               </Button>
             </form>

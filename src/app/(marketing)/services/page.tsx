@@ -1,16 +1,16 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { ArrowRight } from 'lucide-react';
 import { getActiveServices } from '@/lib/booking/availability';
-import { ServiceCard } from '@/components/marketing/ServiceCard';
+import { ServiceGrid } from '@/components/marketing/ServiceGrid';
 import { Reveal } from '@/components/common/Reveal';
 import { Button } from '@/components/ui/button';
+import { SectionHeading } from '@/components/ui/card';
 import { BRAND } from '@/lib/config';
 
 export const metadata: Metadata = {
-  title: 'Consultations & Services',
+  title: 'Consultation Services',
   description:
-    'Astrological guidance, Kundli Milan, life coaching, healing and counselling with Komal Kalra. Fixed prices, clear durations, booked online.',
+    'Astrological guidance, Kundli Milan, life coaching, healing and counselling with Komal Kalra. Fixed fees, clear durations, booked online.',
   alternates: { canonical: '/services' },
 };
 
@@ -19,48 +19,45 @@ export default async function ServicesPage() {
 
   return (
     <>
-      <section className="band-dawn constellation-motif border-b border-[var(--color-linen)] py-16 sm:py-20">
-        <div className="mx-auto max-w-6xl px-5 lg:px-8">
+      <section className="band-low border-b border-[color-mix(in_srgb,var(--color-muted-gold)_15%,transparent)] py-[var(--spacing-section-md)]">
+        <div className="shell">
           <Reveal>
-            <h1 className="max-w-3xl text-[length:var(--text-h1)]">
-              Consultations with Komal Kalra
-            </h1>
-            <p className="mt-5 max-w-xl text-[17px] leading-relaxed text-[var(--color-bark)]">
-              Every session is one-to-one and confidential. Prices and durations are shown
-              upfront, and nothing is added at checkout.
+            <p className="label-caps text-[var(--color-gold-deep)]">The Practice</p>
+            <h1 className="mt-4 max-w-3xl text-[length:var(--text-h1)]">Consultation Services</h1>
+            <span className="gold-rule mt-6" aria-hidden />
+            <p className="mt-6 max-w-xl text-lg leading-relaxed text-[var(--color-on-surface-variant)]">
+              Every session is one-to-one and confidential. Fees and durations are shown
+              upfront — nothing is added at checkout.
             </p>
           </Reveal>
         </div>
       </section>
 
-      <section className="band-sand py-16 sm:py-20">
-        <div className="mx-auto max-w-6xl px-5 lg:px-8">
-          {services.length > 0 ? (
-            <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-              {services.map((service, i) => (
-                <Reveal as="li" key={service.id} delay={i * 60}>
-                  <ServiceCard service={service} featured={service.featured} />
-                </Reveal>
-              ))}
-            </ul>
-          ) : (
-            <p className="rounded-[var(--radius-card)] border border-dashed border-[var(--color-linen)] p-12 text-center text-sm text-[var(--color-stone)]">
-              Services will appear here once they have been added.
-            </p>
-          )}
+      <section className="band-ivory py-[var(--spacing-section-lg)]">
+        <div className="shell">
+          <ServiceGrid services={services} />
 
           <Reveal delay={120}>
-            <div className="band-night constellation-motif-dark on-dark mt-14 rounded-[var(--radius-panel)] border border-[var(--color-indigo-light)]/25 p-8 text-center shadow-[var(--shadow-lifted)] sm:p-10">
-              <h2 className="text-[length:var(--text-h3)]">Not sure which one you need?</h2>
-              <p className="mx-auto mt-3 max-w-md text-[15px] leading-relaxed text-[var(--color-bark)]">
-                Call and describe what is going on. If a consultation is not the right fit,
-                Komal will say so.
+            <div className="band-navy mt-16 p-10 text-center sm:p-16">
+              <SectionHeading
+                eyebrow="Not sure which"
+                title="Describe what is going on"
+                onDark
+                className="mx-auto text-center"
+              />
+              <p className="mx-auto mt-6 max-w-md text-base leading-relaxed text-[var(--color-on-primary-container)]">
+                If a consultation is not the right fit for what you need, Komal will say so.
               </p>
-              <div className="mt-6 flex flex-col justify-center gap-3 sm:flex-row">
-                <Button asChild><Link href="/book">Book a consultation <ArrowRight aria-hidden /></Link></Button>
-                <Button asChild variant="onDark">
-                  <a href={`tel:${BRAND.phonesE164[0]}`}>Call {BRAND.phones[0]}</a>
+              <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
+                <Button asChild size="lg" variant="onDark">
+                  <Link href="/book">Book a Consultation</Link>
                 </Button>
+                <a
+                  href={`tel:${BRAND.phonesE164[0]}`}
+                  className="label-caps border-b border-[var(--color-gold-light)] pb-1 text-[var(--color-gold-light)] transition-opacity hover:opacity-80"
+                >
+                  Call {BRAND.phones[0]}
+                </a>
               </div>
             </div>
           </Reveal>

@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Practitioner Console - Komal Kalra</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&amp;family=Public+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-primary-fixed": "#161b28",
+                      "error-container": "#ffdad6",
+                      "on-tertiary": "#ffffff",
+                      "inverse-surface": "#32302c",
+                      "muted-gold": "#a45f1e",
+                      "linen-grey": "#ece7e1",
+                      "surface-container-high": "#ece8e1",
+                      "surface": "#fdf9f2",
+                      "on-background": "#1d1c18",
+                      "on-surface": "#1d1c18",
+                      "on-error": "#ffffff",
+                      "surface-container-low": "#f8f3ec",
+                      "surface-dim": "#ded9d3",
+                      "secondary-container": "#fda861",
+                      "background": "#fdf9f2",
+                      "on-primary-container": "#828697",
+                      "surface-variant": "#e6e2db",
+                      "on-tertiary-container": "#898681",
+                      "tertiary-fixed-dim": "#cac6bf",
+                      "primary-container": "#1a1f2c",
+                      "on-tertiary-fixed": "#1d1c18",
+                      "surface-tint": "#595e6d",
+                      "surface-bright": "#fdf9f2",
+                      "surface-container-highest": "#e6e2db",
+                      "outline-variant": "#c6c6cc",
+                      "surface-container-lowest": "#ffffff",
+                      "outline": "#76777c",
+                      "inverse-primary": "#c2c6d8",
+                      "on-primary-fixed-variant": "#424655",
+                      "on-primary": "#ffffff",
+                      "primary-fixed": "#dee2f4",
+                      "warm-ivory": "#fef9f2",
+                      "on-surface-variant": "#45464c",
+                      "ink-black": "#17120e",
+                      "tertiary-container": "#201f1b",
+                      "inverse-on-surface": "#f5f0e9",
+                      "tertiary-fixed": "#e6e2db",
+                      "on-secondary-fixed": "#2f1500",
+                      "on-secondary": "#ffffff",
+                      "secondary": "#8e4e0b",
+                      "on-tertiary-fixed-variant": "#484742",
+                      "secondary-fixed": "#ffdcc3",
+                      "on-secondary-container": "#743c00",
+                      "cosmic-navy": "#1a1f2c",
+                      "on-error-container": "#93000a",
+                      "tertiary": "#070604",
+                      "primary": "#030612",
+                      "on-secondary-fixed-variant": "#6e3900",
+                      "primary-fixed-dim": "#c2c6d8",
+                      "secondary-fixed-dim": "#ffb77e",
+                      "surface-container": "#f2ede6",
+                      "error": "#ba1a1a"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "section-lg": "120px",
+                      "container-max": "1280px",
+                      "section-md": "80px",
+                      "unit": "8px",
+                      "gutter": "24px"
+              },
+              "fontFamily": {
+                      "headline-h1": [
+                              "Playfair Display"
+                      ],
+                      "label-small": [
+                              "Public Sans"
+                      ],
+                      "display-lg-mobile": [
+                              "Playfair Display"
+                      ],
+                      "label-caps": [
+                              "Public Sans"
+                      ],
+                      "headline-h2": [
+                              "Playfair Display"
+                      ],
+                      "headline-h1-mobile": [
+                              "Playfair Display"
+                      ],
+                      "display-lg": [
+                              "Playfair Display"
+                      ],
+                      "body-lg": [
+                              "Public Sans"
+                      ],
+                      "body-base": [
+                              "Public Sans"
+                      ]
+              },
+              "fontSize": {
+                      "headline-h1": [
+                              "48px",
+                              {
+                                      "lineHeight": "1.2",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "label-small": [
+                              "11px",
+                              {
+                                      "lineHeight": "1.2",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "display-lg-mobile": [
+                              "40px",
+                              {
+                                      "lineHeight": "1.15",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "label-caps": [
+                              "12px",
+                              {
+                                      "lineHeight": "1.2",
+                                      "letterSpacing": "0.12em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "headline-h2": [
+                              "36px",
+                              {
+                                      "lineHeight": "1.3",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "headline-h1-mobile": [
+                              "32px",
+                              {
+                                      "lineHeight": "1.2",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "display-lg": [
+                              "72px",
+                              {
+                                      "lineHeight": "1.1",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "body-lg": [
+                              "18px",
+                              {
+                                      "lineHeight": "1.6",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "body-base": [
+                              "16px",
+                              {
+                                      "lineHeight": "1.6",
+                                      "fontWeight": "400"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+      </script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body-base text-body-base overflow-x-hidden min-h-screen flex antialiased selection:bg-muted-gold/20">
+<!-- SideNavBar -->
+<aside class="hidden md:flex h-screen w-64 fixed left-0 top-0 bg-surface-container-low dark:bg-cosmic-void shadow-md z-40 border-r border-muted-gold/20 flex flex-col p-6 space-y-4">
+<!-- Header -->
+<div class="mb-8 flex flex-col items-center text-center mt-4">
+<div class="w-16 h-16 rounded-full overflow-hidden mb-4 border-2 border-muted-gold/30">
+<img alt="Komal Kalra Admin" class="object-cover w-full h-full" data-alt="A refined, minimalist headshot portrait of an elegant woman (representing Komal Kalra) in a well-lit studio. Soft, ethereal lighting illuminating her face against a pure warm ivory background, evoking a sense of calm professionalism and quiet luxury. Shot with a slight soft focus, highly detailed." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCcL3E5w14pBL3PTbBwrmy37UYcVEW9k11rtumW6ggiG2x2mk3FiN6ki3-s0kVCWMwxaoZ2C1mys-N4IIsZK6Eni_es4yzw9oHwNoS1OC35VBP6FusZ1Uea-bLx-KD__ggdoF00j1T8A2kXRtBGN3of8P9fVTTXKvra9qmBM0fhI7cUu-YOt2L-r2J_Kau7aPyK7sZXNRbRwcL7vHtGy9Hqbeig6Cp0mUx_MiyFRdvjVofeXoO1-9tk"/>
+</div>
+<h1 class="font-headline-h3 text-headline-h3 text-on-surface dark:text-inverse-on-surface tracking-tight" style="font-size: 24px;">Practitioner Console</h1>
+<p class="font-body-base text-body-base text-on-surface-variant text-sm mt-1">Vedic Insights Admin</p>
+</div>
+<button class="w-full bg-cosmic-navy text-warm-ivory py-3 px-4 rounded-none font-label-caps text-label-caps hover:bg-cosmic-navy/90 transition-colors flex items-center justify-center gap-2 mb-4">
+<span class="material-symbols-outlined" style="font-size: 18px;">add</span>
+            Start Session
+        </button>
+<!-- Navigation Tabs -->
+<nav class="flex-1 space-y-2 w-full mt-4">
+<!-- Active Tab: Dashboard -->
+<a class="flex items-center gap-3 px-4 py-3 bg-primary-container text-on-primary-container rounded-lg font-bold transition-transform duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+                Dashboard
+            </a>
+<!-- Inactive Tabs -->
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-highest transition-all rounded-lg transition-transform duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="event_note">event_note</span>
+                Appointments
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-highest transition-all rounded-lg transition-transform duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+                Clients
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-highest transition-all rounded-lg transition-transform duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="analytics">analytics</span>
+                Analytics
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-highest transition-all rounded-lg transition-transform duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+                Settings
+            </a>
+</nav>
+<!-- Footer Tabs -->
+<div class="mt-auto border-t border-muted-gold/20 pt-4 space-y-2">
+<a class="flex items-center gap-3 px-4 py-2 text-on-surface-variant hover:bg-surface-container-highest transition-all rounded-lg text-sm" href="#">
+<span class="material-symbols-outlined text-sm" data-icon="help">help</span>
+                Support
+            </a>
+<a class="flex items-center gap-3 px-4 py-2 text-on-surface-variant hover:bg-surface-container-highest transition-all rounded-lg text-sm text-error" href="#">
+<span class="material-symbols-outlined text-sm" data-icon="logout">logout</span>
+                Logout
+            </a>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 md:ml-64 bg-surface min-h-screen">
+<!-- Top App Bar (Dashboard Specific) -->
+<header class="h-20 bg-surface/92 backdrop-blur-md sticky top-0 z-30 border-b border-muted-gold/10 px-gutter flex items-center justify-between">
+<div class="flex items-center gap-4">
+<button class="md:hidden text-on-surface p-2">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<h2 class="font-headline-h2 text-headline-h2 text-on-surface m-0" style="font-size: 28px;">Overview</h2>
+</div>
+<div class="flex items-center gap-6">
+<div class="relative">
+<span class="material-symbols-outlined text-on-surface-variant hover:text-cosmic-navy cursor-pointer transition-colors">notifications</span>
+<span class="absolute top-0 right-0 w-2 h-2 bg-muted-gold rounded-full"></span>
+</div>
+<div class="flex items-center gap-3">
+<div class="text-right hidden sm:block">
+<p class="font-label-small text-label-small text-on-surface">Komal Kalra</p>
+<p class="text-xs text-on-surface-variant">Admin</p>
+</div>
+<div class="w-10 h-10 rounded-full bg-surface-container-high border border-muted-gold/20 flex items-center justify-center overflow-hidden">
+<img alt="Profile" class="object-cover w-full h-full" data-alt="A refined, minimalist headshot portrait of an elegant woman (representing Komal Kalra) in a well-lit studio. Soft, ethereal lighting illuminating her face against a pure warm ivory background, evoking a sense of calm professionalism and quiet luxury. Shot with a slight soft focus, highly detailed." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA_VTsVQCQZlLMsFgZJKN_UxLHSg8lGlT3RjXTaBZ5oZe7gWyllnYTYjgx-d_C29JY4tc6ABX4DRo6gCzn0ctES3Y3rlRsLOkkVggXl97Ff9kFXtaVKgO6-NIftCThTc_yoY_5tTLiOYB-W5ikln_QFif--Wi90zgEFjKUYvz0ZCWT_MXSElsQ-_vGcysuuznBVPOLnV3_-CgFHFpjb2fcwLr9R3y1533Rk-R8WRDmJ14YhN0BoLSMP"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Dashboard Content Container -->
+<div class="p-gutter max-w-container-max mx-auto space-y-8 pb-section-md">
+<!-- Quick Stats Bento -->
+<section class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- Stat Card 1 -->
+<div class="bg-linen-grey p-6 border border-muted-gold/20 flex flex-col justify-between hover:bg-surface-container-high transition-colors group">
+<div class="flex justify-between items-start mb-4">
+<span class="material-symbols-outlined text-muted-gold">group</span>
+<span class="font-label-small text-label-small text-on-surface-variant bg-surface px-2 py-1 rounded">This Month</span>
+</div>
+<div>
+<h3 class="font-headline-h1 text-headline-h1 text-cosmic-navy mb-1" style="font-size: 40px;">142</h3>
+<p class="font-body-base text-body-base text-on-surface-variant">Total Clients</p>
+</div>
+<div class="mt-4 pt-4 border-t border-muted-gold/10 flex items-center text-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-sm mr-1 text-green-700">trending_up</span>
+<span class="text-green-700 font-medium mr-2">+12%</span> from last month
+                    </div>
+</div>
+<!-- Stat Card 2 -->
+<div class="bg-linen-grey p-6 border border-muted-gold/20 flex flex-col justify-between hover:bg-surface-container-high transition-colors">
+<div class="flex justify-between items-start mb-4">
+<span class="material-symbols-outlined text-muted-gold">pending_actions</span>
+<span class="font-label-small text-label-small text-on-surface-variant bg-surface px-2 py-1 rounded">Action Needed</span>
+</div>
+<div>
+<h3 class="font-headline-h1 text-headline-h1 text-cosmic-navy mb-1" style="font-size: 40px;">18</h3>
+<p class="font-body-base text-body-base text-on-surface-variant">Pending Requests</p>
+</div>
+<div class="mt-4 pt-4 border-t border-muted-gold/10 flex items-center text-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-sm mr-1">schedule</span>
+                        Requires attention today
+                    </div>
+</div>
+<!-- Stat Card 3 -->
+<div class="bg-cosmic-navy p-6 border border-muted-gold/20 flex flex-col justify-between text-warm-ivory">
+<div class="flex justify-between items-start mb-4">
+<span class="material-symbols-outlined text-muted-gold">account_balance_wallet</span>
+<span class="font-label-small text-label-small text-warm-ivory/70 bg-warm-ivory/10 px-2 py-1 rounded">YTD</span>
+</div>
+<div>
+<h3 class="font-headline-h1 text-headline-h1 text-warm-ivory mb-1" style="font-size: 40px;">$24.5k</h3>
+<p class="font-body-base text-body-base text-warm-ivory/80">Monthly Revenue</p>
+</div>
+<div class="mt-4 pt-4 border-t border-warm-ivory/10 flex items-center text-sm text-warm-ivory/80">
+<span class="material-symbols-outlined text-sm mr-1">trending_up</span>
+<span class="text-warm-ivory font-medium mr-2">+8.4%</span> steady growth
+                    </div>
+</div>
+</section>
+<!-- Main Charts & Appointments Split -->
+<section class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+<!-- Revenue Insights Chart (Spans 2 columns) -->
+<div class="lg:col-span-2 bg-surface-container-low border border-muted-gold/20 p-6 flex flex-col">
+<div class="flex justify-between items-center mb-6">
+<h3 class="font-headline-h2 text-headline-h2 text-on-surface" style="font-size: 24px;">Revenue Insights</h3>
+<select class="bg-transparent border-b border-muted-gold/30 text-on-surface-variant font-body-base text-sm focus:outline-none focus:border-muted-gold py-1">
+<option>Last 6 Months</option>
+<option>Last Year</option>
+</select>
+</div>
+<div class="flex-1 relative w-full h-64 min-h-[300px]">
+<canvas id="revenueChart"></canvas>
+</div>
+</div>
+<!-- Today's Appointments -->
+<div class="lg:col-span-1 bg-surface-container-low border border-muted-gold/20 p-6 flex flex-col">
+<div class="flex justify-between items-center mb-6">
+<h3 class="font-headline-h2 text-headline-h2 text-on-surface" style="font-size: 24px;">Today's Schedule</h3>
+<button class="text-muted-gold hover:text-cosmic-navy transition-colors">
+<span class="material-symbols-outlined">more_horiz</span>
+</button>
+</div>
+<div class="space-y-4 flex-1 overflow-y-auto">
+<!-- Appointment Item -->
+<div class="p-4 bg-surface border border-muted-gold/10 hover:border-muted-gold/30 transition-colors flex flex-col gap-2 relative">
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-muted-gold"></div>
+<div class="flex justify-between items-start">
+<span class="font-label-caps text-label-caps text-muted-gold">09:00 AM</span>
+<span class="text-xs bg-surface-container-highest px-2 py-1 text-on-surface-variant">60 min</span>
+</div>
+<div>
+<p class="font-body-base text-body-base font-medium text-cosmic-navy">Ananya Sharma</p>
+<p class="text-sm text-on-surface-variant">Natal Chart Reading</p>
+</div>
+</div>
+<!-- Appointment Item -->
+<div class="p-4 bg-surface border border-muted-gold/10 hover:border-muted-gold/30 transition-colors flex flex-col gap-2">
+<div class="flex justify-between items-start">
+<span class="font-label-caps text-label-caps text-on-surface-variant">11:30 AM</span>
+<span class="text-xs bg-surface-container-highest px-2 py-1 text-on-surface-variant">45 min</span>
+</div>
+<div>
+<p class="font-body-base text-body-base font-medium text-cosmic-navy">Rajiv Mehta</p>
+<p class="text-sm text-on-surface-variant">Life Coaching Session</p>
+</div>
+</div>
+<!-- Appointment Item -->
+<div class="p-4 bg-surface border border-muted-gold/10 hover:border-muted-gold/30 transition-colors flex flex-col gap-2">
+<div class="flex justify-between items-start">
+<span class="font-label-caps text-label-caps text-on-surface-variant">02:00 PM</span>
+<span class="text-xs bg-surface-container-highest px-2 py-1 text-on-surface-variant">90 min</span>
+</div>
+<div>
+<p class="font-body-base text-body-base font-medium text-cosmic-navy">Meera Desai</p>
+<p class="text-sm text-on-surface-variant">Energy Healing</p>
+</div>
+</div>
+</div>
+<button class="mt-4 w-full border border-muted-gold/30 text-cosmic-navy py-2 font-label-caps text-label-caps hover:bg-muted-gold/5 transition-colors">
+                        View Full Calendar
+                    </button>
+</div>
+</section>
+</div>
+</main>
+<script>
+        // Chart.js Configuration
+        document.addEventListener('DOMContentLoaded', function() {
+            const ctx = document.getElementById('revenueChart').getContext('2d');
+            
+            // Gradient for the line chart
+            let gradient = ctx.createLinearGradient(0, 0, 0, 400);
+            gradient.addColorStop(0, 'rgba(164, 95, 30, 0.2)'); // muted-gold with opacity
+            gradient.addColorStop(1, 'rgba(253, 249, 242, 0)'); // surface color transparent
+
+            const data = {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                datasets: [{
+                    label: 'Revenue',
+                    data: [15000, 18500, 17200, 21000, 22500, 24500],
+                    borderColor: '#a45f1e', // muted-gold
+                    backgroundColor: gradient,
+                    borderWidth: 2,
+                    pointBackgroundColor: '#1a1f2c', // cosmic-navy
+                    pointBorderColor: '#a45f1e',
+                    pointBorderWidth: 2,
+                    pointRadius: 4,
+                    pointHoverRadius: 6,
+                    fill: true,
+                    tension: 0.4 // Smooth curves
+                }]
+            };
+
+            const config = {
+                type: 'line',
+                data: data,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            backgroundColor: '#1a1f2c',
+                            titleFont: { family: 'Public Sans', size: 12 },
+                            bodyFont: { family: 'Playfair Display', size: 16 },
+                            padding: 12,
+                            displayColors: false,
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.y !== null) {
+                                        label += new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(context.parsed.y);
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: {
+                                display: false,
+                                drawBorder: false
+                            },
+                            ticks: {
+                                font: { family: 'Public Sans', size: 12 },
+                                color: '#76777c' // outline
+                            }
+                        },
+                        y: {
+                            grid: {
+                                color: 'rgba(164, 95, 30, 0.1)', // Subtle horizontal lines
+                                drawBorder: false,
+                                borderDash: [5, 5]
+                            },
+                            ticks: {
+                                font: { family: 'Public Sans', size: 12 },
+                                color: '#76777c',
+                                callback: function(value, index, values) {
+                                    return '$' + value / 1000 + 'k';
+                                }
+                            }
+                        }
+                    },
+                    interaction: {
+                        intersect: false,
+                        mode: 'index',
+                    },
+                }
+            };
+
+            new Chart(ctx, config);
+        });
+    </script>
+</body></html>

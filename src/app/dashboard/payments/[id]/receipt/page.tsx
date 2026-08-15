@@ -39,60 +39,60 @@ export default async function ReceiptPage(props: { params: Promise<{ id: string 
         <PrintButton />
       </div>
 
-      <article className="rounded-[var(--radius-card)] border border-[var(--color-linen)] bg-white p-8 sm:p-10">
-        <header className="flex flex-wrap items-start justify-between gap-4 border-b border-[var(--color-linen)] pb-6">
+      <article className="border border-[var(--color-outline-variant)] bg-white p-8 sm:p-10">
+        <header className="flex flex-wrap items-start justify-between gap-4 border-b border-[var(--color-outline-variant)] pb-6">
           <div>
             <p className="font-[family-name:var(--font-display)] text-xl font-semibold">{BRAND.fullName}</p>
-            <p className="mt-1 text-xs text-[var(--color-stone)]">{BRAND.phones[0]} · {BRAND.email}</p>
+            <p className="mt-1 text-xs text-[var(--color-on-surface-variant)]">{BRAND.phones[0]} · {BRAND.email}</p>
           </div>
           <div className="text-right">
-            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[var(--color-stone)]">Receipt</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[var(--color-on-surface-variant)]">Receipt</p>
             <p className="tabular mt-1 text-sm font-semibold">{data.receipt_number ?? data.id.slice(0, 8).toUpperCase()}</p>
-            <p className="mt-0.5 text-xs text-[var(--color-stone)]">
+            <p className="mt-0.5 text-xs text-[var(--color-on-surface-variant)]">
               {data.paid_at ? formatDateTime(data.paid_at) : formatDateTime(data.created_at)}
             </p>
           </div>
         </header>
 
-        <section className="grid gap-6 border-b border-[var(--color-linen)] py-6 sm:grid-cols-2">
+        <section className="grid gap-6 border-b border-[var(--color-outline-variant)] py-6 sm:grid-cols-2">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.1em] text-[var(--color-stone)]">Billed to</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.1em] text-[var(--color-on-surface-variant)]">Billed to</p>
             <p className="mt-2 text-sm font-medium">{data.profiles?.full_name ?? '—'}</p>
-            <p className="text-sm text-[var(--color-bark)]">{data.profiles?.email}</p>
-            {data.profiles?.phone && <p className="text-sm text-[var(--color-bark)]">{data.profiles.phone}</p>}
+            <p className="text-sm text-[var(--color-on-surface-variant)]">{data.profiles?.email}</p>
+            {data.profiles?.phone && <p className="text-sm text-[var(--color-on-surface-variant)]">{data.profiles.phone}</p>}
           </div>
           {appointment && (
             <div className="sm:text-right">
-              <p className="text-xs font-semibold uppercase tracking-[0.1em] text-[var(--color-stone)]">Booking</p>
+              <p className="text-xs font-semibold uppercase tracking-[0.1em] text-[var(--color-on-surface-variant)]">Booking</p>
               <p className="mt-2 text-sm font-medium">{appointment.reference}</p>
-              <p className="text-sm text-[var(--color-bark)]">{formatLongDay(appointment.starts_at)}</p>
-              <p className="tabular text-sm text-[var(--color-bark)]">{formatTime(appointment.starts_at)} IST</p>
+              <p className="text-sm text-[var(--color-on-surface-variant)]">{formatLongDay(appointment.starts_at)}</p>
+              <p className="tabular text-sm text-[var(--color-on-surface-variant)]">{formatTime(appointment.starts_at)} IST</p>
             </div>
           )}
         </section>
 
-        <table className="w-full border-b border-[var(--color-linen)] py-6 text-sm">
+        <table className="w-full border-b border-[var(--color-outline-variant)] py-6 text-sm">
           <caption className="sr-only">Payment breakdown</caption>
           <thead>
-            <tr className="text-left text-xs uppercase tracking-[0.1em] text-[var(--color-stone)]">
+            <tr className="text-left text-xs uppercase tracking-[0.1em] text-[var(--color-on-surface-variant)]">
               <th scope="col" className="py-3 font-semibold">Description</th>
               <th scope="col" className="py-3 text-right font-semibold">Amount</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-[var(--color-linen)]">
+          <tbody className="divide-y divide-[var(--color-outline-variant)]">
             <tr>
               <td className="py-3">
                 {appointment?.service_title_snapshot ?? 'Consultation'}
                 {appointment && (
-                  <span className="block text-xs text-[var(--color-stone)]">{appointment.duration_minutes} minutes</span>
+                  <span className="block text-xs text-[var(--color-on-surface-variant)]">{appointment.duration_minutes} minutes</span>
                 )}
               </td>
               <td className="tabular py-3 text-right">{formatPaisePrecise(appointment?.price_paise ?? data.amount_paise)}</td>
             </tr>
             {appointment && appointment.discount_paise > 0 && (
               <tr>
-                <td className="py-3 text-[var(--color-jade)]">Discount</td>
-                <td className="tabular py-3 text-right text-[var(--color-jade)]">
+                <td className="py-3 text-[var(--color-success)]">Discount</td>
+                <td className="tabular py-3 text-right text-[var(--color-success)]">
                   −{formatPaisePrecise(appointment.discount_paise)}
                 </td>
               </tr>
@@ -105,7 +105,7 @@ export default async function ReceiptPage(props: { params: Promise<{ id: string 
             )}
           </tbody>
           <tfoot>
-            <tr className="border-t-2 border-[var(--color-ink)]">
+            <tr className="border-t-2 border-[var(--color-cosmic-navy)]">
               <th scope="row" className="py-3.5 text-left font-semibold">Total paid</th>
               <td className="tabular py-3.5 text-right font-[family-name:var(--font-display)] text-lg font-semibold">
                 {formatPaisePrecise(data.amount_paise)}
@@ -113,8 +113,8 @@ export default async function ReceiptPage(props: { params: Promise<{ id: string 
             </tr>
             {data.amount_refunded_paise > 0 && (
               <tr>
-                <th scope="row" className="py-2 text-left text-sm font-medium text-[var(--color-indigo)]">Refunded</th>
-                <td className="tabular py-2 text-right text-sm text-[var(--color-indigo)]">
+                <th scope="row" className="py-2 text-left text-sm font-medium text-[var(--color-cosmic-navy)]">Refunded</th>
+                <td className="tabular py-2 text-right text-sm text-[var(--color-cosmic-navy)]">
                   −{formatPaisePrecise(data.amount_refunded_paise)}
                 </td>
               </tr>
@@ -122,7 +122,7 @@ export default async function ReceiptPage(props: { params: Promise<{ id: string 
           </tfoot>
         </table>
 
-        <footer className="pt-6 text-xs leading-relaxed text-[var(--color-stone)]">
+        <footer className="pt-6 text-xs leading-relaxed text-[var(--color-on-surface-variant)]">
           <p>
             Payment method: {data.method ? data.method.toUpperCase() : 'Online'}
             {data.provider_payment_id && ` · Transaction ${data.provider_payment_id}`}

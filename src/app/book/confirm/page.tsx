@@ -92,15 +92,15 @@ export default async function ConfirmPage(props: {
   if (needsAttention) {
     return (
       <Shell>
-        <div className="flex size-12 items-center justify-center rounded-full bg-[var(--color-amber-tint)]">
-          <TriangleAlert className="size-6 text-[var(--color-amber-warn)]" aria-hidden />
+        <div className="flex size-12 items-center justify-center rounded-full bg-[var(--color-warning-container)]">
+          <TriangleAlert className="size-6 text-[var(--color-warning)]" aria-hidden />
         </div>
         <h1 className="mt-6 text-[length:var(--text-h1)]">We need to rearrange your time</h1>
-        <p className="mt-3 max-w-lg text-[15px] leading-relaxed text-[var(--color-bark)]">
+        <p className="mt-3 max-w-lg text-[15px] leading-relaxed text-[var(--color-on-surface-variant)]">
           Your payment went through, but the slot you chose was taken moments before it
           completed. That is our error, not yours.
         </p>
-        <p className="mt-3 max-w-lg text-[15px] leading-relaxed text-[var(--color-bark)]">
+        <p className="mt-3 max-w-lg text-[15px] leading-relaxed text-[var(--color-on-surface-variant)]">
           <strong>Your money is safe.</strong> We will call you shortly to arrange another
           time. If you would rather have a full refund instead, tell us and it will be
           processed the same day.
@@ -114,7 +114,7 @@ export default async function ConfirmPage(props: {
               <Phone aria-hidden /> Call {BRAND.phones[0]}
             </a>
           </Button>
-          <Button asChild size="lg" variant="outline">
+          <Button asChild size="lg" variant="secondary">
             <Link href="/dashboard">Go to my dashboard</Link>
           </Button>
         </div>
@@ -126,11 +126,11 @@ export default async function ConfirmPage(props: {
   if (isPending) {
     return (
       <Shell>
-        <div className="flex size-12 items-center justify-center rounded-full bg-[var(--color-linen)]">
-          <Clock className="size-6 text-[var(--color-bark)]" aria-hidden />
+        <div className="flex size-12 items-center justify-center rounded-full bg-[var(--color-outline-variant)]">
+          <Clock className="size-6 text-[var(--color-on-surface-variant)]" aria-hidden />
         </div>
         <h1 className="mt-6 text-[length:var(--text-h1)]">Confirming your payment</h1>
-        <p className="mt-3 max-w-lg text-[15px] leading-relaxed text-[var(--color-bark)]">
+        <p className="mt-3 max-w-lg text-[15px] leading-relaxed text-[var(--color-on-surface-variant)]">
           Your payment is being confirmed with the bank. This usually takes a few seconds.
           You do not need to pay again — if anything was debited, it is recorded.
         </p>
@@ -139,7 +139,7 @@ export default async function ConfirmPage(props: {
 
         <BookingFacts appointment={appointment} payment={payment} />
 
-        <p className="mt-6 text-sm text-[var(--color-stone)]">
+        <p className="mt-6 text-sm text-[var(--color-on-surface-variant)]">
           Taking longer than a minute? Call {BRAND.phones[0]} and we will confirm it manually.
         </p>
       </Shell>
@@ -149,11 +149,11 @@ export default async function ConfirmPage(props: {
   // ------------------------------- CONFIRMED -------------------------------
   return (
     <Shell>
-      <div className="flex size-12 items-center justify-center rounded-full bg-[var(--color-jade-tint)]">
-        <CheckCircle2 className="size-6 text-[var(--color-jade)]" aria-hidden />
+      <div className="flex size-12 items-center justify-center rounded-full bg-[var(--color-success-container)]">
+        <CheckCircle2 className="size-6 text-[var(--color-success)]" aria-hidden />
       </div>
       <h1 className="mt-6 text-[length:var(--text-h1)]">You&apos;re booked in</h1>
-      <p className="mt-3 max-w-lg text-[15px] leading-relaxed text-[var(--color-bark)]">
+      <p className="mt-3 max-w-lg text-[15px] leading-relaxed text-[var(--color-on-surface-variant)]">
         A confirmation is on its way to your email. Komal will send the joining link before
         your session.
       </p>
@@ -161,10 +161,10 @@ export default async function ConfirmPage(props: {
       <BookingFacts appointment={appointment} payment={payment} />
 
       <div className="mt-8 space-y-3">
-        <h2 className="font-sans text-sm font-semibold uppercase tracking-[0.1em] text-[var(--color-stone)]">
+        <h2 className="font-sans text-sm font-semibold uppercase tracking-[0.1em] text-[var(--color-on-surface-variant)]">
           What happens next
         </h2>
-        <ol className="space-y-2 text-sm leading-relaxed text-[var(--color-bark)]">
+        <ol className="space-y-2 text-sm leading-relaxed text-[var(--color-on-surface-variant)]">
           <li>1. You will receive a confirmation email with your booking reference.</li>
           <li>2. A joining link is sent before your appointment.</li>
           <li>3. A reminder arrives 24 hours beforehand.</li>
@@ -179,7 +179,7 @@ export default async function ConfirmPage(props: {
           </Link>
         </Button>
         {payment?.receipt_number && (
-          <Button asChild size="lg" variant="outline">
+          <Button asChild size="lg" variant="secondary">
             <Link href={`/dashboard/payments/${payment.id}/receipt`}>
               <Download aria-hidden /> Download receipt
             </Link>
@@ -187,7 +187,7 @@ export default async function ConfirmPage(props: {
         )}
       </div>
 
-      <p className="mt-8 border-t border-[var(--color-linen)] pt-6 text-xs leading-relaxed text-[var(--color-stone)]">
+      <p className="mt-8 border-t border-[var(--color-outline-variant)] pt-6 text-xs leading-relaxed text-[var(--color-on-surface-variant)]">
         {POLICY.cancellationSummary} {POLICY.refundTiming}
       </p>
     </Shell>
@@ -196,7 +196,7 @@ export default async function ConfirmPage(props: {
 
 function Shell({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-dvh bg-[var(--color-sand)]">
+    <div className="min-h-dvh bg-[var(--color-warm-ivory)]">
       <main id="main" className="mx-auto max-w-2xl px-5 py-16 lg:py-24">{children}</main>
     </div>
   );
@@ -214,11 +214,11 @@ function BookingFacts({ appointment, payment }: { appointment: Appointment; paym
   if (payment?.receipt_number) facts.push(['Receipt', payment.receipt_number]);
 
   return (
-    <dl className="mt-8 divide-y divide-[var(--color-linen)] rounded-[var(--radius-card)] border border-[var(--color-linen)] bg-white">
+    <dl className="mt-8 divide-y divide-[var(--color-outline-variant)]  border border-[var(--color-outline-variant)] bg-white">
       {facts.map(([label, value]) => (
         <div key={label} className="flex items-center justify-between gap-4 px-5 py-3.5">
-          <dt className="text-sm text-[var(--color-stone)]">{label}</dt>
-          <dd className="tabular text-right text-sm font-medium text-[var(--color-ink)] break-all">{value}</dd>
+          <dt className="text-sm text-[var(--color-on-surface-variant)]">{label}</dt>
+          <dd className="tabular text-right text-sm font-medium text-[var(--color-cosmic-navy)] break-all">{value}</dd>
         </div>
       ))}
     </dl>

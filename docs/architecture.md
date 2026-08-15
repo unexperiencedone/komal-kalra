@@ -421,3 +421,69 @@ Both matter for the same reason: an audit that cries wolf stops being read, and
 is then worse than no audit. It found three genuine faults on first run,
 including a saffron-filled sticky mobile CTA at 3.55:1 — the most-tapped button
 in the product.
+
+---
+
+## 15. Design system — "Silent Luxury" (current)
+
+The visual layer was replaced wholesale from the supplied Stitch design files
+(`stitch_komal_kalra_brand_design_system/`). **The backend was not touched**:
+schema, RLS, booking locks, Razorpay flow, auth and all API routes are
+unchanged. This was a re-skin plus a restructure of the marketing pages.
+
+### The three rules that define it
+
+| Rule | Consequence |
+|---|---|
+| **0px radius everywhere** | `--radius-control/card/panel` are all `0px`. Circles survive in exactly two places: avatars and the numbered booking-step markers, where roundness carries meaning. |
+| **No shadows** | Depth is tonal (Ivory → Linen → Navy) plus 1px hairlines. The default border colour is Muted Gold at 20%. A `box-shadow` anywhere in this system is a bug. |
+| **Gold accents, navy fills** | Muted Gold is hairlines, eyebrows and small icons. Cosmic Navy fills every button. |
+
+### Palette
+
+```
+Cosmic Navy  #1a1f2c   grounding, button fill, footer        white on it  16.5:1
+Ink Black    #17120e   button hover, deepest ground
+Warm Ivory   #fef9f2   the canvas
+Linen Grey   #ece7e1   editorial card fill
+Muted Gold   #a45f1e   hairlines / icons / eyebrows-on-ivory
+```
+
+**Gold exists in three measured weights**, because one gold cannot serve every
+ground and pretending otherwise is how an accent ends up illegible:
+
+| Token | On ivory | On linen | On navy | Use |
+|---|---|---|---|---|
+| `muted-gold` | 4.73 ✓ | 4.03 ✗ | 3.32 ✗ | hairlines, icons, eyebrows on ivory |
+| `gold-deep` | 6.18 ✓ | 5.27 ✓ | — | accent **text** on light grounds |
+| `gold-light` | — | — | 8.58 ✓ | accent **text** on navy/ink |
+
+### Typography
+
+Playfair Display (500/600) for headings, Public Sans (400/500/600) for body and
+UI. "Label Caps" — 12px/600 at 0.12em tracking, uppercase — is used for every
+button label, eyebrow and table header, and is why buttons carry generous
+horizontal padding.
+
+### Imagery
+
+`src/lib/content/imagery.ts` catalogues all 15 photographs with their real alt
+text from the design files, behind an `img()` accessor.
+
+**Before launch:** run `npm run images:download`, then flip `USE_LOCAL_IMAGES`
+to `true`. The Stitch URLs are Google-hosted and can rotate without warning;
+they are a development convenience, not a hosting strategy. Nothing else needs
+to change — every call site goes through `img()` or `serviceImage()`.
+
+### What the redesign removed
+
+`QuickLinks`, `TrustStrip`, `GuidanceTopics`, `StatsBand` and `StickyCta` are
+gone, along with `lib/content/topics.ts` and `lib/marketing/stats.ts`. The
+Silent Luxury home page is six sections, not twelve — the aesthetic depends on
+"intentional whitespace to evoke exclusivity", and keeping the denser
+conversion furniture would have contradicted the whole direction.
+
+One consequence worth stating plainly: the real-data stats band is gone, so the
+honesty guarantee it enforced now rests on the testimonial components alone.
+Those still render nothing without an approved review, and there is still no
+hardcoded testimonial anywhere in the codebase.

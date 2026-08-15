@@ -63,8 +63,8 @@ export default async function AdminAnalyticsPage(props: {
             aria-current={days === d ? 'page' : undefined}
             className={`rounded-full px-3.5 py-1.5 text-sm font-medium transition-colors ${
               days === d
-                ? 'bg-[var(--color-ink)] text-[var(--color-sand)]'
-                : 'bg-[var(--color-linen)] text-[var(--color-bark)] hover:bg-[var(--color-linen-hover)]'
+                ? 'bg-[var(--color-cosmic-navy)] text-[var(--color-warm-ivory)]'
+                : 'bg-[var(--color-outline-variant)] text-[var(--color-on-surface-variant)] hover:bg-[var(--color-surface-high)]'
             }`}
           >
             {d === 365 ? '1 year' : `${d} days`}
@@ -105,31 +105,30 @@ export default async function AdminAnalyticsPage(props: {
           <InlineAlert tone={(summary?.conversion_rate ?? 0) < 25 ? 'warning' : 'success'}>
             <strong>{summary?.conversion_rate}% of checkouts completed.</strong>{' '}
             {(summary?.conversion_rate ?? 0) < 25
-              ? `${summary?.failed_count ?? 0} payments failed and others were abandoned. Anything under 25% usually points at friction in the flow — check the Leads page for abandoned bookings and call a few to find out what stopped them.`
-              : 'That is a healthy completion rate for a paid consultation flow.'}
+              ? `${summary?.failed_count ?? 0} payments failed and others were abandoned. Anything under 25% usually points at friction in the flow — check the Leads page for abandoned bookings and call a few to find out what stopped them.`: 'That is a healthy completion rate for a paid consultation flow.'}
           </InlineAlert>
         </div>
       )}
 
       <section aria-labelledby="chart-heading" className="mt-8">
-        <h2 id="chart-heading" className="font-sans text-sm font-semibold uppercase tracking-[0.1em] text-[var(--color-stone)]">
+        <h2 id="chart-heading" className="font-sans text-sm font-semibold uppercase tracking-[0.1em] text-[var(--color-on-surface-variant)]">
           Revenue over time
         </h2>
-        <div className="mt-3 rounded-[var(--radius-card)] border border-[var(--color-linen)] bg-white p-5">
+        <div className="mt-3  border border-[var(--color-outline-variant)] bg-white p-5">
           <RevenueChart data={timeseries} />
         </div>
       </section>
 
       <section aria-labelledby="service-heading" className="mt-8">
-        <h2 id="service-heading" className="font-sans text-sm font-semibold uppercase tracking-[0.1em] text-[var(--color-stone)]">
+        <h2 id="service-heading" className="font-sans text-sm font-semibold uppercase tracking-[0.1em] text-[var(--color-on-surface-variant)]">
           Revenue by service
         </h2>
         {byService.length === 0 ? (
-          <p className="mt-3 rounded-[var(--radius-card)] border border-dashed border-[var(--color-linen)] p-10 text-center text-sm text-[var(--color-stone)]">
+          <p className="mt-3  border border-dashed border-[var(--color-outline-variant)] p-10 text-center text-sm text-[var(--color-on-surface-variant)]">
             No paid bookings in this period.
           </p>
         ) : (
-          <ul className="mt-3 divide-y divide-[var(--color-linen)] rounded-[var(--radius-card)] border border-[var(--color-linen)] bg-white">
+          <ul className="mt-3 divide-y divide-[var(--color-outline-variant)]  border border-[var(--color-outline-variant)] bg-white">
             {byService.map((row) => {
               const share = summary?.net_paise ? Math.round((row.net_paise / summary.net_paise) * 100) : 0;
               return (
@@ -139,10 +138,10 @@ export default async function AdminAnalyticsPage(props: {
                     <span className="tabular text-sm font-semibold">{formatPaise(row.net_paise)}</span>
                   </div>
                   <div className="mt-2 flex items-center gap-3">
-                    <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-[var(--color-linen)]">
-                      <div className="h-full rounded-full bg-[var(--color-saffron)]" style={{ width: `${share}%` }} />
+                    <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-[var(--color-outline-variant)]">
+                      <div className="h-full rounded-full bg-[var(--color-muted-gold)]" style={{ width: `${share}%` }} />
                     </div>
-                    <span className="tabular w-24 shrink-0 text-right text-xs text-[var(--color-stone)]">
+                    <span className="tabular w-24 shrink-0 text-right text-xs text-[var(--color-on-surface-variant)]">
                       {row.bookings} {row.bookings === 1 ? 'booking' : 'bookings'}
                     </span>
                   </div>
