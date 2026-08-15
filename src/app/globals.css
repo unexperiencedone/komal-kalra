@@ -85,16 +85,37 @@
   --color-warning-container: #fbf2de;
 
   /* --- Type -------------------------------------------------------------
-     Playfair Display (headings) + Public Sans (body/UI) — "Heritage meets
-     Modernity". Label Caps is used for eyebrows and every button label.     */
+     Cormorant Garamond (display) + Inter (body/UI).
+     "Heritage meets modernity": a Garamond revival carrying the classical
+     register, against the most production-hardened UI sans available.
+     The fallback stack matters — Cormorant is a slow-loading display face, and
+     Georgia is the closest widely-installed old-style serif, so the swap is far
+     less jarring than falling back to a generic `serif`.
 
-  --font-display: var(--font-playfair), 'Playfair Display', ui-serif, Georgia, serif;
-  --font-sans: var(--font-public-sans), 'Public Sans', ui-sans-serif, system-ui, sans-serif;
+     Label Caps (12px/600, 0.12em tracking, uppercase Inter) remains the voice
+     for eyebrows, button labels and table headers.                          */
+  --font-display: var(--font-cormorant), 'Cormorant Garamond', Garamond, Georgia, ui-serif, serif;
+  --font-sans: var(--font-inter), Inter, ui-sans-serif, system-ui, -apple-system, sans-serif;
 
-  --text-display-lg: clamp(2.5rem, 1.6rem + 4vw, 4.5rem);   /* 40 → 72 */
-  --text-h1: clamp(2rem, 1.5rem + 2.2vw, 3rem);             /* 32 → 48 */
-  --text-h2: clamp(1.75rem, 1.4rem + 1.6vw, 2.25rem);       /* 28 → 36 */
-  --text-h3: clamp(1.375rem, 1.2rem + 0.7vw, 1.5rem);
+  /* Sizes nudged up ~8% from the Playfair scale. Cormorant has a notably
+     smaller x-height, so it reads smaller at an identical point size — setting
+     it at the old values would have quietly shrunk every heading on the site. */
+  --text-display-lg: clamp(2.75rem, 1.7rem + 4.4vw, 5rem);   /* 44 → 80 */
+  --text-h1: clamp(2.125rem, 1.55rem + 2.5vw, 3.25rem);      /* 34 → 52 */
+  --text-h2: clamp(1.875rem, 1.45rem + 1.8vw, 2.5rem);       /* 30 → 40 */
+  --text-h3: clamp(1.5rem, 1.3rem + 0.8vw, 1.75rem);         /* 24 → 28 */
+
+  /* --- Reading measure ---------------------------------------------------
+     Line length is the single most under-attended typographic variable. Below
+     about 45 characters the eye jumps lines too often; above about 80 it loses
+     its place on the return sweep. These are tokens rather than ad-hoc
+     `max-w-md` classes so long-form copy is consistent site-wide.
+
+     `ch` is the width of "0" in the current font, so these track the type size
+     automatically instead of needing a rem value per breakpoint.            */
+  --measure: 68ch;        /* body copy — the comfortable middle              */
+  --measure-tight: 46ch;  /* standfirsts and pull quotes, set larger          */
+  --measure-wide: 78ch;   /* dense reference copy: legal pages, FAQ answers   */
 
   /* --- Spacing (fixed grid, generous margins) ---------------------------- */
   --spacing-gutter: 24px;
@@ -132,20 +153,54 @@
     background-color: var(--color-warm-ivory);
     color: var(--color-on-surface);
     font-family: var(--font-sans);
+    font-size: 16px;
+    line-height: 1.6;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
+
+    /* Both faces are variable with an optical-size axis. `auto` lets the
+       browser pick the right optical master per size — Playfair's fine hairlines
+       at 72px are a different drawing from the same face at 20px, and without
+       this the large display type looks slightly coarse. */
+    font-optical-sizing: auto;
+
+    /* Common ligatures and contextual alternates on, discretionary off. */
+    font-variant-ligatures: common-ligatures contextual;
+
+    /* Pulls quotes and hyphens marginally into the gutter so the text edge
+       reads as optically straight. Supported in Safari; a no-op elsewhere. */
+    hanging-punctuation: first last;
   }
 
   h1, h2, h3 {
     font-family: var(--font-display);
     color: var(--color-cosmic-navy);
     text-wrap: balance;
+    font-optical-sizing: auto;
   }
-  h1 { font-weight: 600; letter-spacing: -0.02em; line-height: 1.1; }
-  h2 { font-weight: 500; line-height: 1.3; }
-  h3 { font-weight: 500; line-height: 1.3; }
+
+  /* Tracking is size-dependent, not a single global value. Large display type
+     needs negative tracking because the counters open up as the face scales;
+     smaller headings need close to none or they start to look loose. Applying
+     one letter-spacing to every heading is the most common way a good type
+     pairing ends up looking amateur. */
+  /* WEIGHT: Cormorant is drawn light. Playfair looked right at 500; Cormorant
+     needs 600 below roughly 32px or the strokes disappear against ivory.
+     TRACKING: an old-style face with this much contrast needs LESS negative
+     tracking than a Didone — the counters are already generous. Pulling it in
+     as hard as Playfair wanted would jam the thin strokes together. */
+  h1 { font-weight: 600; letter-spacing: -0.015em; line-height: 1.05; }
+  h2 { font-weight: 600; letter-spacing: -0.008em; line-height: 1.15; }
+  h3 { font-weight: 600; letter-spacing: -0.004em; line-height: 1.25; }
 
   p { text-wrap: pretty; }
+
+  /* Prevent a one-word last line on short display headings. */
+  h1, h2 { text-wrap: balance; }
+
+  /* Numerals in running prose should be proportional; only tabular contexts
+     (money columns, counters) opt into lining figures via `.tabular`. */
+  b, strong { font-weight: 600; }
 
   /* Focus ring transitions to Muted Gold, per the components spec. Square,
      because everything in this system is square. */
@@ -191,6 +246,50 @@
     font-size: 11px;
     font-weight: 500;
     line-height: 1.2;
+  }
+
+  /* --- Editorial prose ----------------------------------------------------
+     For long-form copy: the About biography, legal pages, service descriptions.
+
+     Three things it fixes that ad-hoc utility classes were not:
+       1. MEASURE. Constrained to ~68 characters regardless of container width.
+       2. RHYTHM. Paragraph spacing set in `em` so it scales with the type size
+          rather than staying at a fixed 16px when the copy is set larger.
+       3. WIDOWS. `text-wrap: pretty` on every paragraph, not just the ones
+          someone remembered.                                                */
+  .prose-editorial {
+    max-width: var(--measure);
+    color: var(--color-on-surface-variant);
+  }
+  .prose-editorial > * + * { margin-top: 1.15em; }
+  .prose-editorial p { text-wrap: pretty; line-height: 1.65; }
+  .prose-editorial strong { color: var(--color-on-surface); font-weight: 600; }
+
+  /* Standfirst: the larger opening paragraph. Set tighter in measure because
+     it runs at a bigger size, and slightly tighter in tracking because Public
+     Sans opens up above 18px. */
+  .standfirst {
+    max-width: var(--measure-tight);
+    font-size: clamp(1.125rem, 1rem + 0.5vw, 1.375rem);
+    line-height: 1.5;
+    letter-spacing: -0.011em;
+    color: var(--color-on-surface-variant);
+    text-wrap: pretty;
+  }
+
+  /* Pull quote — Playfair, italic, hung off a gold rule. */
+  .pull-quote {
+    max-width: var(--measure-tight);
+    font-family: var(--font-display);
+    /* Cormorant ships a true italic, so this is a real cut rather than a
+       slanted roman. At this size the difference is obvious. */
+    font-size: clamp(1.5rem, 1.15rem + 1.3vw, 2.125rem);
+    font-style: italic;
+    font-weight: 500;
+    line-height: 1.45;
+    letter-spacing: -0.012em;
+    color: var(--color-cosmic-navy);
+    text-wrap: pretty;
   }
 
   /* The 48px gold hairline that sits under a section heading. */

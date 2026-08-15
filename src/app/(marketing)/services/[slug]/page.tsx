@@ -352,9 +352,9 @@ export default async function ServiceDetailPage(props: { params: Promise<{ slug:
             </Reveal>
 
             <Reveal delay={100} className="md:col-span-8">
-              <p className="whitespace-pre-line text-base leading-relaxed text-[var(--color-on-surface-variant)]">
-                {service.description}
-              </p>
+              <div className="prose-editorial text-base">
+                <p className="whitespace-pre-line">{service.description}</p>
+              </div>
 
               {service.ideal_for.length > 0 && (
                 <div className="mt-10 border-t border-[color-mix(in_srgb,var(--color-muted-gold)_20%,transparent)] pt-8">

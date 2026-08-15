@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next';
-import { Public_Sans, Playfair_Display } from 'next/font/google';
+import { Inter, Cormorant_Garamond } from 'next/font/google';
 import { Toaster } from 'sonner';
 import { BRAND } from '@/lib/config';
 import './globals.css';
@@ -9,17 +9,39 @@ import './globals.css';
  * third-party CDN, no layout shift from a late swap, and no privacy question
  * about who is being told which pages a visitor loads.
  */
-const publicSans = Public_Sans({
+/**
+ * Inter — body and UI.
+ *
+ * Variable, so one file covers 400–600 instead of three static weights. Chosen
+ * over Public Sans for small-size rendering and for `tnum`, which the payments
+ * and revenue tables depend on to keep digits in vertical alignment.
+ */
+const inter = Inter({
   subsets: ['latin'],
-  weight: ['400', '500', '600'],
-  variable: '--font-public-sans',
+  variable: '--font-inter',
   display: 'swap',
+  axes: ['opsz'],
 });
 
-const playfair = Playfair_Display({
+/**
+ * Cormorant Garamond — display only.
+ *
+ * A Garamond revival: old-style, high-contrast, and the serif lineage that
+ * luxury houses actually use. Replaces Playfair Display, which is the most
+ * over-used serif on the web and reads as a default rather than a choice.
+ *
+ * Weights 500/600 and true italics (the pull quote on /about is set in italic,
+ * and a synthesised oblique would be obvious at that size).
+ *
+ * NOTE ON WEIGHT: Cormorant is drawn light. Where Playfair looked right at 500,
+ * Cormorant needs 600 below about 32px or it goes weak against the ivory
+ * ground — see the h2/h3 rules in globals.css.
+ */
+const cormorant = Cormorant_Garamond({
   subsets: ['latin'],
-  weight: ['500', '600'],
-  variable: '--font-playfair',
+  weight: ['500', '600', '700'],
+  style: ['normal', 'italic'],
+  variable: '--font-cormorant',
   display: 'swap',
 });
 
@@ -64,7 +86,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${publicSans.variable} ${playfair.variable}`}>
+    <html lang="en" className={`${inter.variable} ${cormorant.variable}`}>
       <body>
         {/* First focusable element on every page. */}
         <a href="#main" className="skip-link">Skip to content</a>

@@ -32,7 +32,7 @@ export default function FaqPage() {
         <div className="shell max-w-3xl">
           <Reveal>
             <h1 className="text-[length:var(--text-h1)]">Questions, answered</h1>
-            <p className="mt-5 text-[17px] leading-relaxed text-[var(--color-on-surface-variant)]">
+            <p className="standfirst mt-5">
               Everything about booking, payment and cancellation. If your question is not
               here, call {BRAND.phones[0]} and ask.
             </p>

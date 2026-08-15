@@ -25,7 +25,7 @@ export default async function ServicesPage() {
             <p className="label-caps text-[var(--color-gold-deep)]">The Practice</p>
             <h1 className="mt-4 max-w-3xl text-[length:var(--text-h1)]">Consultation Services</h1>
             <span className="gold-rule mt-6" aria-hidden />
-            <p className="mt-6 max-w-xl text-lg leading-relaxed text-[var(--color-on-surface-variant)]">
+            <p className="standfirst mt-6">
               Every session is one-to-one and confidential. Fees and durations are shown
               upfront — nothing is added at checkout.
             </p>

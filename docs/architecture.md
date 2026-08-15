@@ -613,3 +613,57 @@ the right call.
 Delivery is not the problem — `next/image` already emits AVIF/WebP at the right
 size per breakpoint, and `formats: ['image/avif', 'image/webp']` is set in
 `next.config.ts`. The only missing ingredient is source resolution.
+
+---
+
+## 18. Typography (current)
+
+**Cormorant Garamond** (display) + **Inter** (body/UI), replacing Playfair
+Display + Public Sans.
+
+### Why the change
+
+Playfair is the most over-used serif on the web — it reads as a default rather
+than a decision, and its Didone contrast is a fashion-magazine register rather
+than a heritage one. Cormorant is a **Garamond revival**: old-style, warmer,
+and the actual serif lineage luxury houses draw on. It also ships a **true
+italic**, which the `/about` pull quote needs — a synthesised oblique is
+obvious at 34px.
+
+Inter replaces Public Sans for two concrete reasons: better small-size
+rendering, and `tnum` figures, which the payments and revenue tables rely on to
+keep digits vertically aligned.
+
+### What had to change with the face swap
+
+Swapping a display serif is never just a variable rename. Three adjustments
+were required:
+
+| | Playfair | Cormorant | Why |
+|---|---|---|---|
+| **Scale** | 40–72px | 44–80px | Cormorant has a much smaller x-height, so it *reads* smaller at the same point size. Keeping the old values would have silently shrunk every heading. |
+| **Weight** | 500 | **600** below ~32px | Cormorant is drawn light. At 500 the thin strokes disappear against ivory. |
+| **Tracking** | −0.025em | −0.015em | An old-style face has generous counters already. Pulling it in as hard as a Didone wants jams the hairlines together. |
+
+### Supporting typographic work
+
+- **Reading measure as tokens.** `--measure: 68ch`, `--measure-tight: 46ch`,
+  `--measure-wide: 78ch`. Line length is the most under-attended typographic
+  variable — under ~45 characters the eye jumps lines, over ~80 it loses the
+  return sweep. `ch` units track the type size automatically.
+- **`.prose-editorial`** for long-form copy: constrained measure, paragraph
+  spacing in `em` so it scales with type size, `text-wrap: pretty` everywhere.
+- **`.standfirst`** and **`.pull-quote`** as named classes, so the opening
+  paragraph and the quote are consistent rather than re-specified per page.
+- **`font-optical-sizing: auto`** — both faces are variable with an `opsz` axis,
+  so 80px and 20px are genuinely different drawings rather than one scaled.
+- **Per-size heading tracking** rather than one global letter-spacing, which is
+  the most common way a good pairing ends up looking amateur.
+- **`hanging-punctuation: first last`** so quotes and hyphens hang into the
+  gutter and the text edge reads optically straight.
+
+### Fallback stack
+
+`Cormorant Garamond, Garamond, Georgia, ui-serif, serif`. Georgia is deliberate:
+it is the closest widely-installed old-style serif, so the swap during font load
+is far less jarring than falling back to a generic `serif`.

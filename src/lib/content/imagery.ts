@@ -149,6 +149,82 @@ export const IMAGES = {
     alt:
       "An open journal of handwritten astronomical notation, showing a star chart and compass rose, resting on linen beside a brass compass and reading glasses.",
   },
+  contextImage: {
+    // Locally supplied companion shot to serviceContext, same still-life set.
+    remote: '/images/contextImage.png',
+    local: '/images/contextImage.png',
+    alt:
+      "A closer view of the same handwritten journal, open to a circular star chart labelled 'Astronomical notation', beside a brass compass and wooden-framed reading glasses on linen.",
+  },
+  doshaImage: {
+    remote: '/images/doshaImage.png',
+    local: '/images/doshaImage.png',
+    alt:
+      "An antique brass balance scale on a wooden zodiac-wheel base labelled 'Dosha Review', weighing a dish of smooth stones against a dish holding a handwritten astrological chart.",
+  },
+  counselImage: {
+    remote: '/images/counselImage.png',
+    local: '/images/counselImage.png',
+    alt:
+      "Two women in quiet conversation over tea at a candlelit wooden table, an open handwritten astrological journal between them, bookshelves in the background.",
+  },
+  positionImage: {
+    remote: '/images/positionImage.png',
+    local: '/images/positionImage.png',
+    alt:
+      "A brass compass resting open on a handwritten astronomical log, beside a page of star charts, on a dark wooden desk.",
+  },
+  obstacleImage: {
+    remote: '/images/obstacleImage.png',
+    local: '/images/obstacleImage.png',
+    alt:
+      "A single rough stone bound with fine copper wire, resting on linen in front of an open page of star-chart notation.",
+  },
+  stepImage: {
+    remote: '/images/stepImage.png',
+    local: '/images/stepImage.png',
+    alt:
+      "A hand marking a point on a hand-drawn star chart with a fountain pen, a brass ruler laid across the page.",
+  },
+  astrologyGuidanceCardImage: {
+    remote: '/images/astrologyGuidanceCardImage.png',
+    local: '/images/astrologyGuidanceCardImage.png',
+    alt:
+      "A polished black sphere resting on raked sand beside a dark ceramic bowl and a moss-covered stone.",
+  },
+  lifeCoachingCardImage: {
+    remote: '/images/lifeCounsellingcardImage.png',
+    local: '/images/lifeCounsellingcardImage.png',
+    alt:
+      "Warm afternoon light passing through a glass vessel of water, casting long faceted shadows across a linen surface.",
+  },
+  healingCardImage: {
+    remote: '/images/healingCardImage.png',
+    local: '/images/healingCardImage.png',
+    alt:
+      "A single water droplet suspended above concentric ripples at dusk, with the words 'Silent Luxury' beneath.",
+  },
+  counsellingCardImage: {
+    remote: '/images/counsellingCardImage.png',
+    local: '/images/counsellingCardImage.png',
+    alt:
+      "A close, textural view of folded charcoal-grey wool with a single gold thread crossing its fold.",
+  },
+  kundliMilanCardImage: {
+    remote: '/images/kundliMilanCardImage.png',
+    local: '/images/kundliMilanCardImage.png',
+    alt:
+      "Two small engraved celestial globes, one brass and one silver, resting on dark folded fabric and joined by a single beam of light.",
+  },
+  komalKalra: {
+    // The real portrait of the practitioner. This is the one photograph on the
+    // site whose subject is a named person, so it is never passed through a
+    // generative upscaler — see docs/architecture.md §17.
+    remote: '/images/komal_kalra.jpg',
+    local: '/images/komal_kalra.jpg',
+    alt:
+      'Komal Kalra seated in a carved wooden chair, wearing a white floral-embroidered suit, in a warmly lit room with a table lamp behind her.',
+  },
 } as const satisfies Record<string, BrandImage>;
 
 export type ImageKey = keyof typeof IMAGES;
@@ -176,4 +252,23 @@ const SERVICE_IMAGE: Record<string, ImageKey> = {
 
 export function serviceImage(slug: string) {
   return img(SERVICE_IMAGE[slug] ?? 'serviceAstrologicalGuidance');
+}
+
+/**
+ * The photograph on each service's bento card. Unlike serviceImage() above,
+ * this returns null rather than a fallback — reusing another service's card
+ * photo would misrepresent it, same rule as serviceContextImage(). A service
+ * added before its card photograph exists renders text-only rather than
+ * borrowing someone else's.
+ */
+const SERVICE_CARD_IMAGE: Record<string, ImageKey> = {
+  'astrological-guidance': 'astrologyGuidanceCardImage',
+  'life-coaching': 'lifeCoachingCardImage',
+  'healing-session': 'healingCardImage',
+  counselling: 'counsellingCardImage',
+  'kundli-milan': 'kundliMilanCardImage',
+};
+
+export function serviceCardImage(slug: string): ImageKey | null {
+  return SERVICE_CARD_IMAGE[slug] ?? null;
 }

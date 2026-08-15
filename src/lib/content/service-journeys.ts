@@ -74,6 +74,7 @@ const JOURNEYS: Record<string, ServiceJourney> = {
       {
         title: 'Context',
         body: 'We map what the chart shows against what is actually happening in your life, so the reading answers your questions rather than a general profile.',
+        image: 'contextImage',
       },
       {
         title: 'Direction',
@@ -96,10 +97,12 @@ const JOURNEYS: Record<string, ServiceJourney> = {
       {
         title: 'Dosha Review',
         body: 'Mangal Dosha and other afflictions are assessed for their real weight in this specific pairing, not applied as a blanket verdict.',
+        image: 'doshaImage',
       },
       {
         title: 'Counsel',
         body: 'Both charts read individually, with clear guidance for the conversation you will need to have with family.',
+        image: 'counselImage',
       },
     ],
   },
@@ -109,21 +112,12 @@ const JOURNEYS: Record<string, ServiceJourney> = {
     intro:
       'A working session built around one decision, ending with a step you can actually take.',
     phases: [
-      { title: 'Position', body: 'Where you actually are, stated plainly — including the parts that are easier to talk around.' },
-      { title: 'Obstacle', body: 'What is genuinely blocking the decision, separated from what merely feels uncomfortable about it.' },
-      { title: 'Step', body: 'One concrete, specific next action agreed before the session ends, with an optional follow-up to check progress.' },
+      { title: 'Position', body: 'Where you actually are, stated plainly — including the parts that are easier to talk around.', image: 'positionImage' },
+      { title: 'Obstacle', body: 'What is genuinely blocking the decision, separated from what merely feels uncomfortable about it.', image: 'obstacleImage' },
+      { title: 'Step', body: 'One concrete, specific next action agreed before the session ends, with an optional follow-up to check progress.', image: 'stepImage' },
     ],
   },
 
-  counselling: {
-    heading: 'How a Session Runs',
-    intro: 'Unhurried, confidential, and led by what you need to talk through.',
-    phases: [
-      { title: 'Space', body: 'The session opens without an agenda. You set what matters, and it is not cut short.' },
-      { title: 'Perspective', body: 'An objective, non-judgemental view of the situation — including where a different kind of support would serve you better.' },
-      { title: 'Ground', body: 'Practical grounding for whatever comes next, with no pressure to book again.' },
-    ],
-  },
 };
 
 /**

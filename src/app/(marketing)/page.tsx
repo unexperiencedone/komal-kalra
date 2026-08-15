@@ -8,6 +8,8 @@ import { BRAND } from '@/lib/config';
 import { Button } from '@/components/ui/button';
 import { SectionHeading } from '@/components/ui/card';
 import { Reveal } from '@/components/common/Reveal';
+import { PortraitFrame } from '@/components/marketing/PortraitFrame';
+import { FOUNDER } from '@/lib/content/founder';
 import { ScrollWatermark } from '@/components/common/ScrollWatermark';
 import { ServiceGrid } from '@/components/marketing/ServiceGrid';
 import { Testimonials } from '@/components/marketing/Testimonials';
@@ -50,7 +52,7 @@ export default async function HomePage() {
 
   const reviews = testimonials ?? [];
   const hero = img('heroImage');
-  const about = img('aboutStill');
+  const about = img('komalKalra');
   const gramA = img('journalCompass');
   const gramB = img('journalCandle');
 
@@ -132,7 +134,7 @@ export default async function HomePage() {
             </Reveal>
 
             <Reveal delay={200}>
-              <p className="mt-8 max-w-md text-lg leading-relaxed text-[var(--color-on-surface-variant)]">
+              <p className="standfirst mt-8">
                 Professional astrological consultation and life coaching designed to provide
                 precision, discretion, and profound insight.
               </p>
@@ -182,13 +184,14 @@ export default async function HomePage() {
       >
         <div className="shell grid grid-cols-1 items-center gap-12 md:grid-cols-12">
           <Reveal className="md:col-span-5">
-            <Image
+            {/* Square source in a 4/5 crop, focal point raised to 22% so the
+                frame does not cut through her head. */}
+            <PortraitFrame
               src={about.src}
               alt={about.alt}
-              width={800}
-              height={1000}
+              aspect="portrait"
+              objectPosition="50% 22%"
               sizes="(min-width: 768px) 40vw, 100vw"
-              className="aspect-[4/5] w-full border border-[color-mix(in_srgb,var(--color-muted-gold)_20%,transparent)] object-cover"
             />
           </Reveal>
 
@@ -198,27 +201,14 @@ export default async function HomePage() {
               Why Choose Komal Kalra
             </h2>
 
-            <div className="mt-8 space-y-6 text-base leading-relaxed text-[var(--color-on-surface-variant)]">
-              {/* PLACEHOLDER COPY — from the design file. Replace with Komal's
-                  own words and real credentials before launch. */}
-              <p>
-                The practice is built on a foundation of absolute discretion and profound
-                analytical rigor. Moving away from esoteric clichés, the focus is on providing
-                actionable intelligence derived from astrological systems.
-              </p>
-              <p>
-                Every consultation is treated as a high-level executive briefing. You receive a
-                structured, objective perspective on your current reality and upcoming cycles,
-                empowering you to make decisions from a place of clarity rather than anxiety.
-              </p>
+            <div className="prose-editorial mt-8 text-base">
+              {FOUNDER.homepage.map((para) => (
+                <p key={para.slice(0, 24)}>{para}</p>
+              ))}
             </div>
 
             <ul className="mt-10 space-y-4 border-t border-[color-mix(in_srgb,var(--color-muted-gold)_20%,transparent)] pt-8">
-              {[
-                'Strict Confidentiality Protocols',
-                'Evidence-Based Astrological Interpretations',
-                'Action-Oriented Coaching Methodologies',
-              ].map((item) => (
+              {FOUNDER.homepageChecklist.map((item) => (
                 <li key={item} className="flex items-center gap-4 text-[var(--color-on-surface)]">
                   <Check className="size-4 shrink-0 text-[var(--color-muted-gold)]" aria-hidden />
                   {item}
