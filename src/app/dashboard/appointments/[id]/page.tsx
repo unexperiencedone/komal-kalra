@@ -117,7 +117,7 @@ export default async function AppointmentDetailPage(props: { params: Promise<{ i
             </Row>
             {appointment.discount_paise > 0 && (
               <Row label="Discount">
-                <span className="tabular text-[var(--color-sage)]">−{formatPaise(appointment.discount_paise)}</span>
+                <span className="tabular text-[var(--color-jade)]">−{formatPaise(appointment.discount_paise)}</span>
               </Row>
             )}
             {appointment.tax_paise > 0 && (

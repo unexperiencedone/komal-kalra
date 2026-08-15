@@ -107,12 +107,12 @@ export default async function AdminLeadsPage(props: {
 
                   <div className="mt-2 flex flex-wrap gap-x-5 gap-y-1 text-sm">
                     {lead.phone && (
-                      <a href={`tel:${lead.phone}`} className="flex items-center gap-1.5 text-[var(--color-bark)] hover:text-[var(--color-ember)]">
+                      <a href={`tel:${lead.phone}`} className="flex items-center gap-1.5 text-[var(--color-bark)] hover:text-[var(--color-ember-text)]">
                         <Phone className="size-3.5" aria-hidden /> {lead.phone}
                       </a>
                     )}
                     {lead.email && (
-                      <a href={`mailto:${lead.email}`} className="flex items-center gap-1.5 text-[var(--color-bark)] hover:text-[var(--color-ember)]">
+                      <a href={`mailto:${lead.email}`} className="flex items-center gap-1.5 text-[var(--color-bark)] hover:text-[var(--color-ember-text)]">
                         <Mail className="size-3.5" aria-hidden /> {lead.email}
                       </a>
                     )}

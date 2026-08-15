@@ -17,7 +17,7 @@ export default async function ContactPage() {
   const services = await getActiveServices();
 
   return (
-    <section className="py-16 sm:py-20">
+    <section className="band-dawn constellation-motif py-16 sm:py-20">
       <div className="mx-auto max-w-6xl px-5 lg:px-8">
         <div className="grid gap-14 lg:grid-cols-[0.8fr_1.2fr]">
           <Reveal>
@@ -32,9 +32,9 @@ export default async function ContactPage() {
                 <li key={phone}>
                   <a
                     href={`tel:${BRAND.phonesE164[i]}`}
-                    className="flex items-center gap-3 rounded-[var(--radius-control)] border border-[var(--color-linen)] bg-white px-4 py-3.5 text-[15px] font-medium transition-colors hover:border-[var(--color-saffron)]"
+                    className="flex items-center gap-3 rounded-[var(--radius-control)] border border-[var(--color-linen)] bg-white px-4 py-3.5 text-[15px] font-medium transition-colors hover:border-[var(--color-ember)]"
                   >
-                    <Phone className="size-4 text-[var(--color-saffron)]" aria-hidden />
+                    <Phone className="size-4 text-[var(--color-ember-text)]" aria-hidden />
                     {phone}
                   </a>
                 </li>
@@ -44,9 +44,9 @@ export default async function ContactPage() {
                   href={BRAND.instagram}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-3 rounded-[var(--radius-control)] border border-[var(--color-linen)] bg-white px-4 py-3.5 text-[15px] font-medium transition-colors hover:border-[var(--color-saffron)]"
+                  className="flex items-center gap-3 rounded-[var(--radius-control)] border border-[var(--color-linen)] bg-white px-4 py-3.5 text-[15px] font-medium transition-colors hover:border-[var(--color-ember)]"
                 >
-                  <InstagramIcon className="size-4 text-[var(--color-saffron)]" />
+                  <InstagramIcon className="size-4 text-[var(--color-ember-text)]" />
                   {BRAND.instagramHandle}
                 </a>
               </li>
@@ -60,7 +60,7 @@ export default async function ContactPage() {
           </Reveal>
 
           <Reveal delay={80}>
-            <div className="rounded-[var(--radius-card)] border border-[var(--color-linen)] bg-white p-6 sm:p-8">
+            <div className="rounded-[var(--radius-card)] border border-[var(--color-linen)] border-t-4 border-t-[var(--color-ember)] bg-white p-6 shadow-[var(--shadow-lifted)] sm:p-8">
               <h2 className="font-[family-name:var(--font-display)] text-xl font-semibold">Send a message</h2>
               <p className="mt-1.5 text-sm text-[var(--color-stone)]">
                 A sentence or two is plenty to start with.

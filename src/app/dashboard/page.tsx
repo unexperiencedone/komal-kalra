@@ -71,7 +71,7 @@ export default async function DashboardPage() {
         </h2>
 
         {next ? (
-          <div className="mt-3 rounded-[var(--radius-card)] border border-[var(--color-saffron)]/30 bg-white p-6">
+          <div className="mt-3 rounded-[var(--radius-card)] border border-[var(--color-ember)]/30 bg-white p-6">
             <div className="flex flex-wrap items-start justify-between gap-4">
               <div>
                 <div className="flex items-center gap-3">
@@ -140,7 +140,7 @@ export default async function DashboardPage() {
             <h2 id="recent-heading" className="font-sans text-sm font-semibold uppercase tracking-[0.1em] text-[var(--color-stone)]">
               Recent bookings
             </h2>
-            <Link href="/dashboard/appointments" className="text-sm font-medium text-[var(--color-ember)] hover:underline">
+            <Link href="/dashboard/appointments" className="text-sm font-medium text-[var(--color-ember-text)] hover:underline">
               View all
             </Link>
           </div>

@@ -40,21 +40,52 @@ export function ServiceCard({ service, featured = false }: { service: Service; f
 
   const badgeClass =
     badge.tone === 'accent'
-      ? 'bg-[var(--color-saffron)] text-white'
+      ? 'bg-[var(--color-ember)] text-white'
       : 'bg-[var(--color-linen)] text-[var(--color-bark)]';
+
+  /**
+   * Hue per card, keyed off the service slug so it is STABLE — the same service
+   * is always the same colour, on every page, across reloads. A hash of the
+   * slug rather than the array index, because index-based colour reshuffles the
+   * whole grid whenever a service is reordered or deactivated.
+   *
+   * Decorative rather than semantic here: the five services are peers, so the
+   * colour is carrying visual rhythm, not meaning.
+   */
+  const PALETTE = [
+    { plate: 'bg-[var(--color-saffron-tint)]', icon: 'text-[var(--color-ember-text)]', edge: 'bg-[var(--color-ember)]' },
+    { plate: 'bg-[var(--color-rose-tint)]',    icon: 'text-[var(--color-rose)]',       edge: 'bg-[var(--color-rose)]' },
+    { plate: 'bg-[var(--color-indigo-tint)]',  icon: 'text-[var(--color-indigo)]',     edge: 'bg-[var(--color-indigo)]' },
+    { plate: 'bg-[var(--color-jade-tint)]',    icon: 'text-[var(--color-jade)]',       edge: 'bg-[var(--color-jade)]' },
+    { plate: 'bg-[var(--color-teal-tint)]',    icon: 'text-[var(--color-teal)]',       edge: 'bg-[var(--color-teal)]' },
+    { plate: 'bg-[var(--color-plum-tint)]',    icon: 'text-[var(--color-plum)]',       edge: 'bg-[var(--color-plum)]' },
+  ] as const;
+
+  const hue = PALETTE[
+    Math.abs(
+      service.slug.split('').reduce((h, c) => (h * 31 + c.charCodeAt(0)) | 0, 7),
+    ) % PALETTE.length
+  ];
 
   return (
     <article
-      className={`group relative flex h-full flex-col rounded-[var(--radius-card)] border bg-white p-6 transition-[border-color,box-shadow,transform] duration-200 hover:-translate-y-0.5 hover:border-[var(--color-saffron)]/40 hover:shadow-[var(--shadow-overlay)] ${
-        featured ? 'border-[var(--color-saffron)]/35' : 'border-[var(--color-linen)]'
+      className={`group relative flex h-full flex-col overflow-hidden rounded-[var(--radius-card)] border bg-white p-6 transition-[border-color,box-shadow,transform] duration-200 hover:-translate-y-0.5 hover:border-[var(--color-ember)]/40 hover:shadow-[var(--shadow-lifted)] ${
+        featured ? 'border-[var(--color-ember)]/35' : 'border-[var(--color-linen)]'
       }`}
     >
+      <span
+        aria-hidden
+        className={`absolute inset-x-0 top-0 h-1 origin-left transition-transform duration-300 ${hue.edge} ${
+          featured ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'
+        }`}
+      />
+
       <div className="flex items-start justify-between gap-3">
         <span className={`rounded-full px-2.5 py-1 text-[11px] font-semibold ${badgeClass}`}>
           {badge.label}
         </span>
-        <span className="flex size-9 items-center justify-center rounded-full bg-[var(--color-saffron-tint)]">
-          <ModeIcon className="size-4 text-[var(--color-ember)]" aria-hidden />
+        <span className={`flex size-10 items-center justify-center rounded-full ${hue.plate}`}>
+          <ModeIcon className={`size-[18px] ${hue.icon}`} aria-hidden />
         </span>
       </div>
 
@@ -104,7 +135,7 @@ export function ServiceCard({ service, featured = false }: { service: Service; f
             so this is aria-hidden and non-focusable to avoid a duplicate tab stop. */}
         <span
           aria-hidden
-          className="inline-flex items-center gap-1.5 rounded-[var(--radius-control)] border border-[var(--color-linen)] px-3.5 py-2 text-sm font-semibold text-[var(--color-ink)] transition-colors group-hover:border-[var(--color-saffron)] group-hover:bg-[var(--color-saffron)] group-hover:text-white"
+          className="inline-flex items-center gap-1.5 rounded-[var(--radius-control)] border border-[var(--color-edge-hover)] px-3.5 py-2 text-sm font-semibold text-[var(--color-ink)] transition-colors group-hover:border-[var(--color-ember)] group-hover:bg-[var(--color-ember)] group-hover:text-white"
         >
           {service.bookable_online ? 'Book' : 'Enquire'}
           <ArrowRight className="size-4 transition-transform duration-200 group-hover:translate-x-0.5" />

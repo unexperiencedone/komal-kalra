@@ -91,8 +91,8 @@ export default async function ReceiptPage(props: { params: Promise<{ id: string 
             </tr>
             {appointment && appointment.discount_paise > 0 && (
               <tr>
-                <td className="py-3 text-[var(--color-sage)]">Discount</td>
-                <td className="tabular py-3 text-right text-[var(--color-sage)]">
+                <td className="py-3 text-[var(--color-jade)]">Discount</td>
+                <td className="tabular py-3 text-right text-[var(--color-jade)]">
                   −{formatPaisePrecise(appointment.discount_paise)}
                 </td>
               </tr>

@@ -95,13 +95,13 @@ function Stat({ target, decimals = 0, suffix = '', label }: {
       {/* The accessible name carries the final value, so a screen reader is not
           read a stream of intermediate animation frames. */}
       <p
-        className="tabular font-[family-name:var(--font-display)] text-3xl font-semibold text-[var(--color-ink)] sm:text-4xl"
+        className="tabular font-[family-name:var(--font-display)] text-3xl font-semibold text-[var(--color-marigold)] sm:text-4xl"
         aria-label={`${decimals > 0 ? target.toFixed(decimals) : target.toLocaleString('en-IN')}${suffix} ${label}`}
       >
         <span ref={ref} aria-hidden>{display}</span>
         <span aria-hidden>{suffix}</span>
       </p>
-      <p className="mt-2 text-xs leading-relaxed text-[var(--color-stone)]">{label}</p>
+      <p className="mt-2 text-xs leading-relaxed text-[var(--color-indigo-on-dark)]">{label}</p>
     </div>
   );
 }
@@ -113,7 +113,7 @@ export function StatsBand({ stats }: { stats: RealStats }) {
   return (
     <section
       aria-labelledby="stats-heading"
-      className="constellation-motif border-y border-[var(--color-linen)] bg-white py-14"
+      className="band-night constellation-motif-dark border-y border-[var(--color-indigo-light)]/20 py-16"
     >
       <div className="mx-auto max-w-6xl px-5 lg:px-8">
         <h2 id="stats-heading" className="sr-only">Consultations delivered</h2>
@@ -129,7 +129,7 @@ export function StatsBand({ stats }: { stats: RealStats }) {
           )}
         </div>
 
-        <p className="mt-8 text-center text-xs text-[var(--color-stone)]">
+        <p className="mt-10 text-center text-xs text-[var(--color-indigo-on-dark)]">
           Counted from completed bookings on this site. Nothing here is estimated.
         </p>
       </div>

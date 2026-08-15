@@ -54,7 +54,7 @@ export function AppointmentRowActions({ appointment }: { appointment: Appointmen
             <form action={updateAppointmentStatus}>
               <input type="hidden" name="appointmentId" value={appointment.id} />
               <input type="hidden" name="status" value="completed" />
-              <Button type="submit" size="sm" variant="ghost" className="text-[var(--color-sage)]">
+              <Button type="submit" size="sm" variant="ghost" className="text-[var(--color-jade)]">
                 <Check aria-hidden /> Done
               </Button>
             </form>

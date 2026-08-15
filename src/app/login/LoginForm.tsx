@@ -128,7 +128,7 @@ export function LoginForm() {
           <button
             type="button"
             onClick={() => setMode('reset')}
-            className="text-sm font-medium text-[var(--color-ember)] hover:underline"
+            className="text-sm font-medium text-[var(--color-ember-text)] hover:underline"
           >
             Forgotten your password?
           </button>
@@ -177,8 +177,8 @@ export function LoginForm() {
 
           <p className="text-xs leading-relaxed text-[var(--color-stone)]">
             By creating an account you agree to our{' '}
-            <Link href="/legal/terms" className="underline hover:text-[var(--color-ember)]">terms</Link> and{' '}
-            <Link href="/legal/privacy" className="underline hover:text-[var(--color-ember)]">privacy policy</Link>.
+            <Link href="/legal/terms" className="underline hover:text-[var(--color-ember-text)]">terms</Link> and{' '}
+            <Link href="/legal/privacy" className="underline hover:text-[var(--color-ember-text)]">privacy policy</Link>.
           </p>
         </form>
       )}

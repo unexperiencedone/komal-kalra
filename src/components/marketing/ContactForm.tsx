@@ -58,7 +58,7 @@ export function ContactForm({ services = [] }: { services?: Service[] }) {
 
   if (state === 'sent') {
     return (
-      <div className="rounded-[var(--radius-card)] border border-[var(--color-sage)]/25 bg-[var(--color-sage-tint)] p-8 text-center">
+      <div className="rounded-[var(--radius-card)] border border-[var(--color-jade)]/25 bg-[var(--color-jade-tint)] p-8 text-center">
         <div className="mx-auto flex size-11 items-center justify-center rounded-full bg-[var(--color-sage)]">
           <Check className="size-5 text-white" aria-hidden />
         </div>

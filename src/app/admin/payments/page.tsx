@@ -110,7 +110,7 @@ export default async function AdminPaymentsPage(props: {
                     </Td>
                     <Td>
                       {p.profiles ? (
-                        <Link href={`/admin/clients/${p.profiles.id}`} className="block max-w-[160px] truncate text-sm font-medium hover:text-[var(--color-ember)]">
+                        <Link href={`/admin/clients/${p.profiles.id}`} className="block max-w-[160px] truncate text-sm font-medium hover:text-[var(--color-ember-text)]">
                           {p.profiles.full_name ?? p.profiles.email}
                         </Link>
                       ) : '—'}
@@ -152,7 +152,7 @@ export default async function AdminPaymentsPage(props: {
                         {p.receipt_number && p.appointments && (
                           <Link
                             href={`/admin/appointments?ref=${p.appointments.reference}`}
-                            className="text-xs font-medium text-[var(--color-ember)] hover:underline"
+                            className="text-xs font-medium text-[var(--color-ember-text)] hover:underline"
                           >
                             Booking
                           </Link>

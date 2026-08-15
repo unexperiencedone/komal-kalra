@@ -474,11 +474,11 @@ export function BookingFlow({
                       label={
                         <>
                           I have read the{' '}
-                          <Link href="/legal/refunds" target="_blank" className="underline hover:text-[var(--color-ember)]">
+                          <Link href="/legal/refunds" target="_blank" className="underline hover:text-[var(--color-ember-text)]">
                             cancellation and refund policy
                           </Link>{' '}
                           and the{' '}
-                          <Link href="/legal/terms" target="_blank" className="underline hover:text-[var(--color-ember)]">
+                          <Link href="/legal/terms" target="_blank" className="underline hover:text-[var(--color-ember-text)]">
                             terms of service
                           </Link>.
                         </>
@@ -578,18 +578,18 @@ export function BookingFlow({
                 where they measurably help (research §3.1). */}
             <ul className="mt-5 space-y-2 border-t border-[var(--color-linen)] pt-4 text-xs text-[var(--color-stone)]">
               <li className="flex gap-2">
-                <ShieldCheck className="size-3.5 shrink-0 text-[var(--color-sage)]" aria-hidden />
+                <ShieldCheck className="size-3.5 shrink-0 text-[var(--color-jade)]" aria-hidden />
                 <span>{POLICY.cancellationSummary}</span>
               </li>
               <li className="flex gap-2">
-                <Lock className="size-3.5 shrink-0 text-[var(--color-sage)]" aria-hidden />
+                <Lock className="size-3.5 shrink-0 text-[var(--color-jade)]" aria-hidden />
                 <span>Secured by Razorpay. We never see or store your card details.</span>
               </li>
             </ul>
 
             <p className="mt-4 border-t border-[var(--color-linen)] pt-4 text-xs text-[var(--color-stone)]">
               Prefer to speak to someone?{' '}
-              <a href={`tel:${BRAND.phonesE164[0]}`} className="font-medium text-[var(--color-ember)] hover:underline">
+              <a href={`tel:${BRAND.phonesE164[0]}`} className="font-medium text-[var(--color-ember-text)] hover:underline">
                 Call {BRAND.phones[0]}
               </a>
             </p>
@@ -617,7 +617,7 @@ function Stepper({ step }: { step: Step }) {
             className={cn(
               'flex size-6 shrink-0 items-center justify-center rounded-full text-xs font-semibold',
               i <= activeIndex
-                ? 'bg-[var(--color-saffron)] text-white'
+                ? 'bg-[var(--color-ember)] text-white'
                 : 'bg-[var(--color-linen)] text-[var(--color-stone)]',
             )}
           >

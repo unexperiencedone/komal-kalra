@@ -58,7 +58,7 @@ export function Field({ label, htmlFor, error, hint, required, className, childr
 }
 
 const controlBase =
-  'w-full rounded-[var(--radius-control)] border border-[var(--color-linen)] bg-white px-3.5 text-[15px] text-[var(--color-ink)] placeholder:text-[var(--color-placeholder)] transition-colors hover:border-[var(--color-edge-hover)] focus:border-[var(--color-saffron)] disabled:cursor-not-allowed disabled:bg-[var(--color-sand)] disabled:opacity-70 aria-[invalid=true]:border-[var(--color-clay)]';
+  'w-full rounded-[var(--radius-control)] border border-[var(--color-linen)] bg-white px-3.5 text-[15px] text-[var(--color-ink)] placeholder:text-[var(--color-placeholder)] transition-colors hover:border-[var(--color-edge-hover)] focus:border-[var(--color-ember)] disabled:cursor-not-allowed disabled:bg-[var(--color-sand)] disabled:opacity-70 aria-[invalid=true]:border-[var(--color-clay)]';
 
 export const Input = React.forwardRef<HTMLInputElement, React.InputHTMLAttributes<HTMLInputElement>>(
   ({ className, ...props }, ref) => (
@@ -89,7 +89,7 @@ export function Checkbox({
       <input
         id={id}
         type="checkbox"
-        className="mt-0.5 size-4 shrink-0 cursor-pointer rounded-[3px] border-[var(--color-stone)] accent-[var(--color-saffron)]"
+        className="mt-0.5 size-4 shrink-0 cursor-pointer rounded-[3px] border-[var(--color-stone)] accent-[var(--color-ember)]"
         {...props}
       />
       <span className="leading-relaxed">{label}</span>

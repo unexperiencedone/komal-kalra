@@ -20,11 +20,15 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        primary: 'bg-[var(--color-saffron)] text-white hover:bg-[var(--color-ember)] active:bg-[var(--color-ember)]',
-        secondary: 'bg-[var(--color-ink)] text-[var(--color-sand)] hover:bg-[var(--color-bark)]',
-        outline: 'border border-[var(--color-linen)] bg-white text-[var(--color-ink)] hover:border-[var(--color-saffron)] hover:text-[var(--color-ember)]',
+        // EMBER, not saffron. White on saffron #C2762B measures 3.55:1 —
+        // fine for large display type, FAILS AA for a 15px semibold button
+        // label. Ember #A45F1E is 4.96:1. This is why saffron never fills a
+        // button anywhere in the system.
+        primary: 'bg-[var(--color-ember)] text-white shadow-[0_1px_2px_rgb(23_18_14/0.10)] hover:bg-[var(--color-ember-deep)] active:bg-[var(--color-ember-deep)]',
+        secondary: 'bg-[var(--color-indigo)] text-white hover:bg-[var(--color-indigo-deep)]',
+        outline: 'border border-[var(--color-edge-hover)] bg-white text-[var(--color-ink)] hover:border-[var(--color-ember)] hover:bg-[var(--color-saffron-tint)] hover:text-[var(--color-ember-text)]',
         ghost: 'text-[var(--color-bark)] hover:bg-[var(--color-linen)] hover:text-[var(--color-ink)]',
-        link: 'text-[var(--color-ember)] underline-offset-4 hover:underline',
+        link: 'text-[var(--color-ember-text)] underline-offset-4 hover:underline',
         destructive: 'bg-[var(--color-clay)] text-white hover:brightness-95',
         quiet: 'bg-[var(--color-linen)] text-[var(--color-ink)] hover:bg-[var(--color-linen-hover)]',
       },

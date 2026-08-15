@@ -24,14 +24,14 @@ export function SiteFooter({ services = [] }: { services?: Service[] }) {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={`Instagram — ${BRAND.instagramHandle}`}
-                className="flex size-9 items-center justify-center rounded-[var(--radius-control)] border border-[var(--color-linen)] text-[var(--color-bark)] transition-colors hover:border-[var(--color-saffron)] hover:text-[var(--color-ember)]"
+                className="flex size-9 items-center justify-center rounded-[var(--radius-control)] border border-[var(--color-linen)] text-[var(--color-bark)] transition-colors hover:border-[var(--color-ember)] hover:text-[var(--color-ember-text)]"
               >
                 <InstagramIcon className="size-4" />
               </a>
               <a
                 href={`tel:${BRAND.phonesE164[0]}`}
                 aria-label={`Call ${BRAND.phones[0]}`}
-                className="flex size-9 items-center justify-center rounded-[var(--radius-control)] border border-[var(--color-linen)] text-[var(--color-bark)] transition-colors hover:border-[var(--color-saffron)] hover:text-[var(--color-ember)]"
+                className="flex size-9 items-center justify-center rounded-[var(--radius-control)] border border-[var(--color-linen)] text-[var(--color-bark)] transition-colors hover:border-[var(--color-ember)] hover:text-[var(--color-ember-text)]"
               >
                 <Phone className="size-4" aria-hidden />
               </a>
@@ -46,14 +46,14 @@ export function SiteFooter({ services = [] }: { services?: Service[] }) {
               {services.length > 0
                 ? services.map((s) => (
                     <li key={s.id}>
-                      <Link href={`/services/${s.slug}`} className="text-sm text-[var(--color-bark)] transition-colors hover:text-[var(--color-ember)]">
+                      <Link href={`/services/${s.slug}`} className="text-sm text-[var(--color-bark)] transition-colors hover:text-[var(--color-ember-text)]">
                         {s.title}
                       </Link>
                     </li>
                   ))
                 : (
                     <li>
-                      <Link href="/services" className="text-sm text-[var(--color-bark)] hover:text-[var(--color-ember)]">
+                      <Link href="/services" className="text-sm text-[var(--color-bark)] hover:text-[var(--color-ember-text)]">
                         All services
                       </Link>
                     </li>
@@ -74,7 +74,7 @@ export function SiteFooter({ services = [] }: { services?: Service[] }) {
                 { href: '/login', label: 'Sign in' },
               ].map((l) => (
                 <li key={l.href}>
-                  <Link href={l.href} className="text-sm text-[var(--color-bark)] transition-colors hover:text-[var(--color-ember)]">
+                  <Link href={l.href} className="text-sm text-[var(--color-bark)] transition-colors hover:text-[var(--color-ember-text)]">
                     {l.label}
                   </Link>
                 </li>
@@ -89,13 +89,13 @@ export function SiteFooter({ services = [] }: { services?: Service[] }) {
             <ul className="mt-4 space-y-2.5 text-sm">
               {BRAND.phones.map((p, i) => (
                 <li key={p}>
-                  <a href={`tel:${BRAND.phonesE164[i]}`} className="flex items-center gap-2 text-[var(--color-bark)] transition-colors hover:text-[var(--color-ember)]">
+                  <a href={`tel:${BRAND.phonesE164[i]}`} className="flex items-center gap-2 text-[var(--color-bark)] transition-colors hover:text-[var(--color-ember-text)]">
                     <Phone className="size-3.5 shrink-0" aria-hidden /> {p}
                   </a>
                 </li>
               ))}
               <li>
-                <a href={`mailto:${BRAND.email}`} className="flex items-center gap-2 text-[var(--color-bark)] transition-colors hover:text-[var(--color-ember)]">
+                <a href={`mailto:${BRAND.email}`} className="flex items-center gap-2 text-[var(--color-bark)] transition-colors hover:text-[var(--color-ember-text)]">
                   <Mail className="size-3.5 shrink-0" aria-hidden /> {BRAND.email}
                 </a>
               </li>
@@ -114,7 +114,7 @@ export function SiteFooter({ services = [] }: { services?: Service[] }) {
               { href: '/legal/refunds', label: 'Cancellation & refunds' },
             ].map((l) => (
               <li key={l.href}>
-                <Link href={l.href} className="text-[var(--color-stone)] transition-colors hover:text-[var(--color-ember)]">
+                <Link href={l.href} className="text-[var(--color-stone)] transition-colors hover:text-[var(--color-ember-text)]">
                   {l.label}
                 </Link>
               </li>

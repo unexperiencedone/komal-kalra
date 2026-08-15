@@ -187,7 +187,7 @@ function ActionTile({ count, label, detail, href, tone }: {
   const tones = {
     danger: 'border-[var(--color-clay)]/30 bg-[var(--color-clay-tint)]',
     warning: 'border-[var(--color-amber-warn)]/30 bg-[var(--color-amber-tint)]',
-    accent: 'border-[var(--color-saffron)]/30 bg-[var(--color-saffron-tint)]',
+    accent: 'border-[var(--color-ember)]/30 bg-[var(--color-saffron-tint)]',
     neutral: 'border-[var(--color-linen)] bg-white',
   };
   return (

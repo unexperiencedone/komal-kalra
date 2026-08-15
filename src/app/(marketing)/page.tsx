@@ -135,13 +135,13 @@ export default async function HomePage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
       {/* ============================ 1. HERO ============================ */}
-      <section className="constellation-motif relative overflow-hidden">
+      <section className="band-dawn constellation-motif relative overflow-hidden">
         <div className="mx-auto max-w-6xl px-5 pb-14 pt-12 sm:pb-20 sm:pt-16 lg:px-8">
           <div className="grid items-center gap-12 lg:grid-cols-[1.05fr_0.95fr]">
             <div>
               <Reveal>
-                <p className="inline-flex items-center gap-2 rounded-full border border-[var(--color-linen)] bg-white px-3 py-1 text-xs font-medium text-[var(--color-bark)]">
-                  <Sparkles className="size-3.5 text-[var(--color-saffron)]" aria-hidden />
+                <p className="inline-flex items-center gap-2 rounded-full border border-[var(--color-ember)]/25 bg-white px-3.5 py-1.5 text-xs font-semibold text-[var(--color-ember-text)] shadow-[var(--shadow-resting)]">
+                  <Sparkles className="size-3.5 text-[var(--color-ember-text)]" aria-hidden />
                   Private one-to-one consultations
                 </p>
               </Reveal>
@@ -152,7 +152,7 @@ export default async function HomePage() {
                   <br />
                   Choose your direction.
                   <br />
-                  <span className="text-[var(--color-ember)]">Move forward with confidence.</span>
+                  <span className="text-[var(--color-ember-text)]">Move forward with confidence.</span>
                 </h1>
               </Reveal>
 
@@ -187,15 +187,15 @@ export default async function HomePage() {
                 */}
                 <ul className="mt-7 flex flex-wrap items-center gap-x-5 gap-y-2.5 text-xs text-[var(--color-stone)]">
                   <li className="flex items-center gap-1.5">
-                    <Languages className="size-3.5 text-[var(--color-saffron)]" aria-hidden />
+                    <Languages className="size-3.5 text-[var(--color-indigo)]" aria-hidden />
                     English, Hindi &amp; Punjabi
                   </li>
                   <li className="flex items-center gap-1.5">
-                    <CheckCircle2 className="size-3.5 text-[var(--color-sage)]" aria-hidden />
+                    <CheckCircle2 className="size-3.5 text-[var(--color-jade)]" aria-hidden />
                     Free cancellation up to 24 hours before
                   </li>
                   <li className="flex items-center gap-1.5">
-                    <ShieldCheck className="size-3.5 text-[var(--color-sage)]" aria-hidden />
+                    <ShieldCheck className="size-3.5 text-[var(--color-jade)]" aria-hidden />
                     Confidential
                   </li>
                 </ul>
@@ -211,17 +211,17 @@ export default async function HomePage() {
             */}
             <Reveal delay={140} className="hidden lg:block">
               <div className="relative">
-                <div className="relative aspect-[4/5] overflow-hidden rounded-[var(--radius-panel)] border border-[var(--color-linen)] bg-gradient-to-b from-[var(--color-linen)] to-[var(--color-saffron-tint)]">
+                <div className="band-night constellation-motif-dark relative aspect-[4/5] overflow-hidden rounded-[var(--radius-panel)] border border-[var(--color-indigo-light)]/30 shadow-[var(--shadow-lifted)]">
                   <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 p-8 text-center">
-                    <span className="flex size-12 items-center justify-center rounded-full bg-white/70">
-                      <Sparkles className="size-5 text-[var(--color-ember)]" aria-hidden />
+                    <span className="flex size-12 items-center justify-center rounded-full bg-white/10">
+                      <Sparkles className="size-5 text-[var(--color-marigold)]" aria-hidden />
                     </span>
-                    <p className="mt-2 font-[family-name:var(--font-display)] text-lg font-semibold text-[var(--color-bark)]">
+                    <p className="mt-2 font-[family-name:var(--font-display)] text-lg font-semibold text-[var(--color-sand)]">
                       Portrait of Komal
                     </p>
-                    <p className="max-w-[24ch] text-xs leading-relaxed text-[var(--color-stone)]">
+                    <p className="max-w-[24ch] text-xs leading-relaxed text-[var(--color-indigo-on-dark)]">
                       PLACEHOLDER — add a real photograph at
-                      <code className="mx-1 rounded bg-white px-1 py-0.5">/public/komal-portrait.jpg</code>
+                      <code className="mx-1 rounded bg-white/15 px-1 py-0.5">/public/komal-portrait.jpg</code>
                       and replace this block.
                     </p>
                   </div>
@@ -229,7 +229,7 @@ export default async function HomePage() {
 
                 {/* Floating detail card — grounds the portrait and repeats the
                     two facts that most often decide a booking. */}
-                <div className="absolute -bottom-5 -left-5 rounded-[var(--radius-card)] border border-[var(--color-linen)] bg-white p-4 shadow-[var(--shadow-overlay)]">
+                <div className="absolute -bottom-5 -left-5 rounded-[var(--radius-card)] border border-[var(--color-linen)] border-l-4 border-l-[var(--color-ember)] bg-white p-4 shadow-[var(--shadow-overlay)]">
                   <p className="text-[11px] uppercase tracking-[0.12em] text-[var(--color-stone)]">
                     Every session
                   </p>
@@ -256,14 +256,14 @@ export default async function HomePage() {
       <GuidanceTopics services={services} />
 
       {/* ============================ 5. ABOUT ========================== */}
-      <section aria-labelledby="about-heading" className="border-y border-[var(--color-linen)] bg-white py-20 sm:py-24">
+      <section aria-labelledby="about-heading" className="band-shell border-y border-[var(--color-linen)] py-20 sm:py-24">
         <div className="mx-auto max-w-6xl px-5 lg:px-8">
           <div className="grid gap-12 lg:grid-cols-[0.9fr_1.1fr]">
             <Reveal>
-              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[var(--color-saffron)]">
+              <p className="accent-rule text-xs font-semibold uppercase tracking-[0.16em] text-[var(--color-ember-text)]">
                 About Komal
               </p>
-              <h2 id="about-heading" className="mt-3 text-[length:var(--text-h2)]">
+              <h2 id="about-heading" className="mt-5 text-[length:var(--text-h2)]">
                 An honest reading, and a conversation that actually helps
               </h2>
             </Reveal>
@@ -300,13 +300,13 @@ export default async function HomePage() {
       </section>
 
       {/* =========================== 6. SERVICES ======================== */}
-      <section aria-labelledby="services-heading" className="py-20 sm:py-24">
+      <section aria-labelledby="services-heading" className="band-sand py-20 sm:py-24">
         <div className="mx-auto max-w-6xl px-5 lg:px-8">
           <Reveal>
-            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[var(--color-saffron)]">
+            <p className="accent-rule text-xs font-semibold uppercase tracking-[0.16em] text-[var(--color-ember-text)]">
               Consultations
             </p>
-            <h2 id="services-heading" className="mt-3 max-w-2xl text-[length:var(--text-h2)]">
+            <h2 id="services-heading" className="mt-5 max-w-2xl text-[length:var(--text-h2)]">
               Choose the conversation you need
             </h2>
             <p className="mt-4 max-w-xl text-[15px] leading-relaxed text-[var(--color-bark)]">
@@ -343,17 +343,20 @@ export default async function HomePage() {
       </section>
 
       {/* ========================= 7. HOW IT WORKS ======================= */}
-      <section aria-labelledby="how-heading" className="border-y border-[var(--color-linen)] bg-white py-20 sm:py-24">
+      <section aria-labelledby="how-heading" className="band-night constellation-motif-dark on-dark py-20 sm:py-24">
         <div className="mx-auto max-w-6xl px-5 lg:px-8">
           <Reveal>
-            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[var(--color-saffron)]">
+            <p className="accent-rule text-xs font-semibold uppercase tracking-[0.16em] text-[var(--color-marigold)]">
               How it works
             </p>
-            <h2 id="how-heading" className="mt-3 max-w-2xl text-[length:var(--text-h2)]">
+            <h2 id="how-heading" className="mt-5 max-w-2xl text-[length:var(--text-h2)]">
               Booked in about two minutes
             </h2>
           </Reveal>
 
+          {/* Cards sit on the night ground, so they use a translucent white
+              wash rather than a solid fill — a solid card here would read as a
+              hole punched in the section. */}
           <ol className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {[
               { icon: Sparkles, title: 'Choose a service', body: 'Pick the consultation that fits what you want to discuss.' },
@@ -362,22 +365,22 @@ export default async function HomePage() {
               { icon: MessageCircle, title: 'Attend your session', body: 'A joining link arrives by email before your appointment.' },
             ].map((step, i) => (
               <Reveal as="li" key={step.title} delay={i * 70}>
-                <div className="flex h-full flex-col rounded-[var(--radius-card)] border border-[var(--color-linen)] bg-[var(--color-sand)] p-6">
+                <div className="flex h-full flex-col rounded-[var(--radius-card)] border border-white/12 bg-white/[0.06] p-6 backdrop-blur-[2px]">
                   <div className="flex items-center gap-3">
-                    <span className="tabular flex size-8 items-center justify-center rounded-full bg-[var(--color-saffron-tint)] text-sm font-semibold text-[var(--color-ember)]">
+                    <span className="tabular flex size-8 items-center justify-center rounded-full bg-[var(--color-marigold)] text-sm font-semibold text-[var(--color-indigo-deep)]">
                       {i + 1}
                     </span>
-                    <step.icon className="size-4 text-[var(--color-stone)]" aria-hidden />
+                    <step.icon className="size-4 text-[var(--color-marigold)]" aria-hidden />
                   </div>
-                  <p className="mt-4 font-sans text-[15px] font-semibold">{step.title}</p>
-                  <p className="mt-1.5 text-sm leading-relaxed text-[var(--color-stone)]">{step.body}</p>
+                  <p className="mt-4 font-sans text-[15px] font-semibold text-[var(--color-sand)]">{step.title}</p>
+                  <p className="mt-1.5 text-sm leading-relaxed">{step.body}</p>
                 </div>
               </Reveal>
             ))}
           </ol>
 
           <Reveal delay={100}>
-            <p className="mx-auto mt-10 max-w-2xl rounded-[var(--radius-card)] border border-[var(--color-linen)] bg-[var(--color-sand)] px-5 py-4 text-center text-sm leading-relaxed text-[var(--color-bark)]">
+            <p className="mx-auto mt-10 max-w-2xl rounded-[var(--radius-card)] border border-white/12 bg-white/[0.06] px-5 py-4 text-center text-sm leading-relaxed">
               {POLICY.cancellationSummary}
             </p>
           </Reveal>
@@ -392,13 +395,13 @@ export default async function HomePage() {
       <Testimonials testimonials={reviews} />
 
       {/* ============================= 10. FAQ ========================== */}
-      <section aria-labelledby="faq-heading" className="py-20 sm:py-24">
+      <section aria-labelledby="faq-heading" className="band-cool py-20 sm:py-24">
         <div className="mx-auto max-w-3xl px-5 lg:px-8">
           <Reveal>
-            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[var(--color-saffron)]">
+            <p className="accent-rule text-xs font-semibold uppercase tracking-[0.16em] text-[var(--color-ember-text)]">
               Questions
             </p>
-            <h2 id="faq-heading" className="mt-3 text-[length:var(--text-h2)]">
+            <h2 id="faq-heading" className="mt-5 text-[length:var(--text-h2)]">
               Before you book
             </h2>
           </Reveal>
@@ -418,15 +421,15 @@ export default async function HomePage() {
         free report; this asks for three, because the goal is a reply from a
         person rather than an automated lead magnet.
       */}
-      <section aria-labelledby="contact-heading" className="pb-20 sm:pb-24">
+      <section aria-labelledby="contact-heading" className="band-sand py-20 sm:py-24">
         <div className="mx-auto max-w-6xl px-5 lg:px-8">
-          <div className="constellation-motif overflow-hidden rounded-[var(--radius-panel)] border border-[var(--color-linen)] bg-white">
+          <div className="constellation-motif overflow-hidden rounded-[var(--radius-panel)] border border-[var(--color-linen)] bg-white shadow-[var(--shadow-lifted)]">
             <div className="grid gap-12 p-8 sm:p-12 lg:grid-cols-[0.85fr_1.15fr]">
               <Reveal>
-                <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[var(--color-saffron)]">
+                <p className="accent-rule text-xs font-semibold uppercase tracking-[0.16em] text-[var(--color-ember-text)]">
                   Not sure yet?
                 </p>
-                <h2 id="contact-heading" className="mt-3 text-[length:var(--text-h2)]">
+                <h2 id="contact-heading" className="mt-5 text-[length:var(--text-h2)]">
                   Ask first. Book later.
                 </h2>
                 <p className="mt-4 text-[15px] leading-relaxed text-[var(--color-bark)]">
@@ -439,9 +442,9 @@ export default async function HomePage() {
                     <li key={phone}>
                       <a
                         href={`tel:${BRAND.phonesE164[i]}`}
-                        className="flex items-center gap-3 rounded-[var(--radius-control)] border border-[var(--color-linen)] bg-[var(--color-sand)] px-4 py-3 text-[15px] font-medium text-[var(--color-ink)] transition-colors hover:border-[var(--color-saffron)] hover:bg-white"
+                        className="flex items-center gap-3 rounded-[var(--radius-control)] border border-[var(--color-linen)] bg-[var(--color-saffron-tint)] px-4 py-3 text-[15px] font-medium text-[var(--color-ink)] transition-colors hover:border-[var(--color-ember)] hover:bg-white"
                       >
-                        <Phone className="size-4 text-[var(--color-saffron)]" aria-hidden />
+                        <Phone className="size-4 text-[var(--color-ember-text)]" aria-hidden />
                         {phone}
                       </a>
                     </li>
@@ -463,13 +466,13 @@ export default async function HomePage() {
       </section>
 
       {/* ========================== 12. FINAL CTA ======================== */}
-      <section className="constellation-motif bg-[var(--color-ink)] py-20 text-center sm:py-24">
+      <section className="band-night constellation-motif-dark on-dark py-20 text-center sm:py-24">
         <div className="mx-auto max-w-2xl px-5">
           <Reveal>
-            <h2 className="text-[length:var(--text-h2)] text-[var(--color-sand)]">
+            <h2 className="text-[length:var(--text-h2)]">
               The answer is usually simpler than it feels
             </h2>
-            <p className="mx-auto mt-4 max-w-lg text-[15px] leading-relaxed text-[var(--color-sand-muted)]">
+            <p className="mx-auto mt-4 max-w-lg text-[15px] leading-relaxed">
               One conversation is often enough to see the situation clearly. Pick a time that
               suits you — you can cancel free of charge up to 24 hours beforehand.
             </p>

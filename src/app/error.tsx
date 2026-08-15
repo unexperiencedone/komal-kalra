@@ -41,7 +41,7 @@ export default function Error({
       </div>
       <p className="mt-8 text-sm text-[var(--color-stone)]">
         In the middle of booking? Call{' '}
-        <a href={`tel:${BRAND.phonesE164[0]}`} className="font-medium text-[var(--color-ember)] hover:underline">
+        <a href={`tel:${BRAND.phonesE164[0]}`} className="font-medium text-[var(--color-ember-text)] hover:underline">
           {BRAND.phones[0]}
         </a>{' '}
         and we will do it for you.

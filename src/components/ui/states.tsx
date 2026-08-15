@@ -115,7 +115,7 @@ export function InlineAlert({
 }) {
   const tones = {
     info: 'border-[var(--color-indigo)]/20 bg-[var(--color-indigo-tint)] text-[var(--color-indigo)]',
-    success: 'border-[var(--color-sage)]/25 bg-[var(--color-sage-tint)] text-[var(--color-sage)]',
+    success: 'border-[var(--color-jade)]/25 bg-[var(--color-jade-tint)] text-[var(--color-jade)]',
     warning: 'border-[var(--color-amber-warn)]/25 bg-[var(--color-amber-tint)] text-[var(--color-amber-warn)]',
     danger: 'border-[var(--color-clay)]/25 bg-[var(--color-clay-tint)] text-[var(--color-clay)]',
   };

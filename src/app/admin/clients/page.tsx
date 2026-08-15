@@ -71,7 +71,7 @@ export default async function AdminClientsPage(props: {
                   <tr key={c.id} className="hover:bg-[var(--color-sand)]">
                     <Td>
                       <Link href={`/admin/clients/${c.id}`} className="flex items-center gap-2">
-                        <span className="text-sm font-medium hover:text-[var(--color-ember)]">
+                        <span className="text-sm font-medium hover:text-[var(--color-ember-text)]">
                           {c.full_name ?? 'Unnamed'}
                         </span>
                         {c.role === 'admin' && <Badge tone="info">Admin</Badge>}

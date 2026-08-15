@@ -74,7 +74,7 @@ export default async function PaymentsPage() {
                   {['paid', 'partially_refunded', 'refunded'].includes(p.status) && (
                     <Link
                       href={`/dashboard/payments/${p.id}/receipt`}
-                      className="mt-2 inline-flex items-center gap-1 text-xs font-medium text-[var(--color-ember)] hover:underline"
+                      className="mt-2 inline-flex items-center gap-1 text-xs font-medium text-[var(--color-ember-text)] hover:underline"
                     >
                       <Download className="size-3" aria-hidden /> Receipt
                     </Link>

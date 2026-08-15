@@ -43,7 +43,7 @@ export default function LoginPage() {
           the form below the fold. */}
       <aside
         aria-hidden
-        className="constellation-motif relative hidden flex-col justify-between bg-[var(--color-ink)] p-16 lg:flex"
+        className="band-night constellation-motif-dark relative hidden flex-col justify-between p-16 lg:flex"
       >
         <p className="font-[family-name:var(--font-display)] text-xl font-semibold text-[var(--color-sand)]">
           {BRAND.fullName}
@@ -52,7 +52,7 @@ export default function LoginPage() {
           <blockquote className="max-w-md font-[family-name:var(--font-display)] text-[28px] leading-snug text-[var(--color-sand)]">
             &ldquo;{BRAND.tagline}&rdquo;
           </blockquote>
-          <p className="mt-6 max-w-md text-sm leading-relaxed text-[var(--color-sand-muted)]">
+          <p className="mt-6 max-w-md text-sm leading-relaxed">
             Sign in to see your upcoming consultations, download receipts, and manage
             your bookings.
           </p>

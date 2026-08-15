@@ -18,13 +18,13 @@ export function Testimonials({ testimonials }: { testimonials: Testimonial[] }) 
   if (testimonials.length === 0) return null;
 
   return (
-    <section aria-labelledby="testimonials-heading" className="border-t border-[var(--color-linen)] bg-white py-20 sm:py-24">
+    <section aria-labelledby="testimonials-heading" className="band-shell border-t border-[var(--color-linen)] py-20 sm:py-24">
       <div className="mx-auto max-w-6xl px-5 lg:px-8">
         <Reveal>
-          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[var(--color-saffron)]">
+          <p className="accent-rule text-xs font-semibold uppercase tracking-[0.16em] text-[var(--color-ember-text)]">
             In their words
           </p>
-          <h2 id="testimonials-heading" className="mt-3 max-w-2xl text-[length:var(--text-h2)]">
+          <h2 id="testimonials-heading" className="mt-5 max-w-2xl text-[length:var(--text-h2)]">
             What people say after a session
           </h2>
         </Reveal>
@@ -32,7 +32,7 @@ export function Testimonials({ testimonials }: { testimonials: Testimonial[] }) 
         <ul className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
           {testimonials.map((t, i) => (
             <Reveal as="li" key={t.id} delay={i * 60}>
-              <figure className="flex h-full flex-col rounded-[var(--radius-card)] border border-[var(--color-linen)] bg-[var(--color-sand)] p-6">
+              <figure className="flex h-full flex-col rounded-[var(--radius-card)] border border-[var(--color-linen)] bg-[var(--color-saffron-tint)] p-6">
                 <div className="flex gap-0.5" role="img" aria-label={`${t.rating} out of 5 stars`}>
                   {Array.from({ length: 5 }).map((_, s) => (
                     <Star

@@ -57,7 +57,7 @@ export function PendingPaymentWatcher({ appointmentId }: { appointmentId: string
       aria-live="polite"
       className="mt-6 flex items-center gap-2 rounded-[var(--radius-control)] border border-[var(--color-linen)] bg-white px-4 py-3 text-sm text-[var(--color-bark)]"
     >
-      <Loader2 className="size-4 animate-spin text-[var(--color-saffron)]" aria-hidden />
+      <Loader2 className="size-4 animate-spin text-[var(--color-ember-text)]" aria-hidden />
       Checking with your bank…
     </p>
   );

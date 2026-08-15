@@ -105,7 +105,7 @@ export default async function AdminAppointmentsPage(props: {
                     <Td>
                       {a.profiles ? (
                         <Link href={`/admin/clients/${a.profiles.id}`} className="block max-w-[180px]">
-                          <span className="block truncate text-sm font-medium hover:text-[var(--color-ember)]">
+                          <span className="block truncate text-sm font-medium hover:text-[var(--color-ember-text)]">
                             {a.profiles.full_name ?? 'Unnamed'}
                           </span>
                           <span className="block truncate text-xs text-[var(--color-stone)]">

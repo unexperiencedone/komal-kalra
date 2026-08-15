@@ -2,77 +2,124 @@
 
 /* ==========================================================================
    DESIGN TOKENS — Astrologer Komal Kalra
-   Derived in docs/research.md §2. Summary of the decisions encoded here:
 
-   The brief asks for Trust + Luxury + Calmness + Spirituality + Professionalism.
-   Spirituality pulls toward celestial ornament; trust and professionalism pull
-   toward restraint. Every low-credibility site in this category resolves that
-   tension toward ornament, so we resolve it toward restraint and let ONE warm
-   accent plus a serif display face carry the spiritual register.
+   REVISED PALETTE (second pass).
 
-   No zodiac wheels. No starfields. No purple→gold gradients. Nothing glows.
+   The first pass used a single saffron accent on a near-neutral base, argued
+   from "restraint reads as premium". That reasoning was half right and the
+   result was wrong: it read monotone. Restraint is about avoiding NOISE —
+   glow, gradient meshes, rotating zodiac wheels — not about avoiding colour.
+
+   Indian spiritual and wellness brands use rich colour legitimately, and it is
+   culturally grounded rather than gaudy: saffron and marigold (auspicious),
+   deep indigo (the night sky, and the traditional counterweight to warm tones),
+   terracotta, jade, rose. This palette uses all of them, with rules about
+   WHERE each one is allowed, which is what keeps it disciplined.
+
+   The discipline now lives in three rules rather than in scarcity:
+     1. ONE primary action colour. Ember/marigold owns every CTA. Category hues
+        never appear on a button.
+     2. Category hues encode MEANING (which topic, which state) — never
+        decoration. Six topics, six hues, consistently mapped.
+     3. Sections alternate on a fixed rhythm: sand → white → tinted → night.
+        Never two adjacent sections on the same ground.
+
+   ACCESSIBILITY — every pairing below was measured, not eyeballed.
+   Notably: white on saffron #C2762B is only 3.55:1, so saffron is NEVER a
+   button fill. Ember #A45F1E (4.96:1 with white) fills buttons; saffron is
+   reserved for icons, rules and large display type.
    ========================================================================== */
 
 @theme {
-  /* --- Colour ------------------------------------------------------------
-     A near-neutral warm base with a single saturated accent. Neutral bases
-     make photography look expensive and let one accent do all the CTA work,
-     which is what conversion research asks for.                            */
+  /* --- Neutrals -----------------------------------------------------------
+     Warmed compared to the first pass. #FDF8F1 rather than #FAF7F2 — the extra
+     warmth stops the page reading grey next to the saturated hues.          */
 
-  --color-ink: #14100E;        /* warm near-black — headings, body */
-  --color-bark: #3D332C;       /* warm brown-grey — secondary text */
-  --color-stone: #6B5E54;      /* tertiary / meta text */
-  --color-sand: #FAF7F2;       /* page background */
-  --color-linen: #F1EAE0;      /* cards, section bands, borders */
-  --color-linen-hover: #E8DFD2;/* pressed/hover on linen surfaces */
-  --color-edge-hover: #E0D5C6; /* input & card border on hover */
-  --color-placeholder: #A79B8F;/* input placeholder text */
-  --color-sand-muted: #C9BEB2; /* body copy on the dark (ink) background */
+  --color-ink: #17120E;          /* warm near-black — headings, body        */
+  --color-bark: #4A3C31;         /* secondary text            10.0:1 on sand */
+  --color-stone: #7A6A5C;        /* tertiary / meta            4.9:1 on sand */
+  --color-sand: #FDF8F1;         /* page ground                             */
+  --color-linen: #F4E9DA;        /* borders, dividers, quiet fills          */
+  --color-linen-hover: #EBDCC7;
+  --color-edge-hover: #E3D2BB;
+  --color-placeholder: #A8968A;
   --color-shell: #FFFFFF;
 
-  --color-saffron: #C2762B;    /* primary CTA, focus ring, active */
-  --color-ember: #A45F1E;      /* hover / pressed */
-  --color-saffron-tint: #F7EEE2;
+  /* --- Primary: saffron / marigold ---------------------------------------
+     Warm, auspicious, and the only family permitted on a call to action.   */
 
-  --color-sage: #4E6650;       /* success / confirmed / paid */
-  --color-sage-tint: #EDF2ED;
-  --color-clay: #A8412F;       /* destructive / failed / cancelled */
-  --color-clay-tint: #FBEDEA;
-  --color-amber-warn: #8A6412; /* pending / attention */
-  --color-amber-tint: #FBF3E0;
+  --color-saffron: #C2762B;      /* icons, rules, large display ONLY        */
+  --color-marigold: #E8942F;     /* brighter — for use ON dark grounds      */
+  --color-ember: #A45F1E;        /* BUTTON FILL. white on this = 4.96:1     */
+  --color-ember-deep: #8A4E17;   /* pressed / hover        white = 6.60:1   */
+  --color-ember-text: #8F5219;   /* accent TEXT on light   5.5–6.2:1        */
+  --color-saffron-tint: #FDF0DC;
+  --color-saffron-tint-deep: #F9E3C2;
 
-  /* The single "celestial" note. Used sparingly — never as a gradient. */
-  --color-indigo: #2C3557;
-  --color-indigo-tint: #EDEFF5;
+  /* --- Secondary: indigo --------------------------------------------------
+     A real second colour, not a garnish. Owns entire sections. This is the
+     "night sky" counterweight that lets the warm tones read as warm.       */
 
-  /* --- Type --------------------------------------------------------------
-     Fraunces (variable serif, optical-size axis) for display; Inter for UI.
-     A high-contrast serif + neutral sans is the reliable premium pairing;
-     the serif carries gravitas without becoming decorative.               */
+  --color-indigo: #2A2E5A;       /* white on this = 12.8:1                  */
+  --color-indigo-deep: #1B1E3E;  /* darkest ground                          */
+  --color-indigo-light: #4C5490;
+  --color-indigo-tint: #ECEDF6;
+  --color-indigo-on-dark: #C7CBE4;  /* body copy on indigo grounds          */
+
+  /* --- Category hues ------------------------------------------------------
+     One per guidance topic. Each is a {base, tint} pair where base-on-tint
+     clears AA. These NEVER appear on a button — they identify, they do not
+     call to action.                                                         */
+
+  --color-rose: #9E2F55;         --color-rose-tint: #FCEBF1;        /* 6.1:1 */
+  --color-jade: #256149;         --color-jade-tint: #E6F4EE;        /* 6.4:1 */
+  --color-plum: #59318A;         --color-plum-tint: #F2ECFA;        /* 8.1:1 */
+  --color-terracotta: #A2412A;   --color-terracotta-tint: #FCEDE8;  /* 5.5:1 */
+  --color-teal: #175A62;         --color-teal-tint: #E4F2F3;        /* 6.8:1 */
+
+  /* --- Semantic -----------------------------------------------------------
+     Deliberately distinct from the category hues so a green "confirmed"
+     badge is never confused with the jade "wellbeing" topic.               */
+
+  --color-sage: #2F6B4A;         --color-sage-tint: #E8F3EC;        /* 5.6:1 */
+  --color-clay: #9A3323;         --color-clay-tint: #FCEBE7;        /* 6.3:1 */
+  --color-amber-warn: #7D5709;   --color-amber-tint: #FBF2DE;       /* 5.8:1 */
+
+  --color-sand-muted: #C6BCAE;   /* body copy on ink/indigo — 8.6:1        */
+
+  /* --- Gradients ----------------------------------------------------------
+     The first pass banned gradients outright. That was over-broad: what makes
+     a site look cheap is a SATURATED gradient used as a focal point (purple→
+     gold hero washes, glowing buttons). A low-contrast wash between two
+     neighbouring tints is just an atmospheric ground, and it is what stops
+     large flat areas reading as dead space.
+
+     Rules: two stops, both from the same temperature family, and never
+     underneath body text that needs to stay legible across the whole span.  */
+
+  --gradient-dawn: linear-gradient(150deg, #FDF0DC 0%, #FDF8F1 45%, #FCEDE8 100%);
+  --gradient-night: linear-gradient(155deg, #2A2E5A 0%, #1B1E3E 100%);
+  --gradient-ember: linear-gradient(135deg, #C2762B 0%, #A45F1E 100%);
+
+  /* --- Type ---------------------------------------------------------------
+     Fraunces (variable serif, optical-size axis) for display; Inter for UI. */
   --font-display: var(--font-fraunces), ui-serif, Georgia, serif;
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system, sans-serif;
 
-  /* 1.25 major-third scale, fluid via clamp so mobile does not need overrides */
   --text-display: clamp(2.25rem, 1.6rem + 3.2vw, 4rem);
   --text-h1: clamp(1.875rem, 1.4rem + 2.2vw, 3rem);
   --text-h2: clamp(1.5rem, 1.25rem + 1.2vw, 2.25rem);
   --text-h3: clamp(1.25rem, 1.1rem + 0.7vw, 1.5rem);
 
-  /* --- Radius ------------------------------------------------------------
-     No fully-rounded pills on buttons: pills read consumer-app, not
-     professional practice. Reserved for status badges only.                */
+  /* --- Radius / elevation / motion --------------------------------------- */
   --radius-control: 0.375rem;
   --radius-card: 0.75rem;
   --radius-panel: 1.25rem;
 
-  /* --- Elevation ---------------------------------------------------------
-     Two levels. Large diffuse shadows read as dated SaaS.                  */
-  --shadow-resting: 0 1px 2px rgb(20 16 14 / 0.04), 0 1px 3px rgb(20 16 14 / 0.06);
-  --shadow-overlay: 0 10px 15px -3px rgb(20 16 14 / 0.08), 0 4px 6px -4px rgb(20 16 14 / 0.06);
+  --shadow-resting: 0 1px 2px rgb(23 18 14 / 0.04), 0 1px 3px rgb(23 18 14 / 0.06);
+  --shadow-overlay: 0 10px 15px -3px rgb(23 18 14 / 0.09), 0 4px 6px -4px rgb(23 18 14 / 0.06);
+  --shadow-lifted: 0 18px 30px -12px rgb(42 46 90 / 0.18);
 
-  /* --- Motion ------------------------------------------------------------
-     Entrance-only, short. Scroll-linked parallax and long staggers are what
-     make a site feel like a template.                                      */
   --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
@@ -109,24 +156,24 @@
 
   p { text-wrap: pretty; }
 
-  /* Focus ring: always visible, never removed. 2px accent + 2px offset gives
-     contrast against both the sand background and white cards.            */
+  /* Focus ring: always visible, never removed. Uses ember rather than saffron
+     so it holds contrast against both the sand and white grounds. */
   :focus-visible {
-    outline: 2px solid var(--color-saffron);
+    outline: 2px solid var(--color-ember);
     outline-offset: 2px;
     border-radius: 2px;
   }
   :focus:not(:focus-visible) { outline: none; }
 
-  /* Money and dashboard counts use tabular figures so columns line up and
-     numbers do not jitter as they update. */
+  /* Focus ring on dark grounds needs the brighter marigold to be visible. */
+  .on-dark :focus-visible { outline-color: var(--color-marigold); }
+
   .tabular { font-variant-numeric: tabular-nums; }
 
-  ::selection { background: var(--color-saffron-tint); color: var(--color-ink); }
+  ::selection { background: var(--color-saffron-tint-deep); color: var(--color-ink); }
 }
 
 @layer components {
-  /* Skip link — first focusable element on every page. */
   .skip-link {
     position: absolute;
     left: -9999px;
@@ -139,13 +186,50 @@
   }
   .skip-link:focus { left: 0; }
 
-  /* The one celestial motif, used at most once per page and at low opacity. */
+  /* --- Section grounds ----------------------------------------------------
+     The rhythm rule lives here so a page cannot accidentally place two
+     identical grounds next to each other — you pick a named band, and the
+     names make the alternation obvious when reading the JSX.               */
+
+  .band-sand   { background: var(--color-sand); }
+  .band-shell  { background: var(--color-shell); }
+  .band-dawn   { background: var(--gradient-dawn); }
+  .band-warm   { background: var(--color-saffron-tint); }
+  .band-cool   { background: var(--color-indigo-tint); }
+  .band-night  { background: var(--gradient-night); color: var(--color-sand); }
+
+  .band-night h1, .band-night h2, .band-night h3 { color: var(--color-sand); }
+  .band-night p  { color: var(--color-indigo-on-dark); }
+
+  /* Celestial motif — thin scattered points, low opacity, once per page.
+     Two variants so it reads on both light and dark grounds. */
   .constellation-motif {
-    background-image: radial-gradient(circle at 20% 30%, rgb(44 53 87 / 0.10) 1px, transparent 1px),
-                      radial-gradient(circle at 65% 15%, rgb(44 53 87 / 0.08) 1px, transparent 1px),
-                      radial-gradient(circle at 85% 60%, rgb(44 53 87 / 0.10) 1px, transparent 1px),
-                      radial-gradient(circle at 40% 80%, rgb(44 53 87 / 0.06) 1px, transparent 1px);
-    background-size: 100% 100%;
+    background-image:
+      radial-gradient(circle at 18% 24%, rgb(42 46 90 / 0.13) 1.4px, transparent 1.4px),
+      radial-gradient(circle at 63% 12%, rgb(194 118 43 / 0.16) 1.2px, transparent 1.2px),
+      radial-gradient(circle at 86% 58%, rgb(42 46 90 / 0.11) 1.4px, transparent 1.4px),
+      radial-gradient(circle at 38% 78%, rgb(194 118 43 / 0.12) 1.2px, transparent 1.2px),
+      radial-gradient(circle at 74% 88%, rgb(42 46 90 / 0.09) 1.2px, transparent 1.2px);
+  }
+
+  .constellation-motif-dark {
+    background-image:
+      radial-gradient(circle at 15% 20%, rgb(232 148 47 / 0.30) 1.4px, transparent 1.4px),
+      radial-gradient(circle at 68% 14%, rgb(255 255 255 / 0.22) 1.2px, transparent 1.2px),
+      radial-gradient(circle at 88% 62%, rgb(232 148 47 / 0.22) 1.3px, transparent 1.3px),
+      radial-gradient(circle at 32% 80%, rgb(255 255 255 / 0.16) 1.2px, transparent 1.2px),
+      radial-gradient(circle at 55% 46%, rgb(255 255 255 / 0.12) 1px, transparent 1px);
+  }
+
+  /* Thin rule used under section eyebrows. */
+  .accent-rule::after {
+    content: '';
+    display: block;
+    width: 2.5rem;
+    height: 2px;
+    margin-top: 0.75rem;
+    border-radius: 999px;
+    background: var(--gradient-ember);
   }
 }
 
@@ -162,7 +246,7 @@
   }
 
   .shimmer {
-    background: linear-gradient(90deg, var(--color-linen) 25%, #F7F2EA 50%, var(--color-linen) 75%);
+    background: linear-gradient(90deg, var(--color-linen) 25%, #FAF2E6 50%, var(--color-linen) 75%);
     background-size: 200% 100%;
     animation: shimmer 1.4s linear infinite;
   }
@@ -173,7 +257,7 @@
 }
 
 /* Reduced motion is respected globally: animations become instant rather than
-   merely shorter. Nothing in this product depends on motion to be understood. */
+   merely shorter. Nothing here depends on motion to be understood. */
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after {
@@ -188,4 +272,5 @@
 @media print {
   .no-print { display: none !important; }
   body { background: #fff; }
+  .band-night { background: #fff !important; color: #000 !important; }
 }

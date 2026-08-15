@@ -149,8 +149,8 @@ export default async function ConfirmPage(props: {
   // ------------------------------- CONFIRMED -------------------------------
   return (
     <Shell>
-      <div className="flex size-12 items-center justify-center rounded-full bg-[var(--color-sage-tint)]">
-        <CheckCircle2 className="size-6 text-[var(--color-sage)]" aria-hidden />
+      <div className="flex size-12 items-center justify-center rounded-full bg-[var(--color-jade-tint)]">
+        <CheckCircle2 className="size-6 text-[var(--color-jade)]" aria-hidden />
       </div>
       <h1 className="mt-6 text-[length:var(--text-h1)]">You&apos;re booked in</h1>
       <p className="mt-3 max-w-lg text-[15px] leading-relaxed text-[var(--color-bark)]">

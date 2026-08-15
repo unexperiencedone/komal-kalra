@@ -130,8 +130,8 @@ export function SlotPicker({
                   className={cn(
                     'tabular h-11 rounded-[var(--radius-control)] border text-sm font-medium transition-colors disabled:opacity-50',
                     isSelected
-                      ? 'border-[var(--color-saffron)] bg-[var(--color-saffron)] text-white'
-                      : 'border-[var(--color-linen)] bg-white text-[var(--color-ink)] hover:border-[var(--color-saffron)] hover:text-[var(--color-ember)]',
+                      ? 'border-[var(--color-saffron)] bg-[var(--color-ember)] text-white'
+                      : 'border-[var(--color-linen)] bg-white text-[var(--color-ink)] hover:border-[var(--color-ember)] hover:text-[var(--color-ember-text)]',
                   )}
                 >
                   {formatTime(slot.start)}

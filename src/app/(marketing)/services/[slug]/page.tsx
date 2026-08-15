@@ -95,13 +95,13 @@ export default async function ServiceDetailPage(props: { params: Promise<{ slug:
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
       <article>
-        <section className="border-b border-[var(--color-linen)] py-14 sm:py-20">
+        <section className="band-dawn constellation-motif border-b border-[var(--color-linen)] py-14 sm:py-20">
           <div className="mx-auto max-w-6xl px-5 lg:px-8">
             <nav aria-label="Breadcrumb" className="mb-6 text-sm">
               <ol className="flex items-center gap-2 text-[var(--color-stone)]">
-                <li><Link href="/" className="hover:text-[var(--color-ember)]">Home</Link></li>
+                <li><Link href="/" className="hover:text-[var(--color-ember-text)]">Home</Link></li>
                 <li aria-hidden>/</li>
-                <li><Link href="/services" className="hover:text-[var(--color-ember)]">Services</Link></li>
+                <li><Link href="/services" className="hover:text-[var(--color-ember-text)]">Services</Link></li>
                 <li aria-hidden>/</li>
                 <li aria-current="page" className="text-[var(--color-ink)]">{service.title}</li>
               </ol>
@@ -119,12 +119,12 @@ export default async function ServiceDetailPage(props: { params: Promise<{ slug:
                 <dl className="mt-8 flex flex-wrap gap-x-8 gap-y-3 text-sm">
                   <div className="flex items-center gap-2">
                     <dt className="sr-only">Duration</dt>
-                    <Clock className="size-4 text-[var(--color-saffron)]" aria-hidden />
+                    <Clock className="size-4 text-[var(--color-ember-text)]" aria-hidden />
                     <dd className="font-medium">{service.duration_minutes} minutes</dd>
                   </div>
                   <div className="flex items-center gap-2">
                     <dt className="sr-only">Format</dt>
-                    <mode.icon className="size-4 text-[var(--color-saffron)]" aria-hidden />
+                    <mode.icon className="size-4 text-[var(--color-ember-text)]" aria-hidden />
                     <dd className="font-medium">{mode.label}</dd>
                   </div>
                   <div className="flex items-center gap-2">
@@ -136,7 +136,7 @@ export default async function ServiceDetailPage(props: { params: Promise<{ slug:
 
               {/* Booking card — sticky on desktop so the CTA is always reachable. */}
               <Reveal delay={80}>
-                <div className="rounded-[var(--radius-card)] border border-[var(--color-linen)] bg-white p-6 lg:sticky lg:top-24">
+                <div className="rounded-[var(--radius-card)] border border-[var(--color-linen)] border-t-4 border-t-[var(--color-ember)] bg-white p-6 shadow-[var(--shadow-lifted)] lg:sticky lg:top-24">
                   <p className="text-xs uppercase tracking-[0.12em] text-[var(--color-stone)]">Price</p>
                   <p className="tabular mt-1 font-[family-name:var(--font-display)] text-3xl font-semibold">
                     {formatPaise(service.price_paise)}
@@ -172,7 +172,7 @@ export default async function ServiceDetailPage(props: { params: Promise<{ slug:
           </div>
         </section>
 
-        <section className="py-16 sm:py-20">
+        <section className="band-sand py-16 sm:py-20">
           <div className="mx-auto max-w-6xl px-5 lg:px-8">
             <div className="grid gap-14 lg:grid-cols-[1.15fr_0.85fr]">
               <Reveal>
@@ -185,7 +185,7 @@ export default async function ServiceDetailPage(props: { params: Promise<{ slug:
                   <ul className="mt-8 space-y-3">
                     {service.highlights.map((h) => (
                       <li key={h} className="flex gap-3 text-[15px] leading-relaxed text-[var(--color-bark)]">
-                        <Check className="mt-0.5 size-4 shrink-0 text-[var(--color-sage)]" aria-hidden />
+                        <Check className="mt-0.5 size-4 shrink-0 text-[var(--color-jade)]" aria-hidden />
                         {h}
                       </li>
                     ))}
@@ -195,7 +195,7 @@ export default async function ServiceDetailPage(props: { params: Promise<{ slug:
 
               {service.ideal_for.length > 0 && (
                 <Reveal delay={80}>
-                  <div className="rounded-[var(--radius-card)] border border-[var(--color-linen)] bg-white p-6">
+                  <div className="rounded-[var(--radius-card)] border border-[var(--color-linen)] bg-[var(--color-indigo-tint)] p-6">
                     <h2 className="font-sans text-[15px] font-semibold">This is probably right for you if…</h2>
                     <ul className="mt-4 space-y-3">
                       {service.ideal_for.map((item) => (
@@ -212,7 +212,7 @@ export default async function ServiceDetailPage(props: { params: Promise<{ slug:
           </div>
         </section>
 
-        <section aria-labelledby="service-faq" className="border-t border-[var(--color-linen)] bg-white py-16 sm:py-20">
+        <section aria-labelledby="service-faq" className="band-cool border-t border-[var(--color-linen)] py-16 sm:py-20">
           <div className="mx-auto max-w-3xl px-5 lg:px-8">
             <h2 id="service-faq" className="text-[length:var(--text-h3)]">Common questions</h2>
             <div className="mt-6">

@@ -103,32 +103,81 @@ formula is **a high-contrast serif for display + a neutral geometric/grotesque s
 
 Type scale is a 1.25 (major third) ratio, clamped with `clamp()` for fluid mobile→desktop.
 
-### 2.3 Colour
+### 2.3 Colour — revised after review
 
-A near-neutral warm base with a single saturated accent. Rationale: neutral bases make
-photography look expensive and make one accent colour do all the CTA work, which is exactly
-what conversion research wants (§3).
+**The first pass got this wrong, and the correction is worth recording.**
+
+The original reasoning was: every low-credibility site in this category resolves
+the ornament-vs-restraint tension toward ornament, therefore resolve it toward
+restraint — a near-neutral warm base with one saffron accent.
+
+The premise was right; the conclusion overshot. What makes those sites look
+cheap is **noise** — glow, saturated gradient meshes, rotating zodiac wheels,
+particle fields — not colour itself. Removing colour to avoid noise removed the
+warmth too, and the result read monotone. Restraint and beige are not the same
+thing.
+
+Indian spiritual and wellness brands use rich colour legitimately, and it is
+culturally grounded rather than gaudy: saffron and marigold are auspicious, deep
+indigo is the traditional night-sky counterweight to warm tones, and terracotta,
+jade and rose all sit naturally alongside them.
+
+**Revised palette**
 
 ```
-Ink        #14100E   near-black, warm       body text, headings
-Bark       #3D332C   warm brown-grey        secondary text
-Sand       #FAF7F2   warm off-white         page background
-Linen      #F1EAE0   warm neutral           cards, section bands
-Saffron    #C2762B   deep amber             primary CTA, focus rings, active states
-Ember      #A45F1E   darker amber           hover/pressed
-Sage       #4E6650   muted green            success / confirmed / paid
-Clay       #A8412F   muted terracotta       destructive / failed / cancelled
-Indigo     #2C3557   deep muted blue        the single "celestial" note; used sparingly
+NEUTRALS
+Ink        #17120E   warm near-black          headings, body
+Bark       #4A3C31   secondary text           10.0:1 on sand
+Stone      #7A6A5C   tertiary / meta           4.9:1 on sand
+Sand       #FDF8F1   page ground              (warmer than the first pass)
+Linen      #F4E9DA   borders, quiet fills
+
+PRIMARY — the only family allowed on a call to action
+Saffron    #C2762B   icons, rules, large display ONLY
+Marigold   #E8942F   for use on dark grounds   6.7:1 on indigo-deep
+Ember      #A45F1E   BUTTON FILL               4.96:1 with white
+EmberDeep  #8A4E17   hover / pressed           6.60:1 with white
+EmberText  #8F5219   accent TEXT on light      5.5–6.2:1
+
+SECONDARY — a real second colour that owns whole sections
+Indigo     #2A2E5A   white on this = 12.8:1
+IndigoDeep #1B1E3E   darkest ground
+IndigoTint #ECEDF6
+
+CATEGORY HUES — one per guidance topic, base-on-tint all clear AA
+Rose       #9E2F55 / #FCEBF1    6.1:1
+Jade       #256149 / #E6F4EE    6.4:1
+Plum       #59318A / #F2ECFA    8.1:1
+Terracotta #A2412A / #FCEDE8    5.5:1
+Teal       #175A62 / #E4F2F3    6.8:1
 ```
 
-Contrast: Saffron `#C2762B` on Sand `#FAF7F2` measures **4.6:1** — passes WCAG AA for normal
-text. White on Saffron measures **4.0:1**, which passes AA for large text and UI components
-only, so button labels are set at 15px/600 weight or larger. Body copy never uses Saffron.
+**The discipline now lives in rules, not in scarcity:**
 
-Dark mode is deliberately **out of scope for v1**: it doubles the design/QA surface, and the
-audience for a consultation booking site skews strongly toward one-time daytime mobile visits.
-The token architecture (CSS custom properties in a single `@theme` block) makes adding it later
-a contained change.
+1. **One primary action colour.** Ember owns every CTA. Category hues never
+   appear on a button — they identify, they do not call to action.
+2. **Category hues encode meaning.** Six topics, six hues, stable mapping. On
+   service cards the hue is keyed to a hash of the slug, so a service is always
+   the same colour rather than reshuffling when the grid is reordered.
+3. **Fixed section rhythm.** `sand → shell → dawn → warm → cool → night`, and
+   never two adjacent sections on the same ground. Encoded as `.band-*` classes
+   so the alternation is visible when reading the JSX.
+
+**The contrast finding that changed the buttons.** White on Saffron `#C2762B`
+measures **3.55:1** — acceptable for large display type, but a **failure** for a
+15px semibold button label, which is not "large text" under WCAG. Saffron is
+therefore never a button fill anywhere in the system; Ember `#A45F1E` (4.96:1)
+fills buttons instead. Every pairing in the table above was measured
+programmatically, not eyeballed.
+
+**Gradients: the original blanket ban was also over-broad.** What looks cheap is
+a *saturated* gradient used as a focal point — purple→gold hero washes, glowing
+buttons. A low-contrast wash between two neighbouring tints is an atmospheric
+ground, and it is what stops large flat areas reading as dead space. Three are
+defined (`dawn`, `night`, `ember`), each two-stop, same temperature family, and
+never underneath body copy that must stay legible across the whole span.
+
+Dark mode remains out of scope for v1, for the same reason as before.
 
 ### 2.4 Spacing, radius, elevation
 
@@ -545,7 +594,8 @@ Decisions:
 2. The server decides everything that involves money or identity. The client is a renderer.
 3. The database enforces what must never be violated. Application code is the second line.
 4. Two independent payment-confirmation paths, one idempotent state machine, plus reconciliation.
-5. Restraint as the differentiator. No fake data, no fake urgency, no zodiac wheels.
+5. Restraint means no fake data, no fake urgency and no zodiac wheels — **not** no
+   colour. See §2.3 for where the first pass got that wrong and how it was corrected.
 6. Every feature must remove real weekly work for a solo practitioner, or it is not built.
 
 ---

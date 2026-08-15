@@ -48,11 +48,11 @@ export default async function ClientDetailPage(props: { params: Promise<{ id: st
             {client.full_name ?? 'Unnamed client'}
           </h1>
           <div className="mt-2 flex flex-wrap gap-x-5 gap-y-1.5 text-sm text-[var(--color-bark)]">
-            <a href={`mailto:${client.email}`} className="flex items-center gap-1.5 hover:text-[var(--color-ember)]">
+            <a href={`mailto:${client.email}`} className="flex items-center gap-1.5 hover:text-[var(--color-ember-text)]">
               <Mail className="size-3.5" aria-hidden /> {client.email}
             </a>
             {client.phone && (
-              <a href={`tel:${client.phone}`} className="flex items-center gap-1.5 hover:text-[var(--color-ember)]">
+              <a href={`tel:${client.phone}`} className="flex items-center gap-1.5 hover:text-[var(--color-ember-text)]">
                 <Phone className="size-3.5" aria-hidden /> {client.phone}
               </a>
             )}

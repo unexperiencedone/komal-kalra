@@ -173,7 +173,7 @@ export function StatCard({
 }) {
   const tones = {
     neutral: 'text-[var(--color-ink)]',
-    success: 'text-[var(--color-sage)]',
+    success: 'text-[var(--color-jade)]',
     warning: 'text-[var(--color-amber-warn)]',
     danger: 'text-[var(--color-clay)]',
   };

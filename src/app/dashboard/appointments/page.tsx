@@ -49,7 +49,7 @@ export default async function AppointmentsPage() {
                     <li key={a.id}>
                       <Link
                         href={`/dashboard/appointments/${a.id}`}
-                        className="flex flex-wrap items-center justify-between gap-4 rounded-[var(--radius-card)] border border-[var(--color-linen)] bg-white px-5 py-4 transition-colors hover:border-[var(--color-saffron)]/40"
+                        className="flex flex-wrap items-center justify-between gap-4 rounded-[var(--radius-card)] border border-[var(--color-linen)] bg-white px-5 py-4 transition-colors hover:border-[var(--color-ember)]/40"
                       >
                         <div className="min-w-0">
                           <div className="flex flex-wrap items-center gap-2.5">
