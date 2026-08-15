@@ -45,19 +45,58 @@ and every existing policy keeps working untouched.
    - Application type: **Web application**
    - Name: anything; this is internal only.
 
-### 2. Authorised redirect URI
+### 2. The two URI fields — exact values
 
-This is the step people get wrong. The redirect goes to **Supabase**, not to
-your site:
+This is the step people get wrong, because the two fields do different jobs and
+neither of them wants your website's URL.
+
+| Field in Google Console | What to enter |
+|---|---|
+| **Authorised JavaScript origins** | **Leave empty.** If the console refuses to save blank, enter `https://<project-ref>.supabase.co` |
+| **Authorised redirect URIs** | `https://<project-ref>.supabase.co/auth/v1/callback` — this one entry, nothing else |
+
+Find `<project-ref>` in Supabase → Project Settings → General. For this project
+it is `jjuyybxikomkpmtvzlkl`, so:
 
 ```
-https://<your-project-ref>.supabase.co/auth/v1/callback
+Authorised redirect URIs
+https://jjuyybxikomkpmtvzlkl.supabase.co/auth/v1/callback
 ```
 
-Find `<your-project-ref>` in Supabase → Project Settings → General.
+#### Why JavaScript origins is empty
 
-Add **only** that URI here. Your own `/auth/callback` route is where Supabase
-sends the user *afterwards*, and it does not belong in this field.
+That field exists for flows where the **browser** talks to Google directly —
+Google One Tap, or the `gapi` JS client. This app uses the server-side redirect
+flow: `signInWithOAuth` returns a URL and the server issues a redirect. No Google
+JavaScript ever loads in the browser, so there is no origin to authorise.
+
+#### Why localhost is NOT in the redirect URIs
+
+Even in local development, the round-trip is:
+
+```
+your browser  →  Google  →  https://<ref>.supabase.co/auth/v1/callback  →  localhost:3000/auth/callback
+                                    ▲                                              ▲
+                            Google redirects HERE                    Supabase redirects here afterwards
+                            (this is what Google needs)              (Google never sees this URL)
+```
+
+Google only ever redirects to Supabase. Supabase then forwards to whichever of
+your app's URLs made the request. So the single Supabase entry covers
+development and production both, and adding `http://localhost:3000` to Google
+achieves nothing.
+
+Localhost belongs in **Supabase → Authentication → URL Configuration →
+Redirect URLs**, which is step 4.
+
+#### Common errors and what they mean
+
+| Error | Cause |
+|---|---|
+| `redirect_uri_mismatch` | The redirect URI in Google does not match `https://<ref>.supabase.co/auth/v1/callback` exactly — check for a typo in the ref, a trailing slash, or `http` instead of `https` |
+| Signs in, then lands on a Supabase error page | The app URL is missing from Supabase's **Redirect URLs** allow-list (step 4) |
+| Works in production, fails locally | `http://localhost:3000/auth/callback` missing from that same Supabase allow-list |
+| Redirected to localhost in production | `NEXT_PUBLIC_SITE_URL` still set to localhost in the production environment |
 
 ### 3. Paste the credentials into Supabase
 
