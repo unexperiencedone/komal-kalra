@@ -72,6 +72,21 @@ create trigger services_set_updated_at
   before update on public.services
   for each row execute function public.set_updated_at();
 
+-- ---------------------------------------------------------------------------
+-- Column added after the table already existed in deployed databases.
+--
+-- `create table if not exists` above is a NO-OP on an existing database, so it
+-- does NOT add new columns to one. Without this line, re-running this file
+-- against a live database dropped the public select policy and then failed to
+-- recreate it (the new policy references `internal`, which did not exist yet),
+-- leaving the table with no public read policy at all — RLS then denied every
+-- anonymous read and the entire catalogue vanished from the site.
+--
+-- Any future column added to this table needs the same treatment.
+-- ---------------------------------------------------------------------------
+alter table public.services
+  add column if not exists internal boolean not null default false;
+
 alter table public.services enable row level security;
 
 -- Anonymous visitors can read the active catalogue. This is the only table in

@@ -62,37 +62,62 @@ export async function getAvailableSlots(params: {
 }
 
 /**
- * Public catalogue read. Uses the anon-scoped client, so RLS applies.
+ * Why the `internal` split is done in JavaScript and not with `.eq()`.
  *
- * `.eq('internal', false)` is belt-and-braces on top of the RLS policy, and it
- * is not redundant. RLS hides internal rows from everyone who is not an admin —
- * but an admin browsing the marketing site IS an admin, so without this filter
- * the ₹1 verification service would appear on the homepage and /services for
- * her and nobody else. A catalogue that changes depending on who is signed in
- * is a bug, so the public reads exclude it unconditionally.
+ * THIS BLANKED THE WHOLE CATALOGUE ONCE. Do not "tidy" it back into the query.
+ *
+ * The first version filtered in PostgREST — `.eq('internal', false)`. Against a
+ * database where the column had not been added yet, PostgREST answers 400
+ * (`42703 column services.internal does not exist`). The destructure was
+ * `const { data } = …`, which throws the error away, so `data ?? []` returned an
+ * EMPTY catalogue. Every service disappeared from the site and nothing was
+ * logged. A deploy that runs ahead of its migration is a completely ordinary
+ * state, and the failure it produced here was both total and silent.
+ *
+ * Reading the column off the row instead is immune to that: on a database
+ * without the column, `row.internal` is `undefined`, `!undefined` is true, and
+ * every service is returned exactly as before. The feature degrades to "no
+ * verification service yet"; the catalogue never degrades at all.
+ *
+ * Security does not rest on this filter in any case — the RLS policy
+ * (`active = true and internal = false`) is what stops a non-admin reading an
+ * internal row. This filter exists only so that an ADMIN browsing the marketing
+ * site sees the same catalogue as everyone else, since RLS would otherwise let
+ * the row through for her alone.
  */
+function isPublic(service: Service): boolean {
+  return service.internal !== true;
+}
+
+/** Public catalogue read. Uses the anon-scoped client, so RLS applies. */
 export async function getActiveServices(): Promise<Service[]> {
   const supabase = await createClient();
-  const { data } = await supabase
+  const { data, error } = await supabase
     .from('services')
     .select('*')
     .eq('active', true)
-    .eq('internal', false)
     .order('sort_order', { ascending: true })
     .returns<Service[]>();
-  return data ?? [];
+
+  // An empty catalogue and a failed query look identical downstream — every
+  // page just renders no services. Say which one happened.
+  if (error) console.error('[services] catalogue read failed:', error.message);
+
+  return (data ?? []).filter(isPublic);
 }
 
 export async function getServiceBySlug(slug: string): Promise<Service | null> {
   const supabase = await createClient();
-  const { data } = await supabase
+  const { data, error } = await supabase
     .from('services')
     .select('*')
     .eq('slug', slug)
     .eq('active', true)
-    .eq('internal', false)
     .maybeSingle<Service>();
-  return data;
+
+  if (error) console.error(`[services] read failed for "${slug}":`, error.message);
+
+  return data && isPublic(data) ? data : null;
 }
 
 /**
@@ -104,15 +129,20 @@ export async function getServiceBySlug(slug: string): Promise<Service | null> {
  * matters — reaching for the service-role client here would bypass RLS and make
  * the guard purely application-level, which is exactly the "hardcoded admin
  * privileges in frontend-reachable code" the brief rules out.
+ *
+ * On a database that has not run the migration yet, `internal` is undefined on
+ * every row and this correctly returns nothing.
  */
 export async function getInternalServices(): Promise<Service[]> {
   const supabase = await createClient();
-  const { data } = await supabase
+  const { data, error } = await supabase
     .from('services')
     .select('*')
     .eq('active', true)
-    .eq('internal', true)
     .order('sort_order', { ascending: true })
     .returns<Service[]>();
-  return data ?? [];
+
+  if (error) console.error('[services] internal read failed:', error.message);
+
+  return (data ?? []).filter((s) => s.internal === true);
 }

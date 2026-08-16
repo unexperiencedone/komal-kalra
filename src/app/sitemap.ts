@@ -30,19 +30,22 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const admin = createAdminClient();
     const { data } = await admin
       .from('services')
-      .select('slug, updated_at')
-      .eq('active', true)
-      // Service-role client, so RLS does not apply here — the internal filter
-      // has to be explicit or the ₹1 verification service would be advertised
-      // to Google.
-      .eq('internal', false);
+      .select('slug, updated_at, internal')
+      .eq('active', true);
 
-    const serviceRoutes: MetadataRoute.Sitemap = (data ?? []).map((s) => ({
-      url: `${base}/services/${s.slug}`,
-      lastModified: new Date(s.updated_at as string),
-      changeFrequency: 'monthly',
-      priority: 0.8,
-    }));
+    // Service-role client, so RLS does not apply here — internal rows have to
+    // be excluded explicitly or the ₹1 verification service gets advertised to
+    // Google. Filtered in JS rather than with `.eq('internal', false)` so a
+    // database that has not run the migration still produces a sitemap; see
+    // the note in src/lib/booking/availability.ts.
+    const serviceRoutes: MetadataRoute.Sitemap = (data ?? [])
+      .filter((s) => s.internal !== true)
+      .map((s) => ({
+        url: `${base}/services/${s.slug}`,
+        lastModified: new Date(s.updated_at as string),
+        changeFrequency: 'monthly' as const,
+        priority: 0.8,
+      }));
 
     return [...staticRoutes, ...serviceRoutes];
   } catch {

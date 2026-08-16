@@ -78,8 +78,15 @@ export interface Service {
    * Staff-only row, hidden from the public catalogue by row-level security.
    * Distinct from `active = false`, which means "not bookable at all".
    * See database/04_services.sql.
+   *
+   * OPTIONAL ON PURPOSE. A deployment can be running ahead of its migration,
+   * and on a database without this column the field is simply absent from the
+   * row. Typing it as a required `boolean` claims a guarantee the database is
+   * not making, and the code that trusted that guarantee blanked the entire
+   * catalogue once. Always test `internal === true` / `!== true`, never rely on
+   * it being present.
    */
-  internal: boolean;
+  internal?: boolean;
   min_notice_hours: number;
   max_advance_days: number;
   free_cancellation_hours: number | null;

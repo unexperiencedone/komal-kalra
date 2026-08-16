@@ -36,14 +36,18 @@ export async function generateStaticParams() {
   try {
     const admin = createAdminClient();
     // internal = true rows are staff-only (the ₹1 payment verification
-    // service). Service-role client, so RLS is not filtering here — say it
-    // explicitly or a marketing page gets prerendered for it.
+    // service). Service-role client, so RLS is not filtering here — exclude
+    // them or a marketing page gets prerendered for one. Filtered in JS, not
+    // with `.eq('internal', false)`, so a database that has not run the
+    // migration still prerenders the real services rather than none of them;
+    // see the note in src/lib/booking/availability.ts.
     const { data } = await admin
       .from('services')
-      .select('slug')
-      .eq('active', true)
-      .eq('internal', false);
-    return (data ?? []).map((s) => ({ slug: s.slug as string }));
+      .select('slug, internal')
+      .eq('active', true);
+    return (data ?? [])
+      .filter((s) => s.internal !== true)
+      .map((s) => ({ slug: s.slug as string }));
   } catch {
     // No database at build time (CI without secrets): render on demand rather
     // than failing the build.
