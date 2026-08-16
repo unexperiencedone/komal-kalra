@@ -359,9 +359,25 @@ export function BookingFlow({
                         s.id === serviceId
                           ? 'border-[var(--color-muted-gold)] bg-[var(--color-linen-grey)]'
                           : 'border-[var(--color-outline-variant)] bg-white hover:border-[var(--color-outline-variant)]',
+                        // Internal rows reach this list only for admins, and
+                        // only ever appended to it. Dashed, so it cannot be
+                        // mistaken for part of the catalogue at a glance.
+                        s.internal && 'border-dashed',
                       )}
                     >
-                      <span className="block text-sm font-semibold text-[var(--color-cosmic-navy)]">{s.title}</span>
+                      <span className="block text-sm font-semibold text-[var(--color-cosmic-navy)]">
+                        {s.title}
+                      </span>
+                      {/*
+                        This charges real money through live keys. Labelling it
+                        "test" would be a lie that costs someone a booking —
+                        the payment is genuine, only the amount is trivial.
+                      */}
+                      {s.internal && (
+                        <span className="mt-1.5 inline-block border border-[var(--color-outline-variant)] px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-[var(--color-on-surface-variant)]">
+                          Staff only · real payment
+                        </span>
+                      )}
                       <span className="mt-1 block text-xs text-[var(--color-on-surface-variant)]">
                         {s.duration_minutes} min · {formatPaise(s.price_paise)}
                       </span>

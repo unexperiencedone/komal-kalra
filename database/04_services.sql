@@ -34,6 +34,21 @@ create table if not exists public.services (
   featured         boolean not null default false,
   sort_order       integer not null default 0,
 
+  -- Staff-only row. NOT the same thing as `active = false`.
+  --
+  -- `active = false` means "not bookable at all": get_available_slots(),
+  -- create_slot_hold() and create_pending_appointment() all require
+  -- active = true, so an inactive service cannot be booked by anyone, admin
+  -- included. That is correct for a retired service and useless for a live
+  -- payment test, which needs the whole booking and payment path to run for
+  -- real.
+  --
+  -- `internal = true` means "fully bookable, but not part of the catalogue".
+  -- The ₹1 verification service uses it: every function behaves normally,
+  -- while the public select policy below refuses to return the row to anyone
+  -- who is not an admin.
+  internal         boolean not null default false,
+
   -- How far ahead bookings open, and the minimum notice required. Both are
   -- practical needs of a solo practitioner: no 3am same-minute bookings.
   min_notice_hours integer not null default 12 check (min_notice_hours >= 0),
@@ -61,9 +76,16 @@ alter table public.services enable row level security;
 
 -- Anonymous visitors can read the active catalogue. This is the only table in
 -- the schema readable without authentication, and it is intentional.
+--
+-- `internal = false` is part of the POLICY, not just the application queries.
+-- A ₹1 verification service is a real bookable consultation, so a row that
+-- leaked into a public listing would let any visitor buy a full session for a
+-- rupee. Application-level filtering would be one forgotten `.eq()` away from
+-- that; enforcing it here means the database refuses to hand the row over,
+-- whatever the query says.
 drop policy if exists "services_select_public" on public.services;
 create policy "services_select_public" on public.services
-  for select using (active = true);
+  for select using (active = true and internal = false);
 
 drop policy if exists "services_select_admin" on public.services;
 create policy "services_select_admin" on public.services

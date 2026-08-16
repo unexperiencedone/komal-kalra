@@ -74,6 +74,12 @@ export interface Service {
   bookable_online: boolean;
   featured: boolean;
   sort_order: number;
+  /**
+   * Staff-only row, hidden from the public catalogue by row-level security.
+   * Distinct from `active = false`, which means "not bookable at all".
+   * See database/04_services.sql.
+   */
+  internal: boolean;
   min_notice_hours: number;
   max_advance_days: number;
   free_cancellation_hours: number | null;

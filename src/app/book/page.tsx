@@ -3,7 +3,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { X } from 'lucide-react';
 import { BookingFlow } from '@/components/booking/BookingFlow';
-import { getActiveServices } from '@/lib/booking/availability';
+import { getActiveServices, getInternalServices } from '@/lib/booking/availability';
 import { getProfile } from '@/lib/auth/session';
 import { BRAND } from '@/lib/config';
 
@@ -31,10 +31,29 @@ export default async function BookPage(props: {
 }) {
   // Next.js 16: searchParams is a Promise with no synchronous fallback.
   const searchParams = await props.searchParams;
-  const [services, profile] = await Promise.all([getActiveServices(), getProfile()]);
+  const [catalogue, profile] = await Promise.all([getActiveServices(), getProfile()]);
+
+  /**
+   * Staff-only services (currently just the ₹1 payment verification booking)
+   * are appended for administrators and for nobody else.
+   *
+   * The role is read from the PROFILE on the server, never from anything the
+   * browser sent. Two independent things have to be true for these rows to
+   * appear: this check, and the row-level security policy, which returns
+   * nothing for a non-admin because `getInternalServices` uses the cookie-
+   * scoped client rather than the service-role one. Defeating the UI check
+   * alone gets you an empty array.
+   *
+   * Appended last, and never made the default selection — `initial` only ever
+   * resolves against the public catalogue, so /book?service=guidance-
+   * verification will not preselect it. That is deliberate: the verification
+   * service should require a conscious click.
+   */
+  const internal = profile?.role === 'admin' ? await getInternalServices() : [];
+  const services = [...catalogue, ...internal];
 
   const requestedSlug = typeof searchParams.service === 'string' ? searchParams.service : undefined;
-  const initial = services.find((s) => s.slug === requestedSlug)?.id;
+  const initial = catalogue.find((s) => s.slug === requestedSlug)?.id;
 
   return (
     <div className="min-h-dvh bg-[var(--color-warm-ivory)]">

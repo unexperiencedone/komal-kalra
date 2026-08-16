@@ -61,13 +61,23 @@ export async function getAvailableSlots(params: {
     .sort((a, b) => a.date.localeCompare(b.date));
 }
 
-/** Public catalogue read. Uses the anon-scoped client, so RLS applies. */
+/**
+ * Public catalogue read. Uses the anon-scoped client, so RLS applies.
+ *
+ * `.eq('internal', false)` is belt-and-braces on top of the RLS policy, and it
+ * is not redundant. RLS hides internal rows from everyone who is not an admin —
+ * but an admin browsing the marketing site IS an admin, so without this filter
+ * the ₹1 verification service would appear on the homepage and /services for
+ * her and nobody else. A catalogue that changes depending on who is signed in
+ * is a bug, so the public reads exclude it unconditionally.
+ */
 export async function getActiveServices(): Promise<Service[]> {
   const supabase = await createClient();
   const { data } = await supabase
     .from('services')
     .select('*')
     .eq('active', true)
+    .eq('internal', false)
     .order('sort_order', { ascending: true })
     .returns<Service[]>();
   return data ?? [];
@@ -80,6 +90,29 @@ export async function getServiceBySlug(slug: string): Promise<Service | null> {
     .select('*')
     .eq('slug', slug)
     .eq('active', true)
+    .eq('internal', false)
     .maybeSingle<Service>();
   return data;
+}
+
+/**
+ * Internal (staff-only) services, for the booking flow's consultation list.
+ *
+ * Returns [] for anyone who is not an admin, and does so twice over: the caller
+ * checks the role, and the RLS policy would return nothing anyway because this
+ * uses the anon-scoped cookie client rather than the service-role client. That
+ * matters — reaching for the service-role client here would bypass RLS and make
+ * the guard purely application-level, which is exactly the "hardcoded admin
+ * privileges in frontend-reachable code" the brief rules out.
+ */
+export async function getInternalServices(): Promise<Service[]> {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from('services')
+    .select('*')
+    .eq('active', true)
+    .eq('internal', true)
+    .order('sort_order', { ascending: true })
+    .returns<Service[]>();
+  return data ?? [];
 }

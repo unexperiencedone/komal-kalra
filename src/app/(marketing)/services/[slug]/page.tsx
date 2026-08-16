@@ -35,7 +35,14 @@ import { serviceContextImage, serviceJourney, serviceLogistics } from '@/lib/con
 export async function generateStaticParams() {
   try {
     const admin = createAdminClient();
-    const { data } = await admin.from('services').select('slug').eq('active', true);
+    // internal = true rows are staff-only (the ₹1 payment verification
+    // service). Service-role client, so RLS is not filtering here — say it
+    // explicitly or a marketing page gets prerendered for it.
+    const { data } = await admin
+      .from('services')
+      .select('slug')
+      .eq('active', true)
+      .eq('internal', false);
     return (data ?? []).map((s) => ({ slug: s.slug as string }));
   } catch {
     // No database at build time (CI without secrets): render on demand rather

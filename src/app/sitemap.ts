@@ -31,7 +31,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const { data } = await admin
       .from('services')
       .select('slug, updated_at')
-      .eq('active', true);
+      .eq('active', true)
+      // Service-role client, so RLS does not apply here — the internal filter
+      // has to be explicit or the ₹1 verification service would be advertised
+      // to Google.
+      .eq('internal', false);
 
     const serviceRoutes: MetadataRoute.Sitemap = (data ?? []).map((s) => ({
       url: `${base}/services/${s.slug}`,
