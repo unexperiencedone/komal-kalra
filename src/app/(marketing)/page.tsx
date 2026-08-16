@@ -17,7 +17,7 @@ import { img } from '@/lib/content/imagery';
 import type { Testimonial } from '@/types/database';
 
 export const metadata: Metadata = {
-  title: 'Astrologer Komal Kalra — Clarity for the Curated Life',
+  title: 'Clarity for the Curated Life',
   description:
     'Professional astrological consultation and life coaching designed to provide precision, discretion, and profound insight. Book a private session with Komal Kalra.',
   alternates: { canonical: '/' },
