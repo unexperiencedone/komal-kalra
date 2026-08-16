@@ -109,6 +109,71 @@ export async function saveService(_prev: AdminActionState, formData: FormData): 
   return { success: id ? 'Service updated.' : 'Service created.' };
 }
 
+/**
+ * Archive / restore a service.
+ *
+ * WHY THIS EXISTS INSTEAD OF A DELETE BUTTON
+ *
+ * `appointments.service_id` and `payments.appointment_id` are both ON DELETE
+ * RESTRICT, so deleting a service that has ever been booked means deleting the
+ * payment rows first. A payment row that no longer matches what Razorpay holds
+ * is a reconciliation problem that outlives whatever tidiness it bought. So the
+ * console offers archiving, and deletion stays a deliberate, manual SQL job —
+ * see database/tools/delete-service.sql.
+ *
+ * Archiving sets `active = false` too. That is what keeps this change free of
+ * any RLS edit: the public policy is already `active = true and internal =
+ * false`, so an archived row is excluded by a policy nobody had to touch.
+ *
+ * Restoring clears `archived_at` and deliberately leaves `active = false`. The
+ * service comes back into the admin list still hidden, so bringing it back is
+ * two conscious steps rather than one click that silently republishes a price
+ * to the homepage.
+ */
+export async function archiveService(formData: FormData): Promise<void> {
+  const admin = await requireAdmin();
+  const id = String(formData.get('id') ?? '');
+  const restore = formData.get('restore') === '1';
+  if (!id) return;
+
+  const db = createAdminClient();
+  const { data: before } = await db
+    .from('services')
+    .select('title, slug')
+    .eq('id', id)
+    .maybeSingle<{ title: string; slug: string }>();
+
+  const { error } = await db
+    .from('services')
+    .update(
+      restore
+        ? { archived_at: null }
+        : { archived_at: new Date().toISOString(), active: false },
+    )
+    .eq('id', id);
+
+  // No UI for this failure: the row simply stays where it was and the list
+  // re-renders unchanged. Log it so it is not invisible.
+  if (error) {
+    console.error('[admin] archiveService failed:', error.message);
+    return;
+  }
+
+  const meta = await requestMeta();
+  await writeAdminLog({
+    adminId: admin.id,
+    action: restore ? 'service.restore' : 'service.archive',
+    entityType: 'service',
+    entityId: id,
+    metadata: { title: before?.title, slug: before?.slug },
+    ...meta,
+  });
+
+  revalidatePath('/admin/services');
+  revalidatePath('/services');
+  revalidatePath('/');
+}
+
 // ---------------------------------------------------------------------------
 // Availability
 // ---------------------------------------------------------------------------

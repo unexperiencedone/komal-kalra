@@ -1,8 +1,8 @@
 'use client';
 
 import { useActionState, useState } from 'react';
-import { Plus, Pencil } from 'lucide-react';
-import { saveService, type AdminActionState } from '@/app/admin/actions';
+import { Plus, Pencil, Archive, RotateCcw } from 'lucide-react';
+import { saveService, archiveService, type AdminActionState } from '@/app/admin/actions';
 import { formatPaise, paiseToRupees } from '@/lib/money';
 import { Field, Input, Textarea, Select, Checkbox } from '@/components/ui/field';
 import { Button } from '@/components/ui/button';
@@ -18,8 +18,16 @@ import type { Service } from '@/types/database';
  * everywhere": asking a person to type 210000 for a ₹2,100 service is an
  * invitation to a very expensive typo.
  */
-export function ServiceEditor({ services }: { services: Service[] }) {
+export function ServiceEditor({
+  services,
+  archived = [],
+}: {
+  services: Service[];
+  /** Retired services. Hidden behind a disclosure, restorable, never deleted. */
+  archived?: Service[];
+}) {
   const [editing, setEditing] = useState<Service | 'new' | null>(null);
+  const [showArchived, setShowArchived] = useState(false);
   const [state, action, pending] = useActionState<AdminActionState, FormData>(saveService, null);
 
   if (editing) {
@@ -131,9 +139,24 @@ export function ServiceEditor({ services }: { services: Service[] }) {
                 {s.duration_minutes} min · <span className="tabular">{formatPaise(s.price_paise)}</span> · /services/{s.slug}
               </p>
             </div>
-            <Button variant="secondary" size="sm" onClick={() => setEditing(s)}>
-              <Pencil aria-hidden /> Edit
-            </Button>
+            <div className="flex items-center gap-2">
+              <Button variant="secondary" size="sm" onClick={() => setEditing(s)}>
+                <Pencil aria-hidden /> Edit
+              </Button>
+              {/*
+                Archive, not delete. Deleting a service that has ever been
+                booked requires deleting its payment rows first (both foreign
+                keys are ON DELETE RESTRICT), and a payment record that no
+                longer matches Razorpay is worse than a longer list.
+                Archiving hides it here and everywhere, and keeps all of it.
+              */}
+              <form action={archiveService}>
+                <input type="hidden" name="id" value={s.id} />
+                <Button type="submit" variant="ghost" size="sm" title="Hide from this list, keep all data">
+                  <Archive aria-hidden /> Archive
+                </Button>
+              </form>
+            </div>
           </li>
         ))}
       </ul>
@@ -142,6 +165,62 @@ export function ServiceEditor({ services }: { services: Service[] }) {
         <p className="mt-6  border border-dashed border-[var(--color-outline-variant)] p-10 text-center text-sm text-[var(--color-on-surface-variant)]">
           No services yet. Create your first one to open bookings.
         </p>
+      )}
+
+      {/* ------------------------------- Archived ------------------------- */}
+      {archived.length > 0 && (
+        <section className="mt-12 border-t border-[var(--color-outline-variant)] pt-6">
+          <button
+            type="button"
+            onClick={() => setShowArchived((v) => !v)}
+            aria-expanded={showArchived}
+            className="text-sm font-semibold text-[var(--color-on-surface-variant)] underline-offset-4 hover:underline"
+          >
+            {showArchived ? 'Hide' : 'Show'} archived ({archived.length})
+          </button>
+
+          {showArchived && (
+            <>
+              <p className="mt-3 max-w-prose text-sm text-[var(--color-on-surface-variant)]">
+                Retired services. Nothing has been deleted — bookings, payments,
+                pricing and copy are all intact. Restoring brings a service back
+                into the list above, still hidden from the public site until you
+                tick <strong className="font-medium">Active</strong>.
+              </p>
+
+              <ul className="mt-5 space-y-3">
+                {archived.map((s) => (
+                  <li
+                    key={s.id}
+                    className="flex flex-wrap items-center justify-between gap-4 border border-dashed border-[var(--color-outline-variant)] bg-[var(--color-linen-grey)] p-5"
+                  >
+                    <div className="min-w-0">
+                      <div className="flex flex-wrap items-center gap-2.5">
+                        <p className="font-sans text-[15px] font-semibold">{s.title}</p>
+                        <Badge tone="neutral">Archived</Badge>
+                      </div>
+                      <p className="mt-1 text-sm text-[var(--color-on-surface-variant)]">
+                        {s.duration_minutes} min · <span className="tabular">{formatPaise(s.price_paise)}</span>
+                        {s.archived_at && (
+                          <> · archived {new Date(s.archived_at).toLocaleDateString('en-IN', {
+                            day: 'numeric', month: 'short', year: 'numeric',
+                          })}</>
+                        )}
+                      </p>
+                    </div>
+                    <form action={archiveService}>
+                      <input type="hidden" name="id" value={s.id} />
+                      <input type="hidden" name="restore" value="1" />
+                      <Button type="submit" variant="secondary" size="sm">
+                        <RotateCcw aria-hidden /> Restore
+                      </Button>
+                    </form>
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
+        </section>
       )}
     </div>
   );

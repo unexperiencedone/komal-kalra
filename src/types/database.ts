@@ -87,6 +87,15 @@ export interface Service {
    * it being present.
    */
   internal?: boolean;
+  /**
+   * When the service was retired from the admin console. `null`/absent = live.
+   * Archiving also sets `active = false`, so archived rows are already excluded
+   * from the public catalogue by the existing RLS policy.
+   *
+   * Optional for the same reason as `internal` — a deployment can be running
+   * ahead of its migration. Test `archived_at ? … : …`, never assume presence.
+   */
+  archived_at?: string | null;
   min_notice_hours: number;
   max_advance_days: number;
   free_cancellation_hours: number | null;

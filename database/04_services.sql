@@ -49,6 +49,22 @@ create table if not exists public.services (
   -- who is not an admin.
   internal         boolean not null default false,
 
+  -- Archived: retired from the admin console too, but kept in full.
+  --
+  -- The three states are deliberately separate concerns:
+  --   active = false     hidden from the public site, still listed in /admin
+  --   internal = true    bookable, absent from the public catalogue
+  --   archived_at set    out of the admin list as well, restorable at any time
+  --
+  -- Archiving always sets active = false alongside it, so the existing public
+  -- select policy (active = true and internal = false) already excludes
+  -- archived rows. That is on purpose: no policy needed a change for this
+  -- feature, and a policy that does not change cannot break the catalogue.
+  --
+  -- Nullable timestamp rather than a boolean, because "when was this retired"
+  -- is worth knowing a year later and costs nothing to record.
+  archived_at      timestamptz,
+
   -- How far ahead bookings open, and the minimum notice required. Both are
   -- practical needs of a solo practitioner: no 3am same-minute bookings.
   min_notice_hours integer not null default 12 check (min_notice_hours >= 0),
@@ -86,6 +102,9 @@ create trigger services_set_updated_at
 -- ---------------------------------------------------------------------------
 alter table public.services
   add column if not exists internal boolean not null default false;
+
+alter table public.services
+  add column if not exists archived_at timestamptz;
 
 alter table public.services enable row level security;
 

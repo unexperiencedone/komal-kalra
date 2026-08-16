@@ -11,11 +11,26 @@ export default async function AdminServicesPage() {
   const db = createAdminClient();
 
   // Service role, so inactive services are visible here (RLS hides them publicly).
-  const { data } = await db
+  const { data, error } = await db
     .from('services')
     .select('*')
     .order('sort_order', { ascending: true })
     .returns<Service[]>();
+
+  if (error) console.error('[admin] services read failed:', error.message);
+
+  /**
+   * Archived rows are split out in JavaScript rather than with
+   * `.is('archived_at', null)` in the query.
+   *
+   * A deploy can be running ahead of its migration, and a PostgREST filter on a
+   * column that does not exist yet returns 400 — which previously emptied the
+   * entire catalogue silently. Reading the field off the row degrades to
+   * "nothing is archived" instead, which is both correct and harmless.
+   */
+  const all = data ?? [];
+  const live = all.filter((s) => !s.archived_at);
+  const archived = all.filter((s) => Boolean(s.archived_at));
 
   return (
     <div className="mx-auto max-w-4xl px-5 py-8 lg:px-10 lg:py-12">
@@ -24,7 +39,7 @@ export default async function AdminServicesPage() {
         description="Your consultation catalogue. Prices and durations here are what visitors see and pay."
       />
       <div className="mt-8">
-        <ServiceEditor services={data ?? []} />
+        <ServiceEditor services={live} archived={archived} />
       </div>
     </div>
   );
