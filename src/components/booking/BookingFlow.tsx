@@ -329,7 +329,12 @@ export function BookingFlow({
 
       <div className="grid gap-10 lg:grid-cols-[1fr_380px] lg:items-start">
         {/* ------------------------------ MAIN ------------------------------ */}
-        <div>
+        {/* min-w-0: grid items default to min-content width, which is wider
+            than a phone screen once BookingStepper's four nowrap labels are
+            laid out. Without this, the stepper's own overflow-x-auto never
+            engages — the grid item just grows to fit it instead, and the
+            whole page gains a horizontal scrollbar. */}
+        <div className="min-w-0">
           <BookingStepper current={STEP_LABEL[step]} />
 
           {error && (

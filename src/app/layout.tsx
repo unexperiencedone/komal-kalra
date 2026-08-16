@@ -68,14 +68,33 @@ export const metadata: Metadata = {
     title: `${BRAND.fullName} — Astrology, Coaching & Counselling`,
     description:
       'Private one-to-one consultations. Astrological guidance, Kundli Milan, coaching, healing and counselling.',
+    // Fallback for any page that doesn't set its own openGraph.images.
+    images: [{ url: '/images/logo.png', width: 1024, height: 1024, alt: BRAND.fullName }],
   },
   twitter: {
     card: 'summary_large_image',
     title: `${BRAND.fullName}`,
     description: 'Private one-to-one astrology and counselling consultations.',
+    images: ['/images/logo.png'],
   },
   alternates: { canonical: '/' },
   robots: { index: true, follow: true },
+
+  /**
+   * Google Search Console ownership verification.
+   *
+   * Next.js emits this as <meta name="google-site-verification"> on every page
+   * from the root layout, which is what Search Console's HTML-tag method looks
+   * for. Using the `verification` field rather than a hand-written <meta> keeps
+   * it in the metadata system, so it cannot be lost if <head> is refactored.
+   *
+   * Also required for the Google OAuth consent screen: verifying the domain
+   * here is what removes the "unverified app" interstitial and lets the
+   * practice name show properly. See docs/google-auth-setup.md.
+   */
+  verification: {
+    google: 'ZmWGt-xPRrOJjnBHw3S3vGMJFsrQPhxio2hTBER0Pf0',
+  },
 };
 
 export const viewport: Viewport = {

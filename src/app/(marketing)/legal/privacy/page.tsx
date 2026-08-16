@@ -1,18 +1,15 @@
 import type { Metadata } from 'next';
-import { PrivacyContent, LAST_UPDATED } from '@/lib/content/legal';
+import { LegalDocumentView } from '@/components/marketing/LegalDocument';
+import { LEGAL_DOCUMENTS } from '@/lib/content/legal';
+
+const doc = LEGAL_DOCUMENTS.privacy;
 
 export const metadata: Metadata = {
-  title: 'Privacy policy',
-  description: 'What personal information we collect, why, and how it is protected.',
+  title: doc.title,
+  description: doc.description,
   alternates: { canonical: '/legal/privacy' },
 };
 
-export default function PrivacyPage() {
-  return (
-    <article>
-      <h1 className="text-[length:var(--text-h1)]">Privacy policy</h1>
-      <p className="mt-2 text-sm text-[var(--color-on-surface-variant)]">Last updated: {LAST_UPDATED}</p>
-      <div className="mt-8"><PrivacyContent /></div>
-    </article>
-  );
+export default function Page() {
+  return <LegalDocumentView doc={doc} />;
 }

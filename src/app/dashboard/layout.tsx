@@ -1,4 +1,4 @@
-import { requireUser } from '@/lib/auth/session';
+import { requireUser, getAvatarUrl } from '@/lib/auth/session';
 import { createClient } from '@/lib/supabase/server';
 import { signOut } from '@/app/login/actions';
 import { AppShell, type NavItem } from '@/components/dashboard/AppShell';
@@ -16,6 +16,7 @@ import { AppShell, type NavItem } from '@/components/dashboard/AppShell';
  */
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
   const profile = await requireUser('/dashboard');
+  const avatarUrl = await getAvatarUrl();
   const supabase = await createClient();
 
   const { count: unread } = await supabase
@@ -34,7 +35,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
     <AppShell
       nav={nav}
       title="Your Account"
-      user={{ name: profile.full_name, email: profile.email, role: profile.role }}
+      user={{ name: profile.full_name, email: profile.email, role: profile.role, avatarUrl }}
       signOutAction={signOut}
       primaryAction={{ href: '/book', label: 'Book a Session' }}
     >

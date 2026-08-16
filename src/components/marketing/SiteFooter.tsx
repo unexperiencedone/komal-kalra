@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { BRAND } from '@/lib/config';
 import type { Service } from '@/types/database';
 
@@ -20,9 +21,12 @@ export function SiteFooter({ services = [] }: { services?: Service[] }) {
     <footer className="band-ink no-print border-t border-[color-mix(in_srgb,var(--color-muted-gold)_25%,transparent)]">
       <div className="shell grid grid-cols-1 gap-12 py-16 md:grid-cols-3">
         <div>
-          <p className="font-[family-name:var(--font-display)] text-2xl font-medium text-[var(--color-warm-ivory)]">
-            {BRAND.name}
-          </p>
+          <div className="flex items-center gap-2.5">
+            <Image src="/images/favicon.png" alt="" width={32} height={32} className="size-8" />
+            <p className="font-[family-name:var(--font-display)] text-2xl font-medium text-[var(--color-warm-ivory)]">
+              {BRAND.name}
+            </p>
+          </div>
           <p className="mt-6 max-w-xs text-sm leading-relaxed text-[var(--color-on-primary-container)]">
             Precision astrology and executive life coaching.
           </p>
@@ -64,10 +68,14 @@ export function SiteFooter({ services = [] }: { services?: Service[] }) {
       <div className="border-t border-[color-mix(in_srgb,var(--color-warm-ivory)_12%,transparent)]">
         <div className="shell flex flex-col gap-4 py-6 sm:flex-row sm:items-center sm:justify-between">
           <ul className="flex flex-wrap gap-x-6 gap-y-2">
+            {/* All four are linked from every page: Razorpay's activation
+                check looks for them, and Google's OAuth consent screen
+                requires the privacy and terms URLs to be publicly reachable. */}
             {[
               { href: '/legal/terms', label: 'Terms' },
               { href: '/legal/privacy', label: 'Privacy' },
               { href: '/legal/refunds', label: 'Cancellation & refunds' },
+              { href: '/legal/delivery', label: 'Service delivery' },
             ].map((l) => (
               <li key={l.href}>
                 <Link href={l.href} className="label-small text-[var(--color-on-primary-container)] transition-colors hover:text-[var(--color-warm-ivory)]">

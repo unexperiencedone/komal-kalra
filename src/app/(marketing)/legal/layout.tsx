@@ -1,23 +1,45 @@
+import Link from 'next/link';
+import { LEGAL_INDEX } from '@/lib/content/legal';
+
 /**
- * Legal page shell.
+ * Legal shell.
  *
- * Prose styling lives here rather than in each page so the three documents are
- * typographically identical — inconsistent legal pages read as careless, which
- * is the opposite of what they are for.
+ * Cross-links all four documents at the foot of each, because someone reading
+ * the refund policy is quite likely to want the terms next, and making them
+ * navigate back to the footer to find it is needless friction.
  */
 export default function LegalLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="band-ivory py-16 sm:py-20">
-      <div className="shell max-w-3xl">
-        <div
-          className="[&_h2]:mt-10 [&_h2]:font-[family-name:var(--font-display)] [&_h2]:text-xl [&_h2]:font-semibold
-            [&_p]:mt-4 [&_p]:max-w-[var(--measure-wide)] [&_p]:text-[15px] [&_p]:leading-[1.65] [&_p]:text-[var(--color-on-surface-variant)]
-            [&_ul]:mt-4 [&_ul]:space-y-2 [&_ul]:pl-5
-            [&_li]:list-disc [&_li]:max-w-[var(--measure-wide)] [&_li]:text-[15px] [&_li]:leading-[1.65] [&_li]:text-[var(--color-on-surface-variant)]
-            [&_strong]:font-semibold [&_strong]:text-[var(--color-cosmic-navy)]"
+    <div className="band-ivory py-[var(--spacing-section-md)]">
+      <div className="shell max-w-4xl">
+        {children}
+
+        <nav
+          aria-label="Other legal documents"
+          className="mt-20 border-t border-[color-mix(in_srgb,var(--color-muted-gold)_20%,transparent)] pt-10"
         >
-          {children}
-        </div>
+          <p className="label-caps text-[var(--color-on-surface-variant)]">Also see</p>
+          <ul className="mt-5 flex flex-wrap gap-x-8 gap-y-3">
+            {LEGAL_INDEX.map((d) => (
+              <li key={d.slug}>
+                <Link
+                  href={`/legal/${d.slug}`}
+                  className="text-[15px] text-[var(--color-cosmic-navy)] underline decoration-1 underline-offset-4 transition-colors hover:text-[var(--color-gold-deep)]"
+                >
+                  {d.title}
+                </Link>
+              </li>
+            ))}
+            <li>
+              <Link
+                href="/contact"
+                className="text-[15px] text-[var(--color-cosmic-navy)] underline decoration-1 underline-offset-4 transition-colors hover:text-[var(--color-gold-deep)]"
+              >
+                Contact us
+              </Link>
+            </li>
+          </ul>
+        </nav>
       </div>
     </div>
   );

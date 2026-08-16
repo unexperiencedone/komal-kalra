@@ -1,4 +1,4 @@
-import { requireAdmin } from '@/lib/auth/session';
+import { requireAdmin, getAvatarUrl } from '@/lib/auth/session';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { signOut } from '@/app/login/actions';
 import { AppShell, type NavItem } from '@/components/dashboard/AppShell';
@@ -16,6 +16,7 @@ import { AppShell, type NavItem } from '@/components/dashboard/AppShell';
  */
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const profile = await requireAdmin();
+  const avatarUrl = await getAvatarUrl();
   const admin = createAdminClient();
 
   // Badge counts for the things that genuinely need a human.
@@ -40,7 +41,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     <AppShell
       nav={nav}
       title="Practitioner Console"
-      user={{ name: profile.full_name, email: profile.email, role: profile.role }}
+      user={{ name: profile.full_name, email: profile.email, role: profile.role, avatarUrl }}
       signOutAction={signOut}
       primaryAction={{ href: '/admin/appointments', label: 'Start Session' }}
     >

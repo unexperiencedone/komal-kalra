@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { Menu, UserRound, X } from 'lucide-react';
 import { BRAND } from '@/lib/config';
@@ -41,8 +42,9 @@ export function SiteHeader({ signedIn = false }: { signedIn?: boolean }) {
       <div className="shell flex h-20 items-center justify-between">
         <Link
           href="/"
-          className="font-[family-name:var(--font-display)] text-2xl font-medium tracking-tight text-[var(--color-cosmic-navy)]"
+          className="flex items-center gap-2.5 font-[family-name:var(--font-display)] text-2xl font-medium tracking-tight text-[var(--color-cosmic-navy)]"
         >
+          <Image src="/images/favicon.png" alt="" width={36} height={36} className="size-9" priority />
           {BRAND.name}
         </Link>
 

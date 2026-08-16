@@ -7,6 +7,7 @@
     "build": "next build",
     "dev": "next dev",
     "images:download": "node scripts/download-images.js",
+    "legal:export": "node scripts/export-legal.js",
     "lint": "eslint",
     "start": "next start",
     "typecheck": "tsc --noEmit",

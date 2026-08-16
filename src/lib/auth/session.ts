@@ -27,6 +27,20 @@ export const getCurrentUser = cache(async () => {
   return user;
 });
 
+/**
+ * OAuth profile photo (currently only Google sets one). Read live from the
+ * auth session rather than stored on `profiles` — it's cosmetic, avoids a
+ * migration, and Supabase already refreshes it on every Google sign-in, so a
+ * changed Google avatar shows up here without any sync logic of our own.
+ * Email/password accounts have no such metadata and get null, which callers
+ * fall back from to the existing initials avatar.
+ */
+export const getAvatarUrl = cache(async (): Promise<string | null> => {
+  const user = await getCurrentUser();
+  const meta = user?.user_metadata as Record<string, unknown> | undefined;
+  return (meta?.avatar_url as string | undefined) ?? (meta?.picture as string | undefined) ?? null;
+});
+
 export const getProfile = cache(async (): Promise<Profile | null> => {
   const user = await getCurrentUser();
   if (!user) return null;

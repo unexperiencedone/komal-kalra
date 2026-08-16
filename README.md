@@ -19,6 +19,8 @@ admin console.
 | [`docs/progress.md`](docs/progress.md) | Status, placeholders, setup checklist, pre-launch tests |
 | [`database/README.md`](database/README.md) | Schema files and the order to run them |
 | [`docs/google-auth-setup.md`](docs/google-auth-setup.md) | Google sign-in setup, and how to brand the consent screen |
+| [`docs/legal-compliance.md`](docs/legal-compliance.md) | DPDP / Razorpay / Google obligations, and what still needs a lawyer |
+| [`docs/legal/`](docs/legal/) | The four legal documents as markdown (generated) |
 
 ---
 

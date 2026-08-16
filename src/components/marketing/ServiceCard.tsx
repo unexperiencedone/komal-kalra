@@ -70,7 +70,9 @@ export function ServiceCard({
       {/* No photograph on this card renders text-only rather than borrowing
           another service's imagery — see serviceCardImage(). Grayscale to
           color on hover is the same restrained, one-motion-at-a-time
-          treatment as the rest of the editorial photography on this site. */}
+          treatment as the rest of the editorial photography on this site.
+          Scoped to md+ only: below that there is no hover to reveal the
+          color, so the photo would just sit grayscale forever on a phone. */}
       {photo && (
         <div
           className={cn(
@@ -83,7 +85,7 @@ export function ServiceCard({
             alt={photo.alt}
             fill
             sizes="(min-width: 768px) 40vw, 100vw"
-            className="object-cover grayscale transition-[filter] duration-700 ease-out group-hover:grayscale-0"
+            className="object-cover transition-[filter] duration-700 ease-out md:grayscale md:group-hover:grayscale-0"
           />
         </div>
       )}

@@ -145,7 +145,16 @@
   }
 
   html {
-    scroll-behavior: smooth;
+    /*
+     * Deliberately NOT scroll-behavior: smooth. Next.js resets scroll to the
+     * top on every route change (e.g. clicking a service card), and a global
+     * smooth-scroll makes that reset visibly animate from wherever the old
+     * page was scrolled to — the page appears to slide up from the bottom
+     * instead of the new page simply starting at the top. The one same-page
+     * anchor link in this app (the "Skip to content" link in layout.tsx)
+     * reads better as an instant jump anyway, which is the accessibility
+     * convention for skip links.
+     */
     -webkit-text-size-adjust: 100%;
   }
 

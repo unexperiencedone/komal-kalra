@@ -27,7 +27,7 @@ export function BookingSummary({
   totalPaise: number;
   taxPaise?: number;
 }) {
-  const portrait = img('practitionerPortrait');
+  const portrait = img('komalKalra');
 
   return (
     <aside className="border border-[color-mix(in_srgb,var(--color-muted-gold)_25%,transparent)] bg-[var(--color-surface-low)] p-8 lg:sticky lg:top-28">

@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import {
   LogOut, Menu, Plus, X,
@@ -55,7 +56,7 @@ export function AppShell({
 }: {
   nav: NavItem[];
   title: string;
-  user: { name: string | null; email: string; role: string };
+  user: { name: string | null; email: string; role: string; avatarUrl?: string | null };
   signOutAction: () => Promise<void>;
   /** The one filled CTA in the sidebar, as in the console design. */
   primaryAction?: { href: string; label: string };
@@ -100,12 +101,22 @@ export function AppShell({
   const footer = (
     <div className="border-t border-[var(--color-outline-variant)] p-3">
       <div className="flex items-center gap-2.5  px-2 py-2">
-        <span
-          aria-hidden
-          className="flex size-8 shrink-0 items-center justify-center rounded-full bg-[var(--color-cosmic-navy)] text-xs font-semibold text-[var(--color-warm-ivory)]"
-        >
-          {initials(user.name ?? user.email)}
-        </span>
+        {user.avatarUrl ? (
+          <Image
+            src={user.avatarUrl}
+            alt=""
+            width={32}
+            height={32}
+            className="size-8 shrink-0 rounded-full object-cover"
+          />
+        ) : (
+          <span
+            aria-hidden
+            className="flex size-8 shrink-0 items-center justify-center rounded-full bg-[var(--color-cosmic-navy)] text-xs font-semibold text-[var(--color-warm-ivory)]"
+          >
+            {initials(user.name ?? user.email)}
+          </span>
+        )}
         <div className="min-w-0 flex-1">
           <p className="truncate text-sm text-[var(--color-cosmic-navy)]">{user.name ?? 'Your account'}</p>
           <p className="truncate text-xs text-[var(--color-on-surface-variant)]">{user.email}</p>
@@ -131,12 +142,22 @@ export function AppShell({
       <aside className="hidden w-72 shrink-0 flex-col border-r border-[color-mix(in_srgb,var(--color-muted-gold)_20%,transparent)] bg-[var(--color-warm-ivory)] lg:sticky lg:top-0 lg:flex lg:h-dvh">
         <div className="px-6 pb-8 pt-10 text-center">
           <Link href="/" className="inline-block">
-            <span
-              aria-hidden
-              className="mx-auto flex size-20 items-center justify-center rounded-full border border-[color-mix(in_srgb,var(--color-muted-gold)_35%,transparent)] bg-[var(--color-linen-grey)] font-[family-name:var(--font-display)] text-2xl text-[var(--color-cosmic-navy)]"
-            >
-              {initials(user.name ?? user.email)}
-            </span>
+            {user.avatarUrl ? (
+              <Image
+                src={user.avatarUrl}
+                alt=""
+                width={80}
+                height={80}
+                className="mx-auto size-20 rounded-full border border-[color-mix(in_srgb,var(--color-muted-gold)_35%,transparent)] object-cover"
+              />
+            ) : (
+              <span
+                aria-hidden
+                className="mx-auto flex size-20 items-center justify-center rounded-full border border-[color-mix(in_srgb,var(--color-muted-gold)_35%,transparent)] bg-[var(--color-linen-grey)] font-[family-name:var(--font-display)] text-2xl text-[var(--color-cosmic-navy)]"
+              >
+                {initials(user.name ?? user.email)}
+              </span>
+            )}
             <span className="mt-5 block font-[family-name:var(--font-display)] text-2xl font-medium leading-tight text-[var(--color-cosmic-navy)]">
               {title}
             </span>
@@ -164,7 +185,8 @@ export function AppShell({
 
       {/* Mobile top bar */}
       <header className="sticky top-0 z-40 flex h-16 items-center justify-between border-b border-[color-mix(in_srgb,var(--color-muted-gold)_20%,transparent)] bg-[var(--color-warm-ivory)] px-6 lg:hidden">
-        <Link href="/" className="font-[family-name:var(--font-display)] text-xl font-medium text-[var(--color-cosmic-navy)]">
+        <Link href="/" className="flex items-center gap-2 font-[family-name:var(--font-display)] text-xl font-medium text-[var(--color-cosmic-navy)]">
+          <Image src="/images/favicon.png" alt="" width={28} height={28} className="size-7" />
           {BRAND.name}
         </Link>
         <button

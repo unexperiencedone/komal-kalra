@@ -32,14 +32,18 @@ type Payload = {
   };
 };
 
+// Emails have no access to /public — the logo needs an absolute URL a mail
+// client can actually fetch, not a path relative to this server.
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000';
+
 const wrap = (title: string, body: string) => `
 <!doctype html>
 <html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width">
 <title>${title}</title></head>
 <body style="margin:0;padding:24px;background:#FAF7F2;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;color:#14100E;">
   <div style="max-width:560px;margin:0 auto;background:#fff;border:1px solid #F1EAE0;border-radius:12px;overflow:hidden;">
-    <div style="padding:24px 28px;border-bottom:1px solid #F1EAE0;">
-      <div style="font-size:17px;font-weight:600;letter-spacing:-0.01em;">${BRAND.fullName}</div>
+    <div style="padding:20px 28px;border-bottom:1px solid #F1EAE0;">
+      <img src="${siteUrl}/images/logo.jpg" alt="${BRAND.fullName}" height="44" style="height:44px;width:auto;display:block;" />
     </div>
     <div style="padding:28px;font-size:15px;line-height:1.6;">${body}</div>
     <div style="padding:20px 28px;background:#FAF7F2;font-size:13px;color:#3D332C;line-height:1.6;">
