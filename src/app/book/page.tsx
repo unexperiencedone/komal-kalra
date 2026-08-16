@@ -47,7 +47,7 @@ export default async function BookPage(props: {
         <div className="shell flex h-20 items-center justify-between">
           <Link
             href="/"
-            className="flex items-center gap-2.5 font-[family-name:var(--font-display)] text-2xl font-medium tracking-tight text-[var(--color-cosmic-navy)]"
+            className="flex items-center gap-2.5 font-[family-name:var(--font-display)] text-lg font-medium tracking-tight text-[var(--color-cosmic-navy)] sm:text-2xl"
           >
             <Image src="/images/favicon.png" alt="" width={32} height={32} className="size-8" />
             {BRAND.name}

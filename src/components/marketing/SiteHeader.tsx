@@ -42,7 +42,11 @@ export function SiteHeader({ signedIn = false }: { signedIn?: boolean }) {
       <div className="shell flex h-20 items-center justify-between">
         <Link
           href="/"
-          className="flex items-center gap-2.5 font-[family-name:var(--font-display)] text-2xl font-medium tracking-tight text-[var(--color-cosmic-navy)]"
+          /* text-lg below sm: the wordmark is now the full "Astrologer Komal
+             Kalra" (see BRAND in config.ts — Google's OAuth review requires a
+             single unambiguous name), which overflows a 320px bar at 24px
+             beside the mark and the menu button. */
+          className="flex items-center gap-2.5 font-[family-name:var(--font-display)] text-lg font-medium tracking-tight text-[var(--color-cosmic-navy)] sm:text-2xl"
         >
           <Image src="/images/favicon.png" alt="" width={36} height={36} className="size-9" priority />
           {BRAND.name}

@@ -2,8 +2,23 @@
  * Business constants. Safe to import from client components — nothing secret.
  */
 
+/**
+ * ⚠️ `name` and `fullName` MUST stay identical, and MUST match the "App name"
+ * field on the Google Cloud OAuth consent screen character for character.
+ *
+ * They used to differ — the wordmark said "Komal Kalra" while <title>,
+ * og:site_name and the schema.org Person all said "Astrologer Komal Kalra".
+ * Google's OAuth verification review rejected the app for exactly that:
+ *
+ *   "The app name 'Komal Kalra' configured for your OAuth consent screen
+ *    does not match the app name on your homepage."
+ *
+ * A reviewer reads the homepage and compares one string. Two plausible names
+ * on one page is enough to fail. Both keys are kept only so existing call
+ * sites do not have to change; there is one name, and this is it.
+ */
 export const BRAND = {
-  name: 'Komal Kalra',
+  name: 'Astrologer Komal Kalra',
   fullName: 'Astrologer Komal Kalra',
   tagline: 'Find clarity. Choose your direction. Move forward with confidence.',
   phones: ['+91 98785 77077', '+91 91151 77077'],

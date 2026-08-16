@@ -202,6 +202,120 @@ attempts easier for users to spot.
 
 ---
 
+## Part 3 — Clearing a failed verification
+
+The first submission came back with three findings. Two are fixed in this
+repository; one cannot be, and needs you to buy a domain. Deal with them in the
+order below, because resubmitting before the domain is sorted just burns another
+review cycle.
+
+### Finding 1 — "The website of your homepage URL is not registered to you"
+
+> `https://komal-kalra.vercel.app/`
+
+**This is the blocker, and there is no code fix for it.**
+
+`vercel.app` is a shared domain owned by Vercel. Google requires the homepage to
+sit on a domain **you** own and have verified in Search Console, and the
+authorized-domains field wants the registrable domain — which here is
+`vercel.app`, not `komal-kalra.vercel.app`. You cannot prove ownership of a
+domain that belongs to somebody else, so no amount of meta-tag verification will
+satisfy this. The same rejection hits `*.web.app`, `*.netlify.app`,
+`*.github.io` and every other free hosting subdomain.
+
+Google's own guidance is to move to a domain you control, and Vercel supports
+that on the free tier.
+
+**What to do**
+
+1. **Register a domain.** `komalkalra.com` is the obvious one — the codebase
+   already assumes it, since `BRAND.email` is `consult@komalkalra.com`. Roughly
+   ₹900–1,200 a year.
+2. **Add it in Vercel** → Project → Settings → Domains. Point the registrar's
+   nameservers or add the A/CNAME records Vercel shows you. Certificates are
+   automatic.
+3. **Verify it in Google Search Console** as a *Domain* property (DNS TXT
+   record), not just a URL-prefix property. The DNS method is what Google Cloud
+   reads when it checks authorized domains.
+4. **Update the OAuth consent screen** → Branding:
+   - Application home page → `https://komalkalra.com`
+   - Privacy policy → `https://komalkalra.com/legal/privacy`
+   - Terms of service → `https://komalkalra.com/legal/terms`
+   - Authorised domains → `komalkalra.com`
+5. **Update the app's own configuration** — this is easy to forget and breaks
+   sign-in silently:
+   - `NEXT_PUBLIC_SITE_URL=https://komalkalra.com` in Vercel, then
+     **redeploy** (`NEXT_PUBLIC_` values are baked in at build time, so
+     changing the variable alone does nothing).
+   - Supabase → Authentication → URL Configuration → **Site URL** and add
+     `https://komalkalra.com/auth/callback` to **Redirect URLs**.
+   - Razorpay webhook URL, if it still points at the Vercel address.
+   - The Google client's **Authorised redirect URIs** stay unchanged — they
+     point at Supabase, not at your site. See Part 1.
+6. Keep the old `komal-kalra.vercel.app` URL working, but do **not** list it as
+   the homepage.
+
+> Google also requires the homepage URL to be **static** — it must not redirect
+> to another URL or domain. So set `komalkalra.com` (or `www.`, but pick one) as
+> the primary domain in Vercel and give Google whichever one serves a 200
+> directly, not the one that 308s across.
+
+### Finding 2 — "Your homepage does not explain the purpose of your app"
+
+**Fixed in this repository.** `src/components/marketing/PurposeStatement.tsx`
+renders an *About this service* section on the homepage covering what Google
+asks for:
+
+| Google's requirement | How it is met |
+|---|---|
+| Describes the app's functionality | Opens by naming the app and stating that it is the booking service for one-to-one consultations |
+| Explains why Google user data is requested | A dedicated block: name, email address and profile picture, and what each is used for |
+| States what is *not* accessed | Explicitly rules out Gmail, Drive, Contacts, Calendar and Photos, and posting on the user's behalf |
+| Links terms and privacy policy | Both linked inline, in addition to the footer |
+| Readable without signing in | Server-rendered on `/`, no auth check anywhere in the path |
+| Homepage is not just a login page | It never was — services, pricing, about and FAQ are all public |
+
+The important constraint on that component: **if a scope is ever added to
+`signInWithOAuth`, the disclosure has to change in the same commit.** An
+inaccurate scope disclosure is itself a rejection reason, and a stale one is
+worse than none. There is a note to that effect in the file.
+
+### Finding 3 — "The app name does not match the app name on your homepage"
+
+**Fixed in this repository.** The cause was two names for one business:
+`BRAND.name` was `Komal Kalra` and drove the header wordmark, while
+`BRAND.fullName` was `Astrologer Komal Kalra` and drove `<title>`,
+`og:site_name` and the schema.org `Person`. A reviewer comparing one string
+against a page showing two will fail it.
+
+Both keys are now `Astrologer Komal Kalra`, so the wordmark, the page title, the
+social metadata and the structured data all agree. The wordmark drops to 18px
+below the `sm` breakpoint, because the longer string overflowed a 320px bar.
+
+**Set the consent screen's App name to exactly `Astrologer Komal Kalra`** —
+character for character, no extra punctuation. If you ever change the business
+name, change `BRAND` in `src/lib/config.ts` and the console field together.
+
+### Resubmission checklist
+
+- [ ] Custom domain registered, live on Vercel, serving the homepage with a 200
+- [ ] Domain verified in Search Console as a **Domain** property
+- [ ] `NEXT_PUBLIC_SITE_URL` updated **and redeployed**
+- [ ] Supabase Site URL and Redirect URLs updated
+- [ ] Consent screen: app name `Astrologer Komal Kalra`, homepage, privacy,
+      terms and authorised domain all on the new domain
+- [ ] Logo uploaded (120×120 PNG)
+- [ ] Open the homepage in a private window and read it as a stranger: can you
+      tell what the app does and why it wants your Google account, without
+      signing in?
+- [ ] Resubmit
+
+Since this app only requests `openid`, `email` and `profile` — all
+non-sensitive — there is no security assessment and no restricted-scope review.
+Once the homepage findings clear, approval is normally quick.
+
+---
+
 ## What happens on first Google sign-in
 
 1. User clicks **Continue with Google** on `/login`.

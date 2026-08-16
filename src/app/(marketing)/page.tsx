@@ -12,6 +12,7 @@ import { PortraitFrame } from '@/components/marketing/PortraitFrame';
 import { FOUNDER } from '@/lib/content/founder';
 import { ScrollWatermark } from '@/components/common/ScrollWatermark';
 import { ServiceGrid } from '@/components/marketing/ServiceGrid';
+import { PurposeStatement } from '@/components/marketing/PurposeStatement';
 import { Testimonials } from '@/components/marketing/Testimonials';
 import { img } from '@/lib/content/imagery';
 import type { Testimonial } from '@/types/database';
@@ -308,6 +309,15 @@ export default async function HomePage() {
 
       {/* Additional approved reviews, if there are more than the featured one. */}
       <Testimonials testimonials={reviews.slice(1)} />
+
+      {/*
+        Plain-language statement of what this application is and what Google
+        sign-in accesses. Placed late — a prospective client does not need it
+        before the services — but it must be on the HOMEPAGE specifically, and
+        readable without signing in, because that is where Google's OAuth
+        reviewer looks. See the component for the rejection it answers.
+      */}
+      <PurposeStatement />
 
       {/* ============================ FINAL CTA ============================ */}
       <section className="band-navy py-[var(--spacing-section-md)]">
