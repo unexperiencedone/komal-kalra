@@ -55,7 +55,10 @@ export function ServiceCard({
   // wastes the portrait framing and leaves the card looking short), let it
   // grow to fill whatever height the row already has. This only works because
   // a neighbour in the row has an intrinsic (aspect-ratio) height to anchor
-  // to — don't apply this to a card that might end up alone in its row.
+  // to — so it's scoped to md+, where that bento row-sharing actually happens.
+  // Below md the grid collapses to one stacked column and Kundli Milan has no
+  // neighbour to borrow height from, so flex-1 with no fallback would collapse
+  // to zero — it needs the same fixed aspect ratio as every other card there.
   const fillImageHeight = service.slug === 'kundli-milan';
 
   return (
@@ -76,8 +79,8 @@ export function ServiceCard({
       {photo && (
         <div
           className={cn(
-            'relative w-full overflow-hidden',
-            fillImageHeight ? 'flex-1' : 'aspect-[16/10]',
+            'relative w-full overflow-hidden aspect-[16/10]',
+            fillImageHeight && 'md:aspect-auto md:flex-1',
           )}
         >
           <Image
@@ -90,7 +93,7 @@ export function ServiceCard({
         </div>
       )}
 
-      <div className={cn('flex flex-col justify-between p-8 sm:p-10', !fillImageHeight && 'flex-1')}>
+      <div className={cn('flex flex-1 flex-col justify-between p-8 sm:p-10', fillImageHeight && 'md:flex-none')}>
         <div>
           <Icon className="size-7 text-[var(--color-muted-gold)]" aria-hidden />
 
