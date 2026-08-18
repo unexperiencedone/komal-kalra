@@ -59,11 +59,16 @@ RLS) · Razorpay. It takes real money from real clients. It is not a template.
 8. **`npm run audit:contrast` must pass at every phase gate.** It reads tokens
    from `globals.css` and fails on any same-element pairing below WCAG AA.
 9. **`npx tsc --noEmit` and `npx next build` must pass at every phase gate.**
-10. **Do not delete or restructure the database.** Schema changes, if any, go in
+10. **Third-party API credentials are server-side only.** The Prokerala client
+    ID and secret must never reach the browser bundle. All calls go through
+    route handlers. Same rule that already applies to the Razorpay secret.
+11. **Do not delete or restructure the database.** Schema changes, if any, go in
     a new numbered file in `database/`, and must `alter table … add column if
     not exists` **before** any policy that references the new column. Getting
     this order wrong dropped the public read policy and emptied the site once
     already — `database/21_repair_services_policy.sql` documents it.
+12. **The free tools must not be added to `NOINDEX_PREFIXES`.** Those routes
+    exist to be found. Add them to `sitemap.ts` instead.
 
 ### Phases
 
@@ -238,31 +243,99 @@ nothing animates the LCP element above the fold.
 
 ---
 
+**Phase 11 — Calculators that need no API**
+
+Read §10 of the spec first. Build these four before touching any integration —
+they are pure arithmetic, cost nothing per call, cannot rate-limit, and they
+establish the tool-page pattern that phases 12–13 reuse.
+
+`/calculators/numerology` · `/calculators/name-number` ·
+`/calculators/lo-shu-grid` · `/calculators/flames`
+
+`src/lib/astrology/numerology.ts` — pure functions, no network, unit-tested.
+Digit reduction, Chaldean and Pythagorean letter values, Lo Shu grid placement.
+Label Flames honestly as a game, not astrology.
+
+Each route: inline form above the fold → loading state → result → contextual
+CTA into the paid consultation, plus 200–400 words of real explanatory copy
+beneath for indexing. Add all four to `sitemap.ts`. **Do not** add them to
+`NOINDEX_PREFIXES`.
+
+**Gate:** all checks, plus unit tests for the arithmetic.
+
+---
+
+**Phase 12 — Consent and lead capture**
+
+Before any tool collects a birth date. Spec §10.5.
+
+1. Consent checkbox on every tool form, linking the privacy policy. Model it on
+   the booking flow's `acceptTerms: z.literal(true)` — the **server** rejects a
+   submission without it. Not pre-ticked.
+2. New section in `src/lib/content/legal.ts` covering what the tools collect,
+   why, and retention. Then run `npm run legal:export` and commit the
+   regenerated markdown.
+3. Add a row to `docs/legal-compliance.md` §5.2.
+4. Marketing opt-in stays **separate and default-off**. Using a calculator is
+   consent to receive the result, not consent to be marketed to.
+5. Write into the existing `leads` table. It already has RLS.
+6. Make **phone optional** — their form requires it, which suppresses
+   completion. Email is enough to follow up.
+
+**Gate:** all checks. Confirm a submission without consent is rejected
+server-side, not just disabled in the UI.
+
+---
+
+**Phase 13 — Prokerala integration**
+
+Spec §10.2 and §10.3. Read both before writing code.
+
+1. `src/lib/astrology/provider.ts` — a provider interface, mirroring
+   `src/lib/payments/provider.ts`, so the vendor is swappable.
+2. `src/lib/astrology/prokerala.ts` — OAuth2 client-credentials, token cached
+   until expiry. **Server-side only.** Every call goes through a route handler
+   under `/api/astrology/*`. A client-side fetch would put the client secret in
+   the browser bundle.
+3. `database/23_astrology_cache.sql` — Postgres cache table. **`alter table …
+   add column if not exists` before any policy referencing a new column.**
+4. **Caching is the architecture, not an optimisation.** The free tier is 5,000
+   credits/month and a Panchang call costs 10. The Panchang widget is on the
+   homepage — uncached, that is 500 homepage views before the quota is gone and
+   the homepage starts erroring. Cache Panchang per `(date, city)` for 24 hours
+   and birth charts per `(date, time, lat, lng)` indefinitely. Cache in
+   Postgres, not memory: serverless instances do not share memory, so an
+   in-process cache multiplies calls rather than reducing them.
+5. Handle **429** explicitly with a real "busy, try again shortly" state. The
+   limit is 5 req/min. Do not retry in a tight loop.
+6. Every tool degrades gracefully. If the provider is down the page still
+   renders, explains itself, and offers the booking CTA.
+
+Then build: `/free-kundli`, `/kundli-matching`, `/panchang` and the homepage
+Panchang widget, `/calculators/moon-sign`, `/calculators/lagna`,
+`/calculators/nakshatra`, `/calculators/rahu-ketu`.
+
+**Gate:** all checks. Report the credit cost of one full page load of the
+homepage and of each tool, cold and warm.
+
+---
+
 ### Reporting
 
 After each phase, report: files changed, the three check results, and anything
 you chose to do differently from the spec with the reason. If a constraint
 blocks something the spec asks for, say so and stop — do not work around it.
 
-### Out of scope — do not build any of this
+### Out of scope
 
-**No free products.** No calculators, no free Kundli tool, no Kundli-matching
-tool, no Panchang widget, no horoscope pages, no numerology tools. Also no
-courses, no astrologer grid, no app-download band, no blog.
+Do not build: horoscope pages (daily/weekly/monthly/yearly), transit pages,
+planet pages, muhurat or festival pages, courses, an astrologer grid, an
+app-download band, or a blog.
 
-These are new products with real ongoing cost, not styling. A Kundli calculator
-needs an ephemeris and a maintained dataset. Horoscope pages need writing twelve
-times a month, forever. And a lead form collecting birth date, time, place,
-phone and email is a substantial personal-data collection under India's DPDP
-notice requirements — it would need its own consent surface and an entry in the
-privacy policy before it could ship.
-
-If you find yourself building a form that captures contact details in exchange
-for a generated result, stop. That is out of scope.
-
-**The one thing to take from those sections is the frame**, not the function:
-the chamfered `.notch-panel` shape (§9.5) is the site's most distinctive
-container and should be reused for panels that *do* have content — the pricing
-block, the contact form, the booking summary.
+All of those need prose written and re-written indefinitely. Generating them in
+bulk is what Google's scaled-content-abuse policy targets, and the penalty is
+site-wide — it would take the booking pages down with it. The free tools in
+phases 11–13 are in scope precisely because they are deterministic: the same
+inputs give the same correct answer forever, with no editorial upkeep.
 
 ---

@@ -195,20 +195,19 @@ Three mechanics are worth copying and one is not:
 is 13 indexable URLs against their 330. No palette change will fix that, and it
 is honestly the largest gap between the two sites — bigger than the visual one.
 
-**Decision: no free products in this refactor.** No calculators, no free
-Kundli tool, no Panchang, no horoscope pages. Those are new products with real
-ongoing cost — a Kundli calculator needs an ephemeris and a maintained
-dataset, horoscope pages need writing twelve times a month forever, and a lead
-form collecting birth date, time, place, phone and email is a substantial DPDP
-data-collection that would need its own consent notice and privacy-policy
-entry. Building them badly is worse than not building them.
+**Decision: build the free tools. Skip the horoscope pages.** Full spec in §10.
 
-The route count stays as it is. That is a deliberate trade, and worth naming
-plainly: this refactor changes how the site *looks and reads*, not how much
-traffic it can reach. If organic growth becomes the goal later, a `/blog` with
-posts Komal can write with real authority — what a chart reading actually
-involves, how to find an unknown birth time, what Mangal Dosha does and does
-not mean — is the cheapest honest starting point. It is out of scope here.
+The split is between content that is *deterministic* and content that needs
+*writing*. A Nakshatra calculator gives the same correct answer for the same
+birth details forever — build it once, it works for a decade. A daily horoscope
+for twelve signs needs fresh prose indefinitely, and the shortcut of generating
+it in bulk is precisely what Google's scaled-content-abuse policy targets, with
+a site-wide penalty that would take the booking pages down alongside it.
+
+So: 8 calculators, a free Kundli, Kundli Matching and a Panchang widget — yes.
+120 horoscope pages — not until there is someone to write them.
+
+Route count goes from 13 to roughly 25.
 
 ### 3.5 Tone of voice
 
@@ -385,7 +384,8 @@ until they are gone.
 | Long-form SEO prose | Yes — needs writing | Build |
 | FAQ per service | Yes — `/faq` content exists | Build |
 | Mega footer | Yes, at smaller scale | Build, 4 columns not 6 |
-| Free calculators, free Kundli tool, Panchang, horoscopes, courses, astrologer grid, app banner | **No such products, and out of scope by decision** | Do not build — §3.4 |
+| Free calculators, free Kundli, Kundli Matching, Panchang | Yes, once built | **Build — see §10** |
+| Horoscopes, transits, planets, muhurats, courses, astrologer grid, app banner | **No such products** | Do not build |
 | Newsletter capture in the footer | Yes — `leads` table exists | Build, wired to `leads`. Do not fake a subscription |
 
 ### 5.3 The one place placeholders are genuinely dangerous
@@ -452,9 +452,15 @@ told:
 | `src/app/(marketing)/services/[slug]/page.tsx` | Re-order to §3.2 |
 | `src/lib/content/questions.ts` | **New** — question card copy per service |
 | `scripts/audit-placeholders.js` | **New** — §5.1 |
+| `src/lib/astrology/{provider,prokerala,numerology,cache}.ts` | **New** — §10.2 |
+| `src/app/api/astrology/**` | **New** — server-only provider calls |
+| `src/app/(marketing)/calculators/**` | **New** — 8 routes, §10.1 |
+| `src/app/(marketing)/{free-kundli,kundli-matching,panchang}/` | **New** |
+| `database/23_astrology_cache.sql` | **New** — §10.3 |
+| `src/lib/content/legal.ts` | Add the free-tools data section, §10.5 |
 
 Untouched: everything under `src/lib/payments/`, `src/lib/supabase/`,
-`src/app/api/`, and `database/`.
+`src/app/api/payments/`, and the existing `database/` files.
 
 ---
 
@@ -477,6 +483,16 @@ audit will reject work built on unverified colours.
 Steps 1–8 are marketing surface. Step 9 is the one most likely to break
 something, because the booking flow contains the payment path — re-skin it,
 do not restructure it.
+
+Then the free tools, which are a build rather than a refactor:
+
+11. Calculators needing no API — numerology, name number, Lo Shu, Flames
+12. Consent and lead capture — **before** anything collects a birth date
+13. Prokerala integration → free Kundli, Kundli Matching, Panchang, and the
+    four ephemeris calculators
+
+Step 12 comes before step 13 deliberately. Building the consent surface after
+the tools that need it is how a tool ships collecting personal data without it.
 
 Motion is not a separate step. Each component gets its behaviour when it is
 built — see §9.
@@ -575,6 +591,161 @@ panel must not lose its background if the clip is unsupported.
    be readable at LCP, not fading in — fading in the largest text element is a
    direct Core Web Vitals cost.
 
+---
+
+## 10. Free tools
+
+The funnel's front door. Their free calculators are why ~95% of their URLs
+exist, and they are the one part of their marketing machine that transfers to a
+solo practice without any fabrication — a Nakshatra is a Nakshatra whether you
+have 51 years of legacy or none.
+
+### 10.1 What gets built
+
+| Route | Needs planetary data? | Notes |
+|---|---|---|
+| `/free-kundli` | Yes | Birth chart. The headline tool, and the main lead capture |
+| `/kundli-matching` | Yes | Guna Milan, 36 points. Second lead capture |
+| `/panchang` + homepage widget | Yes | **Cached — see §10.3, this one will eat the quota** |
+| `/calculators/moon-sign` | Yes | |
+| `/calculators/lagna` | Yes | |
+| `/calculators/nakshatra` | Yes | |
+| `/calculators/rahu-ketu` | Yes | |
+| `/calculators/numerology` | **No** | Pure arithmetic |
+| `/calculators/name-number` | **No** | Pure arithmetic |
+| `/calculators/lo-shu-grid` | **No** | Pure arithmetic |
+| `/calculators/flames` | **No** | A playground game, not astrology. Label it as such |
+
+**Four of the eleven need no API at all.** Numerology, name number, Lo Shu grid
+and Flames are deterministic arithmetic over a date or a name — Chaldean or
+Pythagorean letter values, digit reduction, grid placement. Build these first:
+they cost nothing per call, cannot rate-limit, cannot fail when a vendor has an
+outage, and they prove the whole page pattern before any integration exists.
+
+Not building: horoscopes (daily/weekly/monthly/yearly), transit pages, planet
+pages, muhurat pages, festivals. All editorial.
+
+### 10.2 Provider — Prokerala, behind an interface
+
+Free tier: **5,000 credits/month, 5 requests/minute**. Paid starts at ₹999/mo
+for 100K credits.
+
+Mirror the existing payments pattern — `src/lib/payments/provider.ts` already
+does exactly this — so the vendor is swappable:
+
+```
+src/lib/astrology/
+  provider.ts      interface: BirthChart, GunaMilan, Panchang, Nakshatra…
+  prokerala.ts     the implementation
+  numerology.ts    pure functions, no provider, no network
+  cache.ts         Postgres-backed, see 10.3
+```
+
+Non-negotiable: **the API credentials live server-side only.** Prokerala uses
+OAuth2 client-credentials; the token is fetched server-side, cached until
+expiry, and never reaches the browser. Every call goes through a route handler
+under `/api/astrology/*`. A client-side fetch to Prokerala would put the client
+secret in the bundle.
+
+### 10.3 The credit budget — read this before building the Panchang
+
+This is the constraint that decides the architecture, and it is easy to miss
+until the quota is gone.
+
+| Call | Credits |
+|---|---|
+| Panchang | 10 |
+| Birth chart | 50 |
+| Mangal Dosha | 30 |
+| Full Kundli | 50–300 |
+
+The Panchang widget sits **on the homepage**. At 10 credits per call, an
+uncached implementation burns the entire monthly free tier in **500 homepage
+views** — about two weeks of modest traffic, after which the homepage renders
+an error.
+
+So:
+
+- **Panchang is cached per `(date, city)`,** server-side, for 24 hours. One call
+  per city per day. Twelve cities is 3,600 credits a year, not a month.
+- **Birth charts are cached per `(date, time, lat, lng)`.** The same birth
+  details always produce the same chart — a cache miss should be genuinely rare
+  after a few weeks.
+- **The 5 req/min ceiling is low.** Handle 429 explicitly with a real "busy,
+  try again in a moment" state. Do not retry in a tight loop; that is how a rate
+  limit becomes a ban.
+- **Every tool degrades gracefully.** If the provider is down, the page still
+  renders, explains itself, and offers the booking CTA. A blank error page on
+  the highest-traffic route is worse than no tool.
+
+Cache lives in Postgres (`database/23_astrology_cache.sql`), not in memory —
+serverless instances do not share memory, so an in-process cache multiplies
+calls by the number of running instances rather than reducing them.
+
+### 10.4 The interaction
+
+Their sequence, which is the actual design:
+
+```
+inline form on the page (not behind a click)
+        ↓ submit
+   real loading state
+        ↓
+   result revealed
+        ↓
+   contextual CTA into the paid consultation
+```
+
+Two details worth copying exactly: the form is **inline and above the fold**,
+not gated behind a button, and the result page ends with a CTA that references
+what the tool just told you — not a generic "Book now".
+
+One correction to their version: their form marks **phone** required before
+returning anything. Make phone **optional**. A required phone number on a free
+tool measurably suppresses completion, and the email alone is enough to follow
+up. The tool's job is to be used.
+
+### 10.5 Consent — this part is not optional
+
+A form collecting **name, email, phone, date of birth, time of birth and place
+of birth** is a substantial personal-data collection under India's DPDP Act.
+Birth date-time-place is unusually identifying, and the current privacy policy
+already treats it carefully because the booking form asks for it.
+
+Required before these ship:
+
+1. **A consent checkbox on every tool form**, linking the privacy policy —
+   modelled on the booking flow's `acceptTerms: z.literal(true)`, which the
+   server rejects without. Not pre-ticked.
+2. **A new section in `src/lib/content/legal.ts`** covering what the free tools
+   collect, why, and how long it is kept. Then `npm run legal:export`.
+3. **A row added to `docs/legal-compliance.md` §5.2**, the table of where
+   consent is actually captured.
+4. **Marketing opt-in stays separate and default-off.** Using a calculator is
+   consent to receive the result, not consent to be marketed to. Conflating
+   those is exactly what the DPDP purpose-limitation provisions are about.
+5. **A retention period, and a job that honours it.** Storing birth details
+   indefinitely because the schema allows it is the failure mode here.
+
+Write into the existing `leads` table. It already exists and already has RLS.
+
+### 10.6 SEO — the reason these exist
+
+Each tool is its own indexable route with its own metadata, plus 200–400 words
+of genuine explanatory copy beneath the tool: what a Nakshatra is, why birth
+time matters, what Guna Milan actually measures. That prose is what ranks; the
+tool is what converts.
+
+Add every route to `sitemap.ts`. Note that `NOINDEX_PREFIXES` in
+`src/lib/config.ts` currently blocks `/book`, `/dashboard`, `/admin`, `/login`
+and `/auth` — the tool routes must **not** be added to it. These are the pages
+that are supposed to be found.
+
+---
+
 Sources: [astroarunpandit.org](https://astroarunpandit.org/) ·
 [Call consultation page](https://astroarunpandit.org/the-call-consultation/) ·
-[Refund policy](https://astroarunpandit.org/refund-policy/)
+[Refund policy](https://astroarunpandit.org/refund-policy/) ·
+[Prokerala API pricing](https://api.prokerala.com/pricing) ·
+[Prokerala API credits](https://api.prokerala.com/api-credits) ·
+[Swiss Ephemeris licensing](https://www.astro.com/swisseph/swephinfo_e.htm)
