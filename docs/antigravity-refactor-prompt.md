@@ -5,11 +5,9 @@ open and `docs/design-refactor.md` is present — the prompt refers to it rather
 than repeating it, which keeps the agent reading the spec instead of a summary
 of the spec.
 
-**Before you paste:** the prompt's very first task is to sample the real palette
-from the live site. That is deliberate. Every colour in the spec is derived, not
-measured, and a refactor built on guessed values will look like a poor
-imitation. If Antigravity cannot reach the site, do the sampling yourself with
-the DevTools colour picker and paste the hex values into Phase 1 before running.
+The palette is now read from screenshots of the live site and written into the
+prompt directly, so there is no sampling step. If a token looks subtly off once
+it is running in a browser, trust the browser and correct the token.
 
 ---
 
@@ -76,21 +74,25 @@ continuing.** Do not run phases in parallel.
 
 **Phase 1 — Palette**
 
-1. Open https://astroarunpandit.org/the-call-consultation/ and sample the real
-   colours: page background, primary CTA fill (and its gradient stops), heading
-   colour, body colour, footer background, badge fills, hairline/border colour.
-   Report the hex values you measured.
-2. Rewrite the `@theme` block in `src/app/globals.css` with those values,
-   keeping the naming shape in `docs/design-refactor.md` §4. Keep the fonts
-   (Cormorant Garamond + Inter).
-3. Saffron is a hard accent to make legible. You will need **at least three
-   weights** — a fill, a darker one for text on light grounds, a lighter one
-   for text on dark grounds. Do not use one saffron everywhere.
-4. Add radius and shadow scales; the old system's 0px-radius and no-shadow
-   rules are retired.
-5. Update the band classes. Note the comment above `.band-navy` about
+1. Replace the `@theme` block in `src/app/globals.css` with the token set in
+   `docs/design-refactor.md` §4. Use those hex values as given.
+2. **Keep 0px radius.** This is the correction that matters most — their cards
+   are square with a 1px gold hairline and a second inset rule, not rounded.
+   The existing sharp-corner discipline survives the palette change. §4 has the
+   full shape table.
+3. **Keep "no soft shadows".** The only shadow in the new system is a **hard
+   offset block** in a darker orange under primary CTAs. No blur.
+4. Add the `.notch-panel` clip-path utility from §9.5, with the
+   `@supports not (clip-path: …)` square fallback.
+5. Two accent weights are not interchangeable: `--color-saffron` (`#ee9a22`)
+   is for **fills and icons only** — it measures ~2.1:1 on cream and fails as
+   text. Any saffron *text* uses `--color-saffron-deep` (`#b5620a`). Their own
+   site gets this wrong in its display headings; do not copy the fault.
+6. Update the band classes. Note the comment above `.band-navy` about
    `background` shorthand versus `background-image` — that bug is documented
    there because it made body text invisible once. Preserve the structure.
+7. Consider swapping Inter for Poppins (§4, Typography). Keep Cormorant
+   Garamond for display.
 
 **Gate:** `npm run audit:contrast` passes · `npx tsc --noEmit` · `npx next build`
 
@@ -98,8 +100,16 @@ continuing.** Do not run phases in parallel.
 
 **Phase 2 — UI primitives**
 
-`button.tsx` (saffron gradient fills, rounded, working `onDark` variant against
-the new dark ground), `badge.tsx` (pills), `card.tsx`, `field.tsx`.
+- `button.tsx` — **primary**: square, vertical saffron→amber gradient, hard
+  offset shadow. **Secondary**: square, outlined, transparent fill (this is
+  what their in-card "Book Now" / "Calculate for Free →" buttons are).
+  **onDark**: must work against the terracotta band.
+- `badge.tsx` — **not pills.** Small plain text positioned top-right of a card,
+  no fill, no border.
+- `card.tsx` — square, 1px `--color-hairline` border, second rule inset a few
+  px. No shadow.
+- `field.tsx` — underlined inputs, not boxed. Their forms use a bottom rule
+  only, with the label above.
 
 **Gate:** all three checks.
 
@@ -121,10 +131,19 @@ the new dark ground), `badge.tsx` (pills), `card.tsx`, `field.tsx`.
 
 **Phase 4 — Header and footer**
 
-Two-row sticky nav (utility row above, main row below, utility row collapses on
-scroll). Four-column footer on the dark ground. Keep all four legal links in the
-footer — Razorpay's activation check crawls for them and Google's OAuth review
-needs privacy and terms reachable from every page.
+**Header** — single terracotta bar, wordmark centred, nav split left and right
+of it, filled saffron LOGIN button at the far right. White nav text on
+`--color-terracotta-lo`, not `--color-terracotta`, so it clears 4.5:1.
+
+**Footer** — centred logo and tagline at the top, then four columns, on a
+**terracotta vertical gradient** (`--color-footer-top` → `--color-footer-btm`).
+Not maroon. Include the newsletter email capture: underlined white input with
+an arrow submit. Wire it to the existing `leads` table or leave the form
+non-functional and clearly marked — do not fake a subscription.
+
+Keep all four legal links in the footer. Razorpay's activation check crawls for
+them, and Google's OAuth review needs privacy and terms reachable from every
+page.
 
 **Gate:** all checks.
 
@@ -225,10 +244,25 @@ After each phase, report: files changed, the three check results, and anything
 you chose to do differently from the spec with the reason. If a constraint
 blocks something the spec asks for, say so and stop — do not work around it.
 
-### Out of scope
+### Out of scope — do not build any of this
 
-Do not build: free calculators, Panchang, horoscope pages, courses, an
-astrologer grid, or a blog. Those are new products, not a refactor. §3.4 of the
-spec explains which are worth doing later and why.
+**No free products.** No calculators, no free Kundli tool, no Kundli-matching
+tool, no Panchang widget, no horoscope pages, no numerology tools. Also no
+courses, no astrologer grid, no app-download band, no blog.
+
+These are new products with real ongoing cost, not styling. A Kundli calculator
+needs an ephemeris and a maintained dataset. Horoscope pages need writing twelve
+times a month, forever. And a lead form collecting birth date, time, place,
+phone and email is a substantial personal-data collection under India's DPDP
+notice requirements — it would need its own consent surface and an entry in the
+privacy policy before it could ship.
+
+If you find yourself building a form that captures contact details in exchange
+for a generated result, stop. That is out of scope.
+
+**The one thing to take from those sections is the frame**, not the function:
+the chamfered `.notch-panel` shape (§9.5) is the site's most distinctive
+container and should be reused for panels that *do* have content — the pricing
+block, the contact form, the booking summary.
 
 ---

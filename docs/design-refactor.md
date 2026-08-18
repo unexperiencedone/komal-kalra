@@ -19,15 +19,16 @@ to the agent that does the work.
 | [The Call Consultation](https://astroarunpandit.org/the-call-consultation/) | Service detail page structure — this is the template worth copying |
 | [Refund Policy](https://astroarunpandit.org/refund-policy/) | Policy page presentation |
 
-**What could not be captured, and why it matters.** Exact hex values were not
-sampled. The Chrome extension was unreachable during this session, and their
-logo SVG returned empty over plain HTTP, so **every colour in §4 is derived
-from the visual family, not measured from their stylesheet.**
+**Screenshots supplied** covering the hero, the service grid with category
+tabs, the Kundli lead form, the free-calculator grid, the Panchang widget, the
+app band and the podcast band. §4 is read from those.
 
-That distinction is load-bearing. Do not treat §4 as ground truth. The first
-task in the refactor prompt is to open the live site and sample the real
-values, because a palette that is *approximately* someone else's brand looks
-like a bad photocopy rather than a deliberate choice.
+**Accuracy caveat, stated once.** Colours in §4 are eyedropped from PNG
+screenshots, not read from the stylesheet — the Chrome extension was
+unreachable and their logo SVG returned empty over HTTP. Expect each value to
+be within a point or two of the real one. That is close enough to build
+against, but if a token looks subtly off in the browser, trust the browser and
+correct the token rather than assuming the screenshot was right.
 
 ---
 
@@ -59,10 +60,11 @@ content behind it, §5 says so.
 ### 3.1 Homepage section order
 
 ```
-promo strip (seasonal campaign)
-sticky nav (utility row above, main row below)
-hero — campaign offer, single CTA, decorative chakra
-icon quick-access strip (7 circular icons)
+sticky nav — single terracotta row, centred wordmark, filled LOGIN at far right
+hero — terracotta band: eyebrow pill, serif headline, subhead, TWO CTAs
+       (filled primary + outlined secondary), portrait right on a line-art
+       zodiac wheel, carousel dots beneath — the hero is a slideshow
+icon quick-access strip — 6 square cream cards, circular outlined icons
 "Our Services" — category tabs + badged cards
 free-tool lead magnet (inline Kundli form)
 free calculators grid
@@ -193,18 +195,20 @@ Three mechanics are worth copying and one is not:
 is 13 indexable URLs against their 330. No palette change will fix that, and it
 is honestly the largest gap between the two sites — bigger than the visual one.
 
-Recommended route additions, in order of effort against return:
+**Decision: no free products in this refactor.** No calculators, no free
+Kundli tool, no Panchang, no horoscope pages. Those are new products with real
+ongoing cost — a Kundli calculator needs an ephemeris and a maintained
+dataset, horoscope pages need writing twelve times a month forever, and a lead
+form collecting birth date, time, place, phone and email is a substantial DPDP
+data-collection that would need its own consent notice and privacy-policy
+entry. Building them badly is worse than not building them.
 
-| New route | Why |
-|---|---|
-| `/blog/[slug]` + 6–10 posts | The only realistic organic growth path. Topics she can write with authority: what a Kundli reading actually involves, how to find your birth time, what Mangal Dosha does and does not mean |
-| `/free-kundli` | A genuine free tool that captures name/email/phone into `leads` — the table already exists |
-| `/horoscope/[sign]` | 12 pages, refreshed monthly. High effort to maintain honestly; only do it if she will actually write them |
-| `/services` category filter | Already have 4 services; tabs are marginal here |
-
-Be honest about the trade: the blog and the free tool are real work, not a
-refactor. They are listed here because "copy their marketing strategy" without
-them is copying the paint and not the engine.
+The route count stays as it is. That is a deliberate trade, and worth naming
+plainly: this refactor changes how the site *looks and reads*, not how much
+traffic it can reach. If organic growth becomes the goal later, a `/blog` with
+posts Komal can write with real authority — what a chart reading actually
+involves, how to find an unknown birth time, what Mangal Dosha does and does
+not mean — is the cheapest honest starting point. It is out of scope here.
 
 ### 3.5 Tone of voice
 
@@ -258,50 +262,85 @@ English".
 
 ## 4. The saffron token set
 
-⚠️ **Derived, not sampled.** Verify against the live site before committing —
-see §1.
-
 Replacing `@theme` in `src/app/globals.css`. The current Silent Luxury triad
 (Cosmic Navy / Warm Ivory / Muted Gold) is retired.
 
 ```css
 @theme {
-  /* Ground */
-  --color-deep-maroon:  #4a0e0e;   /* footer, inverted bands, headings on light */
-  --color-ink-black:    #1a0f0a;   /* body copy on light grounds                */
-  --color-cream:        #fff8ed;   /* the canvas — replaces warm-ivory          */
-  --color-sand:         #f7ecd9;   /* card fill — replaces linen-grey           */
+  /* --- Grounds ---------------------------------------------------------- */
+  --color-terracotta:   #ab6318;  /* nav + hero band — the signature colour   */
+  --color-terracotta-lo: #9a5814; /* same band where WHITE TEXT sits on it    */
+  --color-amber-band:   #c67f1c;  /* the brighter band (Kundli/Panchang)      */
+  --color-deep-maroon:  #6e2b13;  /* the app-download band only               */
+  /* Footer is NOT maroon — it is a terracotta gradient, top to bottom:       */
+  --color-footer-top:   #a35b13;
+  --color-footer-btm:   #bd7418;
+  --color-cream:        #fff7ec;  /* the page canvas                          */
+  --color-card-cream:   #fcebd1;  /* card fill — peachier than the canvas     */
 
-  /* Saffron, in three weights — same discipline as the three golds we had.
-     One saffron cannot serve both a cream ground and a maroon one.           */
-  --color-saffron:      #f28c1c;   /* fills, CTA gradients, decorative         */
-  --color-saffron-deep: #a33e00;   /* accent TEXT on cream and sand            */
-  --color-saffron-lift: #ffc46b;   /* accent TEXT and hairlines on maroon      */
+  /* --- Saffron in three weights ------------------------------------------
+     One saffron cannot serve a cream ground and a maroon one. This is the
+     same discipline the three golds had, for the same reason.               */
+  --color-saffron:      #ee9a22;  /* FILLS, gradients, icons — not text       */
+  --color-saffron-deep: #b5620a;  /* accent TEXT on cream (4.9:1)             */
+  --color-saffron-lift: #ffc04a;  /* accent TEXT + hairlines on maroon        */
 
-  --color-marigold:     #ffd24a;   /* highlights, badge fills, rule accents    */
-  --color-vermilion:    #c4341c;   /* urgency/offer badges only                */
+  /* --- Text -------------------------------------------------------------- */
+  --color-cocoa:        #6e3a11;  /* section headings on cream — 8.4:1        */
+  --color-card-title:   #8c4a12;  /* card headings on card-cream — 5.5:1      */
+  --color-body-warm:    #3d3226;  /* body copy on cream — 12.6:1              */
+
+  /* --- Lines and status --------------------------------------------------- */
+  --color-hairline:     #e9b96a;  /* the 1px card border, everywhere          */
+  --color-panchang-navy: #1f2b5e; /* the one cool colour on the whole site    */
+  --color-success:      #17753a;  /* "Auspicious (Shubh)" green               */
+  --color-whatsapp:     #25d366;  /* the float button — brand-locked          */
 }
 ```
 
-**Contrast — this is not optional.** `npm run audit:contrast` reads tokens
-directly from `globals.css` and fails the build on any same-element pairing
-below AA. Saffron is a genuinely difficult accent: `#f28c1c` on cream is around
-2.3:1, nowhere near the 4.5:1 needed for text. That is exactly why there are
-three weights. Expect the audit to catch several pairs on the first pass — it
-caught three real faults last time and every one was a visible bug.
+**Two real contrast faults on their site. Do not inherit them.**
 
-### What changes beyond colour
+1. **`#ee9a22` on cream is ~2.1:1.** They use it for the emphasised word in
+   display headings — "Free **Calculators**", "Make Them **Remember** You". That
+   fails AA even at large-text's relaxed 3:1. Use `--color-saffron-deep`
+   (`#b5620a`, ~4.9:1) for any saffron *text*; keep `#ee9a22` for fills and
+   icons where the 3:1 non-text threshold applies.
+2. **White on `#ab6318` is ~4.4:1** — just under the 4.5:1 body threshold. Fine
+   for the 18px+ nav, not fine for smaller text. `--color-terracotta-lo`
+   (`#9a5814`, ~5.2:1) exists for wherever small white text sits on the band.
 
-| Silent Luxury rule | Saffron replacement |
+`npm run audit:contrast` reads these tokens from `globals.css` and will catch
+both. It found three real faults on the last palette change and every one was a
+visible bug.
+
+### Shape language — I had this wrong before the screenshots
+
+The initial spec assumed a saffron theme meant rounded corners and soft
+shadows. **It does not.** Their cards are square, and the current 0px-radius
+discipline largely survives:
+
+| Element | What the screenshots show |
 |---|---|
-| 0px radius everywhere | 12–16px on cards and buttons; pills for badges |
-| No shadows — tonal layering only | Soft warm shadows return: `0 4px 20px rgba(74,14,14,.08)` |
-| Gold is accent, never fill | Saffron **fills**. CTAs become saffron→marigold gradients |
-| Cormorant Garamond display | Keep it. It reads as Indian-premium and is doing no harm |
-| Inter body | Keep it |
+| Service cards, calculator cards | **Square corners.** 1px `--color-hairline` border, with a second inset border a few px in — a double-rule frame |
+| Buttons *inside* cards ("Book Now", "Calculate for Free →") | Square, outlined, transparent fill — not filled buttons |
+| Primary CTAs ("Review my Soul Purpose", "Get My Kundli", "Download app") | Square, saffron→amber vertical gradient, with a **hard offset shadow** in a darker orange. Not a soft blur — a solid displaced block |
+| Feature cards (Kundli form, Panchang) | Square, but with **notched corner brackets** — chamfered `⟩ ⟨` cuts at the vertical mid-edges |
+| Badges ("1-on-1", "FREE", "India's No.1") | No pill, no fill. Small text, top-right corner of the card |
+| Icon medallions | Circles — outlined, not filled |
 
-Fonts stay. The pairing is not what makes the current site feel restrained —
-the palette, the sharp corners and the absent shadows are.
+So: **keep 0px radius**, keep the hairline discipline, add hard offset shadows
+on primary CTAs only, and add the corner-notch treatment as a `clip-path`
+utility for feature panels. The existing "no soft shadows" rule stays true.
+
+### Typography
+
+| | Their site | Ours | Action |
+|---|---|---|---|
+| Display | High-contrast transitional serif | Cormorant Garamond | **Keep.** Very close family |
+| Body | Geometric sans, single-storey `g`, wide apertures — reads as Poppins or similar | Inter | **Consider Poppins.** Inter is a neo-grotesque and noticeably tighter; Poppins is the closer match and is the more common choice on Indian consumer sites |
+
+Two-tone headings are a signature and cost nothing: dark `--color-cocoa` for
+the sentence, `--color-saffron-deep` for the emphasised word.
 
 ---
 
@@ -346,7 +385,8 @@ until they are gone.
 | Long-form SEO prose | Yes — needs writing | Build |
 | FAQ per service | Yes — `/faq` content exists | Build |
 | Mega footer | Yes, at smaller scale | Build, 4 columns not 6 |
-| Free calculators, Panchang, courses, astrologer grid, app banner | **No such products** | Do not build |
+| Free calculators, free Kundli tool, Panchang, horoscopes, courses, astrologer grid, app banner | **No such products, and out of scope by decision** | Do not build — §3.4 |
+| Newsletter capture in the footer | Yes — `leads` table exists | Build, wired to `leads`. Do not fake a subscription |
 
 ### 5.3 The one place placeholders are genuinely dangerous
 
@@ -401,7 +441,7 @@ told:
 | `src/components/ui/card.tsx` | Rounded, soft shadow |
 | `src/components/marketing/ServiceCard.tsx` | Badge slot, rounded media, gradient CTA |
 | `src/components/marketing/SiteHeader.tsx` | Two-row nav: utility row + main row |
-| `src/components/marketing/SiteFooter.tsx` | 4-column mega footer, maroon ground |
+| `src/components/marketing/SiteFooter.tsx` | Centred logo, 4 columns, terracotta **gradient** ground, newsletter input |
 | `src/components/marketing/LegalDocument.tsx` | Section index + numbered eyebrows |
 | `src/components/marketing/QuestionCards.tsx` | **New** — the problem cards, §3.2 |
 | `src/components/marketing/IncludesList.tsx` | **New** — checkmark list from `highlights` |
@@ -454,7 +494,7 @@ is different in kind.
 
 | Behaviour | Evidence | Implementation |
 |---|---|---|
-| **Sticky nav, two rows** | Utility row (Reports / Consultation / Horoscopes / Free Calculator) sits above the main row | `position: sticky`; collapse the utility row and shrink the wordmark past ~80px scroll |
+| **Sticky nav, single row, centred wordmark** | Nav splits left (Reports / Consultation / Horoscopes / Free Calculator, each with a dropdown caret) and right (Poojan / Courses / About / Contact / LOGIN) around a centred logo | `position: sticky`. Three-column grid, not flex-between — the wordmark must stay optically centred regardless of link count. Dropdowns open on hover **and** on focus, or keyboard users cannot reach them |
 | **Scroll-state nav** | Glass tint over content | Already have `.glass-nav`. Add a scrolled class toggled by an `IntersectionObserver` sentinel — not a scroll listener |
 | **Mobile drawer** | Separate mobile logo + long nav list in markup | Already built in `SiteHeader.tsx`. Keep the body-scroll lock |
 | **Section reveal on scroll** | Consistent across their pages | **Already built** — `Reveal.tsx`, IntersectionObserver, fires once then disconnects. Reuse it everywhere rather than adding a library |
@@ -493,30 +533,30 @@ reach a link inside one.
 | **Problem cards** | Photo with a `Shade.png` overlay layered on top | Image + gradient scrim; lift and brighten the scrim on hover. `@media (hover: hover)` only — a permanent hover state on touch is worse than none |
 | **Hero portrait "animated shade"** | `arunji-img` carries `title="adding shade"` | A moving gradient over the portrait. **Already have** `PortraitFrame.tsx` doing a settle-on-first-view; extend rather than replace |
 
-### 9.5 The calculator pattern
+### 9.5 The framed-panel treatment
 
-Their free tools are the funnel entry point, and the interaction is worth
-describing precisely because the *sequence* is the design:
+**Not building the calculators** (see §3.4) — but the *frame* around their
+Kundli and Panchang panels is the most distinctive shape on the site and is
+worth lifting for panels that do have content: the pricing block, the contact
+form, the booking summary.
 
+It is a square card with **chamfered notches at the vertical mid-edges** —
+`⟩` on the left, `⟨` on the right — sitting on a saturated amber band, with a
+1px gold inner rule inset a few pixels from the border.
+
+```css
+.notch-panel {
+  clip-path: polygon(
+    0 0, 100% 0, 100% 42%, calc(100% - 18px) 50%, 100% 58%,
+    100% 100%, 0 100%, 0 58%, 18px 50%, 0 42%
+  );
+}
 ```
-inline form (Name, Phone, Email, DOB, TOB, Place, Gender)
-        ↓ submit
-   loading state
-        ↓
-partial result revealed  →  gated CTA to the paid product
-```
 
-The form sits **inline in the page**, not behind a click, and it asks for phone
-and email before returning anything. If `/free-kundli` gets built, the
-mechanics that matter are: a real loading state, a result that arrives
-progressively rather than all at once, and a write into the existing `leads`
-table.
-
-One caution, since this is the funnel's front door: a form collecting birth
-date, time, place, phone and email is a substantial personal-data collection
-under the DPDP notice requirements. `docs/legal-compliance.md` §5.2 covers where
-consent is captured — a new lead-capture form needs adding to that table, and
-the privacy policy needs to mention it. Do not ship the tool without it.
+`clip-path` cuts the border off with the shape, so the gold rule has to be an
+inset child element rather than a `border` on the clipped box. Add
+`@supports not (clip-path: polygon(0 0))` falling back to a plain square — the
+panel must not lose its background if the clip is unsupported.
 
 ### 9.6 Motion rules that are not negotiable
 
