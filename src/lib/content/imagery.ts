@@ -30,8 +30,8 @@ export interface BrandImage {
 
 export const IMAGES = {
   heroImage: {
-    remote: '/images/heroImage.png',
-    local: '/images/heroImage.png',
+    remote: '/images/heroImage.webp',
+    local: '/images/heroImage.webp',
     alt:
       'Astrologer Komal Kalra, the portrait used on the home page hero.',
   },
@@ -45,28 +45,28 @@ export const IMAGES = {
   aboutStill: {
     remote:
       'https://lh3.googleusercontent.com/aida-public/AB6AXuDi7dnFcTB9ZrnQNYjE7FtldmoJa5Cp4qIuji9Fj2d1A3FZsPuFd0pjpMN9BDdCLEwl8V9khbhx8o1zABdf9S_g-K0g_O3S5JWw0TGehKvAv0FMTuRBCH9uC8R25mbkwl33Duh-1g0_n1YmsjZrX8VI_3uDStsVIpljIZ46PHsDuofXEmMw0CvqVobQXsuJuwEkud1DecYsgDABn7luWxJX1KRIqspunAha2BT9fvUjmf6pnfQ1CYDU',
-    local: '/images/aboutStill.png',
+    local: '/images/aboutStill.webp',
     alt:
       "A minimalist still-life composition featuring a smooth, polished stone resting on a pristine, textured linen surface. The lighting is soft and directional, casting long, elegant shadows. A single, delicate, dried botanical stem lies…",
   },
   journalCompass: {
     remote:
       'https://lh3.googleusercontent.com/aida-public/AB6AXuDA7otnExcjJnjKZrMUu7CNh4_mp2QHVAsqnrHs-1ryvIEMVrurgUXIkmjEIdcfwl_kUfFXAxABF8YwpAdeJAVZg9rnZ5JCxqlBcrd-vtusPjLFsghk5OYOtEnsSSuttHwDx3t9Yk7knQA7E6DDBLXLR7X-WfxUWMRS7Ek13BObRPVnIKJNmdZp5mkq1UGqJ_XyGaMghww9jLFi116WJ7ZAKIxTETEDq_VGockxtTuRg1HpxZEfgp9z',
-    local: '/images/journalCompass.png',
+    local: '/images/journalCompass.webp',
     alt:
       "A macro, detailed shot of an antique brass compass resting on top of complex architectural blueprints or minimalist architectural sketches. The lighting is crisp and moody, emphasizing the texture of the paper and the metallic sheen of…",
   },
   journalCandle: {
     remote:
       'https://lh3.googleusercontent.com/aida-public/AB6AXuB77C7NNiTexJbXHor4GfrTHlPLzL5J59xAT2sSN9ZTuZpM3untgw13M9MVI_WvMGm7cWomrdZsx8cRGG0lu_MvZRaYvMNSOtqxQufX_jjeQY4nnpyVCT5cEVK4BFRWsOiuPSRmyLaZGzz7D0lSWwSwYzGxwUKuGF6ydX_7GOSgqdsvo8pi1SgJYoe5QytaAot4DazLPJsxBNm2d-DTGtN6OlGQIM5kE5bDAIes5ZnaHty_P--_A31N',
-    local: '/images/journalCandle.png',
+    local: '/images/journalCandle.webp',
     alt:
       "A serene, minimalist scene of a single lit white candle in a heavy, dark ceramic holder, placed on a clean wooden desk beside an open, high-quality leather-bound journal and a luxury fountain pen. The overall aesthetic is dark academia…",
   },
   serviceAstrologicalGuidance: {
     remote:
       'https://lh3.googleusercontent.com/aida-public/AB6AXuAIwWf65E-H6pxKgXQQ0UDvE4KPbGy816r7G_fPYoWdAO_iZ2vixHBL8XUnOBSV06WnrtLar_CDRdNmAVUtpq_37qphszJG5UCt292Fm4xODpxHflkA0xNLoWr_Zil4KlCmdIDPiB8qfOWqjJ7twiwuBf8syp0_RPejTt2U0IPZTU6TLb9stF_H3HLxC_2zNYVBx_Ta_RZhi-WacfUy0NDKbkzYaBM8fQcDU3BD7KlzMfWWMw-uTNTD',
-    local: '/images/serviceAstrologicalGuidance.png',
+    local: '/images/serviceAstrologicalGuidance.webp',
     alt:
       "A sophisticated, high-end editorial photograph of an antique brass astrolabe resting on a dark walnut table. The lighting is moody and dramatic, with soft, warm golden light illuminating the intricate details of the instrument against a…",
   },
@@ -129,9 +129,96 @@ export const IMAGES = {
   practitionerPortrait: {
     remote:
       'https://lh3.googleusercontent.com/aida-public/AB6AXuAJKnKilXNrLb0npMP7-WtZWy5KjYefQWGvXlLvrVkzB1dreYLLYN0f0vJk9ie78sDjA6vQ0PpA2B1YCHZYU3gxoWG0LvOFIQlS5XJ_xf6gJRPGS25n0njcj7_vNQ0ztzVKo1YkJsdXc-uNcyjgdosmW0B6UwCCzHQRVV_OVUKcDwqyv3EZJAsqvNG8bVLnVaPcwtDchtJs5LBZxeWP-u39zV9MSwh0FgVbEECKZXWoWc5Dg1LXRA-d',
-    local: '/images/practitionerPortrait.jpg',
+    // Pointed at a practitionerPortrait file that has never existed on disk.
+    // Nothing referenced the key, so it stayed invisible until audit:images
+    // went looking. Uses the real portrait now.
+    local: '/images/komal_kalra.jpg',
     alt:
       "A professional, high-end portrait photograph of Astrologer Komal Kalra. She is dressed elegantly in subtle, warm earthy tones, looking directly at the camera with a calm, authoritative yet welcoming expression. The lighting is soft and…",
+  },
+  /* ---------------------------------------------------------------------
+     Flattened from the generated asset folders.
+
+     These arrived as fifteen DIRECTORIES under public/images, each holding a
+     screen.png. A directory cannot be served as an image, so every one of them
+     was unreachable — 15.2MB in the repo rendering nothing. Converted to WebP
+     (1.11MB total) and named for what they show rather than for the prompt
+     that produced them.
+     --------------------------------------------------------------------- */
+  panchangAlmanac: {
+    remote: '/images/panchangAlmanac.webp',
+    local: '/images/panchangAlmanac.webp',
+    alt: 'A traditional Indian panchang almanac open to a page of astrological tables.',
+  },
+  compassParchment: {
+    remote: '/images/compassParchment.webp',
+    local: '/images/compassParchment.webp',
+    alt: 'A gold-plated compass resting on aged parchment.',
+  },
+  healingCircle: {
+    remote: '/images/healingCircle.webp',
+    local: '/images/healingCircle.webp',
+    alt: 'A small group seated in a circle during a quiet healing session.',
+  },
+  gemstoneMacro: {
+    remote: '/images/gemstoneMacro.webp',
+    local: '/images/gemstoneMacro.webp',
+    alt: 'A macro photograph of a cut gemstone catching the light.',
+  },
+  astroToolsFlatlay: {
+    remote: '/images/astroToolsFlatlay.webp',
+    local: '/images/astroToolsFlatlay.webp',
+    alt: 'A flat lay of astrological tools: a brass pen and a leather-bound notebook.',
+  },
+  diyaLamp: {
+    remote: '/images/diyaLamp.webp',
+    local: '/images/diyaLamp.webp',
+    alt: 'A lit diya lamp resting on a stack of sacred texts.',
+  },
+  templeBellsBanner: {
+    remote: '/images/templeBellsBanner.webp',
+    local: '/images/templeBellsBanner.webp',
+    alt: 'Temple bells softly out of focus against a warm background.',
+  },
+  spiritualTexture: {
+    remote: '/images/spiritualTexture.webp',
+    local: '/images/spiritualTexture.webp',
+    alt: '',
+  },
+  astrologerEditorial: {
+    remote: '/images/astrologerEditorial.webp',
+    local: '/images/astrologerEditorial.webp',
+    alt: 'Editorial photograph of a Vedic astrologer at work.',
+  },
+  komalLifestyle: {
+    remote: '/images/komalLifestyle.webp',
+    local: '/images/komalLifestyle.webp',
+    alt: 'Komal Kalra in a calm, naturally lit interior.',
+  },
+  iconMoonSign: {
+    remote: '/images/icons/moonSign.webp',
+    local: '/images/icons/moonSign.webp',
+    alt: '',
+  },
+  iconNakshatra: {
+    remote: '/images/icons/nakshatra.webp',
+    local: '/images/icons/nakshatra.webp',
+    alt: '',
+  },
+  iconNumerology: {
+    remote: '/images/icons/numerology.webp',
+    local: '/images/icons/numerology.webp',
+    alt: '',
+  },
+  iconVedicChart: {
+    remote: '/images/icons/vedicChart.webp',
+    local: '/images/icons/vedicChart.webp',
+    alt: '',
+  },
+  iconCompatibility: {
+    remote: '/images/icons/compatibility.webp',
+    local: '/images/icons/compatibility.webp',
+    alt: '',
   },
   confirmationMandala: {
     remote:
@@ -144,75 +231,75 @@ export const IMAGES = {
     // Locally supplied, not from the Stitch set — `remote` mirrors `local` so
     // the USE_LOCAL_IMAGES switch and `npm run images:download` both stay
     // well-defined for this key rather than special-casing it.
-    remote: '/images/serviceContext.png',
-    local: '/images/serviceContext.png',
+    remote: '/images/serviceContext.webp',
+    local: '/images/serviceContext.webp',
     alt:
       "An open journal of handwritten astronomical notation, showing a star chart and compass rose, resting on linen beside a brass compass and reading glasses.",
   },
   contextImage: {
     // Locally supplied companion shot to serviceContext, same still-life set.
-    remote: '/images/contextImage.png',
-    local: '/images/contextImage.png',
+    remote: '/images/contextImage.webp',
+    local: '/images/contextImage.webp',
     alt:
       "A closer view of the same handwritten journal, open to a circular star chart labelled 'Astronomical notation', beside a brass compass and wooden-framed reading glasses on linen.",
   },
   doshaImage: {
-    remote: '/images/doshaImage.png',
-    local: '/images/doshaImage.png',
+    remote: '/images/doshaImage.webp',
+    local: '/images/doshaImage.webp',
     alt:
       "An antique brass balance scale on a wooden zodiac-wheel base labelled 'Dosha Review', weighing a dish of smooth stones against a dish holding a handwritten astrological chart.",
   },
   counselImage: {
-    remote: '/images/counselImage.png',
-    local: '/images/counselImage.png',
+    remote: '/images/counselImage.webp',
+    local: '/images/counselImage.webp',
     alt:
       "Two women in quiet conversation over tea at a candlelit wooden table, an open handwritten astrological journal between them, bookshelves in the background.",
   },
   positionImage: {
-    remote: '/images/positionImage.png',
-    local: '/images/positionImage.png',
+    remote: '/images/positionImage.webp',
+    local: '/images/positionImage.webp',
     alt:
       "A brass compass resting open on a handwritten astronomical log, beside a page of star charts, on a dark wooden desk.",
   },
   obstacleImage: {
-    remote: '/images/obstacleImage.png',
-    local: '/images/obstacleImage.png',
+    remote: '/images/obstacleImage.webp',
+    local: '/images/obstacleImage.webp',
     alt:
       "A single rough stone bound with fine copper wire, resting on linen in front of an open page of star-chart notation.",
   },
   stepImage: {
-    remote: '/images/stepImage.png',
-    local: '/images/stepImage.png',
+    remote: '/images/stepImage.webp',
+    local: '/images/stepImage.webp',
     alt:
       "A hand marking a point on a hand-drawn star chart with a fountain pen, a brass ruler laid across the page.",
   },
   astrologyGuidanceCardImage: {
-    remote: '/images/astrologyGuidanceCardImage.png',
-    local: '/images/astrologyGuidanceCardImage.png',
+    remote: '/images/astrologyGuidanceCardImage.webp',
+    local: '/images/astrologyGuidanceCardImage.webp',
     alt:
       "A polished black sphere resting on raked sand beside a dark ceramic bowl and a moss-covered stone.",
   },
   lifeCoachingCardImage: {
-    remote: '/images/lifeCounsellingcardImage.png',
-    local: '/images/lifeCounsellingcardImage.png',
+    remote: '/images/lifeCounsellingcardImage.webp',
+    local: '/images/lifeCounsellingcardImage.webp',
     alt:
       "Warm afternoon light passing through a glass vessel of water, casting long faceted shadows across a linen surface.",
   },
   healingCardImage: {
-    remote: '/images/healingCardImage.png',
-    local: '/images/healingCardImage.png',
+    remote: '/images/healingCardImage.webp',
+    local: '/images/healingCardImage.webp',
     alt:
       "A single water droplet suspended above concentric ripples at dusk, with the words 'Silent Luxury' beneath.",
   },
   counsellingCardImage: {
-    remote: '/images/counsellingCardImage.png',
-    local: '/images/counsellingCardImage.png',
+    remote: '/images/counsellingCardImage.webp',
+    local: '/images/counsellingCardImage.webp',
     alt:
       "A close, textural view of folded charcoal-grey wool with a single gold thread crossing its fold.",
   },
   kundliMilanCardImage: {
-    remote: '/images/kundliMilanCardImage.png',
-    local: '/images/kundliMilanCardImage.png',
+    remote: '/images/kundliMilanCardImage.webp',
+    local: '/images/kundliMilanCardImage.webp',
     alt:
       "Two small engraved celestial globes, one brass and one silver, resting on dark folded fabric and joined by a single beam of light.",
   },
@@ -226,14 +313,14 @@ export const IMAGES = {
       'Komal Kalra seated in a carved wooden chair, wearing a white floral-embroidered suit, in a warmly lit room with a table lamp behind her.',
   },
   signInImage: {
-    remote: '/images/signInImage.png',
-    local: '/images/signInImage.png',
+    remote: '/images/signInImage.webp',
+    local: '/images/signInImage.webp',
     alt:
       "A glass sphere reflecting a constellation, balanced on a stack of astronomical books tied with ribbon, against a dark blue and gold interior.",
   },
   createAccountImage: {
-    remote: '/images/createAccountImage.png',
-    local: '/images/createAccountImage.png',
+    remote: '/images/createAccountImage.webp',
+    local: '/images/createAccountImage.webp',
     alt:
       "A brass astrolabe resting on a hand-drawn birth chart beside a fountain pen, with leather-bound books in the background.",
   },

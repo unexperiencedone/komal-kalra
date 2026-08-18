@@ -13,8 +13,11 @@
   --color-on-saffron: #40220a;
   --color-amber-band:   #c67f1c;
   --color-deep-maroon:  #6e2b13;
-  --color-footer-top:   #a35b13;
-  --color-footer-btm:   #bd7418;
+  /* Deepens DOWNWARD. The reverse made the page step bright amber ->
+     dark -> light again at the very bottom, which looks like a mistake
+     rather than a close. */
+  --color-footer-top:   #9a5814;
+  --color-footer-btm:   #6b3a0c;
   --color-cream:        #fff7ec;
   --color-card-cream:   #fcebd1;
 
@@ -270,8 +273,13 @@
   .band-navy { background-color: var(--color-deep-maroon); color: var(--color-cream); }
   .band-navy h1, .band-navy h2, .band-navy h3 { color: var(--color-cream); }
 
+  /* Uses terracotta-LO deliberately. Every terracotta band carries white or
+     cream text, and white on the full #ab6318 measures 4.36:1 — under AA. The
+     darker step clears it, and it means the header, the hero scrim and every
+     page-header band are the same colour instead of three near-misses meeting
+     at hard lines. --color-terracotta stays for decorative, non-text use. */
   .band-terracotta {
-    background-color: var(--color-terracotta);
+    background-color: var(--color-terracotta-lo);
     color: #ffffff;
   }
   .band-terracotta h1, .band-terracotta h2, .band-terracotta h3 { color: #ffffff; }
@@ -374,21 +382,55 @@
     to   { background-position: -200% 0; }
   }
 
+  /* ======================================================================
+     .hero-scrim — the wash over the hero photograph.
+
+     Built from --color-terracotta-lo, NOT --color-terracotta, so the fully
+     opaque left edge is exactly the colour of the fixed header sitting above
+     it. Those were two different oranges meeting at a hard horizontal line
+     across the top of every page.
+
+     TWO gradients, layered:
+       1. a horizontal wash that carries the text side and releases the photo
+       2. a soft vertical fade at top and bottom so the image does not stop
+          against the header and the next band with a razor edge
+
+     The horizontal stops run 0 → 55 → 88% rather than 0 → 42 → 78%. The old
+     curve reached transparent while the photograph was still at full strength,
+     which reads as a seam rather than a fade. Ending later, with an eased
+     middle stop, makes the transition long enough that the eye cannot find
+     where it happens.
+     ====================================================================== */
   .hero-scrim {
-    background-image: linear-gradient(
-      to right,
-      var(--color-terracotta) 0%,
-      color-mix(in srgb, var(--color-terracotta) 82%, transparent) 42%,
-      transparent 78%
-    );
+    background-image:
+      linear-gradient(
+        to bottom,
+        color-mix(in srgb, var(--color-terracotta-lo) 55%, transparent) 0%,
+        transparent 22%,
+        transparent 82%,
+        color-mix(in srgb, var(--color-terracotta-lo) 40%, transparent) 100%
+      ),
+      linear-gradient(
+        to right,
+        var(--color-terracotta-lo) 0%,
+        var(--color-terracotta-lo) 26%,
+        color-mix(in srgb, var(--color-terracotta-lo) 78%, transparent) 55%,
+        color-mix(in srgb, var(--color-terracotta-lo) 32%, transparent) 74%,
+        transparent 88%
+      );
   }
+
+  /* Below md the headline sits over the middle of the frame, so the wash has
+     to run top-to-bottom instead — a horizontal fade would put the text on
+     the uncovered half. Kept dense enough throughout for white body copy. */
   @media (max-width: 767px) {
     .hero-scrim {
       background-image: linear-gradient(
         to bottom,
-        color-mix(in srgb, var(--color-terracotta) 88%, transparent) 0%,
-        color-mix(in srgb, var(--color-terracotta) 78%, transparent) 55%,
-        color-mix(in srgb, var(--color-terracotta) 94%, transparent) 100%
+        color-mix(in srgb, var(--color-terracotta-lo) 92%, transparent) 0%,
+        color-mix(in srgb, var(--color-terracotta-lo) 74%, transparent) 45%,
+        color-mix(in srgb, var(--color-terracotta-lo) 88%, transparent) 78%,
+        color-mix(in srgb, var(--color-terracotta-lo) 96%, transparent) 100%
       );
     }
   }

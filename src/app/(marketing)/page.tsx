@@ -93,7 +93,19 @@ export default async function HomePage() {
             sizes="100vw"
             className="object-cover opacity-60 mix-blend-multiply grayscale-[30%]"
           />
-          <div className="hero-scrim absolute inset-0 bg-gradient-to-r from-[var(--color-terracotta)]/80 to-transparent" aria-hidden />
+          {/*
+            ⚠️  NO `bg-gradient-to-*` UTILITY HERE. It used to carry
+            `bg-gradient-to-r from-…/80 to-transparent` ALONGSIDE .hero-scrim.
+            Both set `background-image`, the utility layer wins, and the
+            three-stop scrim was silently replaced by a crude two-stop ramp —
+            which is what put a hard vertical seam down the middle of the hero
+            where the orange stopped and the photograph started.
+
+            Same class of bug as the .band-navy one documented in globals.css:
+            two rules competing for one property, the more specific one winning
+            invisibly. If this hero needs a different fade, change .hero-scrim.
+          */}
+          <div className="hero-scrim absolute inset-0" aria-hidden />
         </div>
 
         <div className="shell relative z-10 grid w-full grid-cols-1 gap-[var(--spacing-gutter)] md:grid-cols-12">
