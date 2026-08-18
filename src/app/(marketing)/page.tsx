@@ -83,7 +83,13 @@ export default async function HomePage() {
       <ScrollWatermark />
 
       {/* ========================= HERO — cinematic ========================= */}
-      <section className="band-terracotta relative flex min-h-[calc(100svh-5rem)] items-center overflow-hidden py-20 md:min-h-[819px] md:py-[var(--spacing-section-md)]">
+      {/*
+        Heights subtract the header, which now sits in normal flow (sticky, not
+        fixed) — so the hero plus the header should come to one viewport, not
+        one viewport plus the header. 5rem is the single-row mobile bar; 8rem is
+        the two-row desktop one.
+      */}
+      <section className="band-terracotta relative flex min-h-[calc(100svh-5rem)] items-center overflow-hidden py-20 md:min-h-[calc(100svh-8rem)] md:py-[var(--spacing-section-md)]">
         <div className="absolute inset-0 z-0">
           <Image
             src={hero.src}

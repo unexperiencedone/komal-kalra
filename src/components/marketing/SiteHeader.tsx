@@ -90,7 +90,14 @@ export function SiteHeader({ signedIn = false }: { signedIn?: boolean }) {
   return (
     <header
       className={cn(
-        'fixed top-0 z-50 w-full border-b border-[color-mix(in_srgb,var(--color-cream)_22%,transparent)] bg-[var(--color-terracotta-lo)] text-[var(--color-cream)]',
+        // sticky, not fixed — see the note in (marketing)/layout.tsx. Fixed
+        // required a hardcoded pt- on <main> to compensate, and that padding
+        // showed the cream page background as a stripe under the header.
+        //
+        // No border-b either. Every page's first section is terracotta, the
+        // same value as this bar, so the two are meant to read as one block.
+        // A hairline there just reintroduces the seam in a subtler form.
+        'sticky top-0 z-50 w-full bg-[var(--color-terracotta-lo)] text-[var(--color-cream)]',
         'transition-transform duration-300 ease-out motion-reduce:transition-none',
         hidden ? '-translate-y-full' : 'translate-y-0',
       )}

@@ -403,10 +403,16 @@
      ====================================================================== */
   .hero-scrim {
     background-image:
+      /* Fully opaque for the first few percent so the top edge of the hero is
+         EXACTLY the header colour edge to edge, including over the photograph
+         on the right. Starting this at 55% left a lighter strip under the bar
+         that read as a seam. Fades out quickly after that. */
       linear-gradient(
         to bottom,
-        color-mix(in srgb, var(--color-terracotta-lo) 55%, transparent) 0%,
-        transparent 22%,
+        var(--color-terracotta-lo) 0%,
+        color-mix(in srgb, var(--color-terracotta-lo) 88%, transparent) 5%,
+        color-mix(in srgb, var(--color-terracotta-lo) 40%, transparent) 14%,
+        transparent 26%,
         transparent 82%,
         color-mix(in srgb, var(--color-terracotta-lo) 40%, transparent) 100%
       ),
