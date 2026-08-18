@@ -357,7 +357,7 @@ export function BookingFlow({
                       className={cn(
                         ' border p-4 text-left transition-colors',
                         s.id === serviceId
-                          ? 'border-[var(--color-muted-gold)] bg-[var(--color-linen-grey)]'
+                          ? 'border-[var(--color-saffron)] bg-[var(--color-cream)]'
                           : 'border-[var(--color-outline-variant)] bg-white hover:border-[var(--color-outline-variant)]',
                         // Internal rows reach this list only for admins, and
                         // only ever appended to it. Dashed, so it cannot be
@@ -365,7 +365,7 @@ export function BookingFlow({
                         s.internal && 'border-dashed',
                       )}
                     >
-                      <span className="block text-sm font-semibold text-[var(--color-cosmic-navy)]">
+                      <span className="block text-sm font-semibold text-[var(--color-cocoa)]">
                         {s.title}
                       </span>
                       {/*
@@ -374,11 +374,11 @@ export function BookingFlow({
                         the payment is genuine, only the amount is trivial.
                       */}
                       {s.internal && (
-                        <span className="mt-1.5 inline-block border border-[var(--color-outline-variant)] px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-[var(--color-on-surface-variant)]">
+                        <span className="mt-1.5 inline-block border border-[var(--color-outline-variant)] px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-[var(--color-body-warm)]">
                           Staff only · real payment
                         </span>
                       )}
-                      <span className="mt-1 block text-xs text-[var(--color-on-surface-variant)]">
+                      <span className="mt-1 block text-xs text-[var(--color-body-warm)]">
                         {s.duration_minutes} min · {formatPaise(s.price_paise)}
                       </span>
                     </button>
@@ -421,7 +421,7 @@ export function BookingFlow({
               <button
                 type="button"
                 onClick={() => void releaseAndGoBack()}
-                className="mb-5 inline-flex items-center gap-1.5 text-sm font-medium text-[var(--color-on-surface-variant)] hover:text-[var(--color-cosmic-navy)]"
+                className="mb-5 inline-flex items-center gap-1.5 text-sm font-medium text-[var(--color-body-warm)] hover:text-[var(--color-cocoa)]"
               >
                 <ArrowLeft className="size-3.5" aria-hidden /> Choose a different time
               </button>
@@ -450,7 +450,7 @@ export function BookingFlow({
 
                 <fieldset disabled={step === 'paying'} className="space-y-5  border border-[var(--color-outline-variant)] bg-white p-5">
                   <legend className="px-1.5 text-sm font-semibold">Birth details</legend>
-                  <p className="text-xs leading-relaxed text-[var(--color-on-surface-variant)]">
+                  <p className="text-xs leading-relaxed text-[var(--color-body-warm)]">
                     Optional, but the more Komal has beforehand the more useful the session
                     will be. These details are private and visible only to her.
                   </p>
@@ -509,11 +509,11 @@ export function BookingFlow({
                       label={
                         <>
                           I have read the{' '}
-                          <Link href="/legal/refunds" target="_blank" className="underline hover:text-[var(--color-gold-deep)]">
+                          <Link href="/legal/refunds" target="_blank" className="underline hover:text-[var(--color-saffron-deep)]">
                             cancellation and refund policy
                           </Link>{' '}
                           and the{' '}
-                          <Link href="/legal/terms" target="_blank" className="underline hover:text-[var(--color-gold-deep)]">
+                          <Link href="/legal/terms" target="_blank" className="underline hover:text-[var(--color-saffron-deep)]">
                             terms of service
                           </Link>.
                         </>
@@ -538,7 +538,7 @@ export function BookingFlow({
                   {signedIn ? `Pay ${formatPaise(total)} securely` : 'Sign in to continue'}
                 </Button>
 
-                <p className="flex items-center justify-center gap-1.5 text-xs text-[var(--color-on-surface-variant)]">
+                <p className="flex items-center justify-center gap-1.5 text-xs text-[var(--color-body-warm)]">
                   <Lock className="size-3" aria-hidden />
                   Payment is processed by Razorpay. Your card details never reach our servers.
                 </p>
@@ -564,7 +564,7 @@ function EmptyServices() {
   return (
     <div className="border border-dashed border-[var(--color-outline-variant)] p-12 text-center">
       <p className="font-sans text-[15px] font-semibold">No consultations are open for booking</p>
-      <p className="mx-auto mt-2 max-w-sm text-sm leading-relaxed text-[var(--color-on-surface-variant)]">
+      <p className="mx-auto mt-2 max-w-sm text-sm leading-relaxed text-[var(--color-body-warm)]">
         Please call us and we will arrange a time directly.
       </p>
       <Button asChild variant="secondary" size="sm" className="mt-5">

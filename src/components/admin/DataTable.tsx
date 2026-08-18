@@ -36,7 +36,7 @@ export function Th({ children, className, align = 'left' }: {
     <th
       scope="col"
       className={cn(
-        'whitespace-nowrap border-b border-[var(--color-outline-variant)] bg-[var(--color-warm-ivory)] px-4 py-3 text-xs font-semibold uppercase tracking-[0.08em] text-[var(--color-on-surface-variant)]',
+        'whitespace-nowrap border-b border-[var(--color-outline-variant)] bg-[var(--color-card-cream)] px-4 py-3 text-xs font-semibold uppercase tracking-[0.08em] text-[var(--color-body-warm)]',
         align === 'right' ? 'text-right' : 'text-left',
         className,
       )}

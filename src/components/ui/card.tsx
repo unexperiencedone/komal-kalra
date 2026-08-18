@@ -12,7 +12,8 @@ export function Card({ className, ...props }: React.HTMLAttributes<HTMLDivElemen
   return (
     <div
       className={cn(
-        'border border-[color-mix(in_srgb,var(--color-muted-gold)_20%,transparent)] bg-[var(--color-surface-low)]',
+        'relative border border-[var(--color-hairline)] bg-[var(--color-card-cream)]',
+        'before:absolute before:inset-[4px] before:border before:border-[var(--color-hairline)] before:pointer-events-none',
         className,
       )}
       {...props}
@@ -27,14 +28,14 @@ export function CardHeader({ className, ...props }: React.HTMLAttributes<HTMLDiv
 export function CardTitle({ className, ...props }: React.HTMLAttributes<HTMLHeadingElement>) {
   return (
     <h3
-      className={cn('font-[family-name:var(--font-display)] text-xl font-medium text-[var(--color-cosmic-navy)]', className)}
+      className={cn('font-[family-name:var(--font-display)] text-xl font-medium text-[var(--color-terracotta)]', className)}
       {...props}
     />
   );
 }
 
 export function CardDescription({ className, ...props }: React.HTMLAttributes<HTMLParagraphElement>) {
-  return <p className={cn('text-sm leading-relaxed text-[var(--color-on-surface-variant)]', className)} {...props} />;
+  return <p className={cn('text-sm leading-relaxed text-[var(--color-body-warm)]', className)} {...props} />;
 }
 
 export function CardContent({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
@@ -58,11 +59,11 @@ export function SectionHeading({
   return (
     <div className={cn('max-w-2xl', className)}>
       {eyebrow && (
-        <p className={cn('label-caps', onDark ? 'text-[var(--color-gold-light)]' : 'text-[var(--color-gold-deep)]')}>
+        <p className={cn('label-caps', onDark ? 'text-[var(--color-saffron-lift)]' : 'text-[var(--color-saffron-deep)]')}>
           {eyebrow}
         </p>
       )}
-      <h2 className={cn('mt-4 text-[length:var(--text-h2)]', onDark && 'text-[var(--color-warm-ivory)]')}>
+      <h2 className={cn('mt-4 text-[length:var(--text-h2)]', onDark && 'text-[var(--color-card-cream)]')}>
         {title}
       </h2>
       <span className="gold-rule mt-6" aria-hidden />
@@ -70,7 +71,7 @@ export function SectionHeading({
         <p
           className={cn(
             'mt-6 text-base leading-relaxed',
-            onDark ? 'text-[var(--color-on-primary-container)]' : 'text-[var(--color-on-surface-variant)]',
+            onDark ? 'text-[var(--color-on-primary-container)]' : 'text-[var(--color-body-warm)]',
           )}
         >
           {description}

@@ -49,13 +49,13 @@ export default async function PaymentsPage() {
                     </p>
                     <PaymentStatusBadge status={p.status} />
                   </div>
-                  <p className="mt-1 text-xs text-[var(--color-on-surface-variant)]">
+                  <p className="mt-1 text-xs text-[var(--color-body-warm)]">
                     {formatDateTime(p.created_at)}
                     {p.appointments?.reference && ` · ${p.appointments.reference}`}
                     {p.method && ` · ${p.method.toUpperCase()}`}
                   </p>
                   {p.receipt_number && (
-                    <p className="mt-0.5 text-xs text-[var(--color-on-surface-variant)]">Receipt {p.receipt_number}</p>
+                    <p className="mt-0.5 text-xs text-[var(--color-body-warm)]">Receipt {p.receipt_number}</p>
                   )}
                   {p.status === 'failed' && p.error_description && (
                     <p className="mt-1.5 text-xs text-[var(--color-error)]">{p.error_description}</p>
@@ -67,14 +67,14 @@ export default async function PaymentsPage() {
                     {formatPaisePrecise(p.amount_paise)}
                   </p>
                   {p.amount_refunded_paise > 0 && (
-                    <p className="tabular mt-0.5 text-xs text-[var(--color-cosmic-navy)]">
+                    <p className="tabular mt-0.5 text-xs text-[var(--color-cocoa)]">
                       {formatPaisePrecise(p.amount_refunded_paise)} refunded
                     </p>
                   )}
                   {['paid', 'partially_refunded', 'refunded'].includes(p.status) && (
                     <Link
                       href={`/dashboard/payments/${p.id}/receipt`}
-                      className="mt-2 inline-flex items-center gap-1 text-xs font-medium text-[var(--color-gold-deep)] hover:underline"
+                      className="mt-2 inline-flex items-center gap-1 text-xs font-medium text-[var(--color-saffron-deep)] hover:underline"
                     >
                       <Download className="size-3" aria-hidden /> Receipt
                     </Link>

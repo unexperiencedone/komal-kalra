@@ -48,7 +48,7 @@ export function HoldTimer({
         'flex items-center gap-2  border px-3.5 py-2 text-sm',
         urgent
           ? 'border-[var(--color-warning)]/30 bg-[var(--color-warning-container)] text-[var(--color-warning)]'
-          : 'border-[var(--color-outline-variant)] bg-white text-[var(--color-on-surface-variant)]',
+          : 'border-[var(--color-outline-variant)] bg-white text-[var(--color-body-warm)]',
       )}
     >
       <Timer className="size-4 shrink-0" aria-hidden />

@@ -43,7 +43,7 @@ export function LoginExperience() {
       <div className="flex flex-col px-6 py-8 sm:px-12 lg:px-20">
         <Link
           href="/"
-          className="flex items-center gap-2.5 font-[family-name:var(--font-display)] text-lg font-medium tracking-tight text-[var(--color-cosmic-navy)] sm:text-2xl"
+          className="flex items-center gap-2.5 font-[family-name:var(--font-display)] text-lg font-medium tracking-tight text-[var(--color-cocoa)] sm:text-2xl"
         >
           <Image src="/images/favicon.png" alt="" width={32} height={32} className="size-8" />
           {BRAND.name}
@@ -57,7 +57,7 @@ export function LoginExperience() {
           </div>
         </main>
 
-        <p className="label-small flex items-center gap-2 text-[var(--color-on-surface-variant)]">
+        <p className="label-small flex items-center gap-2 text-[var(--color-body-warm)]">
           <Lock className="size-3" aria-hidden />
           Your details are encrypted in transit and never shared.
         </p>
@@ -76,10 +76,10 @@ export function LoginExperience() {
           sizes="50vw"
           className="object-cover grayscale-[20%]"
         />
-        <div className="absolute inset-0 bg-[var(--color-cosmic-navy)]/70" />
+        <div className="absolute inset-0 bg-[var(--color-cocoa)]/70" />
         <div className="relative flex h-full flex-col justify-end p-16">
           <span className="gold-rule" />
-          <blockquote className="mt-8 max-w-md font-[family-name:var(--font-display)] text-3xl leading-snug text-[var(--color-warm-ivory)]">
+          <blockquote className="mt-8 max-w-md font-[family-name:var(--font-display)] text-3xl leading-snug text-[var(--color-card-cream)]">
             {BRAND.tagline}
           </blockquote>
           <p className="mt-6 max-w-md text-base leading-relaxed text-[var(--color-on-primary-container)]">

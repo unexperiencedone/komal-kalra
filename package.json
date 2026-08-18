@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "audit:contrast": "python3 scripts/contrast-audit.py",
+    "audit:placeholders": "node scripts/audit-placeholders.js",
     "build": "next build",
     "dev": "next dev",
     "images:download": "node scripts/download-images.js",
@@ -11,7 +12,8 @@
     "lint": "eslint",
     "start": "next start",
     "typecheck": "tsc --noEmit",
-    "watermark:prepare": "node scripts/prepare-watermark.js"
+    "watermark:prepare": "node scripts/prepare-watermark.js",
+    "audit:bands": "node scripts/audit-bands.js"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.1",

@@ -34,7 +34,7 @@ export function Field({ label, htmlFor, error, hint, required, className, childr
     <div className={cn('space-y-2', className)}>
       <label
         htmlFor={htmlFor}
-        className="label-caps block text-[var(--color-on-surface-variant)]"
+        className="label-caps block text-[var(--color-body-warm)]"
       >
         {label}
         {required && <span className="ml-1 text-[var(--color-error)]" aria-hidden>*</span>}
@@ -42,7 +42,7 @@ export function Field({ label, htmlFor, error, hint, required, className, childr
       </label>
 
       {hint && (
-        <p id={hintId} className="text-xs leading-relaxed text-[var(--color-on-surface-variant)] opacity-80">
+        <p id={hintId} className="text-xs leading-relaxed text-[var(--color-body-warm)] opacity-80">
           {hint}
         </p>
       )}
@@ -65,28 +65,25 @@ export function Field({ label, htmlFor, error, hint, required, className, childr
 }
 
 const control =
-  'field-underline w-full px-0 py-2.5 text-base text-[var(--color-on-surface)] placeholder:text-[var(--color-outline)] disabled:cursor-not-allowed disabled:opacity-50 aria-[invalid=true]:border-b-[var(--color-error)]';
-
-/** Focus draws the full box — hence the horizontal padding on focus. */
-const focusBox = 'focus:px-3';
+  'field-underline w-full px-0 py-2.5 text-base text-[var(--color-body-warm)] placeholder:text-[var(--color-outline)] disabled:cursor-not-allowed disabled:opacity-50 aria-[invalid=true]:border-b-[var(--color-error)] bg-transparent';
 
 export const Input = React.forwardRef<HTMLInputElement, React.InputHTMLAttributes<HTMLInputElement>>(
   ({ className, ...props }, ref) => (
-    <input ref={ref} className={cn(control, focusBox, 'h-11', className)} {...props} />
+    <input ref={ref} className={cn(control, 'h-11', className)} {...props} />
   ),
 );
 Input.displayName = 'Input';
 
 export const Textarea = React.forwardRef<HTMLTextAreaElement, React.TextareaHTMLAttributes<HTMLTextAreaElement>>(
   ({ className, ...props }, ref) => (
-    <textarea ref={ref} className={cn(control, 'focus:px-3 min-h-28 resize-y leading-relaxed', className)} {...props} />
+    <textarea ref={ref} className={cn(control, 'min-h-28 resize-y leading-relaxed', className)} {...props} />
   ),
 );
 Textarea.displayName = 'Textarea';
 
 export const Select = React.forwardRef<HTMLSelectElement, React.SelectHTMLAttributes<HTMLSelectElement>>(
   ({ className, ...props }, ref) => (
-    <select ref={ref} className={cn(control, focusBox, 'h-11 pr-8', className)} {...props} />
+    <select ref={ref} className={cn(control, 'h-11 pr-8', className)} {...props} />
   ),
 );
 Select.displayName = 'Select';
@@ -97,13 +94,13 @@ export function Checkbox({
   return (
     <label
       htmlFor={id}
-      className={cn('flex cursor-pointer items-start gap-3 text-sm text-[var(--color-on-surface-variant)]', className)}
+      className={cn('flex cursor-pointer items-start gap-3 text-sm text-[var(--color-body-warm)]', className)}
     >
       {/* Square, like everything else. */}
       <input
         id={id}
         type="checkbox"
-        className="mt-0.5 size-4 shrink-0 cursor-pointer rounded-none border border-[var(--color-outline)] accent-[var(--color-cosmic-navy)]"
+        className="mt-0.5 size-4 shrink-0 cursor-pointer rounded-none border border-[var(--color-outline)] accent-[var(--color-terracotta)]"
         {...props}
       />
       <span className="leading-relaxed">{label}</span>

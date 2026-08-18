@@ -1,231 +1,131 @@
 @import "tailwindcss";
 
 /* ==========================================================================
-   DESIGN TOKENS — "Silent Luxury"
-
-   Taken directly from stitch_komal_kalra_brand_design_system/silent_luxury/
-   DESIGN.md and the seventeen screen files beside it. This replaces the
-   previous warm/saffron system wholesale.
-
-   The three defining rules of this system, all of which differ from what was
-   here before:
-
-     1. SHARP EDGES. Every button, input and card is 0px radius. The brief calls
-        this "precision, high-end tailoring, professional discipline". Only
-        avatars and the numbered step markers are circular.
-     2. NO SHADOWS. Depth comes from tonal layering (Ivory → Linen → Navy) and
-        1px hairline borders, not elevation. A drop shadow anywhere in this
-        system is a bug.
-     3. GOLD IS AN ACCENT, NEVER A FILL. Muted Gold appears as hairlines, small
-        icons, eyebrow labels and focus rings. Navy fills the buttons.
-
-   ACCESSIBILITY: every pairing below is measured, and `npm run audit:contrast`
-   enforces it. Note Muted Gold #a45f1e on Warm Ivory is 4.83:1 — it passes,
-   but only just, so it is never used below 12px.
+   DESIGN TOKENS — Saffron / Devotional
    ========================================================================== */
 
 @theme {
-  /* --- The prestige triad -------------------------------------------------
-     Cosmic Navy grounds and authorises. Warm Ivory is the canvas — softer than
-     pure white and the reason the whole thing reads expensive. Muted Gold is
-     the mark of quality, used sparingly.                                    */
+  /* --- Grounds ---------------------------------------------------------- */
+  --color-terracotta:   #ab6318;
+  --color-terracotta-lo: #9a5814;
+  /* Text on a saffron fill. Cocoa is only 4.08:1 there — it is a heading
+     colour for light grounds, not an on-accent colour. This is ~8:1. */
+  --color-on-saffron: #40220a;
+  --color-amber-band:   #c67f1c;
+  --color-deep-maroon:  #6e2b13;
+  --color-footer-top:   #a35b13;
+  --color-footer-btm:   #bd7418;
+  --color-cream:        #fff7ec;
+  --color-card-cream:   #fcebd1;
 
-  --color-cosmic-navy: #1a1f2c;   /* white on this = 16.5:1                  */
-  --color-ink-black: #17120e;     /* body copy; primary button hover         */
-  --color-primary: #030612;       /* deepest — footer, inverted panels       */
-  --color-warm-ivory: #fef9f2;    /* the canvas                              */
-  --color-linen-grey: #ece7e1;    /* editorial card fill                     */
-
-  /* --- Gold, in three measured weights -----------------------------------
-     One gold cannot serve every ground, and pretending otherwise is how the
-     accent ends up illegible. Measured:
-
-       muted-gold  on ivory  4.73:1  ✓ text ≥12px, icons, hairlines
-       muted-gold  on linen  4.03:1  ✗ TEXT — icons and rules only (≥3:1)
-       muted-gold  on navy   3.32:1  ✗ TEXT — hairlines and icons only
-       gold-deep   on ivory  6.18:1  ✓ | on linen 5.27:1  ✓
-       gold-light  on navy   8.58:1  ✓ | on ink   10.5:1  ✓
-
-     So: gold-deep for accent TEXT on light grounds, gold-light for accent
-     TEXT on dark grounds, muted-gold for the decorative work it was designed
-     for. The design file's own #fda861 is reused as gold-light.            */
-
-  --color-muted-gold: #a45f1e;    /* hairlines, icons, eyebrows on ivory     */
-  --color-gold-deep: #8e4e0b;     /* accent TEXT on ivory and linen          */
-  --color-gold-light: #fda861;    /* accent TEXT on navy and ink             */
-
-  /* --- Surfaces (tonal layering replaces elevation) ---------------------- */
-  --color-surface: #fdf9f2;
-  --color-surface-lowest: #ffffff;
-  --color-surface-low: #f8f3ec;
-  --color-surface-container: #f2ede6;
-  --color-surface-high: #ece8e1;
-  --color-surface-highest: #e6e2db;
-  --color-surface-dim: #ded9d3;
-  --color-inverse-surface: #32302c;
-  --color-inverse-on-surface: #f5f0e9;
+  /* --- Saffron in three weights ------------------------------------------ */
+  --color-saffron:      #ee9a22;
+  --color-saffron-deep: #b5620a;
+  --color-saffron-lift: #ffc04a;
 
   /* --- Text -------------------------------------------------------------- */
-  --color-on-surface: #1d1c18;          /* 15.6:1 on ivory                   */
-  --color-on-surface-variant: #45464c;  /*  8.3:1 on ivory — body copy       */
-  --color-outline: #76777c;             /*  3.9:1 — BORDERS ONLY, never text */
-  --color-outline-variant: #c6c6cc;
-  --color-on-primary: #ffffff;
-  --color-on-primary-container: #828697; /* muted copy on navy — 5.6:1       */
+  --color-cocoa:        #6e3a11;
+  --color-card-title:   #8c4a12;
+  --color-body-warm:    #3d3226;
 
-  /* --- Status -----------------------------------------------------------
-     Kept deliberately quiet. A booking system still needs to say "confirmed"
-     and "failed", but in this aesthetic those states are stated, not shouted. */
-  --color-error: #ba1a1a;
-  --color-error-container: #ffdad6;
-  --color-on-error-container: #93000a;
-  --color-success: #2f6b4a;
-  --color-success-container: #e8f3ec;
-  --color-warning: #7d5709;
-  --color-warning-container: #fbf2de;
+  /* --- Lines and status --------------------------------------------------- */
+  --color-hairline:     #e9b96a;
+  --color-panchang-navy: #1f2b5e;
+  --color-success:      #17753a;
+  --color-whatsapp:     #25d366;
 
-  /* --- Type -------------------------------------------------------------
-     Cormorant Garamond (display) + Inter (body/UI).
-     "Heritage meets modernity": a Garamond revival carrying the classical
-     register, against the most production-hardened UI sans available.
-     The fallback stack matters — Cormorant is a slow-loading display face, and
-     Georgia is the closest widely-installed old-style serif, so the swap is far
-     less jarring than falling back to a generic `serif`.
+  /* Compatibility aliases for shared authenticated/booking surfaces. */
+  --color-ink-black:    #6e2b13;
+  --color-surface:      #fff7ec;
+  --color-surface-lowest: #ffffff;
+  --color-outline-variant: #e9b96a;
+  --color-outline:      #e9b96a;
+  --color-on-primary-container: #fff7ec;
+  --color-warning:      #8c4a12;
+  --color-warning-container: #fcebd1;
+  --color-success-container: #e3f3e8;
 
-     Label Caps (12px/600, 0.12em tracking, uppercase Inter) remains the voice
-     for eyebrows, button labels and table headers.                          */
   --font-display: var(--font-cormorant), 'Cormorant Garamond', Garamond, Georgia, ui-serif, serif;
-  --font-sans: var(--font-inter), Inter, ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-sans: var(--font-poppins), Poppins, ui-sans-serif, system-ui, -apple-system, sans-serif;
 
-  /* Sizes nudged up ~8% from the Playfair scale. Cormorant has a notably
-     smaller x-height, so it reads smaller at an identical point size — setting
-     it at the old values would have quietly shrunk every heading on the site. */
-  --text-display-lg: clamp(2.75rem, 1.7rem + 4.4vw, 5rem);   /* 44 → 80 */
-  --text-h1: clamp(2.125rem, 1.55rem + 2.5vw, 3.25rem);      /* 34 → 52 */
-  --text-h2: clamp(1.875rem, 1.45rem + 1.8vw, 2.5rem);       /* 30 → 40 */
-  --text-h3: clamp(1.5rem, 1.3rem + 0.8vw, 1.75rem);         /* 24 → 28 */
+  --text-display-lg: clamp(2.75rem, 1.7rem + 4.4vw, 5rem);
+  --text-h1: clamp(2.125rem, 1.55rem + 2.5vw, 3.25rem);
+  --text-h2: clamp(1.875rem, 1.45rem + 1.8vw, 2.5rem);
+  --text-h3: clamp(1.5rem, 1.3rem + 0.8vw, 1.75rem);
 
-  /* --- Reading measure ---------------------------------------------------
-     Line length is the single most under-attended typographic variable. Below
-     about 45 characters the eye jumps lines too often; above about 80 it loses
-     its place on the return sweep. These are tokens rather than ad-hoc
-     `max-w-md` classes so long-form copy is consistent site-wide.
+  --measure: 68ch;
+  --measure-tight: 46ch;
+  --measure-wide: 78ch;
 
-     `ch` is the width of "0" in the current font, so these track the type size
-     automatically instead of needing a rem value per breakpoint.            */
-  --measure: 68ch;        /* body copy — the comfortable middle              */
-  --measure-tight: 46ch;  /* standfirsts and pull quotes, set larger          */
-  --measure-wide: 78ch;   /* dense reference copy: legal pages, FAQ answers   */
-
-  /* --- Spacing (fixed grid, generous margins) ---------------------------- */
   --spacing-gutter: 24px;
   --spacing-section-md: 80px;
   --spacing-section-lg: 120px;
   --container-max: 1280px;
 
-  /* --- Shape ------------------------------------------------------------
-     Zero. Not "small" — zero. Kept as tokens so the intent is explicit and a
-     future rounded corner has to argue with a named value.                  */
   --radius-control: 0px;
   --radius-card: 0px;
   --radius-panel: 0px;
+
+  --shadow-hard-offset: 4px 4px 0px 0px var(--color-saffron-deep);
 
   --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 @layer base {
-  /* Hairlines, not shadows. The default border is Muted Gold at 20% — the
-     single most characteristic detail of this system. */
   *,
   ::after,
   ::before,
   ::backdrop,
   ::file-selector-button {
-    border-color: color-mix(in srgb, var(--color-muted-gold) 20%, transparent);
+    border-color: var(--color-hairline);
   }
 
   html {
-    /*
-     * Deliberately NOT scroll-behavior: smooth. Next.js resets scroll to the
-     * top on every route change (e.g. clicking a service card), and a global
-     * smooth-scroll makes that reset visibly animate from wherever the old
-     * page was scrolled to — the page appears to slide up from the bottom
-     * instead of the new page simply starting at the top. The one same-page
-     * anchor link in this app (the "Skip to content" link in layout.tsx)
-     * reads better as an instant jump anyway, which is the accessibility
-     * convention for skip links.
-     */
     -webkit-text-size-adjust: 100%;
   }
 
   body {
-    background-color: var(--color-warm-ivory);
-    color: var(--color-on-surface);
+    background-color: var(--color-cream);
+    color: var(--color-body-warm);
     font-family: var(--font-sans);
     font-size: 16px;
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
-
-    /* Both faces are variable with an optical-size axis. `auto` lets the
-       browser pick the right optical master per size — Playfair's fine hairlines
-       at 72px are a different drawing from the same face at 20px, and without
-       this the large display type looks slightly coarse. */
     font-optical-sizing: auto;
-
-    /* Common ligatures and contextual alternates on, discretionary off. */
     font-variant-ligatures: common-ligatures contextual;
-
-    /* Pulls quotes and hyphens marginally into the gutter so the text edge
-       reads as optically straight. Supported in Safari; a no-op elsewhere. */
     hanging-punctuation: first last;
   }
 
   h1, h2, h3 {
     font-family: var(--font-display);
-    color: var(--color-cosmic-navy);
+    color: var(--color-cocoa);
     text-wrap: balance;
     font-optical-sizing: auto;
   }
 
-  /* Tracking is size-dependent, not a single global value. Large display type
-     needs negative tracking because the counters open up as the face scales;
-     smaller headings need close to none or they start to look loose. Applying
-     one letter-spacing to every heading is the most common way a good type
-     pairing ends up looking amateur. */
-  /* WEIGHT: Cormorant is drawn light. Playfair looked right at 500; Cormorant
-     needs 600 below roughly 32px or the strokes disappear against ivory.
-     TRACKING: an old-style face with this much contrast needs LESS negative
-     tracking than a Didone — the counters are already generous. Pulling it in
-     as hard as Playfair wanted would jam the thin strokes together. */
   h1 { font-weight: 600; letter-spacing: -0.015em; line-height: 1.05; }
   h2 { font-weight: 600; letter-spacing: -0.008em; line-height: 1.15; }
   h3 { font-weight: 600; letter-spacing: -0.004em; line-height: 1.25; }
 
   p { text-wrap: pretty; }
 
-  /* Prevent a one-word last line on short display headings. */
   h1, h2 { text-wrap: balance; }
 
-  /* Numerals in running prose should be proportional; only tabular contexts
-     (money columns, counters) opt into lining figures via `.tabular`. */
   b, strong { font-weight: 600; }
 
-  /* Focus ring transitions to Muted Gold, per the components spec. Square,
-     because everything in this system is square. */
   :focus-visible {
-    outline: 2px solid var(--color-muted-gold);
+    outline: 2px solid var(--color-saffron-deep);
     outline-offset: 2px;
     border-radius: 0;
   }
   :focus:not(:focus-visible) { outline: none; }
 
-  /* On navy grounds the gold ring loses contrast; use ivory instead. */
-  .on-dark :focus-visible { outline-color: var(--color-warm-ivory); }
+  .on-dark :focus-visible { outline-color: var(--color-cream); }
 
   .tabular { font-variant-numeric: tabular-nums; }
 
-  ::selection { background: var(--color-linen-grey); color: var(--color-cosmic-navy); }
+  ::selection { background: var(--color-card-cream); color: var(--color-cocoa); }
 }
 
 @layer components {
@@ -234,15 +134,12 @@
     left: -9999px;
     top: 0;
     z-index: 100;
-    background: var(--color-cosmic-navy);
-    color: var(--color-warm-ivory);
+    background: var(--color-terracotta);
+    color: var(--color-cream);
     padding: 0.75rem 1.25rem;
   }
   .skip-link:focus { left: 0; }
 
-  /* --- Editorial primitives ---------------------------------------------- */
-
-  /* Eyebrow: uppercase, wide-tracked, gold. Used above every section heading. */
   .label-caps {
     font-size: 12px;
     font-weight: 600;
@@ -257,60 +154,79 @@
     line-height: 1.2;
   }
 
-  /* --- Editorial prose ----------------------------------------------------
-     For long-form copy: the About biography, legal pages, service descriptions.
+  /* ======================================================================
+     .prose-editorial — long-form body copy.
 
-     Three things it fixes that ad-hoc utility classes were not:
-       1. MEASURE. Constrained to ~68 characters regardless of container width.
-       2. RHYTHM. Paragraph spacing set in `em` so it scales with the type size
-          rather than staying at a fixed 16px when the copy is set larger.
-       3. WIDOWS. `text-wrap: pretty` on every paragraph, not just the ones
-          someone remembered.                                                */
+     ⚠️  DO NOT reach for Tailwind's `prose` / `prose-headings:*` classes.
+     `@tailwindcss/typography` is NOT installed in this project. Those classes
+     silently do nothing, and because Preflight resets heading margins to 0,
+     the result is headings that sit flush against the paragraph above with no
+     spacing and no size difference — which is exactly how the homepage SEO
+     block shipped. Either install the plugin or use this. This is the choice.
+     ====================================================================== */
   .prose-editorial {
     max-width: var(--measure);
-    color: var(--color-on-surface-variant);
+    color: var(--color-body-warm);
   }
   .prose-editorial > * + * { margin-top: 1.15em; }
   .prose-editorial p { text-wrap: pretty; line-height: 1.65; }
-  .prose-editorial strong { color: var(--color-on-surface); font-weight: 600; }
+  .prose-editorial strong { color: var(--color-cocoa); font-weight: 600; }
 
-  /* Standfirst: the larger opening paragraph. Set tighter in measure because
-     it runs at a bigger size, and slightly tighter in tracking because Public
-     Sans opens up above 18px. */
+  .prose-editorial h2,
+  .prose-editorial h3 {
+    font-family: var(--font-display);
+    color: var(--color-cocoa);
+    line-height: 1.2;
+    text-wrap: balance;
+  }
+  .prose-editorial h2 {
+    font-size: clamp(1.375rem, 1.15rem + 0.85vw, 1.75rem);
+    font-weight: 600;
+    /* Asymmetric on purpose: a heading belongs to the text BELOW it, so the
+       space above must be clearly larger than the space below. Equal margins
+       are what make a run of Q&A read as undifferentiated soup. */
+    margin-top: 2.5em;
+    margin-bottom: 0.6em;
+  }
+  .prose-editorial h3 {
+    font-size: clamp(1.125rem, 1rem + 0.4vw, 1.3rem);
+    font-weight: 600;
+    margin-top: 2em;
+    margin-bottom: 0.5em;
+  }
+  /* `> * + *` above would otherwise add its own margin-top on top of these. */
+  .prose-editorial > h2 + *,
+  .prose-editorial > h3 + * { margin-top: 0; }
+  .prose-editorial > :first-child { margin-top: 0; }
+
   .standfirst {
     max-width: var(--measure-tight);
     font-size: clamp(1.125rem, 1rem + 0.5vw, 1.375rem);
     line-height: 1.5;
     letter-spacing: -0.011em;
-    color: var(--color-on-surface-variant);
+    color: var(--color-body-warm);
     text-wrap: pretty;
   }
 
-  /* Pull quote — Playfair, italic, hung off a gold rule. */
   .pull-quote {
     max-width: var(--measure-tight);
     font-family: var(--font-display);
-    /* Cormorant ships a true italic, so this is a real cut rather than a
-       slanted roman. At this size the difference is obvious. */
     font-size: clamp(1.5rem, 1.15rem + 1.3vw, 2.125rem);
     font-style: italic;
     font-weight: 500;
     line-height: 1.45;
     letter-spacing: -0.012em;
-    color: var(--color-cosmic-navy);
+    color: var(--color-cocoa);
     text-wrap: pretty;
   }
 
-  /* The 48px gold hairline that sits under a section heading. */
   .gold-rule {
     display: block;
     width: 3rem;
     height: 1px;
-    background: color-mix(in srgb, var(--color-muted-gold) 45%, transparent);
+    background: color-mix(in srgb, var(--color-hairline) 45%, transparent);
   }
 
-  /* Container: 1280px with 24px gutters rising to 48px on desktop, exactly as
-     the layout spec describes. */
   .shell {
     max-width: var(--container-max);
     margin-inline: auto;
@@ -318,80 +234,117 @@
   }
   @media (min-width: 768px) { .shell { padding-inline: 48px; } }
 
-  /* --- Section grounds ----------------------------------------------------
-     Tonal layering. Sections alternate between ivory, low and container tones;
-     navy is reserved for the footer and one or two high-impact panels.
+  /* ======================================================================
+     BANDS
 
-     NOTE: each band sets background-color ONLY. An earlier version of this
-     file used the `background` shorthand alongside a separate class that set
-     `background-image`, and the second class silently erased the first — the
-     section rendered with no ground and its light text became invisible. Keep
-     colour and image on separate properties.                                */
+     ⚠️  THE BUG THIS SOLVES — do not add another alias.
 
-  .band-ivory     { background-color: var(--color-warm-ivory); }
-  .band-surface   { background-color: var(--color-surface); }
-  .band-low       { background-color: var(--color-surface-low); }
-  .band-container { background-color: var(--color-surface-container); }
-  .band-linen     { background-color: var(--color-linen-grey); }
+     There used to be four class names for two actual colours:
+       .band-cream  .band-low  .band-ivory   → all resolved to --color-cream
+       .band-card-cream                       → --color-card-cream
 
-  .band-navy {
-    background-color: var(--color-cosmic-navy);
-    color: var(--color-on-primary-container);
+     Sections looked varied in the JSX and rendered as one continuous slab of
+     cream in the browser, because a different class name is not a different
+     colour. Five sections ran together on the homepage with no visible
+     boundary, and the closing CTA flowed straight into the footer since both
+     were terracotta.
+
+     There are now exactly FIVE tones, one class each, and a `+` sibling rule
+     below that draws a hairline whenever two of the same tone touch anyway.
+     That rule is a safety net, not permission — a page whose sections do not
+     alternate still reads as a slab, it just has a line in it.
+
+     Use <Band tone="…"> rather than these classes directly. It is typed, so a
+     tone that does not exist is a build error rather than a silent no-op.
+     ====================================================================== */
+
+  .band-cream { background-color: var(--color-cream); color: var(--color-body-warm); }
+  .band-sand  { background-color: var(--color-card-cream); color: var(--color-body-warm); }
+
+  /* Legacy aliases. Both resolve to sand, NOT cream — they used to duplicate
+     cream, which is what caused the slab. Kept so old markup keeps rendering
+     something distinguishable; new work uses <Band>. */
+  .band-card-cream { background-color: var(--color-card-cream); color: var(--color-body-warm); }
+  .band-low, .band-ivory { background-color: var(--color-card-cream); color: var(--color-body-warm); }
+
+  .band-navy { background-color: var(--color-deep-maroon); color: var(--color-cream); }
+  .band-navy h1, .band-navy h2, .band-navy h3 { color: var(--color-cream); }
+
+  .band-terracotta {
+    background-color: var(--color-terracotta);
+    color: #ffffff;
   }
-  .band-navy h1, .band-navy h2, .band-navy h3 { color: var(--color-warm-ivory); }
+  .band-terracotta h1, .band-terracotta h2, .band-terracotta h3 { color: #ffffff; }
 
-  .band-ink {
-    background-color: var(--color-primary);
-    color: var(--color-on-primary-container);
+  .band-amber {
+    background-color: var(--color-amber-band);
+    color: #ffffff;
   }
-  .band-ink h1, .band-ink h2, .band-ink h3 { color: var(--color-warm-ivory); }
+  .band-amber h1, .band-amber h2, .band-amber h3 { color: #ffffff; }
 
-  /* Glassmorphism — reserved for persistent navigation only, per the spec. */
+  .band-maroon {
+    background-color: var(--color-deep-maroon);
+    color: #ffffff;
+  }
+  .band-maroon h1, .band-maroon h2, .band-maroon h3 { color: #ffffff; }
+
+  /* --- Adjacency safety net --------------------------------------------
+     Two bands of the same tone touching get a hairline so the seam is at
+     least visible. Light tones get a warm gold rule; dark tones get a
+     translucent light one, since a gold hairline disappears on terracotta. */
+  .band-cream + .band-cream,
+  .band-sand + .band-sand,
+  .band-card-cream + .band-card-cream,
+  .band-low + .band-low,
+  .band-cream + .band-low,
+  .band-low + .band-cream {
+    border-top: 1px solid color-mix(in srgb, var(--color-hairline) 55%, transparent);
+  }
+  .band-terracotta + .band-terracotta,
+  .band-amber + .band-amber,
+  .band-maroon + .band-maroon {
+    border-top: 1px solid color-mix(in srgb, #ffffff 22%, transparent);
+  }
+
+  /* The footer is a terracotta gradient, so a terracotta band immediately
+     above it has no seam at all. Give that junction a real rule. */
+  .band-terracotta + footer,
+  .band-amber + footer,
+  .band-maroon + footer {
+    border-top: 1px solid color-mix(in srgb, #ffffff 25%, transparent);
+  }
+
   .glass-nav {
-    background-color: color-mix(in srgb, var(--color-warm-ivory) 92%, transparent);
+    background-color: color-mix(in srgb, var(--color-terracotta) 92%, transparent);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
   }
 
-  /* Editorial card: no shadow, defined by a tonal shift and a gold hairline. */
   .card-editorial {
-    background-color: var(--color-linen-grey);
-    border: 1px solid color-mix(in srgb, var(--color-muted-gold) 20%, transparent);
+    background-color: var(--color-card-cream);
+    border: 1px solid var(--color-hairline);
     transition: background-color 300ms var(--ease-out-quint),
                 border-color 300ms var(--ease-out-quint);
   }
   .card-editorial:hover {
-    background-color: var(--color-surface-container);
-    border-color: color-mix(in srgb, var(--color-muted-gold) 45%, transparent);
+    background-color: var(--color-cream);
+    border-color: var(--color-saffron-deep);
   }
 
-  /* Minimalist input: bottom rule only, becoming a full box on focus. */
   .field-underline {
     background: transparent;
     border: 1px solid transparent;
-    border-bottom-color: var(--color-outline-variant);
+    border-bottom-color: var(--color-saffron-deep);
     transition: border-color 200ms var(--ease-out-quint);
   }
-  .field-underline:hover { border-bottom-color: var(--color-outline); }
+  .field-underline:hover { border-bottom-color: var(--color-cocoa); }
   .field-underline:focus {
     outline: none;
-    border-color: var(--color-muted-gold);
+    border-color: var(--color-saffron);
   }
 }
 
 @layer utilities {
-  /* --- Scroll-scrubbed watermark ------------------------------------------
-     Native scroll-driven rotation. `scroll(root block)` ties the animation's
-     progress to the document scrollbar, so the mark turns as the page moves
-     with no JavaScript and no main-thread work.
-
-     `animation-range` is what makes the rate feel right: without it the whole
-     rotation is spread across the entire document, so a long page barely turns
-     and a short one whips round. Pinning the range to the document length and
-     using a large total rotation gives a steady, page-length-independent feel.
-
-     ScrollWatermark.tsx supplies a rAF fallback for browsers without support,
-     and skips attaching it entirely where this rule applies. */
   @supports (animation-timeline: scroll()) {
     .watermark-scrub {
       animation: watermark-rotate 1s linear both;
@@ -404,7 +357,6 @@
     to   { transform: rotate(160deg); }
   }
 
-  /* Entrance animation, matching the design files' fadeInUp. Fires once. */
   .reveal { opacity: 0; transform: translateY(20px); }
   .reveal.is-visible {
     opacity: 1;
@@ -413,7 +365,7 @@
   }
 
   .shimmer {
-    background: linear-gradient(90deg, var(--color-linen-grey) 25%, var(--color-surface-low) 50%, var(--color-linen-grey) 75%);
+    background: linear-gradient(90deg, var(--color-card-cream) 25%, var(--color-cream) 50%, var(--color-card-cream) 75%);
     background-size: 200% 100%;
     animation: shimmer 1.4s linear infinite;
   }
@@ -422,13 +374,11 @@
     to   { background-position: -200% 0; }
   }
 
-  /* The ivory scrim laid over the hero photograph so the headline stays
-     legible across the whole span. */
   .hero-scrim {
     background-image: linear-gradient(
       to right,
-      var(--color-warm-ivory) 0%,
-      color-mix(in srgb, var(--color-warm-ivory) 82%, transparent) 42%,
+      var(--color-terracotta) 0%,
+      color-mix(in srgb, var(--color-terracotta) 82%, transparent) 42%,
       transparent 78%
     );
   }
@@ -436,10 +386,23 @@
     .hero-scrim {
       background-image: linear-gradient(
         to bottom,
-        color-mix(in srgb, var(--color-warm-ivory) 88%, transparent) 0%,
-        color-mix(in srgb, var(--color-warm-ivory) 78%, transparent) 55%,
-        color-mix(in srgb, var(--color-warm-ivory) 94%, transparent) 100%
+        color-mix(in srgb, var(--color-terracotta) 88%, transparent) 0%,
+        color-mix(in srgb, var(--color-terracotta) 78%, transparent) 55%,
+        color-mix(in srgb, var(--color-terracotta) 94%, transparent) 100%
       );
+    }
+  }
+
+  /* --- The framed-panel treatment --- */
+  .notch-panel {
+    clip-path: polygon(
+      0 0, 100% 0, 100% 42%, calc(100% - 18px) 50%, 100% 58%,
+      100% 100%, 0 100%, 0 58%, 18px 50%, 0 42%
+    );
+  }
+  @supports not (clip-path: polygon(0 0)) {
+    .notch-panel {
+      border-radius: 0; /* square fallback */
     }
   }
 }
@@ -454,11 +417,6 @@
   }
   .reveal { opacity: 1; transform: none; }
 
-  /* The watermark holds still rather than snapping to its end rotation. A
-     slowly turning element in the periphery is a classic vestibular trigger,
-     and it carries no information, so stopping it loses nothing. `none` is
-     required because the blanket rule above only shortens animations — a
-     scroll-driven one has no duration to shorten. */
   .watermark-scrub {
     animation: none !important;
     transform: none !important;
@@ -468,5 +426,5 @@
 @media print {
   .no-print { display: none !important; }
   body { background: #fff; }
-  .band-navy, .band-ink { background: #fff !important; color: #000 !important; }
+  .band-terracotta, .band-amber, .band-maroon { background: #fff !important; color: #000 !important; }
 }

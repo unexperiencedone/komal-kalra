@@ -19,10 +19,10 @@ export default async function ServicesPage() {
 
   return (
     <>
-      <section className="band-low border-b border-[color-mix(in_srgb,var(--color-muted-gold)_15%,transparent)] py-[var(--spacing-section-md)]">
+      <section className="band-terracotta py-[var(--spacing-section-md)]">
         <div className="shell">
           <Reveal>
-            <p className="label-caps text-[var(--color-gold-deep)]">The Practice</p>
+            <p className="label-caps text-[var(--color-saffron-deep)]">The Practice</p>
             <h1 className="mt-4 max-w-3xl text-[length:var(--text-h1)]">Consultation Services</h1>
             <span className="gold-rule mt-6" aria-hidden />
             <p className="standfirst mt-6">
@@ -33,7 +33,7 @@ export default async function ServicesPage() {
         </div>
       </section>
 
-      <section className="band-ivory py-[var(--spacing-section-lg)]">
+      <section className="band-cream py-[var(--spacing-section-lg)]">
         <div className="shell">
           <ServiceGrid services={services} />
 
@@ -54,7 +54,7 @@ export default async function ServicesPage() {
                 </Button>
                 <a
                   href={`tel:${BRAND.phonesE164[0]}`}
-                  className="label-caps border-b border-[var(--color-gold-light)] pb-1 text-[var(--color-gold-light)] transition-opacity hover:opacity-80"
+                  className="label-caps border-b border-[var(--color-saffron-lift)] pb-1 text-[var(--color-saffron-lift)] transition-opacity hover:opacity-80"
                 >
                   Call {BRAND.phones[0]}
                 </a>

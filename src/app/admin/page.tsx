@@ -59,7 +59,7 @@ export default async function AdminOverviewPage() {
       {/* ---- Needs a decision ---- */}
       {actionCount > 0 && (
         <section aria-labelledby="actions-heading" className="mt-8">
-          <h2 id="actions-heading" className="flex items-center gap-2 font-sans text-sm font-semibold uppercase tracking-[0.1em] text-[var(--color-on-surface-variant)]">
+          <h2 id="actions-heading" className="flex items-center gap-2 font-sans text-sm font-semibold uppercase tracking-[0.1em] text-[var(--color-body-warm)]">
             <AlertTriangle className="size-3.5 text-[var(--color-warning)]" aria-hidden />
             Pending actions ({actionCount})
           </h2>
@@ -99,7 +99,7 @@ export default async function AdminOverviewPage() {
 
       {/* ---- Revenue ---- */}
       <section aria-labelledby="revenue-heading" className="mt-8">
-        <h2 id="revenue-heading" className="font-sans text-sm font-semibold uppercase tracking-[0.1em] text-[var(--color-on-surface-variant)]">
+        <h2 id="revenue-heading" className="font-sans text-sm font-semibold uppercase tracking-[0.1em] text-[var(--color-body-warm)]">
           Revenue
         </h2>
         <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -141,18 +141,18 @@ export default async function AdminOverviewPage() {
       <div className="mt-8 grid gap-6 lg:grid-cols-2">
         {/* ---- Today ---- */}
         <section aria-labelledby="today-heading">
-          <h2 id="today-heading" className="font-sans text-sm font-semibold uppercase tracking-[0.1em] text-[var(--color-on-surface-variant)]">
+          <h2 id="today-heading" className="font-sans text-sm font-semibold uppercase tracking-[0.1em] text-[var(--color-body-warm)]">
             Today&apos;s schedule
           </h2>
           {today.length > 0 ? (
             <ul className="mt-3 divide-y divide-[var(--color-outline-variant)]  border border-[var(--color-outline-variant)] bg-white">
               {today.map((a) => (
                 <li key={a.id}>
-                  <Link href={`/admin/appointments?ref=${a.reference}`} className="flex items-center gap-4 px-5 py-3.5 hover:bg-[var(--color-warm-ivory)]">
+                  <Link href={`/admin/appointments?ref=${a.reference}`} className="flex items-center gap-4 px-5 py-3.5 hover:bg-[var(--color-card-cream)]">
                     <span className="tabular w-16 shrink-0 text-sm font-semibold">{formatTime(a.starts_at)}</span>
                     <span className="min-w-0 flex-1">
                       <span className="block truncate text-sm font-medium">{a.profiles?.full_name ?? 'Client'}</span>
-                      <span className="block truncate text-xs text-[var(--color-on-surface-variant)]">{a.service_title_snapshot}</span>
+                      <span className="block truncate text-xs text-[var(--color-body-warm)]">{a.service_title_snapshot}</span>
                     </span>
                     <AppointmentStatusBadge status={a.status} />
                   </Link>
@@ -168,7 +168,7 @@ export default async function AdminOverviewPage() {
 
         {/* ---- Upcoming ---- */}
         <section aria-labelledby="upcoming-heading">
-          <h2 id="upcoming-heading" className="font-sans text-sm font-semibold uppercase tracking-[0.1em] text-[var(--color-on-surface-variant)]">
+          <h2 id="upcoming-heading" className="font-sans text-sm font-semibold uppercase tracking-[0.1em] text-[var(--color-body-warm)]">
             Coming up
           </h2>
           {upcoming.length > 0 ? (
@@ -177,11 +177,11 @@ export default async function AdminOverviewPage() {
                 <li key={a.id} className="flex items-center justify-between gap-4 px-5 py-3.5">
                   <div className="min-w-0">
                     <p className="truncate text-sm font-medium">{a.profiles?.full_name ?? 'Client'}</p>
-                    <p className="truncate text-xs text-[var(--color-on-surface-variant)]">
+                    <p className="truncate text-xs text-[var(--color-body-warm)]">
                       {a.service_title_snapshot} · {relativeTime(a.starts_at)}
                     </p>
                   </div>
-                  <span className="tabular shrink-0 text-xs text-[var(--color-on-surface-variant)]">
+                  <span className="tabular shrink-0 text-xs text-[var(--color-body-warm)]">
                     {formatDate(a.starts_at)}
                   </span>
                 </li>
@@ -206,14 +206,14 @@ function ActionTile({ count, label, detail, href, tone }: {
   const tones = {
     danger: 'border-[var(--color-error)]/30 bg-[var(--color-error-container)]',
     warning: 'border-[var(--color-warning)]/30 bg-[var(--color-warning-container)]',
-    accent: 'border-[var(--color-muted-gold)]/30 bg-[var(--color-linen-grey)]',
+    accent: 'border-[var(--color-saffron)]/30 bg-[var(--color-cream)]',
     neutral: 'border-[var(--color-outline-variant)] bg-white',
   };
   return (
     <Link href={href} className={`block  border p-4 transition-shadow hover: ${tones[tone]}`}>
       <p className="tabular font-[family-name:var(--font-display)] text-2xl font-semibold">{count}</p>
-      <p className="mt-1 text-sm font-semibold text-[var(--color-cosmic-navy)]">{label}</p>
-      <p className="mt-0.5 text-xs leading-relaxed text-[var(--color-on-surface-variant)]">{detail}</p>
+      <p className="mt-1 text-sm font-semibold text-[var(--color-cocoa)]">{label}</p>
+      <p className="mt-0.5 text-xs leading-relaxed text-[var(--color-body-warm)]">{detail}</p>
     </Link>
   );
 }

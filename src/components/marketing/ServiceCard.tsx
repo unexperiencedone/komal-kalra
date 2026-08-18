@@ -64,9 +64,10 @@ export function ServiceCard({
   return (
     <article
       className={cn(
-        'group relative flex h-full flex-col overflow-hidden border border-[color-mix(in_srgb,var(--color-muted-gold)_20%,transparent)] transition-colors duration-500',
-        tone === 'linen' ? 'bg-[var(--color-linen-grey)]' : 'bg-[var(--color-surface-high)]',
-        'hover:border-[color-mix(in_srgb,var(--color-muted-gold)_45%,transparent)] hover:bg-[var(--color-surface-container)]',
+        'group relative flex h-full flex-col overflow-hidden border border-[var(--color-hairline)] transition-colors duration-500',
+        'before:absolute before:inset-[4px] before:border before:border-[var(--color-hairline)] before:pointer-events-none before:z-10',
+        tone === 'linen' ? 'bg-[var(--color-card-cream)]' : 'bg-[var(--color-cream)]',
+        'hover:bg-[var(--color-card-cream)]',
         className,
       )}
     >
@@ -95,9 +96,9 @@ export function ServiceCard({
 
       <div className={cn('flex flex-1 flex-col justify-between p-8 sm:p-10', fillImageHeight && 'md:flex-none')}>
         <div>
-          <Icon className="size-7 text-[var(--color-muted-gold)]" aria-hidden />
+          <Icon className="size-7 text-[var(--color-saffron)]" aria-hidden />
 
-          <h3 className="mt-6 font-[family-name:var(--font-display)] text-2xl font-medium text-[var(--color-cosmic-navy)]">
+          <h3 className="mt-6 font-[family-name:var(--font-display)] text-2xl font-medium text-[var(--color-cocoa)]">
             {/* Stretched link: the whole tile is the target, but only the title
                 carries the accessible link name. */}
             <Link href={`/services/${service.slug}`} className="after:absolute after:inset-0 after:content-['']">
@@ -105,14 +106,14 @@ export function ServiceCard({
             </Link>
           </h3>
 
-          <p className="mt-3 max-w-lg text-base leading-relaxed text-[var(--color-on-surface-variant)]">
+          <p className="mt-3 max-w-lg text-base leading-relaxed text-[var(--color-body-warm)]">
             {service.tagline ?? service.description.slice(0, 140)}
           </p>
 
-          <dl className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2 text-[var(--color-on-surface-variant)]">
+          <dl className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2 text-[var(--color-body-warm)]">
             <div className="flex items-center gap-2">
               <dt className="sr-only">Duration</dt>
-              <Clock className="size-3.5 text-[var(--color-muted-gold)]" aria-hidden />
+              <Clock className="size-3.5 text-[var(--color-saffron)]" aria-hidden />
               <dd className="label-small">{service.duration_minutes} MIN</dd>
             </div>
             <div>
@@ -123,7 +124,7 @@ export function ServiceCard({
         </div>
 
         <div className="mt-10 flex items-end justify-between gap-4">
-          <span className="label-small tabular text-[var(--color-on-surface-variant)]">
+          <span className="label-small tabular text-[var(--color-body-warm)]">
             {index !== undefined && total !== undefined
               ? `${String(index + 1).padStart(2, '0')} / ${String(total).padStart(2, '0')}`
               : ''}
@@ -133,7 +134,7 @@ export function ServiceCard({
               target, so this is aria-hidden to avoid a duplicate tab stop. */}
           <span
             aria-hidden
-            className="label-caps border-b border-[var(--color-cosmic-navy)] pb-1 text-[var(--color-cosmic-navy)] transition-colors duration-300 group-hover:border-[var(--color-muted-gold)] group-hover:text-[var(--color-gold-deep)]"
+            className="label-caps border border-[var(--color-terracotta)] px-4 py-2 text-[var(--color-terracotta)] transition-colors duration-300 group-hover:bg-[var(--color-terracotta)] group-hover:text-white"
           >
             {service.bookable_online ? 'Explore' : 'Enquire'}
           </span>

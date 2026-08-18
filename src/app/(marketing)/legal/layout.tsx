@@ -16,15 +16,15 @@ export default function LegalLayout({ children }: { children: React.ReactNode })
 
         <nav
           aria-label="Other legal documents"
-          className="mt-20 border-t border-[color-mix(in_srgb,var(--color-muted-gold)_20%,transparent)] pt-10"
+          className="mt-20 border-t border-[var(--color-hairline)] pt-10"
         >
-          <p className="label-caps text-[var(--color-on-surface-variant)]">Also see</p>
+          <p className="label-caps text-[var(--color-body-warm)]">Also see</p>
           <ul className="mt-5 flex flex-wrap gap-x-8 gap-y-3">
             {LEGAL_INDEX.map((d) => (
               <li key={d.slug}>
                 <Link
                   href={`/legal/${d.slug}`}
-                  className="text-[15px] text-[var(--color-cosmic-navy)] underline decoration-1 underline-offset-4 transition-colors hover:text-[var(--color-gold-deep)]"
+                  className="text-[15px] text-[var(--color-cocoa)] underline decoration-1 underline-offset-4 transition-colors hover:text-[var(--color-saffron-deep)]"
                 >
                   {d.title}
                 </Link>
@@ -33,7 +33,7 @@ export default function LegalLayout({ children }: { children: React.ReactNode })
             <li>
               <Link
                 href="/contact"
-                className="text-[15px] text-[var(--color-cosmic-navy)] underline decoration-1 underline-offset-4 transition-colors hover:text-[var(--color-gold-deep)]"
+                className="text-[15px] text-[var(--color-cocoa)] underline decoration-1 underline-offset-4 transition-colors hover:text-[var(--color-saffron-deep)]"
               >
                 Contact us
               </Link>

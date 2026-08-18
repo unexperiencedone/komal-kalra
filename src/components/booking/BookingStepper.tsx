@@ -30,8 +30,8 @@ export function BookingStepper({ current }: { current: BookingStepName }) {
               className={cn(
                 'label-small flex size-7 shrink-0 items-center justify-center rounded-full border transition-colors',
                 done || active
-                  ? 'border-[var(--color-cosmic-navy)] bg-[var(--color-cosmic-navy)] text-[var(--color-warm-ivory)]'
-                  : 'border-[var(--color-outline-variant)] text-[var(--color-on-surface-variant)]',
+                  ? 'border-[var(--color-cocoa)] bg-[var(--color-cocoa)] text-[var(--color-card-cream)]'
+                  : 'border-[var(--color-outline-variant)] text-[var(--color-body-warm)]',
               )}
             >
               {i + 1}
@@ -40,8 +40,8 @@ export function BookingStepper({ current }: { current: BookingStepName }) {
               className={cn(
                 'label-caps whitespace-nowrap',
                 active
-                  ? 'text-[var(--color-cosmic-navy)]'
-                  : 'text-[var(--color-on-surface-variant)]',
+                  ? 'text-[var(--color-cocoa)]'
+                  : 'text-[var(--color-body-warm)]',
               )}
             >
               {step}
@@ -51,7 +51,7 @@ export function BookingStepper({ current }: { current: BookingStepName }) {
                 aria-hidden
                 className={cn(
                   'hidden h-px flex-1 sm:block',
-                  done ? 'bg-[var(--color-cosmic-navy)]' : 'bg-[var(--color-outline-variant)]',
+                  done ? 'bg-[var(--color-cocoa)]' : 'bg-[var(--color-outline-variant)]',
                 )}
               />
             )}

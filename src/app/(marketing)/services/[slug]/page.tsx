@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
-import { ArrowRight, CheckCircle2, Clock, MapPin, Phone as PhoneIcon, Video } from 'lucide-react';
+import { ArrowRight, Clock, MapPin, Phone as PhoneIcon, Video } from 'lucide-react';
 import { getServiceBySlug } from '@/lib/booking/availability';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { formatPaise, paiseToRupees } from '@/lib/money';
@@ -12,35 +12,17 @@ import { Reveal } from '@/components/common/Reveal';
 import { FaqAccordion } from '@/components/marketing/FaqAccordion';
 import { BOOKING_FAQ } from '@/lib/content/faq';
 import { img, serviceImage } from '@/lib/content/imagery';
-import { serviceContextImage, serviceJourney, serviceLogistics } from '@/lib/content/service-journeys';
-
-/**
- * Service detail — built to the `service_detail_healing` design.
- *
- * Layout, in order:
- *   1. Hero        5/7 split, text left, photograph right with an OFFSET gold
- *                  frame (translated 16px down-right behind the image)
- *   2. Divider     a single gold hairline
- *   3. Journey     three numbered phases, square photographs, hover zoom
- *   4. Bento       8-col pricing card + 4-col stack (Location / Preparation),
- *                  the second of which is an inverted navy card
- *   5. FAQ         4/8 split — heading left, accordion right
- *
- * Everything that is a number or a fact — price, duration, mode, cancellation
- * window — is read from the DATABASE, not from the design file. The design's
- * "$300 / 60 mins" is a mock; a marketing page that hardcodes a price will
- * eventually contradict what the checkout charges.
- */
+import { serviceContextImage } from '@/lib/content/service-journeys';
+import { SERVICE_QUESTIONS } from '@/lib/content/questions';
+import { QuestionCards } from '@/components/marketing/QuestionCards';
+import { IncludesList } from '@/components/marketing/IncludesList';
+import { Differentiators } from '@/components/marketing/Differentiators';
+import { Testimonials } from '@/components/marketing/Testimonials';
+import type { Testimonial } from '@/types/database';
 
 export async function generateStaticParams() {
   try {
     const admin = createAdminClient();
-    // internal = true rows are staff-only (the ₹1 payment verification
-    // service). Service-role client, so RLS is not filtering here — exclude
-    // them or a marketing page gets prerendered for one. Filtered in JS, not
-    // with `.eq('internal', false)`, so a database that has not run the
-    // migration still prerenders the real services rather than none of them;
-    // see the note in src/lib/booking/availability.ts.
     const { data } = await admin
       .from('services')
       .select('slug, internal')
@@ -49,8 +31,6 @@ export async function generateStaticParams() {
       .filter((s) => s.internal !== true)
       .map((s) => ({ slug: s.slug as string }));
   } catch {
-    // No database at build time (CI without secrets): render on demand rather
-    // than failing the build.
     return [];
   }
 }
@@ -83,13 +63,26 @@ export default async function ServiceDetailPage(props: { params: Promise<{ slug:
   const service = await getServiceBySlug(slug);
   if (!service) notFound();
 
+  const admin = createAdminClient();
+  const { data: testimonials } = await admin
+    .from('testimonials')
+    .select('*')
+    .eq('approved', true)
+    .order('featured', { ascending: false })
+    .order('sort_order', { ascending: true })
+    .limit(3)
+    .returns<Testimonial[]>();
+
   const mode = MODE[service.mode];
   const photo = serviceImage(service.slug);
   const contextKey = serviceContextImage(service.slug);
   const context = contextKey ? img(contextKey) : null;
-  const journey = serviceJourney(service.slug);
-  const logistics = serviceLogistics(service.mode);
   const cancellationHours = service.free_cancellation_hours ?? POLICY.freeCancellationHours;
+  const reviews = testimonials ?? [];
+  const questions = SERVICE_QUESTIONS[service.slug] ?? SERVICE_QUESTIONS['astrological-guidance'];
+
+  const bookHref = service.bookable_online ? `/book?service=${service.slug}` : '/contact';
+  const bookLabel = service.bookable_online ? 'Schedule a Call' : 'Enquire About This Service';
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -110,9 +103,6 @@ export default async function ServiceDetailPage(props: { params: Promise<{ slug:
     },
   };
 
-  const bookHref = service.bookable_online ? `/book?service=${service.slug}` : '/contact';
-  const bookLabel = service.bookable_online ? 'Begin Your Journey' : 'Enquire About This Service';
-
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
@@ -120,36 +110,23 @@ export default async function ServiceDetailPage(props: { params: Promise<{ slug:
       <div className="pb-[var(--spacing-section-lg)] pt-8 md:pt-16">
         {/* ============================ 1. HERO ============================ */}
         <section className="shell mb-[var(--spacing-section-lg)]">
-          {/* Breadcrumb removed at the client's request. The header nav already
-              carries Services, and BreadcrumbList structured data is not lost —
-              it was never emitted here, only the visual trail existed. */}
           <div className="grid grid-cols-1 items-center gap-8 md:grid-cols-12">
-            <Reveal className="relative z-10 md:col-span-5">
-              <p className="label-caps text-[var(--color-gold-deep)]">{service.title}</p>
-
-              <h1 className="mt-4 text-[length:var(--text-display-lg)]">
+            <Reveal className="relative z-10 md:col-span-6">
+              <p className="label-caps text-[var(--color-saffron-deep)]">{service.title}</p>
+              <h1 className="mt-4 text-[length:var(--text-display-lg)] text-[var(--color-cocoa)]">
                 {service.tagline ?? service.title}
               </h1>
-
-              <p className="mt-6 max-w-md text-lg leading-relaxed text-[var(--color-on-surface-variant)]">
-                {service.description.split('\n')[0]}
-              </p>
-
-              <div className="mt-10">
-                <Button asChild size="lg">
+              <div className="mt-10 flex flex-wrap items-center gap-6">
+                <Button asChild size="lg" variant="primary" className="shadow-[4px_4px_0_0_var(--color-saffron-deep)]">
                   <Link href={bookHref}>
                     {bookLabel}
-                    <ArrowRight className="size-4" aria-hidden />
+                    <ArrowRight className="size-4 ml-2" aria-hidden />
                   </Link>
                 </Button>
               </div>
             </Reveal>
-
-            <Reveal delay={120} className="md:col-span-7">
-              {/* The offset gold frame — a 1px rule translated 16px down and
-                  right, sitting behind the photograph. This one detail does
-                  most of the work of making the page feel considered. */}
-              <div className="relative aspect-[4/5] w-full bg-[var(--color-linen-grey)] md:aspect-[3/2]">
+            <Reveal delay={120} className="md:col-span-6">
+              <div className="relative aspect-[4/5] w-full bg-[var(--color-card-cream)] md:aspect-[3/2] border border-[var(--color-hairline)] before:absolute before:inset-[4px] before:border before:border-[var(--color-hairline)] before:pointer-events-none before:z-10">
                 <Image
                   src={photo.src}
                   alt={photo.alt}
@@ -158,242 +135,141 @@ export default async function ServiceDetailPage(props: { params: Promise<{ slug:
                   sizes="(min-width: 768px) 58vw, 100vw"
                   className="object-cover contrast-[1.1] grayscale-[20%]"
                 />
-                <div
-                  aria-hidden
-                  className="pointer-events-none absolute inset-0 translate-x-4 translate-y-4 border border-[color-mix(in_srgb,var(--color-muted-gold)_30%,transparent)]"
-                />
               </div>
             </Reveal>
           </div>
         </section>
 
-        {/* ========================== 2. DIVIDER =========================== */}
-        <div className="shell">
-          <div
-            aria-hidden
-            className="mb-[var(--spacing-section-lg)] h-px w-full bg-[color-mix(in_srgb,var(--color-muted-gold)_20%,transparent)]"
-          />
-        </div>
-
-        {/* ========================== 3. JOURNEY =========================== */}
-        {journey && (
-          <section aria-labelledby="journey-heading" className="shell mb-[var(--spacing-section-lg)]">
-            <Reveal>
-              <div className="mx-auto mb-16 max-w-2xl text-center">
-                <h2 id="journey-heading" className="text-[length:var(--text-h2)]">
-                  {journey.heading}
-                </h2>
-                <p className="mt-4 text-base leading-relaxed text-[var(--color-on-surface-variant)]">
-                  {journey.intro}
-                </p>
-              </div>
-            </Reveal>
-
-            <ol className="grid grid-cols-1 gap-12 md:grid-cols-3">
-              {journey.phases.map((phase, i) => {
-                const photo = phase.image ? img(phase.image) : null;
-                return (
-                  <Reveal as="li" key={phase.title} delay={(i + 1) * 100} className="flex flex-col">
-                    <p className="label-caps tabular text-[var(--color-gold-deep)]">
-                      {String(i + 1).padStart(2, '0')}
-                    </p>
-
-                    {photo ? (
-                      <div className="group relative mt-4 aspect-square overflow-hidden bg-[var(--color-linen-grey)]">
-                        <Image
-                          src={photo.src}
-                          alt={photo.alt}
-                          fill
-                          sizes="(min-width: 768px) 30vw, 100vw"
-                          className="object-cover transition-transform duration-700 group-hover:scale-105"
-                        />
-                      </div>
-                    ) : (
-                      /* No commissioned photograph for this phase — a tonal
-                         panel with the numeral rather than another service's
-                         imagery, which would misrepresent the session. */
-                      <div
-                        aria-hidden
-                        className="mt-4 flex aspect-square items-center justify-center border border-[color-mix(in_srgb,var(--color-muted-gold)_15%,transparent)] bg-[var(--color-surface-low)]"
-                      >
-                        <span className="font-[family-name:var(--font-display)] text-6xl text-[color-mix(in_srgb,var(--color-muted-gold)_35%,transparent)]">
-                          {String(i + 1).padStart(2, '0')}
-                        </span>
-                      </div>
-                    )}
-
-                    <h3 className="mt-6 font-[family-name:var(--font-display)] text-2xl font-medium">
-                      {phase.title}
-                    </h3>
-                    <p className="mt-3 text-base leading-relaxed text-[var(--color-on-surface-variant)]">
-                      {phase.body}
-                    </p>
-                  </Reveal>
-                );
-              })}
-            </ol>
-          </section>
-        )}
-
-        {/* ===================== 4. INVESTMENT (BENTO) ===================== */}
-        <section aria-labelledby="pricing-heading" className="shell mb-[var(--spacing-section-lg)]">
-          <Reveal>
-            {/* gap-1 rather than a larger gutter: the design butts these panels
-                almost flush, so the seams read as structural rules. */}
-            <div className="grid grid-cols-1 gap-1 md:grid-cols-12">
-              {/* ---- Main pricing card ---- */}
-              <div className="relative overflow-hidden bg-[var(--color-surface-low)] p-10 md:col-span-8 md:p-16">
-                <div className="relative z-10">
-                  <h2 id="pricing-heading" className="text-[length:var(--text-h2)]">
-                    Session Investment
-                  </h2>
-                  <p className="mt-3 max-w-md text-base leading-relaxed text-[var(--color-on-surface-variant)]">
-                    A {service.duration_minutes}-minute one-to-one consultation, tailored entirely
-                    to what you bring to it.
-                  </p>
-
-                  <p className="mt-8 flex items-baseline gap-2">
-                    <span className="tabular font-[family-name:var(--font-display)] text-[length:var(--text-display-lg)] font-semibold text-[var(--color-cosmic-navy)]">
-                      {formatPaise(service.price_paise)}
-                    </span>
-                    <span className="text-base text-[var(--color-on-surface-variant)]">
-                      / {service.duration_minutes} mins
-                    </span>
-                  </p>
-
-                  {service.highlights.length > 0 && (
-                    <ul className="mt-8 space-y-4">
-                      {service.highlights.map((h) => (
-                        <li key={h} className="flex items-center gap-3 text-[var(--color-on-surface-variant)]">
-                          <CheckCircle2 className="size-4 shrink-0 text-[var(--color-muted-gold)]" aria-hidden />
-                          <span className="text-base">{h}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-
-                  <div className="mt-10">
-                    <Button asChild size="lg" variant="secondary">
-                      <Link href={bookHref}>
-                        {service.bookable_online ? 'Reserve Your Time' : 'Enquire'}
-                      </Link>
-                    </Button>
-                  </div>
-
-                  <p className="mt-6 text-sm text-[var(--color-on-surface-variant)]">
-                    Free cancellation up to {cancellationHours} hours before your session.
-                  </p>
-                </div>
-
-                {/* Decorative gold ring, bleeding off the bottom-right corner. */}
-                <div
-                  aria-hidden
-                  className="pointer-events-none absolute -bottom-20 -right-20 size-64 rounded-full border border-[color-mix(in_srgb,var(--color-muted-gold)_12%,transparent)]"
-                />
-              </div>
-
-              {/* ---- Secondary info stack ---- */}
-              <div className="flex flex-col gap-1 md:col-span-4">
-                <div className="flex flex-grow flex-col justify-center bg-[var(--color-linen-grey)] p-10">
-                  <mode.icon className="size-7 text-[var(--color-muted-gold)]" aria-hidden />
-                  <h3 className="mt-4 font-[family-name:var(--font-display)] text-xl font-medium">
-                    Location
-                  </h3>
-                  <p className="mt-2 text-base leading-relaxed text-[var(--color-on-surface-variant)]">
-                    {logistics.location}
-                  </p>
-                </div>
-
-                {/* The single inverted card on this page. */}
-                <div className="band-ink flex flex-grow flex-col justify-center p-10">
-                  <Clock className="size-7 text-[var(--color-gold-light)]" aria-hidden />
-                  <h3 className="mt-4 font-[family-name:var(--font-display)] text-xl font-medium text-[var(--color-warm-ivory)]">
-                    Preparation
-                  </h3>
-                  <p className="mt-2 text-base leading-relaxed text-[var(--color-on-primary-container)]">
-                    {logistics.preparation}
-                  </p>
-                </div>
-              </div>
-            </div>
-          </Reveal>
-        </section>
-
-        {/* ==================== 5. WHAT THIS COVERS ======================== */}
-        <section aria-labelledby="covers-heading" className="shell mb-[var(--spacing-section-lg)]">
-          <div className="grid grid-cols-1 gap-12 md:grid-cols-12">
-            <Reveal className="md:col-span-4">
-              <h2 id="covers-heading" className="text-[length:var(--text-h2)]">
-                What this session covers
-              </h2>
-              <span className="gold-rule mt-6" aria-hidden />
-
-              {/*
-                Editorial still-life anchoring the context column.
-
-                Only rendered for services where it is truthful — the journal of
-                astronomical notation belongs to chart work, and would
-                misrepresent a counselling or healing session. See
-                serviceContextImage() for the mapping. Where there is none the
-                column is heading and rule alone, which reads fine.
-
-                Placed in the short column rather than beside the body copy
-                because that column was otherwise a heading against a tall block
-                of text; the image gives it enough weight for the two to balance.
-                4/5 crop with the same gold hairline as the About still, so the
-                editorial images read as a set.
-              */}
-              {context && (
+        {/* ========================== 2. STAT STRIP =========================== */}
+        {/* ========================== 3. NARRATIVE =========================== */}
+        <section aria-labelledby="narrative-heading" className="shell py-[var(--spacing-section-lg)]">
+          <div className="grid grid-cols-1 gap-12 md:grid-cols-12 items-center">
+            {context && (
+              <Reveal className="md:col-span-5">
                 <Image
                   src={context.src}
                   alt={context.alt}
                   width={1024}
                   height={1024}
                   sizes="(min-width: 768px) 30vw, 100vw"
-                  className="mt-10 hidden aspect-[4/5] w-full border border-[color-mix(in_srgb,var(--color-muted-gold)_20%,transparent)] object-cover md:block"
+                  className="hidden aspect-[4/5] w-full border border-[var(--color-hairline)] object-cover md:block grayscale-[20%]"
                 />
-              )}
-            </Reveal>
-
-            <Reveal delay={100} className="md:col-span-8">
-              <div className="prose-editorial text-base">
+              </Reveal>
+            )}
+            <Reveal delay={100} className="md:col-span-7">
+              <h2 id="narrative-heading" className="text-[length:var(--text-h2)] text-[var(--color-cocoa)]">
+                This is not just a consultation
+              </h2>
+              <div className="prose-editorial mt-8 text-base text-[var(--color-body-warm)] leading-relaxed">
                 <p className="whitespace-pre-line">{service.description}</p>
               </div>
-
-              {service.ideal_for.length > 0 && (
-                <div className="mt-10 border-t border-[color-mix(in_srgb,var(--color-muted-gold)_20%,transparent)] pt-8">
-                  <p className="label-caps text-[var(--color-gold-deep)]">Suited to</p>
-                  <ul className="mt-6 grid gap-6 sm:grid-cols-3">
-                    {service.ideal_for.map((item, i) => (
-                      <li key={item}>
-                        <span className="label-small tabular block text-[var(--color-muted-gold)]">
-                          {String(i + 1).padStart(2, '0')}
-                        </span>
-                        <p className="mt-3 text-base leading-relaxed text-[var(--color-on-surface-variant)]">
-                          {item}
-                        </p>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
+              <div className="mt-10">
+                <Button asChild size="lg" variant="secondary">
+                  <Link href={bookHref}>{bookLabel}</Link>
+                </Button>
+              </div>
             </Reveal>
           </div>
         </section>
 
-        {/* ============================= 6. FAQ ============================ */}
-        <section aria-labelledby="faq-heading" className="shell">
+        {/* ===================== 5. DIFFERENTIATORS ===================== */}
+        <Differentiators />
+
+        {/* ===================== 6. PROBLEM CARDS ===================== */}
+        <QuestionCards questions={questions} />
+
+        {/* ===================== 7. PRICING (BENTO) ===================== */}
+        <section aria-labelledby="pricing-heading" className="shell mb-[var(--spacing-section-lg)]">
+          <Reveal>
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-12">
+              <div className="relative overflow-hidden bg-[var(--color-card-cream)] p-10 md:col-span-8 md:p-16 border border-[var(--color-hairline)] before:absolute before:inset-[4px] before:border before:border-[var(--color-hairline)] before:pointer-events-none before:z-10">
+                <div className="relative z-20">
+                  <h2 id="pricing-heading" className="text-[length:var(--text-h2)] text-[var(--color-cocoa)]">
+                    Session Investment
+                  </h2>
+                  <p className="mt-3 max-w-md text-base leading-relaxed text-[var(--color-body-warm)]">
+                    A tailored one-to-one consultation directly with Komal Kalra.
+                  </p>
+
+                  <div className="mt-8 flex gap-4">
+                    <div className="px-4 py-2 border border-[var(--color-saffron)] text-[var(--color-cocoa)] font-medium text-sm flex items-center gap-2">
+                      <Clock className="size-4" /> {service.duration_minutes} Mins
+                    </div>
+                    <div className="px-4 py-2 border border-[var(--color-saffron)] text-[var(--color-cocoa)] font-medium text-sm flex items-center gap-2">
+                      <mode.icon className="size-4" /> {mode.label}
+                    </div>
+                  </div>
+
+                  <IncludesList highlights={service.highlights} />
+
+                  <p className="mt-10 flex items-baseline gap-2">
+                    <span className="tabular font-[family-name:var(--font-display)] text-5xl font-semibold text-[var(--color-cocoa)]">
+                      {formatPaise(service.price_paise)}
+                    </span>
+                  </p>
+
+                  <div className="mt-8">
+                    <Button asChild size="lg" variant="primary" className="shadow-[4px_4px_0_0_var(--color-saffron-deep)]">
+                      <Link href={bookHref}>
+                        {service.bookable_online ? 'Schedule a Call' : 'Enquire'}
+                      </Link>
+                    </Button>
+                  </div>
+                  <p className="mt-4 text-sm text-[var(--color-body-warm)]">
+                    Free cancellation up to {cancellationHours} hours before your session.
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex flex-col gap-4 md:col-span-4">
+                <div className="flex flex-grow flex-col justify-center bg-[var(--color-cream)] border border-[var(--color-hairline)] p-10">
+                  <h3 className="font-[family-name:var(--font-display)] text-xl font-medium text-[var(--color-cocoa)]">
+                    Suited for
+                  </h3>
+                  <ul className="mt-4 space-y-3">
+                    {service.ideal_for.slice(0, 3).map((item) => (
+                      <li key={item} className="text-sm text-[var(--color-body-warm)] leading-relaxed">
+                        • {item}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </Reveal>
+        </section>
+
+        {/* ===================== 9. TESTIMONIALS ===================== */}
+        <Testimonials testimonials={reviews} />
+
+        {/* ============================= 10. FAQ ============================ */}
+        <section aria-labelledby="faq-heading" className="shell py-[var(--spacing-section-lg)]">
           <div className="grid grid-cols-1 gap-12 md:grid-cols-12">
             <Reveal className="md:col-span-4">
-              <h2 id="faq-heading" className="text-[length:var(--text-h2)]">Expectations</h2>
-              <p className="mt-4 text-base leading-relaxed text-[var(--color-on-surface-variant)]">
+              <h2 id="faq-heading" className="text-[length:var(--text-h2)] text-[var(--color-cocoa)]">Expectations</h2>
+              <p className="mt-4 text-base leading-relaxed text-[var(--color-body-warm)]">
                 Clarity on the process, so you feel secure and prepared.
               </p>
             </Reveal>
-
             <Reveal delay={100} className="md:col-span-8">
               <FaqAccordion items={BOOKING_FAQ.slice(0, 5)} />
             </Reveal>
+          </div>
+        </section>
+
+        {/* ============================ 11. FINAL CTA ============================ */}
+        <section className="band-terracotta py-[var(--spacing-section-lg)] border-t border-white/20">
+          <div className="shell flex flex-col items-start justify-between gap-10 md:flex-row md:items-center">
+            <div>
+              <h2 className="font-[family-name:var(--font-display)] text-4xl text-white">
+                Ready for clarity?
+              </h2>
+            </div>
+            <div className="flex flex-wrap items-center gap-4">
+              <Button asChild size="lg" variant="primary" className="shadow-[4px_4px_0_0_var(--color-saffron-deep)]">
+                <Link href={bookHref}>Schedule a Call &rarr;</Link>
+              </Button>
+            </div>
           </div>
         </section>
       </div>

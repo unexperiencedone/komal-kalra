@@ -17,7 +17,7 @@ import pathlib, re, sys
 # A hardcoded copy drifts the moment someone edits a colour — which it already
 # did once, producing a phantom failure for a value that had just been fixed.
 def load_tokens(css_path: pathlib.Path):
-    css = css_path.read_text()
+    css = css_path.read_text(encoding="utf-8")
     theme = css[css.index('@theme'):]
     return {
         m.group(1): m.group(2).upper()
@@ -69,7 +69,7 @@ cls_re = re.compile(r'[\'"`]([^\'"`\n]*(?:text|bg)-[^\'"`\n]*)[\'"`]')
 
 problems, checked = [], 0
 for p in sorted(root.rglob('*.tsx')):
-    for m in cls_re.finditer(p.read_text()):
+    for m in cls_re.finditer(p.read_text(encoding="utf-8")):
         for state, fgt, bgt in pairs_for(m.group(1)):
             if fgt in NON_TEXT: continue
             fg, bg = resolve(fgt), resolve(bgt)

@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Free Tools &amp; Calculators - Komal Kalra</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500;600;700&amp;family=Poppins:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "error-container": "#ffdad6",
+                        "surface-tint": "#8f4e00",
+                        "inverse-primary": "#ffb77a",
+                        "tertiary-fixed-dim": "#ffb77f",
+                        "on-primary-fixed": "#2e1500",
+                        "outline-variant": "#d9c2b3",
+                        "inverse-surface": "#343029",
+                        "secondary-fixed": "#ffddb9",
+                        "secondary": "#875300",
+                        "primary-fixed-dim": "#ffb77a",
+                        "on-primary-fixed-variant": "#6d3a00",
+                        "surface-container": "#f5ede2",
+                        "on-primary": "#ffffff",
+                        "on-primary-container": "#fffcff",
+                        "surface-container-high": "#efe7dc",
+                        "surface-bright": "#fff8f1",
+                        "tertiary-fixed": "#ffdcc4",
+                        "surface-dim": "#e0d9ce",
+                        "outline": "#867466",
+                        "secondary-container": "#fda62f",
+                        "on-secondary-fixed": "#2b1700",
+                        "surface": "#fff8f1",
+                        "error": "#ba1a1a",
+                        "on-tertiary-container": "#fffbff",
+                        "secondary-fixed-dim": "#ffb964",
+                        "surface-variant": "#e9e1d7",
+                        "tertiary-container": "#b15f05",
+                        "surface-container-lowest": "#ffffff",
+                        "primary-container": "#ab6318",
+                        "on-tertiary-fixed-variant": "#6f3900",
+                        "tertiary": "#8e4a00",
+                        "on-surface-variant": "#534438",
+                        "on-error-container": "#93000a",
+                        "background": "#fff8f1",
+                        "on-secondary-container": "#6a4000",
+                        "on-error": "#ffffff",
+                        "on-tertiary-fixed": "#2f1500",
+                        "surface-container-highest": "#e9e1d7",
+                        "on-background": "#1e1b15",
+                        "on-tertiary": "#ffffff",
+                        "on-secondary": "#ffffff",
+                        "on-surface": "#1e1b15",
+                        "on-secondary-fixed-variant": "#663e00",
+                        "primary": "#8c4c00",
+                        "inverse-on-surface": "#f7f0e5",
+                        "surface-container-low": "#faf3e8",
+                        "primary-fixed": "#ffdcc2",
+                        "gold": "#d4af37" // Added gold for hairline requests, falling back to brand colors where possible, but explicit gold was requested
+                    },
+                    spacing: {
+                        "margin-desktop": "80px",
+                        "container-max": "1280px",
+                        "gutter": "24px",
+                        "margin-mobile": "20px",
+                        "unit": "4px"
+                    },
+                    fontFamily: {
+                        "display-lg": ["EB Garamond", "serif"],
+                        "display-lg-mobile": ["EB Garamond", "serif"],
+                        "body-lg": ["Poppins", "sans-serif"],
+                        "label-caps": ["Poppins", "sans-serif"],
+                        "title-lg": ["Poppins", "sans-serif"],
+                        "body-md": ["Poppins", "sans-serif"],
+                        "headline-md": ["EB Garamond", "serif"]
+                    },
+                    fontSize: {
+                        "display-lg": ["48px", { lineHeight: "1.1", letterSpacing: "-0.02em", fontWeight: "600" }],
+                        "display-lg-mobile": ["32px", { lineHeight: "1.2", fontWeight: "600" }],
+                        "body-lg": ["18px", { lineHeight: "1.6", fontWeight: "400" }],
+                        "label-caps": ["12px", { lineHeight: "1", letterSpacing: "0.1em", fontWeight: "700" }],
+                        "title-lg": ["20px", { lineHeight: "1.4", letterSpacing: "0.02em", fontWeight: "600" }],
+                        "body-md": ["16px", { lineHeight: "1.6", fontWeight: "400" }],
+                        "headline-md": ["32px", { lineHeight: "1.2", fontWeight: "500" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .hard-shadow {
+            box-shadow: 4px 4px 0px 0px rgba(110, 58, 17, 1);
+        }
+        .double-rule {
+            border: 1px solid #d4af37; /* Using explicit gold for hairline frame */
+            position: relative;
+        }
+        .double-rule::before {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            right: 2px;
+            bottom: 2px;
+            border: 1px solid #d4af37;
+            pointer-events: none;
+        }
+        .notch-panel {
+            clip-path: polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md antialiased min-h-screen flex flex-col">
+<!-- TopNavBar -->
+<nav class="bg-tertiary-container text-on-tertiary-container w-full sticky top-0 z-50 border-b-2 border-outline">
+<div class="flex flex-col w-full max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-4">
+<div class="flex justify-between items-center w-full">
+<!-- Brand -->
+<a class="font-title-lg text-title-lg text-surface-bright uppercase tracking-widest hover:text-secondary-fixed transition-colors duration-200" href="#">
+                    Komal Kalra
+                </a>
+<!-- Desktop Navigation -->
+<div class="hidden md:flex items-center space-x-8">
+<a class="font-label-caps text-label-caps text-surface-container-lowest opacity-90 hover:opacity-100 hover:text-secondary-fixed transition-colors duration-200" href="#">Consultation</a>
+<a class="font-label-caps text-label-caps text-surface-container-lowest opacity-90 hover:opacity-100 hover:text-secondary-fixed transition-colors duration-200" href="#">Courses</a>
+<a class="font-label-caps text-label-caps text-surface-container-lowest opacity-90 hover:opacity-100 hover:text-secondary-fixed transition-colors duration-200" href="#">Horoscope</a>
+<a class="font-label-caps text-label-caps text-surface-container-lowest opacity-90 hover:opacity-100 hover:text-secondary-fixed transition-colors duration-200" href="#">Vastu</a>
+<a class="font-label-caps text-label-caps text-surface-container-lowest opacity-90 hover:opacity-100 hover:text-secondary-fixed transition-colors duration-200" href="#">Shop</a>
+</div>
+<!-- Actions -->
+<div class="flex items-center space-x-4">
+<button class="hidden md:inline-flex text-surface-bright hover:text-secondary-fixed font-label-caps text-label-caps uppercase transition-colors">
+                        Login
+                    </button>
+<button class="bg-secondary-container text-on-secondary-container font-label-caps text-label-caps px-4 py-2 uppercase border border-outline hard-shadow hover:bg-secondary-fixed transition-colors">
+                        Join Community
+                    </button>
+<!-- Mobile Menu Toggle -->
+<button aria-label="Open Menu" class="md:hidden text-surface-bright">
+<span class="material-symbols-outlined">menu</span>
+</button>
+</div>
+</div>
+</div>
+</nav>
+<!-- Header Band -->
+<header class="bg-primary-container py-8 border-b border-outline">
+<div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop text-center">
+<span class="font-label-caps text-label-caps text-secondary-fixed uppercase tracking-widest block mb-2">Free Vedic Tools</span>
+<h1 class="font-display-lg-mobile md:font-display-lg text-display-lg-mobile md:text-display-lg text-on-primary">Calculators &amp; Insights</h1>
+<p class="font-body-lg text-body-lg text-surface-bright mt-4 max-w-2xl mx-auto">Discover ancient wisdom structured for your modern life. Explore our comprehensive suite of free astrological and numerological tools to gain deeper insights into your cosmic blueprint.</p>
+</div>
+</header>
+<!-- Main Content -->
+<main class="flex-grow py-16 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto w-full">
+<!-- Bento Grid of Calculators -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-gutter">
+<!-- Tool 1: Free Kundli (Featured - spans 2 cols on md+) -->
+<div class="bg-surface-container p-6 double-rule flex flex-col justify-between group hover:bg-surface-container-high transition-colors md:col-span-2 lg:col-span-2 xl:col-span-2 row-span-2 min-h-[300px]">
+<div>
+<div class="flex items-start justify-between mb-4">
+<span class="bg-secondary-container text-on-secondary-container font-label-caps text-label-caps px-2 py-1 uppercase border border-outline">Astrology</span>
+<span class="material-symbols-outlined text-tertiary-container text-4xl group-hover:scale-110 transition-transform">auto_awesome</span>
+</div>
+<h2 class="font-headline-md text-headline-md text-on-surface mb-2">Free Kundli</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mb-6">Generate your detailed birth chart (Janam Kundli) instantly. Understand the planetary positions at the exact moment of your birth and their profound influence on your life's path, career, and relationships.</p>
+</div>
+<button class="self-start border border-outline bg-transparent text-primary font-label-caps text-label-caps px-6 py-3 uppercase hover:bg-primary-fixed hover:text-on-primary-fixed transition-colors flex items-center space-x-2">
+<span>Calculate for Free</span>
+<span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+<!-- Tool 2: Kundli Matching -->
+<div class="bg-surface-container p-6 double-rule flex flex-col justify-between group hover:bg-surface-container-high transition-colors">
+<div>
+<div class="flex items-start justify-between mb-4">
+<span class="bg-secondary-container text-on-secondary-container font-label-caps text-label-caps px-2 py-1 uppercase border border-outline">Relationship</span>
+<span class="material-symbols-outlined text-tertiary-container text-3xl group-hover:scale-110 transition-transform">favorite</span>
+</div>
+<h2 class="font-title-lg text-title-lg text-on-surface mb-2">Kundli Matching</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mb-6 text-sm">Assess compatibility with your partner through traditional Ashtakoot Milan.</p>
+</div>
+<button class="w-full border border-outline bg-transparent text-primary font-label-caps text-label-caps px-4 py-2 uppercase hover:bg-primary-fixed hover:text-on-primary-fixed transition-colors flex items-center justify-center space-x-2">
+<span>Calculate for Free</span>
+<span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+<!-- Tool 3: Panchang -->
+<div class="bg-surface-container p-6 double-rule flex flex-col justify-between group hover:bg-surface-container-high transition-colors">
+<div>
+<div class="flex items-start justify-between mb-4">
+<span class="bg-secondary-container text-on-secondary-container font-label-caps text-label-caps px-2 py-1 uppercase border border-outline">Daily</span>
+<span class="material-symbols-outlined text-tertiary-container text-3xl group-hover:scale-110 transition-transform">calendar_today</span>
+</div>
+<h2 class="font-title-lg text-title-lg text-on-surface mb-2">Panchang</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mb-6 text-sm">Check daily auspicious timings, Tithi, Nakshatra, Yoga, and Karana.</p>
+</div>
+<button class="w-full border border-outline bg-transparent text-primary font-label-caps text-label-caps px-4 py-2 uppercase hover:bg-primary-fixed hover:text-on-primary-fixed transition-colors flex items-center justify-center space-x-2">
+<span>Calculate for Free</span>
+<span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+<!-- Tool 4: Moon Sign -->
+<div class="bg-surface-container p-6 double-rule flex flex-col justify-between group hover:bg-surface-container-high transition-colors">
+<div>
+<div class="flex items-start justify-between mb-4">
+<span class="bg-secondary-container text-on-secondary-container font-label-caps text-label-caps px-2 py-1 uppercase border border-outline">Identity</span>
+<span class="material-symbols-outlined text-tertiary-container text-3xl group-hover:scale-110 transition-transform">dark_mode</span>
+</div>
+<h2 class="font-title-lg text-title-lg text-on-surface mb-2">Moon Sign</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mb-6 text-sm">Discover your emotional core and Rashi based on the moon's placement.</p>
+</div>
+<button class="w-full border border-outline bg-transparent text-primary font-label-caps text-label-caps px-4 py-2 uppercase hover:bg-primary-fixed hover:text-on-primary-fixed transition-colors flex items-center justify-center space-x-2">
+<span>Calculate for Free</span>
+<span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+<!-- Tool 5: Lagna -->
+<div class="bg-surface-container p-6 double-rule flex flex-col justify-between group hover:bg-surface-container-high transition-colors">
+<div>
+<div class="flex items-start justify-between mb-4">
+<span class="bg-secondary-container text-on-secondary-container font-label-caps text-label-caps px-2 py-1 uppercase border border-outline">Identity</span>
+<span class="material-symbols-outlined text-tertiary-container text-3xl group-hover:scale-110 transition-transform">wb_sunny</span>
+</div>
+<h2 class="font-title-lg text-title-lg text-on-surface mb-2">Lagna</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mb-6 text-sm">Find your Ascendant sign determining your outer personality and life approach.</p>
+</div>
+<button class="w-full border border-outline bg-transparent text-primary font-label-caps text-label-caps px-4 py-2 uppercase hover:bg-primary-fixed hover:text-on-primary-fixed transition-colors flex items-center justify-center space-x-2">
+<span>Calculate for Free</span>
+<span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+<!-- Tool 6: Nakshatra -->
+<div class="bg-surface-container p-6 double-rule flex flex-col justify-between group hover:bg-surface-container-high transition-colors">
+<div>
+<div class="flex items-start justify-between mb-4">
+<span class="bg-secondary-container text-on-secondary-container font-label-caps text-label-caps px-2 py-1 uppercase border border-outline">Astrology</span>
+<span class="material-symbols-outlined text-tertiary-container text-3xl group-hover:scale-110 transition-transform">star</span>
+</div>
+<h2 class="font-title-lg text-title-lg text-on-surface mb-2">Nakshatra</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mb-6 text-sm">Identify your birth star to understand subconscious patterns and traits.</p>
+</div>
+<button class="w-full border border-outline bg-transparent text-primary font-label-caps text-label-caps px-4 py-2 uppercase hover:bg-primary-fixed hover:text-on-primary-fixed transition-colors flex items-center justify-center space-x-2">
+<span>Calculate for Free</span>
+<span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+<!-- Tool 7: Rahu-Ketu -->
+<div class="bg-surface-container p-6 double-rule flex flex-col justify-between group hover:bg-surface-container-high transition-colors">
+<div>
+<div class="flex items-start justify-between mb-4">
+<span class="bg-secondary-container text-on-secondary-container font-label-caps text-label-caps px-2 py-1 uppercase border border-outline">Karma</span>
+<span class="material-symbols-outlined text-tertiary-container text-3xl group-hover:scale-110 transition-transform">sync_alt</span>
+</div>
+<h2 class="font-title-lg text-title-lg text-on-surface mb-2">Rahu-Ketu</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mb-6 text-sm">Analyze the nodal axis to reveal your karmic lessons and spiritual destiny.</p>
+</div>
+<button class="w-full border border-outline bg-transparent text-primary font-label-caps text-label-caps px-4 py-2 uppercase hover:bg-primary-fixed hover:text-on-primary-fixed transition-colors flex items-center justify-center space-x-2">
+<span>Calculate for Free</span>
+<span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+<!-- Tool 8: Numerology -->
+<div class="bg-surface-container p-6 double-rule flex flex-col justify-between group hover:bg-surface-container-high transition-colors">
+<div>
+<div class="flex items-start justify-between mb-4">
+<span class="bg-secondary-container text-on-secondary-container font-label-caps text-label-caps px-2 py-1 uppercase border border-outline">Numerology</span>
+<span class="material-symbols-outlined text-tertiary-container text-3xl group-hover:scale-110 transition-transform">looks_one</span>
+</div>
+<h2 class="font-title-lg text-title-lg text-on-surface mb-2">Numerology</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mb-6 text-sm">Calculate your life path and destiny numbers to decode your life's purpose.</p>
+</div>
+<button class="w-full border border-outline bg-transparent text-primary font-label-caps text-label-caps px-4 py-2 uppercase hover:bg-primary-fixed hover:text-on-primary-fixed transition-colors flex items-center justify-center space-x-2">
+<span>Calculate for Free</span>
+<span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+<!-- Tool 9: Name Number -->
+<div class="bg-surface-container p-6 double-rule flex flex-col justify-between group hover:bg-surface-container-high transition-colors">
+<div>
+<div class="flex items-start justify-between mb-4">
+<span class="bg-secondary-container text-on-secondary-container font-label-caps text-label-caps px-2 py-1 uppercase border border-outline">Numerology</span>
+<span class="material-symbols-outlined text-tertiary-container text-3xl group-hover:scale-110 transition-transform">spellcheck</span>
+</div>
+<h2 class="font-title-lg text-title-lg text-on-surface mb-2">Name Number</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mb-6 text-sm">Evaluate the vibrational harmony of your name with your birth date.</p>
+</div>
+<button class="w-full border border-outline bg-transparent text-primary font-label-caps text-label-caps px-4 py-2 uppercase hover:bg-primary-fixed hover:text-on-primary-fixed transition-colors flex items-center justify-center space-x-2">
+<span>Calculate for Free</span>
+<span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+<!-- Tool 10: Lo Shu Grid -->
+<div class="bg-surface-container p-6 double-rule flex flex-col justify-between group hover:bg-surface-container-high transition-colors">
+<div>
+<div class="flex items-start justify-between mb-4">
+<span class="bg-secondary-container text-on-secondary-container font-label-caps text-label-caps px-2 py-1 uppercase border border-outline">Numerology</span>
+<span class="material-symbols-outlined text-tertiary-container text-3xl group-hover:scale-110 transition-transform">grid_3x3</span>
+</div>
+<h2 class="font-title-lg text-title-lg text-on-surface mb-2">Lo Shu Grid</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mb-6 text-sm">Generate your personalized magic square to analyze strengths and missing elements.</p>
+</div>
+<button class="w-full border border-outline bg-transparent text-primary font-label-caps text-label-caps px-4 py-2 uppercase hover:bg-primary-fixed hover:text-on-primary-fixed transition-colors flex items-center justify-center space-x-2">
+<span>Calculate for Free</span>
+<span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+<!-- Tool 11: Flames -->
+<div class="bg-surface-container p-6 double-rule flex flex-col justify-between group hover:bg-surface-container-high transition-colors">
+<div>
+<div class="flex items-start justify-between mb-4">
+<span class="bg-secondary-container text-on-secondary-container font-label-caps text-label-caps px-2 py-1 uppercase border border-outline">Fun</span>
+<span class="material-symbols-outlined text-tertiary-container text-3xl group-hover:scale-110 transition-transform">local_fire_department</span>
+</div>
+<h2 class="font-title-lg text-title-lg text-on-surface mb-2">Flames</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mb-6 text-sm">A classic playful calculator to predict the nature of a relationship.</p>
+</div>
+<button class="w-full border border-outline bg-transparent text-primary font-label-caps text-label-caps px-4 py-2 uppercase hover:bg-primary-fixed hover:text-on-primary-fixed transition-colors flex items-center justify-center space-x-2">
+<span>Calculate for Free</span>
+<span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+<!-- Decorative Filler Card to complete the 12-slot grid visually (Optional but keeps layout neat) -->
+<div class="bg-surface-variant/30 p-6 border border-outline border-dashed flex flex-col items-center justify-center text-center opacity-70">
+<span class="material-symbols-outlined text-outline text-4xl mb-4">magic_button</span>
+<p class="font-body-md text-body-md text-on-surface-variant italic">More esoteric tools and calculators coming soon to aid your spiritual journey.</p>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="bg-tertiary-container text-on-tertiary-container w-full mt-auto border-t-4 border-double border-outline-variant">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-gutter py-12 px-margin-mobile md:px-margin-desktop w-full max-w-container-max mx-auto">
+<!-- Brand Column -->
+<div class="md:col-span-1 flex flex-col mb-8 md:mb-0">
+<span class="font-headline-md text-headline-md text-surface-bright mb-4 block">Komal Kalra</span>
+<p class="font-body-md text-body-md text-surface-container-lowest opacity-80 text-sm leading-relaxed mb-6">
+                    Divine Wisdom Structured for Modern Life.
+                </p>
+<p class="font-body-md text-body-md text-surface-container-lowest opacity-80 text-xs">
+                    © 2024 Komal Kalra. All Rights Reserved.
+                </p>
+</div>
+<!-- Links Column 1 -->
+<div class="md:col-span-1 flex flex-col mb-8 md:mb-0">
+<h3 class="font-label-caps text-label-caps text-surface-bright mb-4 uppercase tracking-wider">Services</h3>
+<a class="font-body-md text-body-md text-surface-container-lowest opacity-80 hover:text-secondary-container underline-offset-4 hover:underline hover:translate-x-1 transition-transform mb-2" href="#">Astrology</a>
+<a class="font-body-md text-body-md text-surface-container-lowest opacity-80 hover:text-secondary-container underline-offset-4 hover:underline hover:translate-x-1 transition-transform mb-2" href="#">Numerology</a>
+<a class="font-body-md text-body-md text-surface-container-lowest opacity-80 hover:text-secondary-container underline-offset-4 hover:underline hover:translate-x-1 transition-transform" href="#">Vastu Shastra</a>
+</div>
+<!-- Links Column 2 -->
+<div class="md:col-span-1 flex flex-col mb-8 md:mb-0">
+<h3 class="font-label-caps text-label-caps text-surface-bright mb-4 uppercase tracking-wider">Legal</h3>
+<a class="font-body-md text-body-md text-surface-container-lowest opacity-80 hover:text-secondary-container underline-offset-4 hover:underline hover:translate-x-1 transition-transform mb-2" href="#">Privacy Policy</a>
+<a class="font-body-md text-body-md text-surface-container-lowest opacity-80 hover:text-secondary-container underline-offset-4 hover:underline hover:translate-x-1 transition-transform" href="#">Terms of Service</a>
+</div>
+<!-- Links Column 3 -->
+<div class="md:col-span-1 flex flex-col">
+<h3 class="font-label-caps text-label-caps text-surface-bright mb-4 uppercase tracking-wider">Connect</h3>
+<a class="font-body-md text-body-md text-surface-container-lowest opacity-80 hover:text-secondary-container underline-offset-4 hover:underline hover:translate-x-1 transition-transform mb-4" href="#">Contact Us</a>
+<!-- Newsletter simple signup -->
+<div class="mt-4">
+<p class="font-label-caps text-label-caps text-surface-bright mb-2">Subscribe to Insights</p>
+<div class="flex border border-outline bg-surface p-1">
+<input class="bg-transparent border-none text-on-surface focus:ring-0 w-full text-sm font-body-md p-2 placeholder:text-outline" placeholder="Email Address" type="email"/>
+<button class="bg-secondary-container text-on-secondary-container px-3 py-1 font-label-caps text-xs hover:bg-secondary-fixed transition-colors">
+<span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</footer>
+</body></html>

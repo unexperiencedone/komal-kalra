@@ -1,93 +1,85 @@
 import Link from 'next/link';
-import Image from 'next/image';
 import { BRAND } from '@/lib/config';
 import type { Service } from '@/types/database';
 
-/**
- * Footer — Ink Black ground with a Muted Gold hairline along the top, per the
- * spec ("1px Muted Gold hairlines used to separate sections or define the top
- * of the footer").
- *
- * Link labels use Label Caps at 80% opacity rising to full on hover, which is
- * how the design file handles the muted/active distinction on dark grounds.
- */
 export function SiteFooter({ services = [] }: { services?: Service[] }) {
   const year = new Date().getFullYear();
 
   const linkClass =
-    'label-caps text-[var(--color-warm-ivory)] opacity-70 transition-opacity duration-300 hover:opacity-100';
+    'text-[color-mix(in_srgb,var(--color-cream)_82%,transparent)] transition-colors duration-300 hover:text-white';
 
   return (
-    <footer className="band-ink no-print border-t border-[color-mix(in_srgb,var(--color-muted-gold)_25%,transparent)]">
-      <div className="shell grid grid-cols-1 gap-12 py-16 md:grid-cols-3">
+    <footer className="bg-gradient-to-b from-[var(--color-footer-top)] to-[var(--color-footer-btm)] py-12 md:py-16 no-print border-t border-[color-mix(in_srgb,var(--color-cream)_25%,transparent)] text-[var(--color-cream)]">
+      <div className="shell flex flex-col items-center text-center gap-12">
         <div>
-          <div className="flex items-center gap-2.5">
-            <Image src="/images/favicon.png" alt="" width={32} height={32} className="size-8" />
-            <p className="font-[family-name:var(--font-display)] text-2xl font-medium text-[var(--color-warm-ivory)]">
-              {BRAND.name}
-            </p>
-          </div>
-          <p className="mt-6 max-w-xs text-sm leading-relaxed text-[var(--color-on-primary-container)]">
+          <p className="font-[family-name:var(--font-display)] text-3xl uppercase tracking-[0.15em] text-[var(--color-cream)]">
+            Komal Kalra
+          </p>
+          <p className="mt-4 max-w-md mx-auto text-sm leading-relaxed text-[color-mix(in_srgb,var(--color-cream)_82%,transparent)]">
             Precision astrology and executive life coaching.
           </p>
-          <p className="mt-8 text-xs text-[var(--color-on-primary-container)]">
+        </div>
+
+        <div className="grid grid-cols-2 gap-8 md:grid-cols-4 md:gap-12 w-full text-left">
+          <nav aria-label="Services" className="flex flex-col gap-4">
+            <h4 className="label-caps text-[var(--color-saffron-lift)]">Services</h4>
+            {services.length > 0
+              ? services.slice(0, 5).map((s) => (
+                  <Link key={s.id} href={`/services/${s.slug}`} className={linkClass}>
+                    {s.title}
+                  </Link>
+                ))
+              : <Link href="/services" className={linkClass}>All services</Link>}
+            <Link href="/faq" className={linkClass}>Frequently asked</Link>
+          </nav>
+
+          <nav aria-label="Free tools" className="flex flex-col gap-4">
+            <h4 className="label-caps text-[var(--color-saffron-lift)]">Free Tools</h4>
+            <Link href="/free-tools" className={linkClass}>Calculators</Link>
+            <Link href="/free-tools/free-kundli" className={linkClass}>Free Kundli</Link>
+            <Link href="/free-tools/kundli-matching" className={linkClass}>Kundli Matching</Link>
+          </nav>
+
+          <nav aria-label="Legal" className="flex flex-col gap-4">
+            <h4 className="label-caps text-[var(--color-saffron-lift)]">Legal</h4>
+            <Link href="/legal/privacy" className={linkClass}>Privacy</Link>
+            <Link href="/legal/terms" className={linkClass}>Terms</Link>
+            <Link href="/legal/refunds" className={linkClass}>Refunds</Link>
+          </nav>
+
+          <nav aria-label="Contact" className="flex flex-col gap-4">
+            <h4 className="label-caps text-[var(--color-saffron-lift)]">Contact</h4>
+            <Link href="/contact" className={linkClass}>Contact Form</Link>
+            {BRAND.phones.map((phone, i) => (
+              <a key={phone} href={`tel:${BRAND.phonesE164[i]}`} className={linkClass}>
+                {phone}
+              </a>
+            ))}
+            <a href={`mailto:${BRAND.email}`} className={linkClass}>{BRAND.email}</a>
+            <a href={BRAND.instagram} target="_blank" rel="noopener noreferrer" className={linkClass}>
+              Instagram
+            </a>
+          </nav>
+        </div>
+
+        <div className="w-full border-t border-[color-mix(in_srgb,var(--color-cream)_25%,transparent)] pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-[color-mix(in_srgb,var(--color-cream)_78%,transparent)]">
+          <p>
             © {year} {BRAND.fullName}. All rights reserved.
           </p>
-        </div>
-
-        <nav aria-label="Services" className="flex flex-col gap-4">
-          {services.length > 0
-            ? services.slice(0, 5).map((s) => (
-                <Link key={s.id} href={`/services/${s.slug}`} className={linkClass}>
-                  {s.title}
-                </Link>
-              ))
-            : <Link href="/services" className={linkClass}>All services</Link>}
-          <Link href="/faq" className={linkClass}>Frequently asked</Link>
-          <Link href="/contact" className={linkClass}>Contact</Link>
-        </nav>
-
-        <div className="flex flex-col gap-4 md:items-end">
-          {BRAND.phones.map((phone, i) => (
-            <a key={phone} href={`tel:${BRAND.phonesE164[i]}`} className={linkClass}>
-              {phone}
-            </a>
-          ))}
-          <a href={`mailto:${BRAND.email}`} className={linkClass}>{BRAND.email}</a>
-          <a
-            href={BRAND.instagram}
-            target="_blank"
-            rel="noopener noreferrer"
-            className={`${linkClass} mt-2`}
-          >
-            Instagram
-          </a>
-        </div>
-      </div>
-
-      <div className="border-t border-[color-mix(in_srgb,var(--color-warm-ivory)_12%,transparent)]">
-        <div className="shell flex flex-col gap-4 py-6 sm:flex-row sm:items-center sm:justify-between">
-          <ul className="flex flex-wrap gap-x-6 gap-y-2">
-            {/* All four are linked from every page: Razorpay's activation
-                check looks for them, and Google's OAuth consent screen
-                requires the privacy and terms URLs to be publicly reachable. */}
+          <ul className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
             {[
               { href: '/legal/terms', label: 'Terms' },
               { href: '/legal/privacy', label: 'Privacy' },
-              { href: '/legal/refunds', label: 'Cancellation & refunds' },
+              { href: '/legal/refunds', label: 'Refunds' },
               { href: '/legal/delivery', label: 'Service delivery' },
             ].map((l) => (
               <li key={l.href}>
-                <Link href={l.href} className="label-small text-[var(--color-on-primary-container)] transition-colors hover:text-[var(--color-warm-ivory)]">
+                <Link href={l.href} className="transition-colors hover:text-white">
                   {l.label}
                 </Link>
               </li>
             ))}
           </ul>
-          <p className="max-w-xl text-[11px] leading-relaxed text-[var(--color-on-primary-container)]">
-            Consultations are for guidance and personal reflection, and are not a substitute
-            for medical, psychological, legal or financial advice.
-          </p>
         </div>
       </div>
     </footer>

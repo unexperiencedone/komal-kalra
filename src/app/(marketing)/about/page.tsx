@@ -48,14 +48,14 @@ export default function AboutPage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
       {/* ============================ MASTHEAD ============================ */}
-      <section className="band-low border-b border-[color-mix(in_srgb,var(--color-muted-gold)_15%,transparent)] py-[var(--spacing-section-md)]">
+      <section className="band-terracotta py-[var(--spacing-section-md)]">
         <div className="shell grid grid-cols-1 items-center gap-12 md:grid-cols-12">
           <Reveal className="md:col-span-6">
-            <p className="label-caps text-[var(--color-gold-deep)]">About the founder</p>
+            <p className="label-caps text-[var(--color-saffron-deep)]">About the founder</p>
 
             <h1 className="mt-5 text-[length:var(--text-display-lg)]">{FOUNDER.name}</h1>
 
-            <p className="label-caps mt-5 text-[var(--color-on-surface-variant)]">
+            <p className="label-caps mt-5 text-[var(--color-body-warm)]">
               {FOUNDER.role}
             </p>
 
@@ -102,7 +102,7 @@ export default function AboutPage() {
       {/* ========================== COMPETENCIES ========================== */}
       <section
         aria-labelledby="competencies-heading"
-        className="band-low border-y border-[color-mix(in_srgb,var(--color-muted-gold)_15%,transparent)] py-[var(--spacing-section-lg)]"
+        className="band-sand py-[var(--spacing-section-lg)]"
       >
         <div className="shell">
           <Reveal>
@@ -115,17 +115,17 @@ export default function AboutPage() {
           {/* Numbered, hairline-separated rows rather than cards — the spec's
               "structural lines mimicking a luxury broadsheet". Four cards here
               would repeat the service grid and flatten the hierarchy. */}
-          <dl className="mt-14 border-t border-[color-mix(in_srgb,var(--color-muted-gold)_20%,transparent)]">
+          <dl className="mt-14 border-t border-[var(--color-hairline)]">
             {FOUNDER.competencies.map((item, i) => (
               <Reveal key={item.title} delay={i * 70}>
-                <div className="grid grid-cols-1 gap-4 border-b border-[color-mix(in_srgb,var(--color-muted-gold)_20%,transparent)] py-8 md:grid-cols-12 md:gap-12">
-                  <span className="label-small tabular text-[var(--color-muted-gold)] md:col-span-1">
+                <div className="grid grid-cols-1 gap-4 border-b border-[var(--color-hairline)] py-8 md:grid-cols-12 md:gap-12">
+                  <span className="label-small tabular text-[var(--color-saffron)] md:col-span-1">
                     {String(i + 1).padStart(2, '0')}
                   </span>
-                  <dt className="font-[family-name:var(--font-display)] text-xl font-medium text-[var(--color-cosmic-navy)] md:col-span-4">
+                  <dt className="font-[family-name:var(--font-display)] text-xl font-medium text-[var(--color-cocoa)] md:col-span-4">
                     {item.title}
                   </dt>
-                  <dd className="text-base leading-relaxed text-[var(--color-on-surface-variant)] md:col-span-7">
+                  <dd className="text-base leading-relaxed text-[var(--color-body-warm)] md:col-span-7">
                     {item.body}
                   </dd>
                 </div>
@@ -139,9 +139,9 @@ export default function AboutPage() {
       <section aria-labelledby="note-heading" className="py-[var(--spacing-section-lg)]">
         <div className="shell">
           <Reveal>
-            <figure className="border-l border-[color-mix(in_srgb,var(--color-muted-gold)_35%,transparent)] pl-8 md:pl-12">
-              <figcaption className="label-caps text-[var(--color-gold-deep)]">
-                <h2 id="note-heading" className="label-caps font-[family-name:var(--font-sans)] font-semibold text-[var(--color-gold-deep)]">
+            <figure className="border-l border-[var(--color-hairline)] pl-8 md:pl-12">
+              <figcaption className="label-caps text-[var(--color-saffron-deep)]">
+                <h2 id="note-heading" className="label-caps font-[family-name:var(--font-sans)] font-semibold text-[var(--color-saffron-deep)]">
                   {FOUNDER.note.heading}
                 </h2>
               </figcaption>
@@ -150,7 +150,7 @@ export default function AboutPage() {
                 &ldquo;{FOUNDER.note.quote}&rdquo;
               </blockquote>
 
-              <p className="label-caps mt-8 text-[var(--color-cosmic-navy)]">
+              <p className="label-caps mt-8 text-[var(--color-cocoa)]">
                 — {FOUNDER.note.attribution}
               </p>
             </figure>
@@ -162,7 +162,7 @@ export default function AboutPage() {
       <section className="band-navy py-[var(--spacing-section-md)]">
         <div className="shell flex flex-col items-start justify-between gap-10 md:flex-row md:items-center">
           <div>
-            <h2 className="text-[length:var(--text-h2)] text-[var(--color-warm-ivory)]">
+            <h2 className="text-[length:var(--text-h2)] text-[var(--color-card-cream)]">
               Ready when you are
             </h2>
             <p className="mt-5 max-w-md text-base leading-relaxed text-[var(--color-on-primary-container)]">
@@ -179,7 +179,7 @@ export default function AboutPage() {
             </Button>
             <a
               href={`tel:${BRAND.phonesE164[0]}`}
-              className="label-caps border-b border-[var(--color-gold-light)] pb-1 text-[var(--color-gold-light)] transition-opacity hover:opacity-80"
+              className="label-caps border-b border-[var(--color-saffron-lift)] pb-1 text-[var(--color-saffron-lift)] transition-opacity hover:opacity-80"
             >
               {BRAND.phones[0]}
             </a>

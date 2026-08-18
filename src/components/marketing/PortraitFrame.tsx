@@ -63,8 +63,8 @@ export function PortraitFrame({
       window.matchMedia('(prefers-reduced-motion: reduce)').matches ||
       typeof IntersectionObserver === 'undefined'
     ) {
-      setShown(true);
-      return;
+      const reveal = window.setTimeout(() => setShown(true), 0);
+      return () => window.clearTimeout(reveal);
     }
 
     const observer = new IntersectionObserver(
@@ -88,7 +88,7 @@ export function PortraitFrame({
 
   return (
     <div ref={ref} className={cn('group relative', ratio, className)}>
-      <div className="relative size-full overflow-hidden bg-[var(--color-linen-grey)]">
+      <div className="relative size-full overflow-hidden bg-[var(--color-cream)]">
         <Image
           src={src}
           alt={alt}
@@ -107,7 +107,7 @@ export function PortraitFrame({
       {/* Offset gold rule. Starts flush with the image and settles outward. */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 border border-[color-mix(in_srgb,var(--color-muted-gold)_35%,transparent)] transition-transform duration-[900ms] ease-[var(--ease-out-quint)] motion-safe:group-hover:translate-x-[var(--frame-hover)] motion-safe:group-hover:translate-y-[var(--frame-hover)]"
+        className="pointer-events-none absolute inset-0 border border-[var(--color-hairline)] transition-transform duration-[900ms] ease-[var(--ease-out-quint)] motion-safe:group-hover:translate-x-[var(--frame-hover)] motion-safe:group-hover:translate-y-[var(--frame-hover)]"
         style={
           {
             transform: shown ? `translate(${frameOffset}px, ${frameOffset}px)` : 'translate(0, 0)',

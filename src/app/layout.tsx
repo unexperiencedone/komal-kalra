@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next';
-import { Inter, Cormorant_Garamond } from 'next/font/google';
+import { Poppins, Cormorant_Garamond } from 'next/font/google';
 import { Toaster } from 'sonner';
 import { BRAND } from '@/lib/config';
 import './globals.css';
@@ -10,17 +10,13 @@ import './globals.css';
  * about who is being told which pages a visitor loads.
  */
 /**
- * Inter — body and UI.
- *
- * Variable, so one file covers 400–600 instead of three static weights. Chosen
- * over Public Sans for small-size rendering and for `tnum`, which the payments
- * and revenue tables depend on to keep digits in vertical alignment.
+ * Poppins — body and UI.
  */
-const inter = Inter({
+const poppins = Poppins({
   subsets: ['latin'],
-  variable: '--font-inter',
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-poppins',
   display: 'swap',
-  axes: ['opsz'],
 });
 
 /**
@@ -98,14 +94,14 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: '#fef9f2',
+  themeColor: '#fff7ec',
   width: 'device-width',
   initialScale: 1,
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${inter.variable} ${cormorant.variable}`}>
+    <html lang="en" className={`${poppins.variable} ${cormorant.variable}`}>
       <body>
         {/* First focusable element on every page. */}
         <a href="#main" className="skip-link">Skip to content</a>
@@ -115,8 +111,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           toastOptions={{
             style: {
               background: '#fff',
-              border: '1px solid var(--color-outline-variant)',
-              color: 'var(--color-cosmic-navy)',
+              border: '1px solid var(--color-hairline)',
+              color: 'var(--color-body-warm)',
             },
           }}
         />

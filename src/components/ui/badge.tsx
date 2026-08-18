@@ -10,17 +10,17 @@ import type { AppointmentStatus, PaymentStatus } from '@/types/database';
  * system.
  */
 const badgeVariants = cva(
-  'label-caps inline-flex items-center gap-1.5 border px-2.5 py-1 whitespace-nowrap',
+  'label-caps inline-flex items-center gap-1.5 whitespace-nowrap',
   {
     variants: {
       tone: {
-        neutral: 'border-[var(--color-outline-variant)] bg-transparent text-[var(--color-on-surface-variant)]',
-        accent: 'border-[var(--color-muted-gold)]/40 bg-transparent text-[var(--color-gold-deep)]',
-        success: 'border-[var(--color-success)]/30 bg-[var(--color-success-container)] text-[var(--color-success)]',
-        warning: 'border-[var(--color-warning)]/30 bg-[var(--color-warning-container)] text-[var(--color-warning)]',
-        danger: 'border-[var(--color-error)]/30 bg-[var(--color-error-container)] text-[var(--color-on-error-container)]',
-        info: 'border-[var(--color-cosmic-navy)]/25 bg-transparent text-[var(--color-cosmic-navy)]',
-        solid: 'border-[var(--color-cosmic-navy)] bg-[var(--color-cosmic-navy)] text-[var(--color-warm-ivory)]',
+        neutral: 'text-[var(--color-body-warm)]',
+        accent: 'text-[var(--color-saffron-deep)]',
+        success: 'text-[var(--color-success)]',
+        warning: 'text-[var(--color-amber-band)]',
+        danger: 'text-[var(--color-error)]',
+        info: 'text-[var(--color-terracotta)]',
+        solid: 'text-[var(--color-terracotta)]',
       },
     },
     defaultVariants: { tone: 'neutral' },

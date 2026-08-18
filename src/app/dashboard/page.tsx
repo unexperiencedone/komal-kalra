@@ -66,12 +66,12 @@ export default async function DashboardPage() {
 
       {/* Next appointment — the reason this page exists. */}
       <section aria-labelledby="next-heading" className="mt-8">
-        <h2 id="next-heading" className="font-sans text-sm font-semibold uppercase tracking-[0.1em] text-[var(--color-on-surface-variant)]">
+        <h2 id="next-heading" className="font-sans text-sm font-semibold uppercase tracking-[0.1em] text-[var(--color-body-warm)]">
           Next appointment
         </h2>
 
         {next ? (
-          <div className="mt-3  border border-[var(--color-muted-gold)]/30 bg-white p-6">
+          <div className="mt-3  border border-[var(--color-saffron)]/30 bg-white p-6">
             <div className="flex flex-wrap items-start justify-between gap-4">
               <div>
                 <div className="flex items-center gap-3">
@@ -80,13 +80,13 @@ export default async function DashboardPage() {
                   </h3>
                   <AppointmentStatusBadge status={next.status} />
                 </div>
-                <p className="mt-2 text-[15px] text-[var(--color-on-surface-variant)]">
+                <p className="mt-2 text-[15px] text-[var(--color-body-warm)]">
                   {formatLongDay(next.starts_at)}
                 </p>
-                <p className="tabular mt-0.5 text-[15px] font-medium text-[var(--color-cosmic-navy)]">
+                <p className="tabular mt-0.5 text-[15px] font-medium text-[var(--color-cocoa)]">
                   {formatTime(next.starts_at)} – {formatTime(next.ends_at)} IST
                 </p>
-                <p className="mt-2 text-xs text-[var(--color-on-surface-variant)]">
+                <p className="mt-2 text-xs text-[var(--color-body-warm)]">
                   Reference {next.reference} · {relativeTime(next.starts_at)}
                 </p>
               </div>
@@ -137,10 +137,10 @@ export default async function DashboardPage() {
       <div className="mt-8 grid gap-6 lg:grid-cols-2">
         <section aria-labelledby="recent-heading">
           <div className="flex items-center justify-between">
-            <h2 id="recent-heading" className="font-sans text-sm font-semibold uppercase tracking-[0.1em] text-[var(--color-on-surface-variant)]">
+            <h2 id="recent-heading" className="font-sans text-sm font-semibold uppercase tracking-[0.1em] text-[var(--color-body-warm)]">
               Recent bookings
             </h2>
-            <Link href="/dashboard/appointments" className="text-sm font-medium text-[var(--color-gold-deep)] hover:underline">
+            <Link href="/dashboard/appointments" className="text-sm font-medium text-[var(--color-saffron-deep)] hover:underline">
               View all
             </Link>
           </div>
@@ -149,10 +149,10 @@ export default async function DashboardPage() {
             <ul className="mt-3 divide-y divide-[var(--color-outline-variant)]  border border-[var(--color-outline-variant)] bg-white">
               {appointments.slice(0, 4).map((a) => (
                 <li key={a.id}>
-                  <Link href={`/dashboard/appointments/${a.id}`} className="flex items-center justify-between gap-4 px-5 py-3.5 hover:bg-[var(--color-warm-ivory)]">
+                  <Link href={`/dashboard/appointments/${a.id}`} className="flex items-center justify-between gap-4 px-5 py-3.5 hover:bg-[var(--color-card-cream)]">
                     <div className="min-w-0">
                       <p className="truncate text-sm font-medium">{a.service_title_snapshot}</p>
-                      <p className="mt-0.5 text-xs text-[var(--color-on-surface-variant)]">{formatLongDay(a.starts_at)}</p>
+                      <p className="mt-0.5 text-xs text-[var(--color-body-warm)]">{formatLongDay(a.starts_at)}</p>
                     </div>
                     <AppointmentStatusBadge status={a.status} />
                   </Link>
@@ -167,7 +167,7 @@ export default async function DashboardPage() {
         </section>
 
         <section aria-labelledby="notif-heading">
-          <h2 id="notif-heading" className="font-sans text-sm font-semibold uppercase tracking-[0.1em] text-[var(--color-on-surface-variant)]">
+          <h2 id="notif-heading" className="font-sans text-sm font-semibold uppercase tracking-[0.1em] text-[var(--color-body-warm)]">
             Notifications
           </h2>
 
@@ -176,8 +176,8 @@ export default async function DashboardPage() {
               {notifications.map((n) => (
                 <li key={n.id} className="px-5 py-3.5">
                   <p className="text-sm font-medium">{n.title}</p>
-                  <p className="mt-0.5 text-xs leading-relaxed text-[var(--color-on-surface-variant)]">{n.message}</p>
-                  <p className="mt-1 text-[11px] text-[var(--color-on-surface-variant)]">{relativeTime(n.created_at)}</p>
+                  <p className="mt-0.5 text-xs leading-relaxed text-[var(--color-body-warm)]">{n.message}</p>
+                  <p className="mt-1 text-[11px] text-[var(--color-body-warm)]">{relativeTime(n.created_at)}</p>
                 </li>
               ))}
             </ul>

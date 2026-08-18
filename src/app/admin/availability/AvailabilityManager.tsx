@@ -38,7 +38,7 @@ export function AvailabilityManager({
             <h2 id="hours-heading" className="font-[family-name:var(--font-display)] text-xl font-semibold">
               Weekly working hours
             </h2>
-            <p className="mt-1 text-sm text-[var(--color-on-surface-variant)]">
+            <p className="mt-1 text-sm text-[var(--color-body-warm)]">
               Your normal pattern. It repeats every week until you change it.
             </p>
           </div>
@@ -86,18 +86,18 @@ export function AvailabilityManager({
             <li key={day.name} className="flex flex-wrap items-center gap-4  border border-[var(--color-outline-variant)] bg-white px-5 py-3.5">
               <span className="w-24 shrink-0 text-sm font-medium">{day.name}</span>
               {day.rules.length === 0 ? (
-                <span className="text-sm text-[var(--color-on-surface-variant)]">Not working</span>
+                <span className="text-sm text-[var(--color-body-warm)]">Not working</span>
               ) : (
                 <div className="flex flex-1 flex-wrap items-center gap-2">
                   {day.rules.map((r) => (
-                    <span key={r.id} className="flex items-center gap-2  bg-[var(--color-warm-ivory)] py-1 pl-3 pr-1 text-sm">
+                    <span key={r.id} className="flex items-center gap-2  bg-[var(--color-card-cream)] py-1 pl-3 pr-1 text-sm">
                       <span className="tabular">{r.start_time.slice(0, 5)} – {r.end_time.slice(0, 5)}</span>
-                      <span className="text-xs text-[var(--color-on-surface-variant)]">/{r.slot_interval_minutes}m</span>
+                      <span className="text-xs text-[var(--color-body-warm)]">/{r.slot_interval_minutes}m</span>
                       {!r.active && <Badge tone="neutral">Off</Badge>}
                       <form action={deleteAvailabilityRule}>
                         <input type="hidden" name="id" value={r.id} />
                         <button type="submit" aria-label={`Remove ${day.name} ${r.start_time.slice(0, 5)} hours`}
-                          className="flex size-6 items-center justify-center rounded text-[var(--color-on-surface-variant)] hover:bg-[var(--color-error-container)] hover:text-[var(--color-error)]">
+                          className="flex size-6 items-center justify-center rounded text-[var(--color-body-warm)] hover:bg-[var(--color-error-container)] hover:text-[var(--color-error)]">
                           <Trash2 className="size-3.5" aria-hidden />
                         </button>
                       </form>
@@ -117,7 +117,7 @@ export function AvailabilityManager({
             <h2 id="exceptions-heading" className="font-[family-name:var(--font-display)] text-xl font-semibold">
               Blocked dates & extra hours
             </h2>
-            <p className="mt-1 text-sm text-[var(--color-on-surface-variant)]">
+            <p className="mt-1 text-sm text-[var(--color-body-warm)]">
               One-off changes: holidays, a day off, or extra hours outside your usual pattern.
             </p>
           </div>
@@ -164,7 +164,7 @@ export function AvailabilityManager({
               <li key={e.id} className="flex flex-wrap items-center justify-between gap-3  border border-[var(--color-outline-variant)] bg-white px-5 py-3.5">
                 <div>
                   <p className="text-sm font-medium">{formatLongDay(`${e.date}T00:00:00`)}</p>
-                  <p className="mt-0.5 text-xs text-[var(--color-on-surface-variant)]">
+                  <p className="mt-0.5 text-xs text-[var(--color-body-warm)]">
                     {e.start_time
                       ? `${e.start_time.slice(0, 5)} – ${e.end_time?.slice(0, 5)}`: 'Whole day'}
                     {e.reason && ` · ${e.reason}`}
@@ -177,7 +177,7 @@ export function AvailabilityManager({
                   <form action={deleteAvailabilityException}>
                     <input type="hidden" name="id" value={e.id} />
                     <button type="submit" aria-label={`Remove exception on ${e.date}`}
-                      className="flex size-8 items-center justify-center rounded text-[var(--color-on-surface-variant)] hover:bg-[var(--color-error-container)] hover:text-[var(--color-error)]">
+                      className="flex size-8 items-center justify-center rounded text-[var(--color-body-warm)] hover:bg-[var(--color-error-container)] hover:text-[var(--color-error)]">
                       <Trash2 className="size-4" aria-hidden />
                     </button>
                   </form>

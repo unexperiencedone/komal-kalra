@@ -56,24 +56,24 @@ export default async function BookPage(props: {
   const initial = catalogue.find((s) => s.slug === requestedSlug)?.id;
 
   return (
-    <div className="min-h-dvh bg-[var(--color-warm-ivory)]">
+    <div className="min-h-dvh bg-[var(--color-card-cream)]">
       {/*
         Booking chrome is deliberately stripped back — wordmark and an exit,
         nothing else. The design removes the full navigation here because every
         link in it is a way to abandon a checkout that already has a slot held.
       */}
-      <header className="border-b border-[color-mix(in_srgb,var(--color-muted-gold)_20%,transparent)]">
+      <header className="border-b border-[var(--color-hairline)]">
         <div className="shell flex h-20 items-center justify-between">
           <Link
             href="/"
-            className="flex items-center gap-2.5 font-[family-name:var(--font-display)] text-lg font-medium tracking-tight text-[var(--color-cosmic-navy)] sm:text-2xl"
+            className="flex items-center gap-2.5 font-[family-name:var(--font-display)] text-lg font-medium tracking-tight text-[var(--color-cocoa)] sm:text-2xl"
           >
             <Image src="/images/favicon.png" alt="" width={32} height={32} className="size-8" />
             {BRAND.name}
           </Link>
           <Link
             href="/"
-            className="label-caps inline-flex items-center gap-2 text-[var(--color-on-surface-variant)] transition-colors hover:text-[var(--color-cosmic-navy)]"
+            className="label-caps inline-flex items-center gap-2 text-[var(--color-body-warm)] transition-colors hover:text-[var(--color-cocoa)]"
           >
             <X className="size-4" aria-hidden />
             Exit Booking

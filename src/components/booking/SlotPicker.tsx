@@ -63,11 +63,14 @@ export function SlotPicker({
   useEffect(() => {
     if (!active) return;
     const d = new Date(`${active}T00:00:00`);
-    setCursor((c) =>
-      c.getFullYear() === d.getFullYear() && c.getMonth() === d.getMonth()
-        ? c
-        : new Date(d.getFullYear(), d.getMonth(), 1),
-    );
+    const syncCursor = window.setTimeout(() => {
+      setCursor((c) =>
+        c.getFullYear() === d.getFullYear() && c.getMonth() === d.getMonth()
+          ? c
+          : new Date(d.getFullYear(), d.getMonth(), 1),
+      );
+    }, 0);
+    return () => window.clearTimeout(syncCursor);
   }, [active]);
 
   const grid = useMemo(() => {
@@ -109,9 +112,9 @@ export function SlotPicker({
   return (
     <div className="grid gap-10 md:grid-cols-2">
       {/* ------------------------------ Calendar ------------------------------ */}
-      <div className="bg-[var(--color-surface-low)] p-6 sm:p-8">
+      <div className="bg-[var(--color-card-cream)] p-6 sm:p-8">
         <div className="flex items-center justify-between">
-          <h3 className="font-[family-name:var(--font-display)] text-xl font-medium text-[var(--color-cosmic-navy)]">
+          <h3 className="font-[family-name:var(--font-display)] text-xl font-medium text-[var(--color-cocoa)]">
             {monthLabel}
           </h3>
           <div className="flex items-center gap-1">
@@ -119,7 +122,7 @@ export function SlotPicker({
               type="button"
               aria-label="Previous month"
               onClick={() => setCursor((c) => new Date(c.getFullYear(), c.getMonth() - 1, 1))}
-              className="flex size-9 items-center justify-center text-[var(--color-cosmic-navy)] transition-colors hover:bg-[var(--color-linen-grey)]"
+              className="flex size-9 items-center justify-center text-[var(--color-cocoa)] transition-colors hover:bg-[var(--color-cream)]"
             >
               <ChevronLeft className="size-5" aria-hidden />
             </button>
@@ -127,7 +130,7 @@ export function SlotPicker({
               type="button"
               aria-label="Next month"
               onClick={() => setCursor((c) => new Date(c.getFullYear(), c.getMonth() + 1, 1))}
-              className="flex size-9 items-center justify-center text-[var(--color-cosmic-navy)] transition-colors hover:bg-[var(--color-linen-grey)]"
+              className="flex size-9 items-center justify-center text-[var(--color-cocoa)] transition-colors hover:bg-[var(--color-cream)]"
             >
               <ChevronRight className="size-5" aria-hidden />
             </button>
@@ -140,7 +143,7 @@ export function SlotPicker({
               <div
                 key={w}
                 role="columnheader"
-                className="label-small pb-4 text-center uppercase text-[var(--color-on-surface-variant)]"
+                className="label-small pb-4 text-center uppercase text-[var(--color-body-warm)]"
               >
                 {w}
               </div>
@@ -170,9 +173,9 @@ export function SlotPicker({
                     className={cn(
                       'tabular flex size-10 items-center justify-center text-base transition-colors',
                       isActive
-                        ? 'bg-[var(--color-cosmic-navy)] text-[var(--color-warm-ivory)]'
+                        ? 'bg-[var(--color-cocoa)] text-[var(--color-card-cream)]'
                         : has
-                          ? 'text-[var(--color-on-surface)] hover:bg-[var(--color-linen-grey)]'
+                          ? 'text-[var(--color-body-warm)] hover:bg-[var(--color-cream)]'
                           : 'cursor-not-allowed text-[var(--color-outline-variant)]',
                     )}
                   >
@@ -187,7 +190,7 @@ export function SlotPicker({
 
       {/* ------------------------------- Times -------------------------------- */}
       <div>
-        <h3 className="font-[family-name:var(--font-display)] text-xl font-medium text-[var(--color-cosmic-navy)]">
+        <h3 className="font-[family-name:var(--font-display)] text-xl font-medium text-[var(--color-cocoa)]">
           {active
             ? new Date(`${active}T00:00:00`).toLocaleDateString('en-IN', {
                 weekday: 'long', day: 'numeric', month: 'long',
@@ -213,8 +216,8 @@ export function SlotPicker({
                 className={cn(
                   'flex w-full items-center justify-between border px-6 py-5 text-left text-base transition-colors disabled:opacity-50',
                   isSelected
-                    ? 'border-[var(--color-muted-gold)] bg-[var(--color-linen-grey)] text-[var(--color-gold-deep)]'
-                    : 'border-[var(--color-outline-variant)] text-[var(--color-on-surface)] hover:border-[var(--color-cosmic-navy)]',
+                    ? 'border-[var(--color-saffron)] bg-[var(--color-cream)] text-[var(--color-cocoa)]'
+                    : 'border-[var(--color-outline-variant)] text-[var(--color-body-warm)] hover:border-[var(--color-cocoa)]',
                 )}
               >
                 <span className="tabular">{formatTime(slot.start)}</span>
@@ -224,13 +227,13 @@ export function SlotPicker({
           })}
 
           {slots.length === 0 && (
-            <p className="border border-dashed border-[var(--color-outline-variant)] px-6 py-8 text-center text-sm text-[var(--color-on-surface-variant)]">
+            <p className="border border-dashed border-[var(--color-outline-variant)] px-6 py-8 text-center text-sm text-[var(--color-body-warm)]">
               No times remaining on this date. Choose another from the calendar.
             </p>
           )}
         </div>
 
-        <p className="mt-4 text-xs text-[var(--color-on-surface-variant)]">
+        <p className="mt-4 text-xs text-[var(--color-body-warm)]">
           All times shown in India Standard Time (IST).
         </p>
       </div>

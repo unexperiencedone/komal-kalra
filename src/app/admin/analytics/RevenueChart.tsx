@@ -39,7 +39,7 @@ export function RevenueChart({ data }: { data: { day: string; net_paise: number;
   if (total === 0) {
     return (
       <div className="flex h-64 items-center justify-center text-center">
-        <p className="max-w-xs text-sm leading-relaxed text-[var(--color-on-surface-variant)]">
+        <p className="max-w-xs text-sm leading-relaxed text-[var(--color-body-warm)]">
           No revenue recorded in this period. The chart will fill in as bookings are paid for.
         </p>
       </div>

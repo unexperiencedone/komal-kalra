@@ -32,7 +32,7 @@ export function SkeletonText({ lines = 3, className }: { lines?: number; classNa
 
 export function SkeletonRows({ rows = 5, cols = 4 }: { rows?: number; cols?: number }) {
   return (
-    <div className="divide-y divide-[var(--color-linen-grey)]" role="status" aria-label="Loading">
+    <div className="divide-y divide-[var(--color-cream)]" role="status" aria-label="Loading">
       {Array.from({ length: rows }).map((_, r) => (
         <div key={r} className="grid gap-4 px-4 py-3.5" style={{ gridTemplateColumns: `repeat(${cols}, minmax(0,1fr))` }}>
           {Array.from({ length: cols }).map((_, c) => (
@@ -54,13 +54,13 @@ export function EmptyState({
   action?: { label: string; href: string };
 }) {
   return (
-    <div className="flex flex-col items-center justify-center  border border-dashed border-[var(--color-linen-grey)] bg-[var(--color-surface-low)] px-6 py-14 text-center">
-      <div className="mb-4 flex size-11 items-center justify-center rounded-full bg-[var(--color-linen-grey)]">
-        <Icon className="size-5 text-[var(--color-on-surface-variant)]" />
+    <div className="flex flex-col items-center justify-center  border border-dashed border-[var(--color-cream)] bg-[var(--color-card-cream)] px-6 py-14 text-center">
+      <div className="mb-4 flex size-11 items-center justify-center rounded-full bg-[var(--color-cream)]">
+        <Icon className="size-5 text-[var(--color-body-warm)]" />
       </div>
-      <p className="font-sans text-[15px] font-semibold text-[var(--color-cosmic-navy)]">{title}</p>
+      <p className="font-sans text-[15px] font-semibold text-[var(--color-cocoa)]">{title}</p>
       {description && (
-        <p className="mt-1.5 max-w-sm text-sm leading-relaxed text-[var(--color-on-surface-variant)]">{description}</p>
+        <p className="mt-1.5 max-w-sm text-sm leading-relaxed text-[var(--color-body-warm)]">{description}</p>
       )}
       {action && (
         <Button asChild variant="secondary" size="sm" className="mt-5">
@@ -92,8 +92,8 @@ export function ErrorState({
       className="flex flex-col items-center justify-center  border border-[var(--color-error)]/25 bg-[var(--color-error-container)] px-6 py-12 text-center"
     >
       <AlertTriangle className="mb-3 size-6 text-[var(--color-error)]" aria-hidden />
-      <p className="font-sans text-[15px] font-semibold text-[var(--color-cosmic-navy)]">{title}</p>
-      <p className="mt-1.5 max-w-sm text-sm leading-relaxed text-[var(--color-on-surface-variant)]">{description}</p>
+      <p className="font-sans text-[15px] font-semibold text-[var(--color-cocoa)]">{title}</p>
+      <p className="mt-1.5 max-w-sm text-sm leading-relaxed text-[var(--color-body-warm)]">{description}</p>
       <div className="mt-5 flex gap-3">
         {onRetry && (
           <Button variant="secondary" size="sm" onClick={onRetry}>
@@ -114,7 +114,7 @@ export function InlineAlert({
   children: React.ReactNode;
 }) {
   const tones = {
-    info: 'border-[var(--color-cosmic-navy)]/20 bg-[var(--color-surface-low)] text-[var(--color-cosmic-navy)]',
+    info: 'border-[var(--color-cocoa)]/20 bg-[var(--color-card-cream)] text-[var(--color-cocoa)]',
     success: 'border-[var(--color-success)]/25 bg-[var(--color-success-container)] text-[var(--color-success)]',
     warning: 'border-[var(--color-warning)]/25 bg-[var(--color-warning-container)] text-[var(--color-warning)]',
     danger: 'border-[var(--color-error)]/25 bg-[var(--color-error-container)] text-[var(--color-error)]',
@@ -125,7 +125,7 @@ export function InlineAlert({
       className={cn(' border px-4 py-3 text-sm leading-relaxed', tones[tone])}
     >
       {title && <p className="font-semibold">{title}</p>}
-      <div className={cn(title && 'mt-0.5', 'text-[var(--color-on-surface-variant)]')}>{children}</div>
+      <div className={cn(title && 'mt-0.5', 'text-[var(--color-body-warm)]')}>{children}</div>
     </div>
   );
 }

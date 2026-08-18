@@ -1,36 +1,86 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-import { Menu, UserRound, X } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import { BRAND } from '@/lib/config';
 import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
 
 const NAV = [
-  { href: '/services', label: 'Services' },
-  { href: '/about', label: 'About' },
+  { href: '/services', label: 'Consultation' },
+  { href: '/free-tools', label: 'Free Tools' },
+  { href: '/about', label: 'About Komal' },
   { href: '/faq', label: 'FAQ' },
   { href: '/contact', label: 'Contact' },
 ];
 
 /**
- * Top navigation.
+ * Hide the bar on scroll down, bring it back on scroll up.
  *
- * Fixed, with the one permitted use of glassmorphism in this system: a
- * high-transparency Warm Ivory tint plus backdrop-blur, "to maintain a sense
- * of lightness as the user scrolls". Everything else in the design is opaque.
+ * The header is 8rem tall on desktop — two rows — which is a lot of a phone
+ * screen to give up permanently. Hiding it while the reader is moving forward
+ * and returning it the instant they reverse gives back the space without
+ * making them scroll to the top to navigate.
  *
- * The wordmark is Playfair at 24px with generous clear space, per the logo
- * guidance. The primary CTA is a sharp navy block — the only filled element
- * in the bar.
+ * Three details that matter:
+ *
+ *  • The reads happen inside rAF. `scrollY` is a layout-triggering read, and
+ *    doing it directly in a scroll handler forces a reflow on every event.
+ *  • A 6px threshold, because trackpads and touch momentum emit tiny
+ *    alternating deltas that would otherwise flicker the bar continuously.
+ *  • It never hides in the top 120px, so the header is always present at the
+ *    top of a page regardless of which direction the last scroll went.
  */
+function useHideOnScroll(active: boolean) {
+  const [hidden, setHidden] = useState(false);
+  const lastY = useRef(0);
+  const frame = useRef(0);
+
+  useEffect(() => {
+    if (!active) {
+      setHidden(false);
+      return;
+    }
+
+    lastY.current = window.scrollY;
+
+    const onScroll = () => {
+      if (frame.current) return;
+      frame.current = requestAnimationFrame(() => {
+        frame.current = 0;
+        const y = window.scrollY;
+        const delta = y - lastY.current;
+
+        if (Math.abs(delta) < 6) return;
+        setHidden(y > 120 && delta > 0);
+        lastY.current = y;
+      });
+    };
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      if (frame.current) cancelAnimationFrame(frame.current);
+    };
+  }, [active]);
+
+  return hidden;
+}
+
 export function SiteHeader({ signedIn = false }: { signedIn?: boolean }) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
 
-  useEffect(() => setOpen(false), [pathname]);
+  // Never auto-hide while the mobile menu is open — the close button lives in
+  // the bar, and sliding it off screen would trap the user in the overlay.
+  const hidden = useHideOnScroll(!open);
+
+  useEffect(() => {
+    const close = window.setTimeout(() => setOpen(false), 0);
+    return () => window.clearTimeout(close);
+  }, [pathname]);
 
   useEffect(() => {
     document.body.style.overflow = open ? 'hidden' : '';
@@ -38,94 +88,84 @@ export function SiteHeader({ signedIn = false }: { signedIn?: boolean }) {
   }, [open]);
 
   return (
-    <header className="glass-nav fixed top-0 z-50 w-full border-b border-[color-mix(in_srgb,var(--color-muted-gold)_20%,transparent)]">
-      <div className="shell flex h-20 items-center justify-between">
-        <Link
+    <header
+      className={cn(
+        'fixed top-0 z-50 w-full border-b border-[color-mix(in_srgb,var(--color-cream)_22%,transparent)] bg-[var(--color-terracotta-lo)] text-[var(--color-cream)]',
+        'transition-transform duration-300 ease-out motion-reduce:transition-none',
+        hidden ? '-translate-y-full' : 'translate-y-0',
+      )}
+    >
+      <div className="shell relative flex min-h-20 flex-col">
+        <div className="flex min-h-20 items-center justify-between border-b border-[color-mix(in_srgb,var(--color-cream)_22%,transparent)]">
+          <Link
           href="/"
-          /* text-lg below sm: the wordmark is now the full "Astrologer Komal
-             Kalra" (see BRAND in config.ts — Google's OAuth review requires a
-             single unambiguous name), which overflows a 320px bar at 24px
-             beside the mark and the menu button. */
-          className="flex items-center gap-2.5 font-[family-name:var(--font-display)] text-lg font-medium tracking-tight text-[var(--color-cosmic-navy)] sm:text-2xl"
+          className="absolute left-1/2 -translate-x-1/2 font-[family-name:var(--font-display)] text-xl sm:text-2xl uppercase tracking-[0.15em] text-[var(--color-cream)]"
         >
-          <Image src="/images/favicon.png" alt="" width={36} height={36} className="size-9" priority />
-          {BRAND.name}
-        </Link>
+          Komal Kalra
+          </Link>
 
-        <nav aria-label="Main" className="hidden items-center gap-8 md:flex">
+          <div className="flex items-center gap-4">
+            <Link href={signedIn ? '/dashboard' : '/login'} className="hidden text-xs font-semibold uppercase tracking-[0.1em] text-[var(--color-cream)] hover:text-[var(--color-saffron-lift)] md:inline-flex">Login</Link>
+            <Button variant="primary" asChild className="hidden bg-[var(--color-saffron)] text-[var(--color-on-saffron)] shadow-[4px_4px_0_0_var(--color-on-saffron)] hover:bg-[var(--color-saffron-lift)] md:inline-flex">
+              <Link href="/book">Join Community</Link>
+            </Button>
+            <button
+              type="button"
+              onClick={() => setOpen((v) => !v)}
+              aria-expanded={open}
+              aria-controls="mobile-nav"
+              aria-label={open ? 'Close menu' : 'Open menu'}
+              className="flex size-10 items-center justify-center text-[var(--color-cream)] md:hidden"
+            >
+              {open ? <X className="size-5" /> : <Menu className="size-5" />}
+            </button>
+          </div>
+        </div>
+        <nav aria-label="Main" className="hidden items-center justify-center gap-8 py-3 md:flex">
           {NAV.map((item) => (
             <Link
               key={item.href}
               href={item.href}
               className={cn(
-                'text-base transition-colors duration-300',
+                'text-sm transition-colors duration-300',
                 pathname.startsWith(item.href)
-                  ? 'text-[var(--color-cosmic-navy)]'
-                  : 'text-[var(--color-on-surface-variant)] hover:text-[var(--color-cosmic-navy)]',
+                  ? 'text-[var(--color-saffron-lift)]'
+                  : 'text-[var(--color-cream)] hover:text-[var(--color-saffron-lift)]',
               )}
             >
               {item.label}
             </Link>
           ))}
         </nav>
-
-        <div className="flex items-center gap-5">
-          <Link
-            href="/book"
-            className="label-caps hidden items-center justify-center bg-[var(--color-cosmic-navy)] px-6 py-3.5 text-[var(--color-warm-ivory)] transition-colors duration-300 hover:bg-[var(--color-ink-black)] md:inline-flex"
-          >
-            Book Consultation
-          </Link>
-
-          <Link
-            href={signedIn ? '/dashboard' : '/login'}
-            aria-label={signedIn ? 'Your account' : 'Sign in'}
-            className="text-[var(--color-cosmic-navy)] transition-transform duration-200 hover:scale-95"
-          >
-            <UserRound className="size-6" aria-hidden />
-          </Link>
-
-          <button
-            type="button"
-            onClick={() => setOpen((v) => !v)}
-            aria-expanded={open}
-            aria-controls="mobile-nav"
-            aria-label={open ? 'Close menu' : 'Open menu'}
-            className="-mr-1 flex size-10 items-center justify-center text-[var(--color-cosmic-navy)] md:hidden"
-          >
-            {open ? <X className="size-5" /> : <Menu className="size-5" />}
-          </button>
-        </div>
       </div>
 
       {open && (
         <div
           id="mobile-nav"
-          className="border-t border-[color-mix(in_srgb,var(--color-muted-gold)_20%,transparent)] bg-[var(--color-warm-ivory)] md:hidden"
+          className="fixed inset-0 top-20 z-40 overflow-y-auto bg-[var(--color-terracotta-lo)] md:hidden"
         >
-          <nav aria-label="Mobile" className="shell py-6">
-            <ul className="divide-y divide-[color-mix(in_srgb,var(--color-muted-gold)_15%,transparent)]">
+          <nav aria-label="Mobile" className="shell py-6 flex flex-col min-h-[calc(100dvh-5rem)]">
+            <ul className="flex-1 divide-y divide-[color-mix(in_srgb,var(--color-cream)_30%,transparent)]">
               {NAV.map((item) => (
                 <li key={item.href}>
-                  <Link href={item.href} className="block py-4 text-base text-[var(--color-cosmic-navy)]">
+                  <Link href={item.href} className="block py-4 text-2xl font-[family-name:var(--font-display)] text-[var(--color-cream)]">
                     {item.label}
                   </Link>
                 </li>
               ))}
             </ul>
 
-            <Link
-              href="/book"
-              className="label-caps mt-6 flex items-center justify-center bg-[var(--color-cosmic-navy)] px-6 py-4 text-[var(--color-warm-ivory)]"
-            >
-              Book Consultation
-            </Link>
-            <a
-              href={`tel:${BRAND.phonesE164[0]}`}
-              className="label-caps mt-3 flex items-center justify-center border border-[var(--color-cosmic-navy)] px-6 py-4 text-[var(--color-cosmic-navy)]"
-            >
-              {BRAND.phones[0]}
-            </a>
+            <div className="pb-8">
+              <Button variant="primary" asChild className="w-full bg-[var(--color-cream)] text-[var(--color-cocoa)] hover:bg-[var(--color-card-cream)] shadow-none mb-4">
+                <Link href="/book">Book Consultation</Link>
+              </Button>
+              <a
+                href={`tel:${BRAND.phonesE164[0]}`}
+                className="label-caps flex items-center justify-center border border-[var(--color-cream)] px-6 py-4 text-[var(--color-cream)] transition-colors hover:bg-[var(--color-cream)] hover:text-[var(--color-cocoa)]"
+              >
+                {BRAND.phones[0]}
+              </a>
+            </div>
           </nav>
         </div>
       )}

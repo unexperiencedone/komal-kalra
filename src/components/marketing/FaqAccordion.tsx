@@ -24,14 +24,14 @@ export function FaqAccordion({ items }: { items: FaqItem[] }) {
         <Accordion.Item
           key={i}
           value={`item-${i}`}
-          className="border-b border-[color-mix(in_srgb,var(--color-muted-gold)_20%,transparent)]"
+          className="border-b border-[var(--color-hairline)]"
         >
           <Accordion.Header>
             <Accordion.Trigger className="group flex w-full items-center justify-between gap-6 py-6 text-left">
-              <span className="text-lg leading-relaxed text-[var(--color-cosmic-navy)] transition-colors duration-300 group-hover:text-[var(--color-gold-deep)]">
+              <span className="text-lg leading-relaxed text-[var(--color-cocoa)] transition-colors duration-300 group-hover:text-[var(--color-saffron-deep)]">
                 {item.question}
               </span>
-              <span className="relative flex size-5 shrink-0 items-center justify-center text-[var(--color-muted-gold)]">
+              <span className="relative flex size-5 shrink-0 items-center justify-center text-[var(--color-saffron)]">
                 <Plus className="size-5 group-data-[state=open]:hidden" aria-hidden />
                 <Minus className="hidden size-5 group-data-[state=open]:block" aria-hidden />
               </span>
@@ -39,7 +39,7 @@ export function FaqAccordion({ items }: { items: FaqItem[] }) {
           </Accordion.Header>
 
           <Accordion.Content className="overflow-hidden">
-            <p className="max-w-2xl pb-6 pr-12 text-base leading-relaxed text-[var(--color-on-surface-variant)]">
+            <p className="max-w-2xl pb-6 pr-12 text-base leading-relaxed text-[var(--color-body-warm)]">
               {item.answer}
             </p>
           </Accordion.Content>

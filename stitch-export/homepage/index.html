@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Komal Kalra | Astrologer</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&amp;family=EB+Garamond:wght@500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-tertiary-fixed": "#2f1500",
+                    "on-tertiary": "#ffffff",
+                    "outline-variant": "#d9c2b3",
+                    "secondary-container": "#fda62f",
+                    "on-secondary-fixed": "#2b1700",
+                    "surface-tint": "#8f4e00",
+                    "error": "#ba1a1a",
+                    "inverse-on-surface": "#f7f0e5",
+                    "on-tertiary-fixed-variant": "#6f3900",
+                    "surface-variant": "#e9e1d7",
+                    "tertiary-fixed": "#ffdcc4",
+                    "outline": "#867466",
+                    "surface-bright": "#fff8f1",
+                    "inverse-primary": "#ffb77a",
+                    "surface-dim": "#e0d9ce",
+                    "on-primary-fixed-variant": "#6d3a00",
+                    "on-surface": "#1e1b15",
+                    "on-error-container": "#93000a",
+                    "primary-fixed-dim": "#ffb77a",
+                    "surface-container": "#f5ede2",
+                    "on-primary-container": "#fffcff",
+                    "tertiary-fixed-dim": "#ffb77f",
+                    "surface-container-lowest": "#ffffff",
+                    "surface": "#fff8f1",
+                    "secondary": "#875300",
+                    "on-primary": "#ffffff",
+                    "primary-fixed": "#ffdcc2",
+                    "on-tertiary-container": "#fffbff",
+                    "on-primary-fixed": "#2e1500",
+                    "surface-container-low": "#faf3e8",
+                    "primary": "#8c4c00",
+                    "on-secondary": "#ffffff",
+                    "tertiary-container": "#b15f05",
+                    "surface-container-highest": "#e9e1d7",
+                    "background": "#fff8f1",
+                    "secondary-fixed-dim": "#ffb964",
+                    "error-container": "#ffdad6",
+                    "on-secondary-container": "#6a4000",
+                    "primary-container": "#ab6318",
+                    "on-secondary-fixed-variant": "#663e00",
+                    "secondary-fixed": "#ffddb9",
+                    "surface-container-high": "#efe7dc",
+                    "inverse-surface": "#343029",
+                    "on-error": "#ffffff",
+                    "on-background": "#1e1b15",
+                    "tertiary": "#8e4a00",
+                    "on-surface-variant": "#534438"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0px",
+                    "lg": "0px",
+                    "xl": "0px",
+                    "full": "0px"
+            },
+            "spacing": {
+                    "margin-desktop": "80px",
+                    "container-max": "1280px",
+                    "gutter": "24px",
+                    "margin-mobile": "20px",
+                    "unit": "4px"
+            },
+            "fontFamily": {
+                    "title-lg": [
+                            "Poppins"
+                    ],
+                    "label-caps": [
+                            "Poppins"
+                    ],
+                    "headline-md": [
+                            "EB Garamond"
+                    ],
+                    "display-lg-mobile": [
+                            "EB Garamond"
+                    ],
+                    "body-md": [
+                            "Poppins"
+                    ],
+                    "display-lg": [
+                            "EB Garamond"
+                    ],
+                    "body-lg": [
+                            "Poppins"
+                    ]
+            },
+            "fontSize": {
+                    "title-lg": [
+                            "20px",
+                            {
+                                    "lineHeight": "1.4",
+                                    "letterSpacing": "0.02em",
+                                    "fontWeight": "600"
+                            }
+                    ],
+                    "label-caps": [
+                            "12px",
+                            {
+                                    "lineHeight": "1",
+                                    "letterSpacing": "0.1em",
+                                    "fontWeight": "700"
+                            }
+                    ],
+                    "headline-md": [
+                            "32px",
+                            {
+                                    "lineHeight": "1.2",
+                                    "fontWeight": "500"
+                            }
+                    ],
+                    "display-lg-mobile": [
+                            "32px",
+                            {
+                                    "lineHeight": "1.2",
+                                    "fontWeight": "600"
+                            }
+                    ],
+                    "body-md": [
+                            "16px",
+                            {
+                                    "lineHeight": "1.6",
+                                    "fontWeight": "400"
+                            }
+                    ],
+                    "display-lg": [
+                            "48px",
+                            {
+                                    "lineHeight": "1.1",
+                                    "letterSpacing": "-0.02em",
+                                    "fontWeight": "600"
+                            }
+                    ],
+                    "body-lg": [
+                            "18px",
+                            {
+                                    "lineHeight": "1.6",
+                                    "fontWeight": "400"
+                            }
+                    ]
+            }
+    },
+        },
+      }
+    </script>
+<style>
+        .hard-shadow {
+            box-shadow: 4px 4px 0px 0px #6e3a11;
+        }
+        .hard-shadow-lg {
+            box-shadow: 8px 8px 0px 0px #6e3a11;
+        }
+        .hairline-border {
+            border: 1px solid #6e3a11;
+        }
+        .double-rule-frame {
+            border: 1px solid #6e3a11;
+            padding: 2px;
+        }
+        .double-rule-frame-inner {
+            border: 1px solid #6e3a11;
+            width: 100%;
+            height: 100%;
+        }
+        .double-divider {
+            border-top: 1px solid #6e3a11;
+            border-bottom: 1px solid #6e3a11;
+            height: 6px;
+        }
+        .notch-panel {
+            clip-path: polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px);
+        }
+        @keyframes marquee {
+            0% { transform: translateX(0%); }
+            100% { transform: translateX(-50%); }
+        }
+        .animate-marquee {
+            animation: marquee 20s linear infinite;
+        }
+    </style>
+</head>
+<body class="bg-surface font-body-md text-on-surface">
+<!-- TopNavBar -->
+<header class="bg-tertiary-container dark:bg-tertiary-container text-on-primary dark:text-on-primary full-width top-0 sticky border-b-2 border-outline dark:border-outline-variant flat no shadows z-50">
+<div class="flex flex-col w-full max-w-container-max mx-auto px-margin-desktop md:flex-col">
+<!-- Top Row: Logo & Actions -->
+<div class="flex items-center justify-between py-4 border-b border-on-primary/20">
+<div class="flex-shrink-0">
+<img alt="Komal Kalra Logo" class="h-12 w-12 object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD-4Sgv7W9J1ylpqLOTCJJ2QKEYlUxlcOFR9zd6TneBUoU-kDYoUtO5pUYt65evOsFosoCXIRp-jlS3P0eHyUEmeCnzzfPmJXSTobAf2ymECVlRVGfvzSuDHDc2Cq1bphFSHzI9CdmNE0iQHx3B53qGiyoSctdVMfQba-FyleIFaWDVpB0dHXtf1HQ5Gs_-eIJ9TV-7NVlpRl6cuQbtAdPAOxhY_RNHn9ziSgyvCNiCBPezRRb6fESz"/>
+</div>
+<div class="flex-grow text-center">
+<span class="text-title-lg font-title-lg text-surface-bright uppercase tracking-widest">Komal Kalra</span>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-label-caps font-label-caps hover:text-secondary-fixed transition-colors duration-200">Login</button>
+<button class="bg-secondary-container text-on-secondary-container text-label-caps font-label-caps px-4 py-2 hard-shadow hover:scale-95 duration-150">Join Community</button>
+</div>
+</div>
+<!-- Bottom Row: Navigation -->
+<nav class="hidden md:flex justify-center items-center py-3 gap-8">
+<a class="text-label-caps font-label-caps text-secondary-fixed font-bold border-b-2 border-secondary-fixed pb-1 hover:text-secondary-fixed transition-colors duration-200" href="#">Consultation</a>
+<a class="text-label-caps font-label-caps text-surface-container-lowest opacity-90 hover:opacity-100 hover:text-secondary-fixed transition-colors duration-200" href="#">Courses</a>
+<a class="text-label-caps font-label-caps text-surface-container-lowest opacity-90 hover:opacity-100 hover:text-secondary-fixed transition-colors duration-200" href="#">Horoscope</a>
+<a class="text-label-caps font-label-caps text-surface-container-lowest opacity-90 hover:opacity-100 hover:text-secondary-fixed transition-colors duration-200" href="#">Vastu</a>
+<a class="text-label-caps font-label-caps text-surface-container-lowest opacity-90 hover:opacity-100 hover:text-secondary-fixed transition-colors duration-200" href="#">Shop</a>
+</nav>
+</div>
+</header>
+<main>
+<!-- Hero Section -->
+<section class="bg-primary-container text-on-primary relative overflow-hidden">
+<div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: url('data:image/svg+xml,%3Csvg width=\'100\' height=\'100\' viewBox=\'0 0 100 100\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Ccircle cx=\'50\' cy=\'50\' r=\'40\' stroke=\'%23ffffff\' stroke-width=\'1\' fill=\'none\'/%3E%3Cpath d=\'M50 10 L50 90 M10 50 L90 50\' stroke=\'%23ffffff\' stroke-width=\'1\'/%3E%3C/svg%3E'); background-size: 400px; background-position: center;"></div>
+<div class="max-w-container-max mx-auto px-margin-desktop md:px-margin-desktop px-margin-mobile py-20 md:py-32 grid grid-cols-1 md:grid-cols-2 gap-12 items-center relative z-10">
+<div class="space-y-8">
+<h1 class="text-display-lg-mobile md:text-display-lg font-display-lg-mobile md:font-display-lg">One conversation can show you where you actually stand</h1>
+<p class="text-body-lg font-body-lg text-on-primary/90 max-w-lg">
+                        Discover the blueprint of your soul through structured, authentic astrological guidance. Move beyond confusion and step into clarity.
+                    </p>
+<div class="flex flex-wrap gap-4 pt-4">
+<button class="bg-secondary-container text-on-secondary-container text-label-caps font-label-caps px-8 py-4 hard-shadow hover:-translate-y-1 transition-transform">
+                            Review my Soul Purpose
+                        </button>
+<button class="bg-surface text-tertiary-container text-label-caps font-label-caps px-8 py-4 hairline-border hard-shadow hover:-translate-y-1 transition-transform">
+                            Learn More
+                        </button>
+</div>
+</div>
+<div class="relative h-[400px] md:h-[600px] w-full double-rule-frame bg-surface">
+<div class="double-rule-frame-inner relative overflow-hidden">
+<img class="object-cover w-full h-full grayscale-[20%] sepia-[10%]" data-alt="A professional portrait of a female astrologer in her mid-30s. She is sitting in a modern, minimal consultation room with a spiritual aesthetic. Warm, bright light-mode lighting illuminates the space. She is wearing elegant, contemporary attire with subtle traditional elements, projecting confidence and grounded enlightenment. The color palette features warm creams, terracotta, and soft cocoa tones. High-end editorial photography style, sharp focus, professional headshot." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBHgZUNcekiwt0CbRmgNrTNJK8aeGYgzMEhNcacK4O-cNEjXljNJ-Im1AWItpYPMKdo-8mh8dFCKIPDCu8VuBa-g0Udiyi8PRp1hOVCXWTLxcpukhbQMnt6aJ536VsF9ZCbi3iYKVbRjfAcIuMfcYwObpoDlPLFJEKwGubguoexVaxLNG4xhVVpfV7rk1yy83_QKeWPnl0MpEBEjeGiraoXAjUGoMNuv3J_FzEyqTa4T3XTrp5HtBtC"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary-container/80 to-transparent mix-blend-multiply"></div>
+</div>
+</div>
+</div>
+</section>
+<!-- Quick Access Strip -->
+<section class="max-w-container-max mx-auto px-margin-desktop md:px-margin-desktop px-margin-mobile py-16 -mt-8 relative z-20">
+<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+<!-- Consultation -->
+<a class="bg-surface hairline-border p-6 flex flex-col items-center justify-center gap-4 hover:bg-surface-variant transition-colors group" href="#">
+<div class="w-16 h-16 rounded-none border-2 border-primary-container flex items-center justify-center group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-3xl text-primary-container" style="font-variation-settings: 'FILL' 0;">forum</span>
+</div>
+<span class="text-label-caps font-label-caps text-on-surface">Consultation</span>
+</a>
+<!-- Kundli -->
+<a class="bg-surface hairline-border p-6 flex flex-col items-center justify-center gap-4 hover:bg-surface-variant transition-colors group" href="#">
+<div class="w-16 h-16 rounded-none border-2 border-primary-container flex items-center justify-center group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-3xl text-primary-container" style="font-variation-settings: 'FILL' 0;">menu_book</span>
+</div>
+<span class="text-label-caps font-label-caps text-on-surface">Kundli</span>
+</a>
+<!-- Matching -->
+<a class="bg-surface hairline-border p-6 flex flex-col items-center justify-center gap-4 hover:bg-surface-variant transition-colors group" href="#">
+<div class="w-16 h-16 rounded-none border-2 border-primary-container flex items-center justify-center group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-3xl text-primary-container" style="font-variation-settings: 'FILL' 0;">favorite</span>
+</div>
+<span class="text-label-caps font-label-caps text-on-surface">Matching</span>
+</a>
+<!-- Panchang -->
+<a class="bg-surface hairline-border p-6 flex flex-col items-center justify-center gap-4 hover:bg-surface-variant transition-colors group" href="#">
+<div class="w-16 h-16 rounded-none border-2 border-primary-container flex items-center justify-center group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-3xl text-primary-container" style="font-variation-settings: 'FILL' 0;">calendar_month</span>
+</div>
+<span class="text-label-caps font-label-caps text-on-surface">Panchang</span>
+</a>
+<!-- Numerology -->
+<a class="bg-surface hairline-border p-6 flex flex-col items-center justify-center gap-4 hover:bg-surface-variant transition-colors group" href="#">
+<div class="w-16 h-16 rounded-none border-2 border-primary-container flex items-center justify-center group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-3xl text-primary-container" style="font-variation-settings: 'FILL' 0;">filter_9_plus</span>
+</div>
+<span class="text-label-caps font-label-caps text-on-surface">Numerology</span>
+</a>
+<!-- Shop -->
+<a class="bg-surface hairline-border p-6 flex flex-col items-center justify-center gap-4 hover:bg-surface-variant transition-colors group" href="#">
+<div class="w-16 h-16 rounded-none border-2 border-primary-container flex items-center justify-center group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-3xl text-primary-container" style="font-variation-settings: 'FILL' 0;">shopping_bag</span>
+</div>
+<span class="text-label-caps font-label-caps text-on-surface">Shop</span>
+</a>
+</div>
+</section>
+<!-- Stat Band -->
+<section class="max-w-container-max mx-auto px-margin-desktop md:px-margin-desktop px-margin-mobile mb-16">
+<div class="bg-surface-container hairline-border hard-shadow p-8 flex flex-col md:flex-row justify-around items-center gap-8">
+<div class="text-center">
+<div class="text-display-lg font-display-lg text-primary-container">10+</div>
+<div class="text-label-caps font-label-caps text-on-surface-variant mt-2 tracking-widest">Years Experience</div>
+</div>
+<div class="hidden md:block w-px h-16 bg-outline-variant"></div>
+<div class="text-center">
+<div class="text-display-lg font-display-lg text-primary-container">500+</div>
+<div class="text-label-caps font-label-caps text-on-surface-variant mt-2 tracking-widest">Consultations</div>
+</div>
+<div class="hidden md:block w-px h-16 bg-outline-variant"></div>
+<div class="text-center">
+<div class="text-display-lg font-display-lg text-primary-container">15+</div>
+<div class="text-label-caps font-label-caps text-on-surface-variant mt-2 tracking-widest">Countries Reached</div>
+</div>
+</div>
+</section>
+<!-- Problem / Question Cards -->
+<section class="max-w-container-max mx-auto px-margin-desktop md:px-margin-desktop px-margin-mobile py-12">
+<h2 class="text-headline-md font-headline-md text-primary text-center mb-12">What's weighing on your mind?</h2>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<!-- Card 1 -->
+<div class="bg-surface-bright hairline-border p-8 hard-shadow hover:-translate-y-1 transition-transform group relative overflow-hidden">
+<div class="absolute top-0 right-0 p-4 opacity-10 text-primary-container group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-6xl" style="font-variation-settings: 'FILL' 1;">work</span>
+</div>
+<h3 class="text-title-lg font-title-lg text-primary mb-4 relative z-10">Career &amp; Wealth</h3>
+<p class="text-body-lg font-body-lg text-on-surface-variant italic mb-6 relative z-10">
+                "Why does success always feel out of reach, no matter how hard I work?"
+            </p>
+<a class="text-label-caps font-label-caps text-secondary font-bold flex items-center gap-2 group-hover:text-primary transition-colors relative z-10" href="#">
+                Find Career Clarity <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</a>
+</div>
+<!-- Card 2 -->
+<div class="bg-surface-bright hairline-border p-8 hard-shadow hover:-translate-y-1 transition-transform group relative overflow-hidden">
+<div class="absolute top-0 right-0 p-4 opacity-10 text-primary-container group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-6xl" style="font-variation-settings: 'FILL' 1;">volunteer_activism</span>
+</div>
+<h3 class="text-title-lg font-title-lg text-primary mb-4 relative z-10">Relationships &amp; Love</h3>
+<p class="text-body-lg font-body-lg text-on-surface-variant italic mb-6 relative z-10">
+                "Should I stay, move on, or wait for the right time to commit?"
+            </p>
+<a class="text-label-caps font-label-caps text-secondary font-bold flex items-center gap-2 group-hover:text-primary transition-colors relative z-10" href="#">
+                Understand Your Bonds <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</a>
+</div>
+</div>
+</section>
+<!-- Press / Media Marquee -->
+<section class="w-full bg-surface-variant border-y-2 border-outline py-6 overflow-hidden my-16">
+<div class="flex w-[200%] animate-marquee">
+<div class="flex w-1/2 justify-around items-center opacity-70">
+<span class="text-title-lg font-headline-md tracking-widest text-primary uppercase">As Seen In</span>
+<span class="text-headline-md font-headline-md font-bold text-on-surface">VOGUE</span>
+<span class="text-headline-md font-headline-md font-bold text-on-surface">Forbes</span>
+<span class="text-headline-md font-headline-md font-bold text-on-surface">The Times</span>
+<span class="text-headline-md font-headline-md font-bold text-on-surface">ELLE</span>
+</div>
+<div class="flex w-1/2 justify-around items-center opacity-70">
+<span class="text-title-lg font-headline-md tracking-widest text-primary uppercase">As Seen In</span>
+<span class="text-headline-md font-headline-md font-bold text-on-surface">VOGUE</span>
+<span class="text-headline-md font-headline-md font-bold text-on-surface">Forbes</span>
+<span class="text-headline-md font-headline-md font-bold text-on-surface">The Times</span>
+<span class="text-headline-md font-headline-md font-bold text-on-surface">ELLE</span>
+</div>
+</div>
+</section>
+<!-- Long-form SEO Prose Block -->
+<section class="max-w-container-max mx-auto px-margin-desktop md:px-margin-desktop px-margin-mobile py-16 text-on-surface">
+<div class="max-w-3xl mx-auto space-y-12">
+<div>
+<h2 class="text-headline-md font-headline-md text-primary mb-6">Why Choose Komal Kalra?</h2>
+<p class="text-body-md font-body-md mb-4 text-on-surface-variant leading-relaxed">
+                In a world overflowing with generalized horoscopes and quick spiritual fixes, genuine astrological insight stands apart. Komal Kalra offers a deeply structured, analytical approach to the ancient wisdom of the stars. With over a decade of dedicated study and practice, she translates complex planetary alignments into practical, actionable advice tailored specifically to your life's blueprint.
+            </p>
+<p class="text-body-md font-body-md mb-4 text-on-surface-variant leading-relaxed">
+                Choosing the right guide is essential. It is not merely about predicting the future, but about understanding the undercurrents of your present reality. Whether you are navigating career transitions, seeking harmony in relationships, or pursuing spiritual growth, the focus remains on empowering you to make informed decisions rather than instilling fear or dependency.
+            </p>
+</div>
+<div class="double-divider w-full my-8"></div>
+<div>
+<h2 class="text-headline-md font-headline-md text-primary mb-6">The Science of Authentic Astrology</h2>
+<p class="text-body-md font-body-md mb-4 text-on-surface-variant leading-relaxed">
+                Authentic astrology is a precise science, deeply rooted in astronomical realities and ancient mathematical calculations. It involves mapping the exact positions of celestial bodies at the moment of your birth and interpreting their ongoing transits. This meticulous process requires not only profound intuition but rigorous analytical skills.
+            </p>
+<p class="text-body-md font-body-md mb-4 text-on-surface-variant leading-relaxed">
+                Through methodologies encompassing Vedic Astrology (Jyotish), precise Kundli casting, and deeply researched Panchang analysis, we uncover the mathematical symmetries governing the timing of life events. This systematic approach ensures that every reading is grounded in solid principles, demystifying the mystical and providing clear, logical frameworks for understanding your path.
+            </p>
+<p class="text-body-md font-body-md mb-4 text-on-surface-variant leading-relaxed">
+                By synthesizing these ancient metrics with modern psychological insights, we bridge the gap between deterministic fate and free will. You are given the cosmic weather forecast; how you choose to navigate the storms and harness the favorable winds remains entirely in your hands.
+            </p>
+</div>
+</div>
+</section>
+<div class="max-w-container-max mx-auto px-margin-desktop md:px-margin-desktop px-margin-mobile my-12">
+<div class="double-divider w-full"></div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="bg-tertiary-container dark:bg-tertiary-container text-on-tertiary-container dark:text-on-tertiary-container full-width bottom-0 border-t-4 border-double border-outline-variant flat no shadows mt-24">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-gutter py-12 px-margin-desktop w-full max-w-container-max mx-auto">
+<!-- Brand Column -->
+<div class="space-y-4">
+<h2 class="text-headline-md font-headline-md text-surface-bright">Komal Kalra</h2>
+<p class="text-body-md font-body-md text-surface-container-lowest opacity-80">
+                    Divine Wisdom Structured for Modern Life.
+                </p>
+<div class="pt-4">
+<p class="text-label-caps font-label-caps text-surface-container-lowest opacity-80">© 2024 Komal Kalra. All Rights Reserved.</p>
+</div>
+</div>
+<!-- Links Column 1 -->
+<div class="space-y-4">
+<h3 class="text-label-caps font-label-caps text-secondary-fixed font-bold">Services</h3>
+<ul class="space-y-2">
+<li><a class="text-body-md font-body-md text-surface-container-lowest opacity-80 hover:text-secondary-container underline underline-offset-4 hover:translate-x-1 transition-transform inline-block" href="#">Astrology</a></li>
+<li><a class="text-body-md font-body-md text-surface-container-lowest opacity-80 hover:text-secondary-container underline underline-offset-4 hover:translate-x-1 transition-transform inline-block" href="#">Numerology</a></li>
+<li><a class="text-body-md font-body-md text-surface-container-lowest opacity-80 hover:text-secondary-container underline underline-offset-4 hover:translate-x-1 transition-transform inline-block" href="#">Vastu Shastra</a></li>
+</ul>
+</div>
+<!-- Links Column 2 -->
+<div class="space-y-4">
+<h3 class="text-label-caps font-label-caps text-secondary-fixed font-bold">Legal</h3>
+<ul class="space-y-2">
+<li><a class="text-body-md font-body-md text-surface-container-lowest opacity-80 hover:text-secondary-container underline underline-offset-4 hover:translate-x-1 transition-transform inline-block" href="#">Privacy Policy</a></li>
+<li><a class="text-body-md font-body-md text-surface-container-lowest opacity-80 hover:text-secondary-container underline underline-offset-4 hover:translate-x-1 transition-transform inline-block" href="#">Terms of Service</a></li>
+<li><a class="text-body-md font-body-md text-surface-container-lowest opacity-80 hover:text-secondary-container underline underline-offset-4 hover:translate-x-1 transition-transform inline-block" href="#">Contact Us</a></li>
+</ul>
+</div>
+<!-- Newsletter Column -->
+<div class="space-y-4">
+<h3 class="text-label-caps font-label-caps text-secondary-fixed font-bold">Newsletter</h3>
+<p class="text-body-md font-body-md text-surface-container-lowest opacity-80">Receive lunar updates and exclusive insights.</p>
+<form class="flex flex-col gap-2 mt-2">
+<input class="bg-surface text-on-surface hairline-border p-3 text-body-md font-body-md placeholder-outline focus:outline-none focus:ring-2 focus:ring-secondary-container" placeholder="Email Address" type="email"/>
+<button class="bg-secondary-container text-on-secondary-container text-label-caps font-label-caps px-4 py-3 hard-shadow hover:-translate-y-1 transition-transform mt-2" type="submit">
+                        Subscribe
+                    </button>
+</form>
+</div>
+</div>
+</footer>
+</body></html>

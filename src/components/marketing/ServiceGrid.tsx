@@ -16,7 +16,7 @@ const SPANS = ['md:col-span-8', 'md:col-span-4', 'md:col-span-4', 'md:col-span-4
 export function ServiceGrid({ services }: { services: Service[] }) {
   if (services.length === 0) {
     return (
-      <p className="border border-dashed border-[color-mix(in_srgb,var(--color-muted-gold)_25%,transparent)] p-12 text-center text-sm text-[var(--color-on-surface-variant)]">
+      <p className="border border-dashed border-[var(--color-hairline)] p-12 text-center text-sm text-[var(--color-body-warm)]">
         Services will appear here once they are added from the practitioner console.
       </p>
     );

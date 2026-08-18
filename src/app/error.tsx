@@ -29,19 +29,19 @@ export default function Error({
   return (
     <div className="flex min-h-dvh flex-col items-center justify-center px-5 text-center">
       <h1 className="text-[length:var(--text-h1)]">Something went wrong</h1>
-      <p className="mt-4 max-w-md text-[15px] leading-relaxed text-[var(--color-on-surface-variant)]">
+      <p className="mt-4 max-w-md text-[15px] leading-relaxed text-[var(--color-body-warm)]">
         This is our problem, not yours. Trying again usually fixes it.
       </p>
       {error.digest && (
-        <p className="mt-3 font-mono text-xs text-[var(--color-on-surface-variant)]">Reference: {error.digest}</p>
+        <p className="mt-3 font-mono text-xs text-[var(--color-body-warm)]">Reference: {error.digest}</p>
       )}
       <div className="mt-8 flex flex-col gap-3 sm:flex-row">
         <Button onClick={reset}>Try again</Button>
         <Button asChild variant="secondary"><Link href="/">Back to the homepage</Link></Button>
       </div>
-      <p className="mt-8 text-sm text-[var(--color-on-surface-variant)]">
+      <p className="mt-8 text-sm text-[var(--color-body-warm)]">
         In the middle of booking? Call{' '}
-        <a href={`tel:${BRAND.phonesE164[0]}`} className="font-medium text-[var(--color-gold-deep)] hover:underline">
+        <a href={`tel:${BRAND.phonesE164[0]}`} className="font-medium text-[var(--color-saffron-deep)] hover:underline">
           {BRAND.phones[0]}
         </a>{' '}
         and we will do it for you.

@@ -96,11 +96,11 @@ export default async function ConfirmPage(props: {
           <TriangleAlert className="size-6 text-[var(--color-warning)]" aria-hidden />
         </div>
         <h1 className="mt-6 text-[length:var(--text-h1)]">We need to rearrange your time</h1>
-        <p className="mt-3 max-w-lg text-[15px] leading-relaxed text-[var(--color-on-surface-variant)]">
+        <p className="mt-3 max-w-lg text-[15px] leading-relaxed text-[var(--color-body-warm)]">
           Your payment went through, but the slot you chose was taken moments before it
           completed. That is our error, not yours.
         </p>
-        <p className="mt-3 max-w-lg text-[15px] leading-relaxed text-[var(--color-on-surface-variant)]">
+        <p className="mt-3 max-w-lg text-[15px] leading-relaxed text-[var(--color-body-warm)]">
           <strong>Your money is safe.</strong> We will call you shortly to arrange another
           time. If you would rather have a full refund instead, tell us and it will be
           processed the same day.
@@ -127,10 +127,10 @@ export default async function ConfirmPage(props: {
     return (
       <Shell>
         <div className="flex size-12 items-center justify-center rounded-full bg-[var(--color-outline-variant)]">
-          <Clock className="size-6 text-[var(--color-on-surface-variant)]" aria-hidden />
+          <Clock className="size-6 text-[var(--color-body-warm)]" aria-hidden />
         </div>
         <h1 className="mt-6 text-[length:var(--text-h1)]">Confirming your payment</h1>
-        <p className="mt-3 max-w-lg text-[15px] leading-relaxed text-[var(--color-on-surface-variant)]">
+        <p className="mt-3 max-w-lg text-[15px] leading-relaxed text-[var(--color-body-warm)]">
           Your payment is being confirmed with the bank. This usually takes a few seconds.
           You do not need to pay again — if anything was debited, it is recorded.
         </p>
@@ -139,7 +139,7 @@ export default async function ConfirmPage(props: {
 
         <BookingFacts appointment={appointment} payment={payment} />
 
-        <p className="mt-6 text-sm text-[var(--color-on-surface-variant)]">
+        <p className="mt-6 text-sm text-[var(--color-body-warm)]">
           Taking longer than a minute? Call {BRAND.phones[0]} and we will confirm it manually.
         </p>
       </Shell>
@@ -153,7 +153,7 @@ export default async function ConfirmPage(props: {
         <CheckCircle2 className="size-6 text-[var(--color-success)]" aria-hidden />
       </div>
       <h1 className="mt-6 text-[length:var(--text-h1)]">You&apos;re booked in</h1>
-      <p className="mt-3 max-w-lg text-[15px] leading-relaxed text-[var(--color-on-surface-variant)]">
+      <p className="mt-3 max-w-lg text-[15px] leading-relaxed text-[var(--color-body-warm)]">
         A confirmation is on its way to your email. Komal will send the joining link before
         your session.
       </p>
@@ -161,10 +161,10 @@ export default async function ConfirmPage(props: {
       <BookingFacts appointment={appointment} payment={payment} />
 
       <div className="mt-8 space-y-3">
-        <h2 className="font-sans text-sm font-semibold uppercase tracking-[0.1em] text-[var(--color-on-surface-variant)]">
+        <h2 className="font-sans text-sm font-semibold uppercase tracking-[0.1em] text-[var(--color-body-warm)]">
           What happens next
         </h2>
-        <ol className="space-y-2 text-sm leading-relaxed text-[var(--color-on-surface-variant)]">
+        <ol className="space-y-2 text-sm leading-relaxed text-[var(--color-body-warm)]">
           <li>1. You will receive a confirmation email with your booking reference.</li>
           <li>2. A joining link is sent before your appointment.</li>
           <li>3. A reminder arrives 24 hours beforehand.</li>
@@ -187,7 +187,7 @@ export default async function ConfirmPage(props: {
         )}
       </div>
 
-      <p className="mt-8 border-t border-[var(--color-outline-variant)] pt-6 text-xs leading-relaxed text-[var(--color-on-surface-variant)]">
+      <p className="mt-8 border-t border-[var(--color-outline-variant)] pt-6 text-xs leading-relaxed text-[var(--color-body-warm)]">
         {POLICY.cancellationSummary} {POLICY.refundTiming}
       </p>
     </Shell>
@@ -196,7 +196,7 @@ export default async function ConfirmPage(props: {
 
 function Shell({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-dvh bg-[var(--color-warm-ivory)]">
+    <div className="min-h-dvh bg-[var(--color-card-cream)]">
       <main id="main" className="mx-auto max-w-2xl px-5 py-16 lg:py-24">{children}</main>
     </div>
   );
@@ -217,8 +217,8 @@ function BookingFacts({ appointment, payment }: { appointment: Appointment; paym
     <dl className="mt-8 divide-y divide-[var(--color-outline-variant)]  border border-[var(--color-outline-variant)] bg-white">
       {facts.map(([label, value]) => (
         <div key={label} className="flex items-center justify-between gap-4 px-5 py-3.5">
-          <dt className="text-sm text-[var(--color-on-surface-variant)]">{label}</dt>
-          <dd className="tabular text-right text-sm font-medium text-[var(--color-cosmic-navy)] break-all">{value}</dd>
+          <dt className="text-sm text-[var(--color-body-warm)]">{label}</dt>
+          <dd className="tabular text-right text-sm font-medium text-[var(--color-cocoa)] break-all">{value}</dd>
         </div>
       ))}
     </dl>

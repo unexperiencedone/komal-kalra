@@ -22,7 +22,7 @@ export default async function ContactPage() {
         <div className="grid gap-14 lg:grid-cols-[0.8fr_1.2fr]">
           <Reveal>
             <h1 className="text-[length:var(--text-h1)]">Get in touch</h1>
-            <p className="mt-5 text-[16px] leading-relaxed text-[var(--color-on-surface-variant)]">
+            <p className="mt-5 text-[16px] leading-relaxed text-[var(--color-body-warm)]">
               Ask a question, or describe what is going on and we will tell you which
               consultation fits. If none of them do, we will say that too.
             </p>
@@ -32,9 +32,9 @@ export default async function ContactPage() {
                 <li key={phone}>
                   <a
                     href={`tel:${BRAND.phonesE164[i]}`}
-                    className="flex items-center gap-3  border border-[color-mix(in srgb, var(--color-muted-gold) 20%, transparent)] bg-white px-4 py-3.5 text-[15px] font-medium transition-colors hover:border-[var(--color-muted-gold)]"
+                    className="flex items-center gap-3  border border-[color-mix(in srgb, var(--color-saffron) 20%, transparent)] bg-white px-4 py-3.5 text-[15px] font-medium transition-colors hover:border-[var(--color-saffron)]"
                   >
-                    <Phone className="size-4 text-[var(--color-gold-deep)]" aria-hidden />
+                    <Phone className="size-4 text-[var(--color-saffron-deep)]" aria-hidden />
                     {phone}
                   </a>
                 </li>
@@ -44,15 +44,15 @@ export default async function ContactPage() {
                   href={BRAND.instagram}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-3  border border-[color-mix(in srgb, var(--color-muted-gold) 20%, transparent)] bg-white px-4 py-3.5 text-[15px] font-medium transition-colors hover:border-[var(--color-muted-gold)]"
+                  className="flex items-center gap-3  border border-[color-mix(in srgb, var(--color-saffron) 20%, transparent)] bg-white px-4 py-3.5 text-[15px] font-medium transition-colors hover:border-[var(--color-saffron)]"
                 >
-                  <InstagramIcon className="size-4 text-[var(--color-gold-deep)]" />
+                  <InstagramIcon className="size-4 text-[var(--color-saffron-deep)]" />
                   {BRAND.instagramHandle}
                 </a>
               </li>
             </ul>
 
-            <p className="mt-6 flex items-start gap-2 text-sm leading-relaxed text-[var(--color-on-surface-variant)]">
+            <p className="mt-6 flex items-start gap-2 text-sm leading-relaxed text-[var(--color-body-warm)]">
               <Clock className="mt-0.5 size-3.5 shrink-0" aria-hidden />
               Enquiries are usually answered within one working day. For anything urgent,
               calling is faster than the form.
@@ -60,9 +60,9 @@ export default async function ContactPage() {
           </Reveal>
 
           <Reveal delay={80}>
-            <div className="border border-[color-mix(in srgb, var(--color-muted-gold) 20%, transparent)] border-t-4 border-t-[var(--color-muted-gold)] bg-white p-6  sm:p-8">
+            <div className="border border-[color-mix(in srgb, var(--color-saffron) 20%, transparent)] border-t-4 border-t-[var(--color-saffron)] bg-white p-6  sm:p-8">
               <h2 className="font-[family-name:var(--font-display)] text-xl font-semibold">Send a message</h2>
-              <p className="mt-1.5 text-sm text-[var(--color-on-surface-variant)]">
+              <p className="mt-1.5 text-sm text-[var(--color-body-warm)]">
                 A sentence or two is plenty to start with.
               </p>
               <div className="mt-6">

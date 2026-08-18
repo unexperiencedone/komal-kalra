@@ -40,7 +40,7 @@ export default async function AppointmentDetailPage(props: { params: Promise<{ i
     <div className="mx-auto max-w-3xl px-5 py-8 lg:px-10 lg:py-12">
       <Link
         href="/dashboard/appointments"
-        className="inline-flex items-center gap-1.5 text-sm font-medium text-[var(--color-on-surface-variant)] hover:text-[var(--color-cosmic-navy)]"
+        className="inline-flex items-center gap-1.5 text-sm font-medium text-[var(--color-body-warm)] hover:text-[var(--color-cocoa)]"
       >
         <ArrowLeft className="size-3.5" aria-hidden /> All appointments
       </Link>
@@ -50,7 +50,7 @@ export default async function AppointmentDetailPage(props: { params: Promise<{ i
           <h1 className="font-[family-name:var(--font-display)] text-[28px] font-semibold tracking-tight">
             {appointment.service_title_snapshot}
           </h1>
-          <p className="mt-1.5 text-sm text-[var(--color-on-surface-variant)]">Reference {appointment.reference}</p>
+          <p className="mt-1.5 text-sm text-[var(--color-body-warm)]">Reference {appointment.reference}</p>
         </div>
         <AppointmentStatusBadge status={appointment.status} />
       </div>
@@ -106,7 +106,7 @@ export default async function AppointmentDetailPage(props: { params: Promise<{ i
       )}
 
       <section aria-labelledby="payment-heading" className="mt-8">
-        <h2 id="payment-heading" className="font-sans text-sm font-semibold uppercase tracking-[0.1em] text-[var(--color-on-surface-variant)]">
+        <h2 id="payment-heading" className="font-sans text-sm font-semibold uppercase tracking-[0.1em] text-[var(--color-body-warm)]">
           Payment
         </h2>
         <div className="mt-3  border border-[var(--color-outline-variant)] bg-white">
@@ -131,7 +131,7 @@ export default async function AppointmentDetailPage(props: { params: Promise<{ i
             {payment?.receipt_number && <Row label="Receipt">{payment.receipt_number}</Row>}
             {payment && payment.amount_refunded_paise > 0 && (
               <Row label="Refunded">
-                <span className="tabular text-[var(--color-cosmic-navy)]">
+                <span className="tabular text-[var(--color-cocoa)]">
                   {formatPaisePrecise(payment.amount_refunded_paise)}
                 </span>
               </Row>
@@ -142,11 +142,11 @@ export default async function AppointmentDetailPage(props: { params: Promise<{ i
 
       {canCancel && (
         <section aria-labelledby="manage-heading" className="mt-8">
-          <h2 id="manage-heading" className="font-sans text-sm font-semibold uppercase tracking-[0.1em] text-[var(--color-on-surface-variant)]">
+          <h2 id="manage-heading" className="font-sans text-sm font-semibold uppercase tracking-[0.1em] text-[var(--color-body-warm)]">
             Manage this booking
           </h2>
           <div className="mt-3  border border-[var(--color-outline-variant)] bg-white p-5">
-            <p className="text-sm leading-relaxed text-[var(--color-on-surface-variant)]">
+            <p className="text-sm leading-relaxed text-[var(--color-body-warm)]">
               {refundEligible
                 ? `Cancelling now is free and a full refund will be requested. ${POLICY.refundTiming}`: `Your session is within ${windowHours} hours, so the fee is non-refundable. You can still cancel, or ask us to reschedule instead.`}
             </p>
@@ -161,8 +161,8 @@ export default async function AppointmentDetailPage(props: { params: Promise<{ i
 function Row({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div className="flex flex-wrap items-start justify-between gap-4 px-5 py-3.5">
-      <dt className="text-sm text-[var(--color-on-surface-variant)]">{label}</dt>
-      <dd className="max-w-md text-right text-sm text-[var(--color-cosmic-navy)]">{children}</dd>
+      <dt className="text-sm text-[var(--color-body-warm)]">{label}</dt>
+      <dd className="max-w-md text-right text-sm text-[var(--color-cocoa)]">{children}</dd>
     </div>
   );
 }

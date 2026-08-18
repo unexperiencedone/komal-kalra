@@ -43,12 +43,12 @@ export default async function ReceiptPage(props: { params: Promise<{ id: string 
         <header className="flex flex-wrap items-start justify-between gap-4 border-b border-[var(--color-outline-variant)] pb-6">
           <div>
             <p className="font-[family-name:var(--font-display)] text-xl font-semibold">{BRAND.fullName}</p>
-            <p className="mt-1 text-xs text-[var(--color-on-surface-variant)]">{BRAND.phones[0]} · {BRAND.email}</p>
+            <p className="mt-1 text-xs text-[var(--color-body-warm)]">{BRAND.phones[0]} · {BRAND.email}</p>
           </div>
           <div className="text-right">
-            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[var(--color-on-surface-variant)]">Receipt</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[var(--color-body-warm)]">Receipt</p>
             <p className="tabular mt-1 text-sm font-semibold">{data.receipt_number ?? data.id.slice(0, 8).toUpperCase()}</p>
-            <p className="mt-0.5 text-xs text-[var(--color-on-surface-variant)]">
+            <p className="mt-0.5 text-xs text-[var(--color-body-warm)]">
               {data.paid_at ? formatDateTime(data.paid_at) : formatDateTime(data.created_at)}
             </p>
           </div>
@@ -56,17 +56,17 @@ export default async function ReceiptPage(props: { params: Promise<{ id: string 
 
         <section className="grid gap-6 border-b border-[var(--color-outline-variant)] py-6 sm:grid-cols-2">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.1em] text-[var(--color-on-surface-variant)]">Billed to</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.1em] text-[var(--color-body-warm)]">Billed to</p>
             <p className="mt-2 text-sm font-medium">{data.profiles?.full_name ?? '—'}</p>
-            <p className="text-sm text-[var(--color-on-surface-variant)]">{data.profiles?.email}</p>
-            {data.profiles?.phone && <p className="text-sm text-[var(--color-on-surface-variant)]">{data.profiles.phone}</p>}
+            <p className="text-sm text-[var(--color-body-warm)]">{data.profiles?.email}</p>
+            {data.profiles?.phone && <p className="text-sm text-[var(--color-body-warm)]">{data.profiles.phone}</p>}
           </div>
           {appointment && (
             <div className="sm:text-right">
-              <p className="text-xs font-semibold uppercase tracking-[0.1em] text-[var(--color-on-surface-variant)]">Booking</p>
+              <p className="text-xs font-semibold uppercase tracking-[0.1em] text-[var(--color-body-warm)]">Booking</p>
               <p className="mt-2 text-sm font-medium">{appointment.reference}</p>
-              <p className="text-sm text-[var(--color-on-surface-variant)]">{formatLongDay(appointment.starts_at)}</p>
-              <p className="tabular text-sm text-[var(--color-on-surface-variant)]">{formatTime(appointment.starts_at)} IST</p>
+              <p className="text-sm text-[var(--color-body-warm)]">{formatLongDay(appointment.starts_at)}</p>
+              <p className="tabular text-sm text-[var(--color-body-warm)]">{formatTime(appointment.starts_at)} IST</p>
             </div>
           )}
         </section>
@@ -74,7 +74,7 @@ export default async function ReceiptPage(props: { params: Promise<{ id: string 
         <table className="w-full border-b border-[var(--color-outline-variant)] py-6 text-sm">
           <caption className="sr-only">Payment breakdown</caption>
           <thead>
-            <tr className="text-left text-xs uppercase tracking-[0.1em] text-[var(--color-on-surface-variant)]">
+            <tr className="text-left text-xs uppercase tracking-[0.1em] text-[var(--color-body-warm)]">
               <th scope="col" className="py-3 font-semibold">Description</th>
               <th scope="col" className="py-3 text-right font-semibold">Amount</th>
             </tr>
@@ -84,7 +84,7 @@ export default async function ReceiptPage(props: { params: Promise<{ id: string 
               <td className="py-3">
                 {appointment?.service_title_snapshot ?? 'Consultation'}
                 {appointment && (
-                  <span className="block text-xs text-[var(--color-on-surface-variant)]">{appointment.duration_minutes} minutes</span>
+                  <span className="block text-xs text-[var(--color-body-warm)]">{appointment.duration_minutes} minutes</span>
                 )}
               </td>
               <td className="tabular py-3 text-right">{formatPaisePrecise(appointment?.price_paise ?? data.amount_paise)}</td>
@@ -105,7 +105,7 @@ export default async function ReceiptPage(props: { params: Promise<{ id: string 
             )}
           </tbody>
           <tfoot>
-            <tr className="border-t-2 border-[var(--color-cosmic-navy)]">
+            <tr className="border-t-2 border-[var(--color-cocoa)]">
               <th scope="row" className="py-3.5 text-left font-semibold">Total paid</th>
               <td className="tabular py-3.5 text-right font-[family-name:var(--font-display)] text-lg font-semibold">
                 {formatPaisePrecise(data.amount_paise)}
@@ -113,8 +113,8 @@ export default async function ReceiptPage(props: { params: Promise<{ id: string 
             </tr>
             {data.amount_refunded_paise > 0 && (
               <tr>
-                <th scope="row" className="py-2 text-left text-sm font-medium text-[var(--color-cosmic-navy)]">Refunded</th>
-                <td className="tabular py-2 text-right text-sm text-[var(--color-cosmic-navy)]">
+                <th scope="row" className="py-2 text-left text-sm font-medium text-[var(--color-cocoa)]">Refunded</th>
+                <td className="tabular py-2 text-right text-sm text-[var(--color-cocoa)]">
                   −{formatPaisePrecise(data.amount_refunded_paise)}
                 </td>
               </tr>
@@ -122,7 +122,7 @@ export default async function ReceiptPage(props: { params: Promise<{ id: string 
           </tfoot>
         </table>
 
-        <footer className="pt-6 text-xs leading-relaxed text-[var(--color-on-surface-variant)]">
+        <footer className="pt-6 text-xs leading-relaxed text-[var(--color-body-warm)]">
           <p>
             Payment method: {data.method ? data.method.toUpperCase() : 'Online'}
             {data.provider_payment_id && ` · Transaction ${data.provider_payment_id}`}

@@ -30,14 +30,14 @@ export function BookingSummary({
   const portrait = img('komalKalra');
 
   return (
-    <aside className="border border-[color-mix(in_srgb,var(--color-muted-gold)_25%,transparent)] bg-[var(--color-surface-low)] p-8 lg:sticky lg:top-28">
-      <h2 className="font-[family-name:var(--font-display)] text-3xl font-medium leading-tight text-[var(--color-cosmic-navy)]">
+    <aside className="border border-[var(--color-hairline)] bg-[var(--color-card-cream)] p-8 lg:sticky lg:top-28">
+      <h2 className="font-[family-name:var(--font-display)] text-3xl font-medium leading-tight text-[var(--color-cocoa)]">
         Booking
         <br />
         Summary
       </h2>
 
-      <div className="mt-8 flex items-center gap-4 border-t border-[color-mix(in_srgb,var(--color-muted-gold)_20%,transparent)] pt-8">
+      <div className="mt-8 flex items-center gap-4 border-t border-[var(--color-hairline)] pt-8">
         <Image
           src={portrait.src}
           alt={portrait.alt}
@@ -47,36 +47,36 @@ export function BookingSummary({
           className="size-14 shrink-0 rounded-full object-cover"
         />
         <div>
-          <p className="font-[family-name:var(--font-display)] text-lg font-medium text-[var(--color-cosmic-navy)]">
+          <p className="font-[family-name:var(--font-display)] text-lg font-medium text-[var(--color-cocoa)]">
             {BRAND.name}
           </p>
-          <p className="text-sm text-[var(--color-on-surface-variant)]">Vedic Astrologer</p>
+          <p className="text-sm text-[var(--color-body-warm)]">Vedic Astrologer</p>
         </div>
       </div>
 
-      <dl className="mt-8 space-y-6 border-t border-[color-mix(in_srgb,var(--color-muted-gold)_20%,transparent)] pt-8">
+      <dl className="mt-8 space-y-6 border-t border-[var(--color-hairline)] pt-8">
         <div>
-          <dt className="label-caps text-[var(--color-on-surface-variant)]">Service</dt>
-          <dd className="mt-2 text-base text-[var(--color-on-surface)]">
+          <dt className="label-caps text-[var(--color-body-warm)]">Service</dt>
+          <dd className="mt-2 text-base text-[var(--color-body-warm)]">
             {service?.title ?? 'Not selected'}
           </dd>
         </div>
 
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <dt className="label-caps text-[var(--color-on-surface-variant)]">Duration</dt>
-            <dd className="mt-2 flex items-center gap-2 text-base text-[var(--color-on-surface)]">
-              <Clock className="size-4 text-[var(--color-muted-gold)]" aria-hidden />
+            <dt className="label-caps text-[var(--color-body-warm)]">Duration</dt>
+            <dd className="mt-2 flex items-center gap-2 text-base text-[var(--color-body-warm)]">
+              <Clock className="size-4 text-[var(--color-saffron)]" aria-hidden />
               {service ? `${service.duration_minutes} mins` : '—'}
             </dd>
           </div>
           <div>
-            <dt className="label-caps text-[var(--color-on-surface-variant)]">Date &amp; Time</dt>
-            <dd className="mt-2 text-base text-[var(--color-on-surface)]">
+            <dt className="label-caps text-[var(--color-body-warm)]">Date &amp; Time</dt>
+            <dd className="mt-2 text-base text-[var(--color-body-warm)]">
               {startsAt ? (
                 <>
                   {formatLongDay(startsAt)}
-                  <span className="tabular block text-sm text-[var(--color-on-surface-variant)]">
+                  <span className="tabular block text-sm text-[var(--color-body-warm)]">
                     {formatTime(startsAt)}
                     {endsAt ? ` – ${formatTime(endsAt)}` : ''} IST
                   </span>
@@ -90,20 +90,20 @@ export function BookingSummary({
 
         {taxPaise > 0 && (
           <div className="flex items-center justify-between">
-            <dt className="text-sm text-[var(--color-on-surface-variant)]">GST</dt>
-            <dd className="tabular text-sm text-[var(--color-on-surface)]">{formatPaise(taxPaise)}</dd>
+            <dt className="text-sm text-[var(--color-body-warm)]">GST</dt>
+            <dd className="tabular text-sm text-[var(--color-body-warm)]">{formatPaise(taxPaise)}</dd>
           </div>
         )}
       </dl>
 
-      <div className="mt-8 flex items-baseline justify-between border-t border-[color-mix(in_srgb,var(--color-muted-gold)_20%,transparent)] pt-8">
-        <span className="text-base text-[var(--color-on-surface)]">Total Amount</span>
-        <span className="tabular font-[family-name:var(--font-display)] text-3xl font-medium text-[var(--color-cosmic-navy)]">
+      <div className="mt-8 flex items-baseline justify-between border-t border-[var(--color-hairline)] pt-8">
+        <span className="text-base text-[var(--color-body-warm)]">Total Amount</span>
+        <span className="tabular font-[family-name:var(--font-display)] text-3xl font-medium text-[var(--color-cocoa)]">
           {formatPaise(totalPaise)}
         </span>
       </div>
 
-      <p className="mt-6 text-xs leading-relaxed text-[var(--color-on-surface-variant)]">
+      <p className="mt-6 text-xs leading-relaxed text-[var(--color-body-warm)]">
         {POLICY.cancellationSummary}
       </p>
     </aside>

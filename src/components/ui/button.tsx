@@ -21,21 +21,14 @@ import { cn } from '@/lib/utils';
  * white on Muted Gold measures 3.3:1 — nowhere near enough for a label.
  */
 const buttonVariants = cva(
-  'inline-flex items-center justify-center gap-2 whitespace-nowrap uppercase tracking-[0.12em] font-semibold transition-colors duration-300 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0',
+  'inline-flex items-center justify-center gap-2 whitespace-nowrap uppercase tracking-[0.12em] font-semibold transition-all duration-300 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 rounded-none',
   {
     variants: {
       variant: {
-        /** Cosmic Navy fill, Warm Ivory text — 16.5:1. */
-        primary: 'bg-[var(--color-cosmic-navy)] text-[var(--color-warm-ivory)] hover:bg-[var(--color-ink-black)]',
-        /** Transparent with a 1px Cosmic Navy border. */
-        secondary:
-          'border border-[var(--color-cosmic-navy)] bg-transparent text-[var(--color-cosmic-navy)] hover:bg-[var(--color-cosmic-navy)] hover:text-[var(--color-warm-ivory)]',
-        /** Transparent with a 1px Muted Gold border — the quieter outline. */
-        gold: 'border border-[var(--color-muted-gold)] bg-transparent text-[var(--color-gold-deep)] hover:bg-[var(--color-muted-gold)] hover:text-white',
-        /** For use on navy/ink grounds only. */
-        onDark:
-          'border border-[color-mix(in_srgb,var(--color-warm-ivory)_35%,transparent)] bg-transparent text-[var(--color-warm-ivory)] hover:bg-[var(--color-warm-ivory)] hover:text-[var(--color-cosmic-navy)]',
-        ghost: 'text-[var(--color-on-surface-variant)] hover:text-[var(--color-cosmic-navy)]',
+        primary: 'bg-gradient-to-b from-[var(--color-saffron)] to-[var(--color-amber-band)] text-white shadow-[var(--shadow-hard-offset)] hover:shadow-none hover:translate-x-1 hover:translate-y-1',
+        secondary: 'border border-[var(--color-terracotta)] bg-transparent text-[var(--color-terracotta)] hover:bg-[var(--color-terracotta)] hover:text-white',
+        onDark: 'border border-[var(--color-cream)] bg-transparent text-[var(--color-cream)] hover:bg-[var(--color-cream)] hover:text-[var(--color-terracotta-lo)]',
+        ghost: 'text-[var(--color-body-warm)] hover:text-[var(--color-terracotta)]',
         destructive: 'bg-[var(--color-error)] text-white hover:brightness-90',
       },
       size: {
@@ -91,7 +84,7 @@ export function TextLink({ className, ...props }: React.AnchorHTMLAttributes<HTM
   return (
     <a
       className={cn(
-        'underline decoration-1 underline-offset-4 transition-colors hover:text-[var(--color-gold-deep)]',
+        'underline decoration-1 underline-offset-4 transition-colors hover:text-[var(--color-saffron-deep)]',
         className,
       )}
       {...props}

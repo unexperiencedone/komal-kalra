@@ -135,7 +135,7 @@ export function ServiceEditor({
                 {s.featured && <Badge tone="accent">Featured</Badge>}
                 {!s.bookable_online && <Badge tone="warning">Enquiry only</Badge>}
               </div>
-              <p className="mt-1 text-sm text-[var(--color-on-surface-variant)]">
+              <p className="mt-1 text-sm text-[var(--color-body-warm)]">
                 {s.duration_minutes} min · <span className="tabular">{formatPaise(s.price_paise)}</span> · /services/{s.slug}
               </p>
             </div>
@@ -162,7 +162,7 @@ export function ServiceEditor({
       </ul>
 
       {services.length === 0 && (
-        <p className="mt-6  border border-dashed border-[var(--color-outline-variant)] p-10 text-center text-sm text-[var(--color-on-surface-variant)]">
+        <p className="mt-6  border border-dashed border-[var(--color-outline-variant)] p-10 text-center text-sm text-[var(--color-body-warm)]">
           No services yet. Create your first one to open bookings.
         </p>
       )}
@@ -174,14 +174,14 @@ export function ServiceEditor({
             type="button"
             onClick={() => setShowArchived((v) => !v)}
             aria-expanded={showArchived}
-            className="text-sm font-semibold text-[var(--color-on-surface-variant)] underline-offset-4 hover:underline"
+            className="text-sm font-semibold text-[var(--color-body-warm)] underline-offset-4 hover:underline"
           >
             {showArchived ? 'Hide' : 'Show'} archived ({archived.length})
           </button>
 
           {showArchived && (
             <>
-              <p className="mt-3 max-w-prose text-sm text-[var(--color-on-surface-variant)]">
+              <p className="mt-3 max-w-prose text-sm text-[var(--color-body-warm)]">
                 Retired services. Nothing has been deleted — bookings, payments,
                 pricing and copy are all intact. Restoring brings a service back
                 into the list above, still hidden from the public site until you
@@ -192,14 +192,14 @@ export function ServiceEditor({
                 {archived.map((s) => (
                   <li
                     key={s.id}
-                    className="flex flex-wrap items-center justify-between gap-4 border border-dashed border-[var(--color-outline-variant)] bg-[var(--color-linen-grey)] p-5"
+                    className="flex flex-wrap items-center justify-between gap-4 border border-dashed border-[var(--color-outline-variant)] bg-[var(--color-cream)] p-5"
                   >
                     <div className="min-w-0">
                       <div className="flex flex-wrap items-center gap-2.5">
                         <p className="font-sans text-[15px] font-semibold">{s.title}</p>
                         <Badge tone="neutral">Archived</Badge>
                       </div>
-                      <p className="mt-1 text-sm text-[var(--color-on-surface-variant)]">
+                      <p className="mt-1 text-sm text-[var(--color-body-warm)]">
                         {s.duration_minutes} min · <span className="tabular">{formatPaise(s.price_paise)}</span>
                         {s.archived_at && (
                           <> · archived {new Date(s.archived_at).toLocaleDateString('en-IN', {

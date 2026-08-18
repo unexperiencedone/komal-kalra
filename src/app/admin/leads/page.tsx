@@ -74,8 +74,8 @@ export default async function AdminLeadsPage(props: {
             aria-current={status === s ? 'page' : undefined}
             className={`rounded-full px-3.5 py-1.5 text-sm font-medium capitalize transition-colors ${
               status === s
-                ? 'bg-[var(--color-cosmic-navy)] text-[var(--color-warm-ivory)]'
-                : 'bg-[var(--color-outline-variant)] text-[var(--color-on-surface-variant)] hover:bg-[var(--color-surface-high)]'
+                ? 'bg-[var(--color-cocoa)] text-[var(--color-card-cream)]'
+                : 'bg-[var(--color-outline-variant)] text-[var(--color-body-warm)] hover:bg-[var(--color-cream)]'
             }`}
           >
             {s}
@@ -107,19 +107,19 @@ export default async function AdminLeadsPage(props: {
 
                   <div className="mt-2 flex flex-wrap gap-x-5 gap-y-1 text-sm">
                     {lead.phone && (
-                      <a href={`tel:${lead.phone}`} className="flex items-center gap-1.5 text-[var(--color-on-surface-variant)] hover:text-[var(--color-gold-deep)]">
+                      <a href={`tel:${lead.phone}`} className="flex items-center gap-1.5 text-[var(--color-body-warm)] hover:text-[var(--color-saffron-deep)]">
                         <Phone className="size-3.5" aria-hidden /> {lead.phone}
                       </a>
                     )}
                     {lead.email && (
-                      <a href={`mailto:${lead.email}`} className="flex items-center gap-1.5 text-[var(--color-on-surface-variant)] hover:text-[var(--color-gold-deep)]">
+                      <a href={`mailto:${lead.email}`} className="flex items-center gap-1.5 text-[var(--color-body-warm)] hover:text-[var(--color-saffron-deep)]">
                         <Mail className="size-3.5" aria-hidden /> {lead.email}
                       </a>
                     )}
                   </div>
 
                   {lead.message && (
-                    <p className="mt-3 max-w-2xl whitespace-pre-wrap text-sm leading-relaxed text-[var(--color-on-surface-variant)]">
+                    <p className="mt-3 max-w-2xl whitespace-pre-wrap text-sm leading-relaxed text-[var(--color-body-warm)]">
                       {lead.message}
                     </p>
                   )}
@@ -134,12 +134,12 @@ export default async function AdminLeadsPage(props: {
                   )}
 
                   {lead.assigned_note && (
-                    <p className="mt-3 border-l-2 border-[var(--color-outline-variant)] pl-3 text-xs italic text-[var(--color-on-surface-variant)]">
+                    <p className="mt-3 border-l-2 border-[var(--color-outline-variant)] pl-3 text-xs italic text-[var(--color-body-warm)]">
                       {lead.assigned_note}
                     </p>
                   )}
 
-                  <p className="mt-3 text-xs text-[var(--color-on-surface-variant)]">
+                  <p className="mt-3 text-xs text-[var(--color-body-warm)]">
                     {formatDateTime(lead.created_at)} · {relativeTime(lead.created_at)}
                   </p>
                 </div>

@@ -28,7 +28,7 @@ export default function FaqPage() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
-      <section className="band-low border-b border-[color-mix(in srgb, var(--color-muted-gold) 20%, transparent)] py-16 sm:py-20">
+      <section className="band-terracotta py-16 sm:py-20">
         <div className="shell max-w-3xl">
           <Reveal>
             <h1 className="text-[length:var(--text-h1)]">Questions, answered</h1>
@@ -40,13 +40,13 @@ export default function FaqPage() {
         </div>
       </section>
 
-      <section className="band-low py-16 sm:py-20">
+      <section className="band-cream py-16 sm:py-20">
         <div className="shell max-w-3xl">
           <FaqAccordion items={BOOKING_FAQ} />
 
           <div className="band-navy mt-14  border border-[var(--color-outline)]/25 p-8 text-center">
             <h2 className="text-[length:var(--text-h3)]">Still not sure?</h2>
-            <p className="mx-auto mt-3 max-w-md text-[15px] leading-relaxed text-[var(--color-on-surface-variant)]">
+            <p className="mx-auto mt-3 max-w-md text-[15px] leading-relaxed text-[var(--color-body-warm)]">
               Ask before you book. Komal reads every enquiry personally.
             </p>
             <div className="mt-6 flex flex-col justify-center gap-3 sm:flex-row">

@@ -53,7 +53,7 @@ export default async function AdminTestimonialsPage() {
         <div className="mt-8 space-y-10">
           {pending.length > 0 && (
             <section aria-labelledby="pending-heading">
-              <h2 id="pending-heading" className="font-sans text-sm font-semibold uppercase tracking-[0.1em] text-[var(--color-on-surface-variant)]">
+              <h2 id="pending-heading" className="font-sans text-sm font-semibold uppercase tracking-[0.1em] text-[var(--color-body-warm)]">
                 Awaiting approval ({pending.length})
               </h2>
               <ul className="mt-3 space-y-3">
@@ -63,7 +63,7 @@ export default async function AdminTestimonialsPage() {
           )}
 
           <section aria-labelledby="published-heading">
-            <h2 id="published-heading" className="font-sans text-sm font-semibold uppercase tracking-[0.1em] text-[var(--color-on-surface-variant)]">
+            <h2 id="published-heading" className="font-sans text-sm font-semibold uppercase tracking-[0.1em] text-[var(--color-body-warm)]">
               Published ({published.length})
             </h2>
             {published.length === 0 ? (
@@ -97,11 +97,11 @@ function TestimonialCard({ testimonial: t }: { testimonial: Testimonial }) {
           </div>
           <div className="mt-1.5 flex items-center gap-0.5" role="img" aria-label={`${t.rating} out of 5`}>
             {Array.from({ length: 5 }).map((_, i) => (
-              <Star key={i} className={`size-3.5 ${i < t.rating ? 'fill-[var(--color-muted-gold)] text-[var(--color-muted-gold)]' : 'text-[var(--color-outline-variant)]'}`} aria-hidden />
+              <Star key={i} className={`size-3.5 ${i < t.rating ? 'fill-[var(--color-saffron)] text-[var(--color-saffron)]' : 'text-[var(--color-outline-variant)]'}`} aria-hidden />
             ))}
           </div>
-          <p className="mt-3 max-w-2xl text-sm leading-relaxed text-[var(--color-on-surface-variant)]">{t.review}</p>
-          <p className="mt-2 text-xs text-[var(--color-on-surface-variant)]">{formatDate(t.created_at)}</p>
+          <p className="mt-3 max-w-2xl text-sm leading-relaxed text-[var(--color-body-warm)]">{t.review}</p>
+          <p className="mt-2 text-xs text-[var(--color-body-warm)]">{formatDate(t.created_at)}</p>
         </div>
       </div>
 

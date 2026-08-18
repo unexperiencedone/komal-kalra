@@ -29,7 +29,7 @@ export function ProfileForm({ profile }: { profile: Profile }) {
       {state?.success && <InlineAlert tone="success">{state.success}</InlineAlert>}
 
       <fieldset className="space-y-5">
-        <legend className="font-sans text-sm font-semibold uppercase tracking-[0.1em] text-[var(--color-on-surface-variant)]">
+        <legend className="font-sans text-sm font-semibold uppercase tracking-[0.1em] text-[var(--color-body-warm)]">
           Contact details
         </legend>
 
@@ -48,7 +48,7 @@ export function ProfileForm({ profile }: { profile: Profile }) {
 
       <fieldset className="space-y-5  border border-[var(--color-outline-variant)] bg-white p-5">
         <legend className="px-1.5 font-sans text-sm font-semibold">Birth details</legend>
-        <p className="flex items-start gap-2 text-xs leading-relaxed text-[var(--color-on-surface-variant)]">
+        <p className="flex items-start gap-2 text-xs leading-relaxed text-[var(--color-body-warm)]">
           <Lock className="mt-0.5 size-3 shrink-0" aria-hidden />
           Private. Visible only to you and Komal, used only to prepare your consultations.
           Never shared, sold or used for marketing.

@@ -1,21 +1,22 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import type { Metadata } from 'next';
-import { ArrowUpRight, Camera, Check, Quote } from 'lucide-react';
+import { ArrowUpRight, Camera, Quote } from 'lucide-react';
 import { createClient } from '@/lib/supabase/server';
 import { getActiveServices } from '@/lib/booking/availability';
 import { BRAND } from '@/lib/config';
 import { Button } from '@/components/ui/button';
-import { SectionHeading } from '@/components/ui/card';
 import { Reveal } from '@/components/common/Reveal';
-import { PortraitFrame } from '@/components/marketing/PortraitFrame';
-import { FOUNDER } from '@/lib/content/founder';
 import { ScrollWatermark } from '@/components/common/ScrollWatermark';
 import { ServiceGrid } from '@/components/marketing/ServiceGrid';
 import { PurposeStatement } from '@/components/marketing/PurposeStatement';
 import { Testimonials } from '@/components/marketing/Testimonials';
 import { img } from '@/lib/content/imagery';
 import type { Testimonial } from '@/types/database';
+
+import { IconStrip } from '@/components/marketing/IconStrip';
+import { Differentiators } from '@/components/marketing/Differentiators';
+import { SeoProse } from '@/components/marketing/SeoProse';
 
 export const metadata: Metadata = {
   title: 'Clarity for the Curated Life',
@@ -24,18 +25,6 @@ export const metadata: Metadata = {
   alternates: { canonical: '/' },
 };
 
-/**
- * Home — built to the `komal_kalra_home_interactive` design.
- *
- * Section order and copy follow the design file. The one structural difference
- * is that services are read from the DATABASE rather than hardcoded as five
- * static tiles: prices, durations and titles are editable from the practitioner
- * console, and a marketing page that hardcodes a price will eventually contradict
- * what the checkout charges.
- *
- * Still a Server Component with no client-side JavaScript for content — the
- * only islands are the nav, the reveal observer and the testimonial carousel.
- */
 export default async function HomePage() {
   const supabase = await createClient();
 
@@ -47,13 +36,12 @@ export default async function HomePage() {
       .eq('approved', true)
       .order('featured', { ascending: false })
       .order('sort_order', { ascending: true })
-      .limit(3)
+      .limit(4)
       .returns<Testimonial[]>(),
   ]);
 
   const reviews = testimonials ?? [];
   const hero = img('heroImage');
-  const about = img('komalKalra');
   const gramA = img('journalCompass');
   const gramB = img('journalCandle');
 
@@ -77,9 +65,6 @@ export default async function HomePage() {
         priceRange: '₹₹',
         areaServed: 'IN',
         availableLanguage: ['English', 'Hindi', 'Punjabi'],
-        // aggregateRating only when real approved reviews exist. Inventing
-        // review markup earns a manual action, and would contradict the rest
-        // of this build.
         ...(reviews.length > 0 && {
           aggregateRating: {
             '@type': 'AggregateRating',
@@ -95,17 +80,10 @@ export default async function HomePage() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
-      {/*
-        Rashi Chakra watermark. Fixed behind the page, turning as it scrolls.
-        Only shows through the sections below that carry no background of their
-        own — the hero and the tonal/navy bands stay opaque, which gives the
-        mark a rhythm of appearing and receding rather than being permanently
-        on screen.
-      */}
       <ScrollWatermark />
 
       {/* ========================= HERO — cinematic ========================= */}
-      <section className="band-low relative flex min-h-[calc(100svh-5rem)] items-center overflow-hidden py-20 md:min-h-[819px] md:py-[var(--spacing-section-md)]">
+      <section className="band-terracotta relative flex min-h-[calc(100svh-5rem)] items-center overflow-hidden py-20 md:min-h-[819px] md:py-[var(--spacing-section-md)]">
         <div className="absolute inset-0 z-0">
           <Image
             src={hero.src}
@@ -113,21 +91,21 @@ export default async function HomePage() {
             fill
             priority
             sizes="100vw"
-            className="object-cover opacity-80 mix-blend-multiply grayscale-[30%]"
+            className="object-cover opacity-60 mix-blend-multiply grayscale-[30%]"
           />
-          {/* Ivory scrim — left-to-right on desktop, top-to-bottom on mobile
-              where the headline sits over the middle of the frame. */}
-          <div className="hero-scrim absolute inset-0" aria-hidden />
+          <div className="hero-scrim absolute inset-0 bg-gradient-to-r from-[var(--color-terracotta)]/80 to-transparent" aria-hidden />
         </div>
 
         <div className="shell relative z-10 grid w-full grid-cols-1 gap-[var(--spacing-gutter)] md:grid-cols-12">
-          <div className="flex flex-col justify-center md:col-span-6">
+          <div className="flex flex-col justify-center md:col-span-8 lg:col-span-6">
             <Reveal>
-              <p className="label-caps text-[var(--color-gold-deep)]">Trusted Guidance</p>
+              <div className="inline-flex items-center rounded-sm bg-white/20 px-3 py-1 text-xs font-semibold uppercase tracking-widest text-white backdrop-blur-sm">
+                Trusted Guidance
+              </div>
             </Reveal>
 
             <Reveal delay={100}>
-              <h1 className="mt-6 text-[length:var(--text-display-lg)]">
+              <h1 className="mt-6 font-[family-name:var(--font-display)] text-5xl leading-tight text-white md:text-7xl">
                 Clarity for the
                 <br />
                 Curated Life
@@ -135,41 +113,54 @@ export default async function HomePage() {
             </Reveal>
 
             <Reveal delay={200}>
-              <p className="standfirst mt-8">
-                Professional astrological consultation and life coaching designed to provide
-                precision, discretion, and profound insight.
+              <p className="mt-8 max-w-lg text-lg leading-relaxed text-[var(--color-cream)]">
+                Stuck on a decision? Not sure what the next year holds? Talk to Komal directly — in English, Hindi, or Punjabi.
               </p>
             </Reveal>
 
             <Reveal delay={300}>
               <div className="mt-10 flex flex-wrap items-center gap-6">
-                <Button asChild size="lg">
+                <Button asChild size="lg" variant="primary">
                   <Link href="/book">Book a Consultation</Link>
                 </Button>
-                <Link
-                  href="/services"
-                  className="label-caps border-b border-[var(--color-cosmic-navy)] pb-1 text-[var(--color-cosmic-navy)] transition-colors duration-300 hover:border-[var(--color-muted-gold)] hover:text-[var(--color-gold-deep)]"
-                >
-                  Explore Services
-                </Link>
+                <Button asChild size="lg" variant="secondary" className="bg-transparent text-white border-white hover:bg-white hover:text-[var(--color-terracotta)]">
+                  <Link href="/services">Explore Services</Link>
+                </Button>
               </div>
             </Reveal>
           </div>
         </div>
       </section>
 
+      {/* ====================== ICON QUICK ACCESS ====================== */}
+      <IconStrip />
+
       {/* ====================== CONSULTATION SERVICES ====================== */}
-      <section aria-labelledby="services-heading" className="py-[var(--spacing-section-lg)]">
+      {/*
+        BAND RHYTHM — the tones below alternate deliberately:
+
+          terracotta → cream → sand → cream → sand → cream → sand → cream
+                                                              → amber → footer
+
+        Every one of these used to be cream or an alias of cream, which is why
+        five sections ran together as a single slab. `npm run audit:bands`
+        checks this ordering; do not add a section without giving it a tone
+        that differs from its neighbour.
+
+        The closing CTA is AMBER, not terracotta, specifically because the
+        footer is a terracotta gradient — two terracotta blocks touching had
+        no visible boundary at all.
+      */}
+      <section aria-labelledby="services-heading" className="band-sand py-[var(--spacing-section-lg)]">
         <div className="shell">
           <Reveal>
             <div className="mb-16 md:w-1/2">
-              <h2 id="services-heading" className="text-[length:var(--text-h2)]">
-                Consultation Services
+              <h2 id="services-heading" className="text-[length:var(--text-h2)] text-[var(--color-cocoa)]">
+                Our Services
               </h2>
               <span className="gold-rule mt-6" aria-hidden />
-              <p className="mt-6 text-base leading-relaxed text-[var(--color-on-surface-variant)]">
-                A tailored approach to understanding your unique path, combining ancient wisdom
-                with modern executive coaching.
+              <p className="mt-6 text-base leading-relaxed text-[var(--color-body-warm)]">
+                Choose the conversation that fits what you are dealing with right now.
               </p>
             </div>
           </Reveal>
@@ -178,73 +169,29 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* ===================== THE APPROACH / WHY CHOOSE ==================== */}
-      <section
-        aria-labelledby="about-heading"
-        className="band-low border-t border-[color-mix(in_srgb,var(--color-muted-gold)_15%,transparent)] py-[var(--spacing-section-lg)]"
-      >
-        <div className="shell grid grid-cols-1 items-center gap-12 md:grid-cols-12">
-          <Reveal className="md:col-span-5">
-            {/* Square source in a 4/5 crop, focal point raised to 22% so the
-                frame does not cut through her head. */}
-            <PortraitFrame
-              src={about.src}
-              alt={about.alt}
-              aspect="portrait"
-              objectPosition="50% 22%"
-              sizes="(min-width: 768px) 40vw, 100vw"
-            />
-          </Reveal>
-
-          <Reveal delay={120} className="md:col-span-6 md:col-start-7">
-            <p className="label-caps text-[var(--color-gold-deep)]">The Approach</p>
-            <h2 id="about-heading" className="mt-4 text-[length:var(--text-h1)]">
-              Why Choose Komal Kalra
-            </h2>
-
-            <div className="prose-editorial mt-8 text-base">
-              {FOUNDER.homepage.map((para) => (
-                <p key={para.slice(0, 24)}>{para}</p>
-              ))}
-            </div>
-
-            <ul className="mt-10 space-y-4 border-t border-[color-mix(in_srgb,var(--color-muted-gold)_20%,transparent)] pt-8">
-              {FOUNDER.homepageChecklist.map((item) => (
-                <li key={item} className="flex items-center gap-4 text-[var(--color-on-surface)]">
-                  <Check className="size-4 shrink-0 text-[var(--color-muted-gold)]" aria-hidden />
-                  {item}
-                </li>
-              ))}
-            </ul>
-          </Reveal>
-        </div>
-      </section>
+      {/* ===================== DIFFERENTIATORS (Pitch Band) ==================== */}
+      <Differentiators />
 
       {/* ================= SOCIAL PROOF + CURATED INSIGHTS ================= */}
-      <section aria-labelledby="proof-heading" className="py-[var(--spacing-section-md)]">
+      <section aria-labelledby="proof-heading" className="band-sand py-[var(--spacing-section-lg)]">
         <h2 id="proof-heading" className="sr-only">What clients say, and where to follow along</h2>
 
         <div className="shell grid grid-cols-1 gap-16 md:grid-cols-2">
-          {/*
-            Testimonial. Renders only when a real approved review exists —
-            there is no hardcoded fallback quote anywhere in this codebase, so
-            the section is simply absent until Komal approves one.
-          */}
           {reviews.length > 0 ? (
             <Reveal>
-              <figure className="flex h-full flex-col justify-center border-l border-[color-mix(in_srgb,var(--color-muted-gold)_30%,transparent)] pl-8">
-                <Quote className="size-9 text-[var(--color-muted-gold)] opacity-50" aria-hidden />
-                <blockquote className="mt-6 font-[family-name:var(--font-display)] text-2xl italic leading-relaxed text-[var(--color-cosmic-navy)]">
+              <figure className="flex h-full flex-col justify-center border-l border-[var(--color-saffron)] pl-8">
+                <Quote className="size-9 text-[var(--color-saffron)] opacity-50" aria-hidden />
+                <blockquote className="mt-6 font-[family-name:var(--font-display)] text-2xl italic leading-relaxed text-[var(--color-cocoa)]">
                   &ldquo;{reviews[0].review}&rdquo;
                 </blockquote>
                 <figcaption className="mt-8">
-                  <p className="label-caps text-[var(--color-cosmic-navy)]">
+                  <p className="label-caps text-[var(--color-cocoa)]">
                     {reviews[0].display_initials_only
                       ? reviews[0].author_name.split(/\s+/).map((p) => `${p[0]}.`).join(' ')
                       : reviews[0].author_name}
                   </p>
                   {reviews[0].author_location && (
-                    <p className="mt-1 text-sm text-[var(--color-on-surface-variant)]">
+                    <p className="mt-1 text-sm text-[var(--color-body-warm)] opacity-80">
                       {reviews[0].author_location}
                     </p>
                   )}
@@ -253,9 +200,9 @@ export default async function HomePage() {
             </Reveal>
           ) : (
             <Reveal>
-              <div className="flex h-full flex-col justify-center border-l border-[color-mix(in_srgb,var(--color-muted-gold)_30%,transparent)] pl-8">
-                <p className="label-caps text-[var(--color-gold-deep)]">In their words</p>
-                <p className="mt-6 max-w-md text-base leading-relaxed text-[var(--color-on-surface-variant)]">
+              <div className="flex h-full flex-col justify-center border-l border-[var(--color-saffron)] pl-8">
+                <p className="label-caps text-[var(--color-saffron-deep)]">In their words</p>
+                <p className="mt-6 max-w-md text-base leading-relaxed text-[var(--color-body-warm)]">
                   Client reflections appear here once they have been reviewed and approved.
                   Nothing is published without Komal&apos;s explicit approval.
                 </p>
@@ -263,23 +210,21 @@ export default async function HomePage() {
             </Reveal>
           )}
 
-          {/* Curated Insights — Instagram teaser */}
           <Reveal delay={120}>
-            <div className="flex h-full flex-col items-center border border-[color-mix(in_srgb,var(--color-muted-gold)_15%,transparent)] bg-[var(--color-linen-grey)] p-8 text-center sm:p-10">
-              <Camera className="size-7 text-[var(--color-cosmic-navy)]" aria-hidden />
-              <h3 className="mt-4 font-[family-name:var(--font-display)] text-xl font-medium">
+            <div className="flex h-full flex-col items-center border border-[var(--color-hairline)] bg-[var(--color-card-cream)] p-8 text-center sm:p-10 relative before:absolute before:inset-[4px] before:border before:border-[var(--color-hairline)] before:pointer-events-none">
+              <Camera className="size-7 text-[var(--color-cocoa)]" aria-hidden />
+              <h3 className="mt-4 font-[family-name:var(--font-display)] text-xl font-medium text-[var(--color-cocoa)]">
                 Curated Insights
               </h3>
-              <p className="mt-4 max-w-sm text-base leading-relaxed text-[var(--color-on-surface-variant)]">
-                Follow for regular reflections on timing, energy management, and leading a
-                conscious professional life.
+              <p className="mt-4 max-w-sm text-base leading-relaxed text-[var(--color-body-warm)]">
+                Follow for regular reflections on timing, energy management, and leading a conscious professional life.
               </p>
 
               <div className="mt-8 grid w-full grid-cols-2 gap-4">
                 {[gramA, gramB].map((g) => (
                   <div
                     key={g.src}
-                    className="aspect-square overflow-hidden border border-[color-mix(in_srgb,var(--color-muted-gold)_15%,transparent)] bg-[var(--color-surface-container)]"
+                    className="aspect-square overflow-hidden border border-[var(--color-hairline)] bg-[var(--color-cream)] relative z-20"
                   >
                     <Image
                       src={g.src}
@@ -297,7 +242,7 @@ export default async function HomePage() {
                 href={BRAND.instagram}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="label-caps mt-8 inline-flex items-center gap-2 border-b border-[var(--color-cosmic-navy)] pb-1 text-[var(--color-cosmic-navy)] transition-colors duration-300 hover:border-[var(--color-muted-gold)] hover:text-[var(--color-gold-deep)]"
+                className="label-caps mt-8 inline-flex items-center gap-2 border-b border-[var(--color-terracotta)] pb-1 text-[var(--color-terracotta)] transition-colors duration-300 hover:border-[var(--color-cocoa)] hover:text-[var(--color-cocoa)] relative z-20"
               >
                 View Instagram
                 <ArrowUpRight className="size-3.5" aria-hidden />
@@ -310,36 +255,31 @@ export default async function HomePage() {
       {/* Additional approved reviews, if there are more than the featured one. */}
       <Testimonials testimonials={reviews.slice(1)} />
 
-      {/*
-        Plain-language statement of what this application is and what Google
-        sign-in accesses. Placed late — a prospective client does not need it
-        before the services — but it must be on the HOMEPAGE specifically, and
-        readable without signing in, because that is where Google's OAuth
-        reviewer looks. See the component for the rejection it answers.
-      */}
+      {/* ===================== SEO PROSE ===================== */}
+      <SeoProse />
+
+      {/* Purpose statement for OAuth */}
       <PurposeStatement />
 
       {/* ============================ FINAL CTA ============================ */}
-      <section className="band-navy py-[var(--spacing-section-md)]">
+      <section className="band-amber py-[var(--spacing-section-lg)] border-t border-white/25">
         <div className="shell flex flex-col items-start justify-between gap-10 md:flex-row md:items-center">
           <div>
-            <SectionHeading
-              eyebrow="Begin"
-              title="A single conversation is often enough"
-              onDark
-            />
-            <p className="mt-6 max-w-md text-base leading-relaxed text-[var(--color-on-primary-container)]">
+            <h2 className="font-[family-name:var(--font-display)] text-4xl text-white">
+              Still deciding? One call is usually all it takes
+            </h2>
+            <p className="mt-4 max-w-md text-base leading-relaxed text-[var(--color-cream)]">
               Choose a time that suits you. Free cancellation up to 24 hours beforehand.
             </p>
           </div>
 
           <div className="flex flex-wrap items-center gap-4">
-            <Button asChild size="lg" variant="onDark">
-              <Link href="/book">Book a Consultation</Link>
+            <Button asChild size="lg" variant="primary" className="shadow-[4px_4px_0_0_var(--color-saffron-deep)]">
+              <Link href="/book">Schedule a Call &rarr;</Link>
             </Button>
             <a
               href={`tel:${BRAND.phonesE164[0]}`}
-              className="label-caps border-b border-[var(--color-gold-light)] pb-1 text-[var(--color-gold-light)] transition-opacity hover:opacity-80"
+              className="label-caps border-b border-white pb-1 text-white transition-opacity hover:opacity-80"
             >
               {BRAND.phones[0]}
             </a>

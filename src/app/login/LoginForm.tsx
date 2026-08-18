@@ -64,7 +64,7 @@ export function LoginForm({
         <input type="hidden" name="next" value={next} />
         <button
           type="submit"
-          className="flex w-full items-center justify-center gap-3 border border-[var(--color-outline-variant)] bg-[var(--color-surface-lowest)] px-6 py-3.5 text-[15px] font-medium text-[var(--color-on-surface)] transition-colors duration-300 hover:border-[var(--color-cosmic-navy)] hover:bg-[var(--color-surface-low)]"
+          className="flex w-full items-center justify-center gap-3 border border-[var(--color-outline-variant)] bg-[var(--color-surface-lowest)] px-6 py-3.5 text-[15px] font-medium text-[var(--color-body-warm)] transition-colors duration-300 hover:border-[var(--color-cocoa)] hover:bg-[var(--color-card-cream)]"
         >
           <GoogleMark className="size-5" />
           Continue with Google
@@ -74,11 +74,11 @@ export function LoginForm({
       {/* Hairline divider with a centred label — the editorial version of the
           usual "or" rule. */}
       <div className="flex items-center gap-4" aria-hidden>
-        <span className="h-px flex-1 bg-[color-mix(in_srgb,var(--color-muted-gold)_20%,transparent)]" />
-        <span className="label-small uppercase tracking-[0.12em] text-[var(--color-on-surface-variant)]">
+        <span className="h-px flex-1 bg-[var(--color-hairline)]" />
+        <span className="label-small uppercase tracking-[0.12em] text-[var(--color-body-warm)]">
           or
         </span>
-        <span className="h-px flex-1 bg-[color-mix(in_srgb,var(--color-muted-gold)_20%,transparent)]" />
+        <span className="h-px flex-1 bg-[var(--color-hairline)]" />
       </div>
     </div>
   );
@@ -89,13 +89,13 @@ export function LoginForm({
         <button
           type="button"
           onClick={() => onModeChange('signin')}
-          className="mb-6 inline-flex items-center gap-1.5 text-sm font-medium text-[var(--color-on-surface-variant)] hover:text-[var(--color-cosmic-navy)]"
+          className="mb-6 inline-flex items-center gap-1.5 text-sm font-medium text-[var(--color-body-warm)] hover:text-[var(--color-cocoa)]"
         >
           <ArrowLeft className="size-3.5" aria-hidden /> Back to sign in
         </button>
 
         <h1 className="text-[length:var(--text-h2)]">Reset your password</h1>
-        <p className="mt-2 text-sm leading-relaxed text-[var(--color-on-surface-variant)]">
+        <p className="mt-2 text-sm leading-relaxed text-[var(--color-body-warm)]">
           Enter your email and we will send you a link to set a new password.
         </p>
 
@@ -120,7 +120,7 @@ export function LoginForm({
       <h1 className="text-[length:var(--text-h2)]">
         {mode === 'signin' ? 'Welcome back' : 'Create your account'}
       </h1>
-      <p className="mt-2 text-sm leading-relaxed text-[var(--color-on-surface-variant)]">
+      <p className="mt-2 text-sm leading-relaxed text-[var(--color-body-warm)]">
         {mode === 'signin'
           ? 'Sign in to see your consultations, receipts and upcoming sessions.'
           : 'You need an account to confirm a booking and keep your session history.'}
@@ -141,7 +141,7 @@ export function LoginForm({
             onClick={() => onModeChange(m)}
             className={cn(
               ' py-2 text-sm font-medium transition-colors',
-              mode === m ? 'bg-white text-[var(--color-cosmic-navy)] ' : 'text-[var(--color-on-surface-variant)]',
+              mode === m ? 'bg-white text-[var(--color-cocoa)] ' : 'text-[var(--color-body-warm)]',
             )}
           >
             {m === 'signin' ? 'Sign in' : 'Create account'}
@@ -181,7 +181,7 @@ export function LoginForm({
           <button
             type="button"
             onClick={() => onModeChange('reset')}
-            className="text-sm font-medium text-[var(--color-gold-deep)] hover:underline"
+            className="text-sm font-medium text-[var(--color-saffron-deep)] hover:underline"
           >
             Forgotten your password?
           </button>
@@ -228,10 +228,10 @@ export function LoginForm({
             Create account
           </Button>
 
-          <p className="text-xs leading-relaxed text-[var(--color-on-surface-variant)]">
+          <p className="text-xs leading-relaxed text-[var(--color-body-warm)]">
             By creating an account you agree to our{' '}
-            <Link href="/legal/terms" className="underline hover:text-[var(--color-gold-deep)]">terms</Link> and{' '}
-            <Link href="/legal/privacy" className="underline hover:text-[var(--color-gold-deep)]">privacy policy</Link>.
+            <Link href="/legal/terms" className="underline hover:text-[var(--color-saffron-deep)]">terms</Link> and{' '}
+            <Link href="/legal/privacy" className="underline hover:text-[var(--color-saffron-deep)]">privacy policy</Link>.
           </p>
         </form>
       )}

@@ -97,12 +97,12 @@ export function RefundDialog({
       role="dialog"
       aria-modal="true"
       aria-label="Issue a refund"
-      className="fixed inset-0 z-50 flex items-center justify-center bg-[var(--color-cosmic-navy)]/40 p-4"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-[var(--color-cocoa)]/40 p-4"
       onKeyDown={(e) => { if (e.key === 'Escape') setOpen(false); }}
     >
       <div className="w-full max-w-md  border border-[var(--color-outline-variant)] bg-white p-6 ">
         <h2 className="font-[family-name:var(--font-display)] text-xl font-semibold">Issue a refund</h2>
-        <p className="mt-1.5 text-sm leading-relaxed text-[var(--color-on-surface-variant)]">
+        <p className="mt-1.5 text-sm leading-relaxed text-[var(--color-body-warm)]">
           Refunding {clientName}. {formatPaisePrecise(remaining)} is available to refund
           {refundedPaise > 0 && ` (${formatPaisePrecise(refundedPaise)} already refunded)`}.
         </p>

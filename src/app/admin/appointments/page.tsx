@@ -95,30 +95,30 @@ export default async function AdminAppointmentsPage(props: {
               </thead>
               <Tbody>
                 {appointments.map((a) => (
-                  <tr key={a.id} className="hover:bg-[var(--color-warm-ivory)]">
+                  <tr key={a.id} className="hover:bg-[var(--color-card-cream)]">
                     <Td>
                       <span className="block text-sm font-medium">{formatDate(a.starts_at)}</span>
-                      <span className="tabular block text-xs text-[var(--color-on-surface-variant)]">
+                      <span className="tabular block text-xs text-[var(--color-body-warm)]">
                         {formatTime(a.starts_at)}
                       </span>
                     </Td>
                     <Td>
                       {a.profiles ? (
                         <Link href={`/admin/clients/${a.profiles.id}`} className="block max-w-[180px]">
-                          <span className="block truncate text-sm font-medium hover:text-[var(--color-gold-deep)]">
+                          <span className="block truncate text-sm font-medium hover:text-[var(--color-saffron-deep)]">
                             {a.profiles.full_name ?? 'Unnamed'}
                           </span>
-                          <span className="block truncate text-xs text-[var(--color-on-surface-variant)]">
+                          <span className="block truncate text-xs text-[var(--color-body-warm)]">
                             {a.profiles.phone ?? a.profiles.email}
                           </span>
                         </Link>
                       ) : (
-                        <span className="text-sm text-[var(--color-on-surface-variant)]">—</span>
+                        <span className="text-sm text-[var(--color-body-warm)]">—</span>
                       )}
                     </Td>
                     <Td>
                       <span className="block max-w-[160px] truncate text-sm">{a.service_title_snapshot}</span>
-                      <span className="block text-xs text-[var(--color-on-surface-variant)]">{a.reference}</span>
+                      <span className="block text-xs text-[var(--color-body-warm)]">{a.reference}</span>
                     </Td>
                     <Td><AppointmentStatusBadge status={a.status} /></Td>
                     <Td><PaymentStatusBadge status={a.payment_status} /></Td>

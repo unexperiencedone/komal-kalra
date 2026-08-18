@@ -63,8 +63,8 @@ export default async function AdminAnalyticsPage(props: {
             aria-current={days === d ? 'page' : undefined}
             className={`rounded-full px-3.5 py-1.5 text-sm font-medium transition-colors ${
               days === d
-                ? 'bg-[var(--color-cosmic-navy)] text-[var(--color-warm-ivory)]'
-                : 'bg-[var(--color-outline-variant)] text-[var(--color-on-surface-variant)] hover:bg-[var(--color-surface-high)]'
+                ? 'bg-[var(--color-cocoa)] text-[var(--color-card-cream)]'
+                : 'bg-[var(--color-outline-variant)] text-[var(--color-body-warm)] hover:bg-[var(--color-cream)]'
             }`}
           >
             {d === 365 ? '1 year' : `${d} days`}
@@ -111,7 +111,7 @@ export default async function AdminAnalyticsPage(props: {
       )}
 
       <section aria-labelledby="chart-heading" className="mt-8">
-        <h2 id="chart-heading" className="font-sans text-sm font-semibold uppercase tracking-[0.1em] text-[var(--color-on-surface-variant)]">
+        <h2 id="chart-heading" className="font-sans text-sm font-semibold uppercase tracking-[0.1em] text-[var(--color-body-warm)]">
           Revenue over time
         </h2>
         <div className="mt-3  border border-[var(--color-outline-variant)] bg-white p-5">
@@ -120,11 +120,11 @@ export default async function AdminAnalyticsPage(props: {
       </section>
 
       <section aria-labelledby="service-heading" className="mt-8">
-        <h2 id="service-heading" className="font-sans text-sm font-semibold uppercase tracking-[0.1em] text-[var(--color-on-surface-variant)]">
+        <h2 id="service-heading" className="font-sans text-sm font-semibold uppercase tracking-[0.1em] text-[var(--color-body-warm)]">
           Revenue by service
         </h2>
         {byService.length === 0 ? (
-          <p className="mt-3  border border-dashed border-[var(--color-outline-variant)] p-10 text-center text-sm text-[var(--color-on-surface-variant)]">
+          <p className="mt-3  border border-dashed border-[var(--color-outline-variant)] p-10 text-center text-sm text-[var(--color-body-warm)]">
             No paid bookings in this period.
           </p>
         ) : (
@@ -139,9 +139,9 @@ export default async function AdminAnalyticsPage(props: {
                   </div>
                   <div className="mt-2 flex items-center gap-3">
                     <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-[var(--color-outline-variant)]">
-                      <div className="h-full rounded-full bg-[var(--color-muted-gold)]" style={{ width: `${share}%` }} />
+                      <div className="h-full rounded-full bg-[var(--color-saffron)]" style={{ width: `${share}%` }} />
                     </div>
-                    <span className="tabular w-24 shrink-0 text-right text-xs text-[var(--color-on-surface-variant)]">
+                    <span className="tabular w-24 shrink-0 text-right text-xs text-[var(--color-body-warm)]">
                       {row.bookings} {row.bookings === 1 ? 'booking' : 'bookings'}
                     </span>
                   </div>

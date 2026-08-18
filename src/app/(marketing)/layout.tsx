@@ -15,7 +15,7 @@ export default async function MarketingLayout({ children }: { children: React.Re
   return (
     <div className="flex min-h-dvh flex-col">
       <SiteHeader signedIn={Boolean(user)} />
-      <main id="main" className="flex-1 pt-20">{children}</main>
+      <main id="main" className="flex-1 pt-20 md:pt-32">{children}</main>
       <SiteFooter services={services} />
     </div>
   );
