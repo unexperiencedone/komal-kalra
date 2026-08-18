@@ -96,7 +96,7 @@ export function ServiceCard({
 
       <div className={cn('flex flex-1 flex-col justify-between p-8 sm:p-10', fillImageHeight && 'md:flex-none')}>
         <div>
-          <Icon className="size-7 text-[var(--color-saffron)]" aria-hidden />
+          {Icon !== Sparkles && <Icon className="size-7 text-[var(--color-saffron)]" aria-hidden />}
 
           <h3 className="mt-6 font-[family-name:var(--font-display)] text-2xl font-medium text-[var(--color-cocoa)]">
             {/* Stretched link: the whole tile is the target, but only the title

@@ -1,5 +1,5 @@
-import { Fragment } from 'react';
 import { Band } from './Band';
+import { Reveal } from '@/components/common/Reveal';
 
 /**
  * The long-form block below the fold. Its job is to be indexed — this is the
@@ -70,13 +70,15 @@ export function SeoProse() {
   return (
     <Band tone="cream">
       <div className="shell">
-        <div className="mx-auto max-w-3xl">
-          <header className="mb-12">
+        <div className="mx-auto max-w-5xl">
+          <header className="mb-14 max-w-2xl">
             <p className="label-caps text-[var(--color-saffron-deep)]">Before you book</p>
-            <h2 className="mt-4 font-[family-name:var(--font-display)] text-[length:var(--text-h2)] font-semibold leading-tight text-[var(--color-cocoa)]">
-              Questions people ask first
-            </h2>
-            <span className="gold-rule mt-6" aria-hidden />
+            <div className="w-fit">
+              <h2 className="mt-4 font-[family-name:var(--font-display)] text-[length:var(--text-h2)] font-semibold leading-tight text-[var(--color-cocoa)]">
+                Questions people ask first
+              </h2>
+              <span className="gold-rule mt-6 !w-[calc(100%+1rem)]" aria-hidden />
+            </div>
           </header>
 
           {/*
@@ -86,12 +88,23 @@ export function SeoProse() {
             hides the h3 from those selectors and the spacing collapses back to
             the flat wall this component was written to fix.
           */}
-          <div className="prose-editorial max-w-none">
-            {ENTRIES.map((entry) => (
-              <Fragment key={entry.q}>
-                <h3>{entry.q}</h3>
-                <p>{entry.a.replace(/\s+/g, ' ').trim()}</p>
-              </Fragment>
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-x-10 md:gap-y-8">
+            {[ENTRIES.filter((_, index) => index % 2 === 0), ENTRIES.filter((_, index) => index % 2 === 1)].map((column, columnIndex) => (
+              <div key={columnIndex} className="space-y-6 md:space-y-8">
+                {column.map((entry, index) => (
+                  <Reveal key={entry.q} delay={(index + columnIndex) * 120} as="article">
+                    <article className="group border border-[var(--color-hairline)] bg-[var(--color-card-cream)] p-6 transition-colors duration-300 hover:bg-white md:p-8">
+                      <span className="label-small text-[var(--color-saffron-deep)]">{String(columnIndex === 0 ? index * 2 + 1 : index * 2 + 2).padStart(2, '0')}</span>
+                      <h3 className="mt-4 font-[family-name:var(--font-display)] text-2xl font-semibold leading-tight text-[var(--color-cocoa)] transition-colors group-hover:text-[var(--color-terracotta)]">
+                        {entry.q}
+                      </h3>
+                      <p className="mt-4 text-[15px] leading-[1.75] text-[var(--color-body-warm)]">
+                        {entry.a.replace(/\s+/g, ' ').trim()}
+                      </p>
+                    </article>
+                  </Reveal>
+                ))}
+              </div>
             ))}
           </div>
         </div>

@@ -48,8 +48,10 @@ export function LegalDocumentView({ doc }: { doc: Doc }) {
   return (
     <article>
       <p className="label-caps text-[var(--color-saffron-deep)]">Legal</p>
-      <h1 className="mt-4 font-[family-name:var(--font-display)] text-[length:var(--text-h1)] text-[var(--color-cocoa)]">{doc.title}</h1>
-      <span className="gold-rule mt-6" aria-hidden />
+      <div className="w-fit">
+        <h1 className="mt-4 font-[family-name:var(--font-display)] text-[length:var(--text-h1)] text-[var(--color-cocoa)]">{doc.title}</h1>
+        <span className="gold-rule mt-6 !w-[calc(100%+1rem)]" aria-hidden />
+      </div>
 
       <p className="standfirst mt-6 text-[var(--color-body-warm)]">{doc.standfirst}</p>
 

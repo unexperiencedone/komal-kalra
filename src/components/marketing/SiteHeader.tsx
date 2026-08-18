@@ -40,8 +40,8 @@ function useHideOnScroll(active: boolean) {
 
   useEffect(() => {
     if (!active) {
-      setHidden(false);
-      return;
+      const reveal = window.setTimeout(() => setHidden(false), 0);
+      return () => window.clearTimeout(reveal);
     }
 
     lastY.current = window.scrollY;
@@ -99,7 +99,7 @@ export function SiteHeader({ signedIn = false }: { signedIn?: boolean }) {
         // A hairline there just reintroduces the seam in a subtler form.
         'sticky top-0 z-50 w-full bg-[var(--color-terracotta-lo)] text-[var(--color-cream)]',
         'transition-transform duration-300 ease-out motion-reduce:transition-none',
-        hidden ? '-translate-y-full' : 'translate-y-0',
+        hidden && !open ? '-translate-y-full' : 'translate-y-0',
       )}
     >
       <div className="shell relative flex min-h-20 flex-col">
@@ -122,7 +122,7 @@ export function SiteHeader({ signedIn = false }: { signedIn?: boolean }) {
               aria-expanded={open}
               aria-controls="mobile-nav"
               aria-label={open ? 'Close menu' : 'Open menu'}
-              className="flex size-10 items-center justify-center text-[var(--color-cream)] md:hidden"
+              className="relative z-[70] flex size-10 items-center justify-center text-[var(--color-cream)] md:hidden"
             >
               {open ? <X className="size-5" /> : <Menu className="size-5" />}
             </button>
@@ -149,7 +149,7 @@ export function SiteHeader({ signedIn = false }: { signedIn?: boolean }) {
       {open && (
         <div
           id="mobile-nav"
-          className="fixed inset-0 top-20 z-40 overflow-y-auto bg-[var(--color-terracotta-lo)] md:hidden"
+          className="absolute inset-x-0 top-full z-[60] min-h-[calc(100dvh-5rem)] overflow-y-auto bg-[var(--color-terracotta-lo)] md:hidden"
         >
           <nav aria-label="Mobile" className="shell py-6 flex flex-col min-h-[calc(100dvh-5rem)]">
             <ul className="flex-1 divide-y divide-[color-mix(in_srgb,var(--color-cream)_30%,transparent)]">

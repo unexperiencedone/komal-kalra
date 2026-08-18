@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { FaqAccordion } from '@/components/marketing/FaqAccordion';
 import { BOOKING_FAQ } from '@/lib/content/faq';
@@ -28,11 +29,21 @@ export default function FaqPage() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
-      <section className="band-terracotta py-16 sm:py-20">
-        <div className="shell max-w-3xl">
+      <section className="band-terracotta relative overflow-hidden py-16 sm:py-20">
+        <Image
+          src="/images/stepImage.webp"
+          alt=""
+          aria-hidden
+          fill
+          priority
+          sizes="100vw"
+          className="pointer-events-none absolute inset-0 z-0 object-cover opacity-35"
+        />
+        <div aria-hidden className="pointer-events-none absolute inset-0 z-0 bg-[var(--color-terracotta)]/75" />
+        <div className="shell relative z-10 max-w-3xl">
           <Reveal>
             <h1 className="text-[length:var(--text-h1)]">Questions, answered</h1>
-            <p className="standfirst mt-5">
+            <p className="standfirst mt-5 !text-[var(--color-cream)]">
               Everything about booking, payment and cancellation. If your question is not
               here, call {BRAND.phones[0]} and ask.
             </p>
@@ -46,7 +57,7 @@ export default function FaqPage() {
 
           <div className="band-navy mt-14  border border-[var(--color-outline)]/25 p-8 text-center">
             <h2 className="text-[length:var(--text-h3)]">Still not sure?</h2>
-            <p className="mx-auto mt-3 max-w-md text-[15px] leading-relaxed text-[var(--color-body-warm)]">
+            <p className="mx-auto mt-3 max-w-md text-[15px] leading-relaxed text-[var(--color-cream)] opacity-90">
               Ask before you book. Komal reads every enquiry personally.
             </p>
             <div className="mt-6 flex flex-col justify-center gap-3 sm:flex-row">

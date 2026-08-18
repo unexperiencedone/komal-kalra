@@ -39,6 +39,7 @@ export function PortraitFrame({
   sizes = '(min-width: 768px) 40vw, 100vw',
   className,
   frameOffset = 16,
+  frameStyle = 'offset',
 }: {
   src: string;
   alt: string;
@@ -50,6 +51,8 @@ export function PortraitFrame({
   className?: string;
   /** How far the gold rule sits down and right of the image, in px. */
   frameOffset?: number;
+  /** Editorial double-line treatment for pages that need a distinct portrait frame. */
+  frameStyle?: 'offset' | 'double' | 'corners' | 'gallery';
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const [shown, setShown] = useState(false);
@@ -88,7 +91,12 @@ export function PortraitFrame({
 
   return (
     <div ref={ref} className={cn('group relative', ratio, className)}>
-      <div className="relative size-full overflow-hidden bg-[var(--color-cream)]">
+      <div
+        className={cn(
+          'relative size-full overflow-hidden bg-[var(--color-cream)]',
+          frameStyle === 'gallery' && 'rounded-[1.5rem]',
+        )}
+      >
         <Image
           src={src}
           alt={alt}
@@ -104,17 +112,48 @@ export function PortraitFrame({
         />
       </div>
 
-      {/* Offset gold rule. Starts flush with the image and settles outward. */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 border border-[var(--color-hairline)] transition-transform duration-[900ms] ease-[var(--ease-out-quint)] motion-safe:group-hover:translate-x-[var(--frame-hover)] motion-safe:group-hover:translate-y-[var(--frame-hover)]"
-        style={
-          {
-            transform: shown ? `translate(${frameOffset}px, ${frameOffset}px)` : 'translate(0, 0)',
-            '--frame-hover': `${frameOffset + 3}px`,
-          } as React.CSSProperties
-        }
-      />
+      {frameStyle === 'gallery' ? (
+        <>
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-[-10px] rounded-[1.9rem] border-2 border-[#BC5233] rotate-[-2deg] transition-transform duration-[900ms] ease-[var(--ease-out-quint)] motion-safe:group-hover:rotate-0"
+          />
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-[-4px] rounded-[1.7rem] border border-[var(--color-saffron)] rotate-[1deg] transition-transform duration-[900ms] ease-[var(--ease-out-quint)] motion-safe:group-hover:rotate-0"
+          />
+        </>
+      ) : frameStyle === 'corners' ? (
+        <div aria-hidden className="pointer-events-none absolute inset-[-10px] transition-transform duration-[900ms] ease-[var(--ease-out-quint)] motion-safe:group-hover:translate-x-1 motion-safe:group-hover:translate-y-1">
+          <span className="absolute left-0 top-0 h-16 w-16 border-l-2 border-t-2 border-[#BC5233]" />
+          <span className="absolute right-0 top-0 h-16 w-16 border-r-2 border-t-2 border-[#BC5233]" />
+          <span className="absolute bottom-0 left-0 h-16 w-16 border-b-2 border-l-2 border-[#BC5233]" />
+          <span className="absolute bottom-0 right-0 h-16 w-16 border-b-2 border-r-2 border-[#BC5233]" />
+        </div>
+      ) : frameStyle === 'double' ? (
+        <>
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-2 border border-[var(--color-saffron)] transition-transform duration-[900ms] ease-[var(--ease-out-quint)] motion-safe:group-hover:-translate-x-1 motion-safe:group-hover:-translate-y-1"
+          />
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-0 border-2 border-[#BC5233] transition-transform duration-[900ms] ease-[var(--ease-out-quint)] motion-safe:group-hover:translate-x-1 motion-safe:group-hover:translate-y-1"
+          />
+        </>
+      ) : (
+        /* Offset gold rule. Starts flush with the image and settles outward. */
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 border border-[var(--color-hairline)] transition-transform duration-[900ms] ease-[var(--ease-out-quint)] motion-safe:group-hover:translate-x-[var(--frame-hover)] motion-safe:group-hover:translate-y-[var(--frame-hover)]"
+          style={
+            {
+              transform: shown ? `translate(${frameOffset}px, ${frameOffset}px)` : 'translate(0, 0)',
+              '--frame-hover': `${frameOffset + 3}px`,
+            } as React.CSSProperties
+          }
+        />
+      )}
     </div>
   );
 }

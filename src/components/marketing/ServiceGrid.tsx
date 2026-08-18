@@ -1,6 +1,7 @@
 import { Reveal } from '@/components/common/Reveal';
 import { ServiceCard } from './ServiceCard';
 import type { Service } from '@/types/database';
+import { CompactServiceRail } from './CompactServiceRail';
 
 /**
  * The bento grid from the home design: a wide 8-column tile leading, then
@@ -13,7 +14,7 @@ import type { Service } from '@/types/database';
  */
 const SPANS = ['md:col-span-8', 'md:col-span-4', 'md:col-span-4', 'md:col-span-4', 'md:col-span-4'];
 
-export function ServiceGrid({ services }: { services: Service[] }) {
+export function ServiceGrid({ services, compactDesktop = false }: { services: Service[]; compactDesktop?: boolean }) {
   if (services.length === 0) {
     return (
       <p className="border border-dashed border-[var(--color-hairline)] p-12 text-center text-sm text-[var(--color-body-warm)]">
@@ -25,7 +26,9 @@ export function ServiceGrid({ services }: { services: Service[] }) {
   const useDesignedLayout = services.length === 5;
 
   return (
-    <ul className="grid grid-cols-1 gap-6 md:grid-cols-12">
+    <>
+      {compactDesktop && <CompactServiceRail services={services} />}
+      <ul className={compactDesktop ? 'hidden' : 'grid grid-cols-1 gap-6 md:grid-cols-12'}>
       {services.map((service, i) => (
         <Reveal
           as="li"
@@ -41,6 +44,7 @@ export function ServiceGrid({ services }: { services: Service[] }) {
           />
         </Reveal>
       ))}
-    </ul>
+      </ul>
+    </>
   );
 }

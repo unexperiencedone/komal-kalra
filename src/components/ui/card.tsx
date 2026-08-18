@@ -63,10 +63,12 @@ export function SectionHeading({
           {eyebrow}
         </p>
       )}
-      <h2 className={cn('mt-4 text-[length:var(--text-h2)]', onDark && 'text-[var(--color-card-cream)]')}>
-        {title}
-      </h2>
-      <span className="gold-rule mt-6" aria-hidden />
+      <div className="inline-block text-left">
+        <h2 className={cn('mt-4 text-[length:var(--text-h2)]', onDark && 'text-[var(--color-card-cream)]')}>
+          {title}
+        </h2>
+        <span className="gold-rule mt-6 !w-[calc(100%+1rem)]" aria-hidden />
+      </div>
       {description && (
         <p
           className={cn(

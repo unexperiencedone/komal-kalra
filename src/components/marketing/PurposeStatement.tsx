@@ -53,10 +53,12 @@ export function PurposeStatement() {
       <div className="shell grid grid-cols-1 gap-12 md:grid-cols-12">
         <div className="md:col-span-4">
           <p className="label-caps text-[var(--color-saffron-deep)]">About this service</p>
-          <h2 id="purpose-heading" className="mt-4 text-[length:var(--text-h2)] text-[var(--color-cocoa)]">
-            What this website does
-          </h2>
-          <span className="gold-rule mt-6" aria-hidden />
+          <div className="w-fit">
+            <h2 id="purpose-heading" className="mt-4 text-[length:var(--text-h2)] text-[var(--color-cocoa)]">
+              What this website does
+            </h2>
+            <span className="gold-rule mt-6 !w-[calc(100%+1rem)]" aria-hidden />
+          </div>
         </div>
 
         <div className="space-y-6 text-base leading-relaxed text-[var(--color-body-warm)] md:col-span-7 md:col-start-6">

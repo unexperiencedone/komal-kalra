@@ -10,7 +10,7 @@
   --color-terracotta-lo: #9a5814;
   /* Text on a saffron fill. Cocoa is only 4.08:1 there — it is a heading
      colour for light grounds, not an on-accent colour. This is ~8:1. */
-  --color-on-saffron: #40220a;
+  --color-on-saffron: #fffaf2;
   --color-amber-band:   #c67f1c;
   --color-deep-maroon:  #6e2b13;
   /* Deepens DOWNWARD. The reverse made the page step bright amber ->
@@ -18,8 +18,8 @@
      rather than a close. */
   --color-footer-top:   #9a5814;
   --color-footer-btm:   #6b3a0c;
-  --color-cream:        #fff7ec;
-  --color-card-cream:   #fcebd1;
+  --color-cream:        #fffdf9;
+  --color-card-cream:   #fff7ed;
 
   /* --- Saffron in three weights ------------------------------------------ */
   --color-saffron:      #ee9a22;
@@ -268,7 +268,7 @@
      cream, which is what caused the slab. Kept so old markup keeps rendering
      something distinguishable; new work uses <Band>. */
   .band-card-cream { background-color: var(--color-card-cream); color: var(--color-body-warm); }
-  .band-low, .band-ivory { background-color: var(--color-card-cream); color: var(--color-body-warm); }
+  .band-low, .band-ivory { background-color: color-mix(in srgb, var(--color-saffron) 7%, white); color: var(--color-body-warm); }
 
   .band-navy { background-color: var(--color-deep-maroon); color: var(--color-cream); }
   .band-navy h1, .band-navy h2, .band-navy h3 { color: var(--color-cream); }
@@ -280,21 +280,21 @@
      at hard lines. --color-terracotta stays for decorative, non-text use. */
   .band-terracotta {
     background-color: var(--color-terracotta-lo);
-    color: #ffffff;
+    color: var(--color-cream);
   }
-  .band-terracotta h1, .band-terracotta h2, .band-terracotta h3 { color: #ffffff; }
+  .band-terracotta h1, .band-terracotta h2, .band-terracotta h3 { color: var(--color-cream); }
 
   .band-amber {
     background-color: var(--color-amber-band);
-    color: #ffffff;
+    color: var(--color-cream);
   }
-  .band-amber h1, .band-amber h2, .band-amber h3 { color: #ffffff; }
+  .band-amber h1, .band-amber h2, .band-amber h3 { color: var(--color-cream); }
 
   .band-maroon {
     background-color: var(--color-deep-maroon);
-    color: #ffffff;
+    color: var(--color-cream);
   }
-  .band-maroon h1, .band-maroon h2, .band-maroon h3 { color: #ffffff; }
+  .band-maroon h1, .band-maroon h2, .band-maroon h3 { color: var(--color-cream); }
 
   /* --- Adjacency safety net --------------------------------------------
      Two bands of the same tone touching get a hairline so the seam is at
@@ -354,10 +354,20 @@
 
 @layer utilities {
   @supports (animation-timeline: scroll()) {
-    .watermark-scrub {
-      animation: watermark-rotate 1s linear both;
-      animation-timeline: scroll(root block);
-    }
+  .watermark-scrub {
+    animation: watermark-rotate 1s linear both;
+    animation-timeline: scroll(root block);
+  }
+
+  .hero-watermark {
+    animation: hero-watermark-spin 36s linear infinite;
+    transform-origin: center;
+  }
+
+  @keyframes hero-watermark-spin {
+    from { rotate: 0deg; }
+    to { rotate: 360deg; }
+  }
   }
 
   @keyframes watermark-rotate {
@@ -380,6 +390,29 @@
   @keyframes shimmer {
     from { background-position: 200% 0; }
     to   { background-position: -200% 0; }
+  }
+
+  .loading-cursor {
+    position: relative;
+    height: 4rem;
+    width: 4rem;
+  }
+
+  .loading-cursor-line {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    display: block;
+    height: 1.15rem;
+    width: 0.3rem;
+    border-radius: 999px;
+    background: var(--color-terracotta);
+    animation: loading-line-roll 1.08s linear infinite;
+  }
+
+  @keyframes loading-line-roll {
+    0%, 100% { opacity: 0.2; }
+    35% { opacity: 1; }
   }
 
   /* ======================================================================
@@ -468,6 +501,11 @@
   .watermark-scrub {
     animation: none !important;
     transform: none !important;
+  }
+
+  .hero-watermark {
+    animation: none !important;
+    rotate: none !important;
   }
 }
 

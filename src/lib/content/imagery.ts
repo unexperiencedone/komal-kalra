@@ -312,6 +312,21 @@ export const IMAGES = {
     alt:
       'Komal Kalra seated in a carved wooden chair, wearing a white floral-embroidered suit, in a warmly lit room with a table lamp behind her.',
   },
+  komalKalra2: {
+    remote: '/images/komal_kalra_2.jpeg',
+    local: '/images/komal_kalra_2.jpeg',
+    alt: 'Komal Kalra in a softly lit consultation setting.',
+  },
+  komalKalra4: {
+    remote: '/images/komal_kalra_4.jpeg',
+    local: '/images/komal_kalra_4.jpeg',
+    alt: 'Komal Kalra seated for a thoughtful astrology consultation.',
+  },
+  komalKalra5: {
+    remote: '/images/komal_kalra_5.jpeg',
+    local: '/images/komal_kalra_5.jpeg',
+    alt: 'Komal Kalra in a warm, editorial portrait.',
+  },
   signInImage: {
     remote: '/images/signInImage.webp',
     local: '/images/signInImage.webp',

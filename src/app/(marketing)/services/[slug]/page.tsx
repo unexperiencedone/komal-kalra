@@ -242,23 +242,8 @@ export default async function ServiceDetailPage(props: { params: Promise<{ slug:
         {/* ===================== 9. TESTIMONIALS ===================== */}
         <Testimonials testimonials={reviews} />
 
-        {/* ============================= 10. FAQ ============================ */}
-        <section aria-labelledby="faq-heading" className="shell py-[var(--spacing-section-lg)]">
-          <div className="grid grid-cols-1 gap-12 md:grid-cols-12">
-            <Reveal className="md:col-span-4">
-              <h2 id="faq-heading" className="text-[length:var(--text-h2)] text-[var(--color-cocoa)]">Expectations</h2>
-              <p className="mt-4 text-base leading-relaxed text-[var(--color-body-warm)]">
-                Clarity on the process, so you feel secure and prepared.
-              </p>
-            </Reveal>
-            <Reveal delay={100} className="md:col-span-8">
-              <FaqAccordion items={BOOKING_FAQ.slice(0, 5)} />
-            </Reveal>
-          </div>
-        </section>
-
-        {/* ============================ 11. FINAL CTA ============================ */}
-        <section className="band-terracotta py-[var(--spacing-section-lg)] border-t border-white/20">
+        {/* ============================ 10. FINAL CTA ============================ */}
+        <section className="band-navy py-[var(--spacing-section-lg)] border-t border-white/20">
           <div className="shell flex flex-col items-start justify-between gap-10 md:flex-row md:items-center">
             <div>
               <h2 className="font-[family-name:var(--font-display)] text-4xl text-white">
@@ -270,6 +255,21 @@ export default async function ServiceDetailPage(props: { params: Promise<{ slug:
                 <Link href={bookHref}>Schedule a Call &rarr;</Link>
               </Button>
             </div>
+          </div>
+        </section>
+
+        {/* ============================= 11. EXPECTATIONS ============================ */}
+        <section aria-labelledby="faq-heading" className="shell py-[var(--spacing-section-lg)]">
+          <div className="grid grid-cols-1 gap-12 md:grid-cols-12">
+            <Reveal className="md:col-span-4">
+              <h2 id="faq-heading" className="text-[length:var(--text-h2)] text-[var(--color-cocoa)]">Expectations</h2>
+              <p className="mt-4 text-base leading-relaxed text-[var(--color-body-warm)]">
+                Clarity on the process, so you feel secure and prepared.
+              </p>
+            </Reveal>
+            <Reveal delay={100} className="md:col-span-8">
+              <FaqAccordion items={BOOKING_FAQ.slice(0, 5)} />
+            </Reveal>
           </div>
         </section>
       </div>

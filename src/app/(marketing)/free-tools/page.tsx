@@ -1,7 +1,9 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
+import Image from 'next/image';
 import { ArrowRight, Calculator } from 'lucide-react';
 import { Reveal } from '@/components/common/Reveal';
+import { img } from '@/lib/content/imagery';
 
 export const metadata: Metadata = {
   title: 'Free Astrological Calculators',
@@ -23,10 +25,14 @@ const TOOLS = [
 ].map(([title, slug, description]) => ({ title, slug, description }));
 
 export default function FreeToolsIndex() {
+  const banner = img('panchangAlmanac');
+
   return (
     <div className="pb-[var(--spacing-section-lg)]">
-      <section className="band-terracotta border-b border-[var(--color-hairline)] py-12 md:py-16">
-        <div className="shell text-center">
+      <section className="band-terracotta relative overflow-hidden border-b border-[var(--color-hairline)] py-12 md:py-16">
+        <Image src={banner.src} alt="" aria-hidden fill sizes="100vw" className="pointer-events-none absolute inset-0 z-0 object-cover opacity-30" />
+        <div aria-hidden className="pointer-events-none absolute inset-0 z-0 bg-[var(--color-terracotta)]/70" />
+        <div className="shell relative z-10 text-center">
         <Reveal>
           <div className="mx-auto max-w-3xl">
             <p className="label-caps text-[var(--color-saffron-lift)]">Free Vedic Tools</p>

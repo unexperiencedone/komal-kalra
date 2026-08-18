@@ -6,22 +6,22 @@ export function SiteFooter({ services = [] }: { services?: Service[] }) {
   const year = new Date().getFullYear();
 
   const linkClass =
-    'text-[color-mix(in_srgb,var(--color-cream)_82%,transparent)] transition-colors duration-300 hover:text-white';
+    'text-[var(--color-cream)] transition-colors duration-300 hover:text-white';
 
   return (
-    <footer className="bg-gradient-to-b from-[var(--color-footer-top)] to-[var(--color-footer-btm)] py-12 md:py-16 no-print border-t border-[color-mix(in_srgb,var(--color-cream)_25%,transparent)] text-[var(--color-cream)]">
-      <div className="shell flex flex-col items-center text-center gap-12">
-        <div>
+    <footer className="no-print border-t border-[var(--color-cream)] bg-gradient-to-b from-[var(--color-footer-top)] to-[var(--color-footer-btm)] py-14 text-[var(--color-cream)] sm:py-16 lg:py-20">
+      <div className="shell flex flex-col gap-12 sm:gap-14 lg:gap-16">
+        <div className="w-full text-left">
           <p className="font-[family-name:var(--font-display)] text-3xl uppercase tracking-[0.15em] text-[var(--color-cream)]">
             Komal Kalra
           </p>
-          <p className="mt-4 max-w-md mx-auto text-sm leading-relaxed text-[color-mix(in_srgb,var(--color-cream)_82%,transparent)]">
+          <p className="mt-4 max-w-md text-sm leading-relaxed text-[var(--color-cream)]">
             Precision astrology and executive life coaching.
           </p>
         </div>
 
-        <div className="grid grid-cols-2 gap-8 md:grid-cols-4 md:gap-12 w-full text-left">
-          <nav aria-label="Services" className="flex flex-col gap-4">
+        <div className="grid w-full grid-cols-1 gap-x-8 gap-y-12 text-left sm:grid-cols-2 lg:grid-cols-4 lg:gap-x-12 lg:gap-y-0">
+          <nav aria-label="Services" className="flex flex-col gap-3">
             <h4 className="label-caps text-[var(--color-saffron-lift)]">Services</h4>
             {services.length > 0
               ? services.slice(0, 5).map((s) => (
@@ -33,21 +33,21 @@ export function SiteFooter({ services = [] }: { services?: Service[] }) {
             <Link href="/faq" className={linkClass}>Frequently asked</Link>
           </nav>
 
-          <nav aria-label="Free tools" className="flex flex-col gap-4">
+          <nav aria-label="Free tools" className="flex flex-col gap-3">
             <h4 className="label-caps text-[var(--color-saffron-lift)]">Free Tools</h4>
             <Link href="/free-tools" className={linkClass}>Calculators</Link>
             <Link href="/free-tools/free-kundli" className={linkClass}>Free Kundli</Link>
             <Link href="/free-tools/kundli-matching" className={linkClass}>Kundli Matching</Link>
           </nav>
 
-          <nav aria-label="Legal" className="flex flex-col gap-4">
+          <nav aria-label="Legal" className="flex flex-col gap-3">
             <h4 className="label-caps text-[var(--color-saffron-lift)]">Legal</h4>
             <Link href="/legal/privacy" className={linkClass}>Privacy</Link>
             <Link href="/legal/terms" className={linkClass}>Terms</Link>
             <Link href="/legal/refunds" className={linkClass}>Refunds</Link>
           </nav>
 
-          <nav aria-label="Contact" className="flex flex-col gap-4">
+          <nav aria-label="Contact" className="flex flex-col gap-3">
             <h4 className="label-caps text-[var(--color-saffron-lift)]">Contact</h4>
             <Link href="/contact" className={linkClass}>Contact Form</Link>
             {BRAND.phones.map((phone, i) => (
@@ -62,11 +62,11 @@ export function SiteFooter({ services = [] }: { services?: Service[] }) {
           </nav>
         </div>
 
-        <div className="w-full border-t border-[color-mix(in_srgb,var(--color-cream)_25%,transparent)] pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-[color-mix(in_srgb,var(--color-cream)_78%,transparent)]">
+        <div className="flex w-full flex-col items-start justify-between gap-5 border-t border-[color-mix(in_srgb,var(--color-cream)_25%,transparent)] pt-7 text-xs text-[color-mix(in_srgb,var(--color-cream)_78%,transparent)] sm:flex-row sm:items-center sm:gap-4">
           <p>
             © {year} {BRAND.fullName}. All rights reserved.
           </p>
-          <ul className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
+          <ul className="flex flex-wrap items-center justify-start gap-x-5 gap-y-2 sm:justify-end">
             {[
               { href: '/legal/terms', label: 'Terms' },
               { href: '/legal/privacy', label: 'Privacy' },
