@@ -9,13 +9,54 @@ import { serviceImage } from '@/lib/content/imagery';
 import type { Service } from '@/types/database';
 
 /**
- * Resting rotation per card. Small on purpose — on the reference the row reads
- * as an even upright line with a hint of variation, not scattered polaroids.
+ * ALL ROTATION HERE IS rotateY — around the vertical axis, turning the card in
+ * depth like a door — NOT `rotate()`, which spins it flat in the page plane.
+ *
+ * Two things this depends on, both on the ROW rather than the card:
+ *
+ *  • `perspective`. Without it `rotateY` is an orthographic squash: the card
+ *    just gets narrower, with no near edge and no far edge. Perspective is what
+ *    supplies the vanishing point that makes it read as depth.
+ *  • `perspective` must sit on the PARENT. Put it on each card and every card
+ *    gets its own vanishing point directly in front of itself, so they all
+ *    turn identically and the row looks flat. One perspective on the row means
+ *    they share a single viewpoint, and cards away from centre catch it at an
+ *    angle — which is what makes the fan read as a real arc.
+ *
+ * Angles stay modest. rotateY foreshortens, so past roughly 25° a card loses
+ * enough width to look broken rather than turned, and text on it starts to
+ * render soft.
  */
-const RESTING_TILT_DEG = [-2, 1.5, -1, 2, -1.5];
 
-/** How far the cursor-follow tilt swings from resting, edge to edge. */
-const HOVER_SWING_DEG = 16;
+/**
+ * THE FAN IS DERIVED FROM POSITION, NOT LISTED PER CARD.
+ *
+ * This used to be a hardcoded array of angles cycled by index — `[-6, 4, -2,
+ * 5, -4]`. That is why the row looked uneven: the angles bore no relation to
+ * where a card actually sat, so the third card might lean harder than the
+ * fifth, and because rotateY foreshortens, a card turned further also renders
+ * NARROWER. Cards that were all genuinely the same width read as different
+ * widths. Arbitrary angles cannot be symmetrical by accident.
+ *
+ * Now every angle comes from one number: how far the card is from the middle
+ * of the row. The centre card is 0 — upright, facing straight ahead, widest —
+ * and the turn grows toward both ends, mirrored. That is symmetric for any
+ * number of services, including even counts where no single card is the
+ * middle, and it is what makes the row read as one arc rather than five
+ * separate decisions.
+ */
+
+/** Turn at the outermost card, degrees on Y. The centre card is always 0. */
+const FAN_BASE_DEG = 9;
+
+/** Extra turn the outermost card gains as the pinned stage scrolls open. */
+const FAN_OPEN_DEG = 12;
+
+/** How much higher the centre card sits than the ends, in px. */
+const ARC_LIFT_PX = 34;
+
+/** How far the cursor-follow turn swings from the card's fan angle. */
+const HOVER_SWING_DEG = 20;
 
 /**
  * Progress of the pinned stage, 0 → 1.
@@ -95,7 +136,6 @@ function ServiceTiltCard({
   onHover: (index: number | null) => void;
 }) {
   const ref = useRef<HTMLAnchorElement>(null);
-  const resting = RESTING_TILT_DEG[index % RESTING_TILT_DEG.length];
   const [swing, setSwing] = useState(0);
   const [hovering, setHovering] = useState(false);
 
@@ -111,24 +151,47 @@ function ServiceTiltCard({
   /**
    * SCROLL-DRIVEN FAN.
    *
-   * At progress 0 the row is a tight, flat stack — every card sits low, close
-   * to centre, barely rotated. As the stage scrolls the cards rise, spread
-   * outward from the middle and rotate away from it, so the row opens like a
-   * hand of cards.
+   * At progress 0 the row is a tight, low, nearly-flat stack. As the stage
+   * scrolls the cards rise, spread outward from the middle and turn away from
+   * it, so the row opens like a hand of cards.
    *
-   * `offset` is -1 at the leftmost card, +1 at the rightmost, 0 in the middle,
-   * which is what makes the spread symmetrical regardless of how many services
-   * exist.
+   * `offset` is -1 at the leftmost card, +1 at the rightmost, 0 in the middle.
+   * Every placement value below is a function of it, which is what guarantees
+   * the row is mirrored however many services exist.
    */
   const offset = count > 1 ? (index / (count - 1)) * 2 - 1 : 0;
+
+  /**
+   * Sign matters and is easy to get backwards.
+   *
+   * Positive `rotateY` turns a card's RIGHT edge away from the viewer, so the
+   * card ends up facing LEFT. The left-hand cards have a negative `offset`, so
+   * `-offset` makes them positive → they face left. The right-hand cards get a
+   * negative angle → they face right. The fan opens OUTWARD from the middle.
+   *
+   * Flip this sign and the row turns inward like a closing book, which looks
+   * like a bug rather than a choice.
+   */
+  const fanDeg = -offset * (FAN_BASE_DEG + progress * FAN_OPEN_DEG);
+
+  /** Centre highest, ends lowest — `1 - |offset|` peaks in the middle. */
+  const arc = -(1 - Math.abs(offset)) * ARC_LIFT_PX * progress;
+
+  /** The whole row starts low and rises into place as the stage scrolls. */
   const rise = (1 - progress) * 96;
-  const spread = offset * progress * 14;
-  const fan = offset * progress * 5;
+
+  /** Ends push outward slightly as it opens, so the arc widens rather than
+      just rotating in place. */
+  const spread = offset * progress * 16;
+
+  // Hovering flattens the card back toward the viewer. Turning it further
+  // would fight the cursor tilt; facing the reader rewards the attention.
+  const flatten = hovering ? 0.3 : 1;
   const settle = 0.94 + progress * 0.06;
 
   const transform = [
-    `translate3d(${spread}px, ${rise}px, 0)`,
-    `rotate(${resting + fan + swing}deg)`,
+    `translate3d(${spread}px, ${rise + arc}px, 0)`,
+    `rotateY(${fanDeg * flatten + swing}deg)`,
     `scale(${(hovering ? 1.06 : 1) * settle})`,
   ].join(' ');
 
@@ -148,14 +211,38 @@ function ServiceTiltCard({
       }}
       onFocus={() => onHover(index)}
       onBlur={() => onHover(null)}
-      style={{
-        transform,
-        // Entrance stagger. Cards arrive left to right rather than all at once,
-        // which is the whole difference between "appeared" and "dealt".
-        transitionDelay: `${index * 60}ms`,
-        opacity: dimmed ? 0.55 : 1,
-      }}
-      className="group relative block aspect-[3/4] w-48 shrink-0 snap-center overflow-hidden rounded-[28px] border border-[var(--color-hairline)] shadow-[0_20px_45px_-20px_rgba(45,20,5,0.5)] transition-[transform,opacity,filter] duration-500 ease-out will-change-transform motion-reduce:transition-none sm:w-56 md:h-full md:w-auto md:shrink"
+      style={{ transform, opacity: dimmed ? 0.55 : 1 }}
+      /*
+        TWO DURATIONS, NOT ONE.
+
+        `transform` is recomputed every animation frame by the scroll fan and
+        again on every mousemove by the cursor tilt. A 500ms transition on a
+        value that already changes per frame does not smooth it — it adds half
+        a second of lag behind the cursor and makes the fan trail the scroll.
+        120ms is enough to take the edge off without the card feeling detached
+        from the pointer.
+
+        `opacity` is the opposite case: it changes once, when a sibling is
+        pointed at, so it wants a slow fade.
+
+        There is also no transition-delay here any more. Staggering a property
+        that updates continuously means each card lags the scroll by a
+        different amount, which reads as jank rather than choreography — the
+        fan's own per-card offset already provides the stagger.
+      */
+      className="group relative block aspect-[3/4] w-48 shrink-0 snap-center overflow-hidden rounded-[28px] border border-[var(--color-hairline)] shadow-[0_20px_45px_-20px_rgba(45,20,5,0.5)] [transition:transform_120ms_ease-out,opacity_400ms_ease-out] will-change-transform motion-reduce:transition-none sm:w-56 md:h-full md:w-auto md:shrink"
+      /*
+        EVEN WIDTHS BY CONSTRUCTION at md+. Every card takes the row's full
+        height (`h-full`) and derives its width from one shared aspect ratio
+        (`w-auto`), so identical height ⇒ identical width — there is no per-card
+        width to drift. `shrink` only ever applies proportionally, so they stay
+        equal even when the row is tight.
+
+        This is also why width is NOT set with `flex-1`: that makes height a
+        function of the row's width, and inside a pinned panel the cards then
+        computed taller than the space available and were clipped on a 720px
+        laptop.
+      */
     >
       <Image
         src={photo.src}
@@ -224,7 +311,14 @@ export function ServiceTiltGallery({ services }: { services: Service[] }) {
   return (
     <div
       ref={rowRef}
-      className="flex snap-x snap-mandatory flex-nowrap items-end gap-4 overflow-x-auto px-2 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:h-full md:justify-center md:overflow-visible md:px-0 md:pb-0 lg:gap-6"
+      /*
+        `perspective` and `preserve-3d` live HERE, on the row, so every card
+        shares one vanishing point — see the note at the top of this file.
+        Scoped to md+: below that the row is a horizontal scroller, and
+        `overflow-x-auto` forces a flattened stacking context that kills the 3D
+        anyway, so paying for it on a phone buys nothing.
+      */
+      className="flex snap-x snap-mandatory flex-nowrap items-end gap-4 overflow-x-auto px-2 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:h-full md:justify-center md:overflow-visible md:px-0 md:pb-0 md:[perspective:1600px] md:[transform-style:preserve-3d] lg:gap-6"
     >
       {services.map((service, index) => (
         <ServiceTiltCard
