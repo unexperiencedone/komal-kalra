@@ -95,7 +95,7 @@ export default async function ServicesPage() {
             so they are cropped by the fold, as on the reference, rather than
             stopping neatly above it.
           */}
-          <div className="relative z-10 mt-auto min-h-0 flex-1 pt-8 md:-mb-14 md:pt-10">
+          <div className="relative z-10 mt-auto min-h-0 flex-1 pt-8 md:-mb-6 md:pt-10">
             <ServiceTiltGallery services={services} />
           </div>
         </section>

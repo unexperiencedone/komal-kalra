@@ -135,14 +135,38 @@ function ServiceTiltCard({
   dimmed: boolean;
   onHover: (index: number | null) => void;
 }) {
-  const ref = useRef<HTMLAnchorElement>(null);
+  /**
+   * ⚠️  THIS REF IS ON THE UNTRANSFORMED WRAPPER, NOT THE ROTATING CARD.
+   *    Moving it back onto the card breaks hover. Here is why.
+   *
+   * `getBoundingClientRect()` returns the rect AFTER transforms. Reading it
+   * from the element that is being rotated means measuring a moving target:
+   *
+   *    mousemove → compute angle from the card's current rect
+   *              → card rotates and shifts
+   *              → its rect is now different, and the cursor may no longer be
+   *                over it at all
+   *              → mouseleave fires, swing resets to 0
+   *              → card springs back under the cursor
+   *              → mouseenter fires …
+   *
+   * That loop is what "the hover animation is not being triggered, something
+   * is interrupting it" actually is: enter and leave firing against each other
+   * several times a second, so the hover state never survives long enough to
+   * be seen. It gets worse the larger the tilt, which is why it appeared only
+   * after the angles went up.
+   *
+   * The wrapper never moves, so the rect is stable, the pointer target is
+   * stable, and the angle is measured against a fixed frame of reference.
+   */
+  const wrapRef = useRef<HTMLDivElement>(null);
   const [swing, setSwing] = useState(0);
   const [hovering, setHovering] = useState(false);
 
   const photo = serviceImage(service.slug);
 
-  const handleMove = (event: React.MouseEvent<HTMLAnchorElement>) => {
-    const rect = ref.current?.getBoundingClientRect();
+  const handleMove = (event: React.MouseEvent<HTMLDivElement>) => {
+    const rect = wrapRef.current?.getBoundingClientRect();
     if (!rect) return;
     const relativeX = (event.clientX - rect.left) / rect.width - 0.5;
     setSwing(relativeX * HOVER_SWING_DEG);
@@ -174,15 +198,28 @@ function ServiceTiltCard({
    */
   const fanDeg = -offset * (FAN_BASE_DEG + progress * FAN_OPEN_DEG);
 
+  /**
+   * ARRIVAL STATE — the arc is MOSTLY FORMED AT progress 0.
+   *
+   * These used to be multiplied by `progress` alone, so at progress 0 — which
+   * is what you see the instant the page loads — the arc was flat, the spread
+   * was zero and a separate `rise` pushed the whole row 96px down. The first
+   * thing a visitor saw was the row in its least interesting state, half off
+   * the bottom of the screen, and it only assembled if they happened to scroll.
+   *
+   * An entrance you have to scroll to trigger is not an entrance. The arc is
+   * now 65% formed on arrival and opens the rest of the way as the pin
+   * scrolls, so the composition is right on the first frame and scrolling
+   * refines it rather than creating it.
+   */
+  const formed = 0.65 + 0.35 * progress;
+
   /** Centre highest, ends lowest — `1 - |offset|` peaks in the middle. */
-  const arc = -(1 - Math.abs(offset)) * ARC_LIFT_PX * progress;
+  const arc = -(1 - Math.abs(offset)) * ARC_LIFT_PX * formed;
 
-  /** The whole row starts low and rises into place as the stage scrolls. */
-  const rise = (1 - progress) * 96;
-
-  /** Ends push outward slightly as it opens, so the arc widens rather than
-      just rotating in place. */
-  const spread = offset * progress * 16;
+  /** Ends push outward as it opens, so the arc widens rather than just
+      rotating in place. */
+  const spread = offset * formed * 16;
 
   // Hovering flattens the card back toward the viewer. Turning it further
   // would fight the cursor tilt; facing the reader rewards the attention.
@@ -190,15 +227,14 @@ function ServiceTiltCard({
   const settle = 0.94 + progress * 0.06;
 
   const transform = [
-    `translate3d(${spread}px, ${rise + arc}px, 0)`,
+    `translate3d(${spread}px, ${arc}px, 0)`,
     `rotateY(${fanDeg * flatten + swing}deg)`,
     `scale(${(hovering ? 1.06 : 1) * settle})`,
   ].join(' ');
 
   return (
-    <Link
-      ref={ref}
-      href={`/services/${service.slug}`}
+    <div
+      ref={wrapRef}
       onMouseMove={handleMove}
       onMouseEnter={() => {
         setHovering(true);
@@ -209,9 +245,25 @@ function ServiceTiltCard({
         setSwing(0);
         onHover(null);
       }}
-      onFocus={() => onHover(index)}
-      onBlur={() => onHover(null)}
-      style={{ transform, opacity: dimmed ? 0.55 : 1 }}
+      /*
+        The static frame. It holds the SIZE and owns the POINTER; nothing here
+        is ever transformed, so the hit area and the measurement rect both stay
+        still. The plate inside is the only thing that moves.
+      */
+      className="group relative aspect-[3/4] w-48 shrink-0 snap-center sm:w-56 md:h-full md:w-auto md:shrink"
+    >
+      <Link
+        href={`/services/${service.slug}`}
+        aria-label={`${service.title} — ${service.duration_minutes} minutes, ${formatPaise(service.price_paise)}`}
+        onFocus={() => {
+          setHovering(true);
+          onHover(index);
+        }}
+        onBlur={() => {
+          setHovering(false);
+          onHover(null);
+        }}
+        style={{ transform, opacity: dimmed ? 0.55 : 1 }}
       /*
         TWO DURATIONS, NOT ONE.
 
@@ -230,58 +282,76 @@ function ServiceTiltCard({
         different amount, which reads as jank rather than choreography — the
         fan's own per-card offset already provides the stagger.
       */
-      className="group relative block aspect-[3/4] w-48 shrink-0 snap-center overflow-hidden rounded-[28px] border border-[var(--color-hairline)] shadow-[0_20px_45px_-20px_rgba(45,20,5,0.5)] [transition:transform_120ms_ease-out,opacity_400ms_ease-out] will-change-transform motion-reduce:transition-none sm:w-56 md:h-full md:w-auto md:shrink"
-      /*
-        EVEN WIDTHS BY CONSTRUCTION at md+. Every card takes the row's full
-        height (`h-full`) and derives its width from one shared aspect ratio
-        (`w-auto`), so identical height ⇒ identical width — there is no per-card
-        width to drift. `shrink` only ever applies proportionally, so they stay
-        equal even when the row is tight.
+        /*
+          The PLATE — the only transformed element. Holds the photograph and
+          the scrims and nothing else.
 
-        This is also why width is NOT set with `flex-1`: that makes height a
-        function of the row's width, and inside a pinned panel the cards then
-        computed taller than the space available and were clipped on a 720px
-        laptop.
-      */
-    >
-      <Image
-        src={photo.src}
-        alt={photo.alt}
-        fill
-        sizes="(min-width: 768px) 22vw, 240px"
-        className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.08]"
-      />
+          Two durations, not one. `transform` is recomputed every animation
+          frame by the scroll fan and again on every mousemove by the cursor
+          tilt; a 500ms transition on a value that already changes per frame
+          does not smooth it, it just adds half a second of lag behind the
+          pointer. `opacity` changes once, when a sibling is pointed at, so it
+          wants the slow fade.
+        */
+        className="absolute inset-0 block overflow-hidden rounded-[28px] border border-[var(--color-hairline)] shadow-[0_20px_45px_-20px_rgba(45,20,5,0.5)] [transition:transform_120ms_ease-out,opacity_400ms_ease-out] will-change-transform motion-reduce:transition-none"
+      >
+        <Image
+          src={photo.src}
+          alt=""
+          fill
+          sizes="(min-width: 768px) 22vw, 240px"
+          className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.08]"
+        />
 
-      {/* Two scrims: the bottom row needs contrast along the lower edge, the
-          vertical title along the right. One gradient cannot do both without
-          washing out the photograph. */}
-      <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/5 to-transparent" />
-      <div aria-hidden className="absolute inset-0 bg-gradient-to-l from-black/55 via-transparent to-transparent" />
+        {/* Two scrims: the bottom row needs contrast along the lower edge, the
+            vertical title along the right. One gradient cannot do both without
+            washing out the photograph. */}
+        <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/5 to-transparent" />
+        <div aria-hidden className="absolute inset-0 bg-gradient-to-l from-black/55 via-transparent to-transparent" />
+      </Link>
 
-      {/* Title on the vertical axis, reading bottom-to-top — the spine-label
-          treatment from the reference, not a flat caption. */}
-      <h3 className="absolute inset-y-4 right-3 z-10 flex items-center [writing-mode:vertical-rl] rotate-180 font-[family-name:var(--font-display)] text-lg font-medium leading-none tracking-wide text-white lg:text-xl">
-        {service.title}
-      </h3>
+      {/*
+        TEXT LIVES OUTSIDE THE ROTATION.
 
-      <div className="relative z-10 flex h-full flex-col justify-between p-4 pr-11 text-white">
-        <span className="label-small opacity-80">0{index + 1}</span>
+        It used to sit inside the plate, so `rotateY` foreshortened it along
+        with the photograph — the vertical title sheared, the digits went soft,
+        and at the outer cards the type looked bent rather than turned. Text is
+        the one thing on a card that must stay square to the reader.
 
-        <div className="flex items-end justify-between gap-3">
-          <div className="flex flex-col gap-1 text-xs opacity-90">
-            <span className="flex items-center gap-1">
-              <Clock className="size-3.5" aria-hidden />
-              {service.duration_minutes} min
+        It cannot be counter-rotated back either: the plate carries
+        `overflow: hidden` for the rounded crop, and any overflow other than
+        `visible` forces the browser to flatten `preserve-3d`, so a child's
+        `rotateY(-angle)` would not compose in 3D. Keeping the text in the
+        untransformed wrapper is the fix that actually works.
+
+        `pointer-events-none` so clicks fall through to the link underneath,
+        and `aria-hidden` because the link already carries all of this in its
+        accessible name — otherwise a screen reader reads the card twice.
+      */}
+      <div aria-hidden className="pointer-events-none absolute inset-0 z-10">
+        <h3 className="absolute inset-y-4 right-3 flex items-center [writing-mode:vertical-rl] rotate-180 font-[family-name:var(--font-display)] text-lg font-medium leading-none tracking-wide text-white lg:text-xl">
+          {service.title}
+        </h3>
+
+        <div className="flex h-full flex-col justify-between p-4 pr-11 text-white">
+          <span className="label-small opacity-80">0{index + 1}</span>
+
+          <div className="flex items-end justify-between gap-3">
+            <div className="flex flex-col gap-1 text-xs opacity-90">
+              <span className="flex items-center gap-1">
+                <Clock className="size-3.5" aria-hidden />
+                {service.duration_minutes} min
+              </span>
+              <span>{formatPaise(service.price_paise)}</span>
+            </div>
+            <span className="inline-flex items-center gap-1 text-xs font-semibold uppercase tracking-widest opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+              {service.bookable_online ? 'Explore' : 'Enquire'}
+              <ArrowUpRight className="size-3.5" aria-hidden />
             </span>
-            <span>{formatPaise(service.price_paise)}</span>
           </div>
-          <span className="inline-flex items-center gap-1 text-xs font-semibold uppercase tracking-widest opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-            {service.bookable_online ? 'Explore' : 'Enquire'}
-            <ArrowUpRight className="size-3.5" aria-hidden />
-          </span>
         </div>
       </div>
-    </Link>
+    </div>
   );
 }
 

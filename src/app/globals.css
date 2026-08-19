@@ -141,6 +141,16 @@
 }
 
 @layer components {
+  /*
+    The header is ONE 5rem row on mobile and TWO rows at md and up, so the
+    token that stands in for its height has to change at the same breakpoint.
+    Declared here rather than in @theme because @theme values cannot carry a
+    media query — a single 5rem left desktop layouts 3rem short.
+  */
+  @media (min-width: 768px) {
+    :root { --header-h: 8rem; }
+  }
+
   .skip-link {
     position: absolute;
     left: -9999px;
@@ -272,13 +282,32 @@
     position: relative;
     min-height: calc(100svh + var(--pin-travel, 80svh));
   }
+  /**
+   * ⚠️  `top: 0`, NOT `top: var(--header-h)`. And the clearance is PADDING.
+   *
+   * Pinning at `top: var(--header-h)` looks equivalent and is not. It parks the
+   * panel 5rem (8rem on desktop) below the top of the viewport and leaves that
+   * strip showing whatever is behind — the page background, which is cream.
+   * While the header is on screen that strip is covered and nobody notices.
+   * The moment the header auto-hides on scroll-down, it uncovers a full-width
+   * white band above the hero.
+   *
+   * Pinning at 0 makes the panel span the whole viewport, so its own terracotta
+   * is what sits behind the header. The header hiding then reveals more of the
+   * same colour and there is no seam at all. Header clearance becomes
+   * `padding-top`, which pushes the CONTENT down without leaving a hole.
+   *
+   * The padding is constant whether or not the header is showing, so nothing
+   * reflows when it hides — the gap it leaves is simply the same colour.
+   */
   .pin-panel {
     position: sticky;
-    top: var(--header-h);
+    top: 0;
     z-index: 0;
     display: flex;
     flex-direction: column;
-    min-height: calc(100svh - var(--header-h));
+    min-height: 100svh;
+    padding-top: var(--header-h);
   }
 
   @keyframes fade-in {
