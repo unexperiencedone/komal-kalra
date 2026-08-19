@@ -6,8 +6,8 @@ import { Field, Input, Select } from '@/components/ui/field';
 export function CalculatorForm({ toolSlug }: { toolSlug: string }) {
   const [showModal, setShowModal] = useState(false);
 
-  if (toolSlug === 'numerology' || toolSlug === 'name-number') {
-    return <NumerologyForm nameOnly={toolSlug === 'name-number'} />;
+  if (toolSlug === 'numerology') {
+    return <NumerologyForm />;
   }
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -145,7 +145,7 @@ function LeadCaptureModal({ toolSlug, onClose }: { toolSlug: string; onClose: ()
   );
 }
 
-function NumerologyForm({ nameOnly = false }: { nameOnly?: boolean }) {
+function NumerologyForm() {
   const [name, setName] = useState('');
   const [date, setDate] = useState('');
   const [submitted, setSubmitted] = useState(false);
@@ -168,16 +168,14 @@ function NumerologyForm({ nameOnly = false }: { nameOnly?: boolean }) {
         <Field label="Full Name" htmlFor="numerology-name" required>
           <Input id="numerology-name" value={name} onChange={(event) => setName(event.target.value)} required />
         </Field>
-        {!nameOnly && (
-          <Field label="Date of Birth" htmlFor="numerology-date" required>
-            <Input id="numerology-date" type="date" value={date} onChange={(event) => setDate(event.target.value)} required />
-          </Field>
-        )}
+        <Field label="Date of Birth" htmlFor="numerology-date" required>
+          <Input id="numerology-date" type="date" value={date} onChange={(event) => setDate(event.target.value)} required />
+        </Field>
         <Button type="submit" size="lg" variant="primary" className="w-full shadow-[4px_4px_0_0_var(--color-cocoa)]">Calculate Numbers</Button>
       </form>
       {submitted && (
         <div className="grid gap-4 border-t border-[var(--color-hairline)] pt-8 md:grid-cols-3">
-          {[...(nameOnly ? [{ label: 'Name Number', value: nameNumber }] : [{ label: 'Psychic Number', value: psychic }, { label: 'Destiny Number', value: destiny }, { label: 'Name Number', value: nameNumber }])].map((item) => (
+          {[{ label: 'Psychic Number', value: psychic }, { label: 'Destiny Number', value: destiny }, { label: 'Name Number', value: nameNumber }].map((item) => (
             <div key={item.label} className="border border-[var(--color-hairline)] bg-[var(--color-cream)] p-5 text-center">
               <div className="font-[family-name:var(--font-display)] text-4xl text-[var(--color-cocoa)]">{item.value ?? '—'}</div>
               <p className="mt-2 text-xs font-semibold uppercase tracking-[0.1em] text-[var(--color-saffron-deep)]">{item.label}</p>

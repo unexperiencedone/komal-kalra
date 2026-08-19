@@ -312,6 +312,11 @@ export const IMAGES = {
     alt:
       'Komal Kalra seated in a carved wooden chair, wearing a white floral-embroidered suit, in a warmly lit room with a table lamp behind her.',
   },
+  heroGraphic: {
+    remote: '/images/hero_graphic.png',
+    local: '/images/hero_graphic.png',
+    alt: 'A fine gold-line zodiac wheel with the twelve signs around a central star pattern.',
+  },
   komalKalra2: {
     remote: '/images/komal_kalra_2.jpeg',
     local: '/images/komal_kalra_2.jpeg',

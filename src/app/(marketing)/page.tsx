@@ -14,6 +14,7 @@ import { img } from '@/lib/content/imagery';
 import type { Testimonial } from '@/types/database';
 
 import { IconStrip } from '@/components/marketing/IconStrip';
+import { SectionWatermark } from '@/components/marketing/SectionWatermark';
 import { Differentiators } from '@/components/marketing/Differentiators';
 import { SeoProse } from '@/components/marketing/SeoProse';
 import { ToolsLeadSection } from '@/components/marketing/ToolsLeadSection';
@@ -46,8 +47,10 @@ export default async function HomePage() {
 
   const reviews = testimonials ?? [];
   const hero = img('komalKalra');
+  const heroWatermark = img('heroGraphic');
   const gramA = img('journalCompass');
   const gramB = img('journalCandle');
+  const diya = img('diyaLamp');
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -119,7 +122,6 @@ export default async function HomePage() {
 
         <div className="shell grid items-center gap-12 md:grid-cols-12">
           <div className="relative flex flex-col justify-center md:col-span-7 lg:col-span-6">
-            <Image src="/images/watermark-mark.webp" alt="" aria-hidden width={560} height={560} className="hero-watermark pointer-events-none absolute -left-24 top-1/2 z-0 ml-8 max-md:ml-16 max-md:-mt-2.5 size-[min(52rem,115vw)] -translate-y-1/2 object-contain opacity-15" />
             <Reveal>
               <div className="relative z-10 inline-flex items-center rounded-sm bg-white/20 px-3 py-1 text-xs font-semibold uppercase tracking-widest text-white backdrop-blur-sm">
                 Trusted Guidance
@@ -152,9 +154,19 @@ export default async function HomePage() {
             </Reveal>
           </div>
           <Reveal delay={160} className="md:col-span-5 lg:col-span-6">
-            <div className="relative mx-auto aspect-[4/5] w-full max-w-md border border-[var(--color-hairline)] bg-[var(--color-card-cream)] p-1 shadow-[8px_8px_0_0_var(--color-cocoa)]">
-              <div className="relative z-10 size-full overflow-hidden border border-[var(--color-hairline)]">
-                <Image src={hero.src} alt={hero.alt} fill priority sizes="(min-width: 1024px) 40vw, 90vw" className="object-cover" />
+            <div className="relative mx-auto w-full max-w-md">
+              <Image
+                src={heroWatermark.src}
+                alt=""
+                aria-hidden
+                width={900}
+                height={900}
+                className="hero-watermark pointer-events-none absolute left-1/2 top-1/2 z-0 size-[220%] max-w-none -translate-x-1/2 -translate-y-1/2 object-contain opacity-45"
+              />
+              <div className="relative z-10 aspect-[4/5] w-full border border-[var(--color-hairline)] bg-[var(--color-card-cream)] p-1 shadow-[8px_8px_0_0_var(--color-cocoa)]">
+                <div className="relative z-10 size-full overflow-hidden border border-[var(--color-hairline)]">
+                  <Image src={hero.src} alt={hero.alt} fill priority sizes="(min-width: 1024px) 40vw, 90vw" className="object-cover" />
+                </div>
               </div>
             </div>
           </Reveal>
@@ -180,7 +192,10 @@ export default async function HomePage() {
         footer is a terracotta gradient — two terracotta blocks touching had
         no visible boundary at all.
       */}
-      <section aria-labelledby="services-heading" className="band-sand py-[var(--spacing-section-lg)]">
+      <section aria-labelledby="services-heading" className="band-sand relative isolate overflow-hidden py-[var(--spacing-section-lg)]">
+        <Image src={diya.src} alt="" aria-hidden fill sizes="100vw" className="pointer-events-none absolute inset-0 -z-10 object-cover opacity-20" />
+        <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 bg-[var(--color-card-cream)]/85" />
+        <SectionWatermark corner="bottom-left" />
         <div className="shell">
           <Reveal>
             <div className="mb-16 md:w-1/2">
@@ -241,7 +256,8 @@ export default async function HomePage() {
       </section>
 
       {/* ================= SOCIAL PROOF — immediately before footer ================= */}
-      <section aria-labelledby="proof-heading" className="band-sand py-[var(--spacing-section-lg)]">
+      <section aria-labelledby="proof-heading" className="band-sand relative isolate overflow-hidden py-[var(--spacing-section-lg)]">
+        <SectionWatermark corner="top-right" />
         <h2 id="proof-heading" className="sr-only">In their words and curated insights</h2>
         <div className="shell grid grid-cols-1 gap-16 md:grid-cols-2">
           <Reveal>

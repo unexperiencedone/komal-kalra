@@ -23,25 +23,9 @@ const TOOLS: Record<string, { title: string; description: string }> = {
     title: 'Nakshatra Calculator',
     description: 'Identify your lunar mansion and explore the qualities it brings to your chart.',
   },
-  'rahu-ketu': {
-    title: 'Rahu-Ketu Calculator',
-    description: 'Explore the karmic axis formed by Rahu and Ketu in your birth chart.',
-  },
   numerology: {
     title: 'Vedic Numerology Calculator',
     description: 'Calculate your psychic, destiny and name numbers from your birth details.',
-  },
-  'name-number': {
-    title: 'Name Number Calculator',
-    description: 'Decode the numerological vibration carried by your name.',
-  },
-  'lo-shu-grid': {
-    title: 'Lo Shu Grid Calculator',
-    description: 'Map the numbers in your birth date to reveal recurring strengths and gaps.',
-  },
-  flames: {
-    title: 'FLAMES Compatibility',
-    description: 'A playful name-based compatibility exercise for two people.',
   },
   'mangal-dosha': {
     title: 'Mangal Dosha Calculator',

@@ -10,7 +10,8 @@
   --color-terracotta-lo: #9a5814;
   /* Text on a saffron fill. Cocoa is only 4.08:1 there — it is a heading
      colour for light grounds, not an on-accent colour. This is ~8:1. */
-  --color-on-saffron: #fffaf2;
+  --color-on-saffron: #40220a;   /* ~8:1 on saffron. NOT a light value —
+                                    white here measures 2.18:1. */
   --color-amber-band:   #c67f1c;
   --color-deep-maroon:  #6e2b13;
   /* Deepens DOWNWARD. The reverse made the page step bright amber ->
@@ -72,6 +73,14 @@
   --shadow-hard-offset: 4px 4px 0px 0px var(--color-saffron-deep);
 
   --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* Height of the sticky site header: one 5rem row on mobile, plus the nav
+     row at md and up. Any section that pins with `sticky top-0` sits UNDER
+     that bar (it is z-50), so it needs this much top clearance or its first
+     line is hidden behind the nav. Declared once here rather than guessed at
+     each call site — that guess is what put a cream stripe under the header
+     the last time it was hardcoded. */
+  --header-h: 5rem;
 }
 
 @layer base {
@@ -236,6 +245,124 @@
     padding-inline: 24px;
   }
   @media (min-width: 768px) { .shell { padding-inline: 48px; } }
+
+  /* ======================================================================
+     .pin-stage / .pin-panel — pin a section while the next one scrolls over.
+
+     Usage:
+       <div class="pin-stage" style="--pin-travel: 80svh"> …the extra scroll…
+         <section class="pin-panel"> …stays put… </section>
+       </div>
+       <section class="band-cream relative z-10"> …rises over it… </section>
+
+     Three things this gets right that a hand-rolled version did not:
+
+      1. `svh`, not `vh`. On mobile `vh` is the LARGE viewport height, so a
+         `100vh` panel inside a `180vh` stage is measured against a taller
+         viewport than it occupies and the pin distance comes out wrong.
+      2. `top: var(--header-h)` and a matching height reduction. The site
+         header is `sticky top-0 z-50`; a panel pinned at `top: 0` slides
+         underneath it and loses its first line behind the nav.
+      3. `min-height`, not `height`, plus no `overflow: hidden`. A fixed
+         height with hidden overflow silently CLIPS on a 720px laptop — which
+         is precisely the screen this effect is for. Content that outgrows the
+         panel should push it taller, not disappear.
+     ====================================================================== */
+  .pin-stage {
+    position: relative;
+    min-height: calc(100svh + var(--pin-travel, 80svh));
+  }
+  .pin-panel {
+    position: sticky;
+    top: var(--header-h);
+    z-index: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: calc(100svh - var(--header-h));
+  }
+
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+
+  /* ======================================================================
+     .line-reveal — headline lines rise from behind a mask.
+
+     Each line is wrapped in a clipping span; the inner span starts translated
+     fully below it and slides up into view. Because the wrapper clips, the
+     line appears to emerge from a hard edge rather than fading in — which is
+     what makes an oversized display headline land instead of just appearing.
+
+     `overflow: clip` not `hidden`: `hidden` creates a scroll container, so a
+     descendant taking focus would scroll the wrapper by a few pixels and leave
+     the line permanently mis-positioned. `clip` cuts without that side effect.
+     ====================================================================== */
+  .line-reveal {
+    display: block;
+    overflow: clip;
+    /* Descenders (g, y, p) sit below the baseline and would be sliced off by
+       the clip. Padding gives them room, the negative margin takes the space
+       back so line spacing is unchanged. */
+    padding-bottom: 0.12em;
+    margin-bottom: -0.12em;
+  }
+  .line-reveal > * {
+    display: block;
+    animation: line-rise 900ms var(--ease-out-quint) both;
+    animation-delay: var(--line-delay, 0ms);
+  }
+  @keyframes line-rise {
+    from { transform: translateY(105%); }
+    to   { transform: translateY(0); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .line-reveal > * { animation: none; }
+  }
+
+  /* The oversized closing CTA, from the reference's "GOT AN IDEA?" block —
+     the largest type on the page, deliberately bigger than the h1. */
+  .display-xxl {
+    font-family: var(--font-display);
+    font-size: clamp(3rem, 1.5rem + 7vw, 9rem);
+    font-weight: 600;
+    line-height: 0.9;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+
+  /* The repeating wordmark strip above the footer. Duplicated track sliding
+     -50%, so the seam never shows. */
+  .wordmark-marquee {
+    display: flex;
+    width: max-content;
+    animation: wordmark-scroll 28s linear infinite;
+  }
+  @keyframes wordmark-scroll {
+    to { transform: translateX(-50%); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .wordmark-marquee { animation: none; }
+  }
+
+  /* The rule that trails the "Scroll" cue, drawing downward on a loop. */
+  .scroll-cue-rule {
+    display: block;
+    width: 1px;
+    height: 2.25rem;
+    background: currentColor;
+    transform-origin: top;
+    animation: scroll-cue 1.8s var(--ease-out-quint) infinite;
+  }
+  @keyframes scroll-cue {
+    0%   { transform: scaleY(0); opacity: 0; }
+    35%  { transform: scaleY(1); opacity: 1; }
+    75%  { transform: scaleY(1); opacity: 1; }
+    100% { transform: scaleY(0) translateY(2.25rem); opacity: 0; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .scroll-cue-rule { animation: none; opacity: 0.7; }
+  }
 
   /* ======================================================================
      BANDS

@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { ArrowUpRight, Calculator, Heart, Sun } from 'lucide-react';
 import { CalculatorForm } from '@/components/tools/CalculatorForm';
+import { SectionWatermark } from '@/components/marketing/SectionWatermark';
 
 const TOOLS = [
   { slug: 'free-kundli', title: 'Free Kundli', description: 'See the planetary pattern at your birth.', Icon: Sun },
@@ -16,7 +17,9 @@ export function ToolsLeadSection() {
   const current = TOOLS.find((tool) => tool.slug === active) ?? TOOLS[0];
 
   return (
-    <section aria-labelledby="tools-heading" className="band-cream py-[var(--spacing-section-lg)]">
+    <section aria-labelledby="tools-heading" className="band-sand relative isolate overflow-hidden py-[var(--spacing-section-lg)]">
+      <SectionWatermark corner="top-right" />
+      <SectionWatermark corner="bottom-left" />
       <div className="shell">
         <div className="mb-12 max-w-2xl">
           <p className="label-caps text-[var(--color-saffron-deep)]">Free Vedic tools</p>

@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { Menu, X } from 'lucide-react';
 import { BRAND } from '@/lib/config';
@@ -111,8 +112,15 @@ export function SiteHeader() {
         <div className="flex min-h-20 items-center justify-between border-b border-[color-mix(in_srgb,var(--color-cream)_22%,transparent)]">
           <Link
           href="/"
-          className="absolute left-1/2 -translate-x-1/2 font-[family-name:var(--font-display)] text-xl sm:text-2xl uppercase tracking-[0.15em] text-[var(--color-cream)]"
+          className="absolute left-1/2 flex -translate-x-1/2 items-center gap-2 font-[family-name:var(--font-display)] text-xl sm:text-2xl uppercase tracking-[0.15em] text-[var(--color-cream)]"
         >
+          <Image
+            src="/images/favicon_new.png"
+            alt=""
+            width={40}
+            height={40}
+            className="size-8 object-contain sm:size-10"
+          />
           Komal Kalra
           </Link>
 

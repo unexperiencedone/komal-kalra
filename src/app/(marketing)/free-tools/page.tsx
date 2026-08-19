@@ -17,11 +17,7 @@ const TOOLS = [
   ['Moon Sign', 'moon-sign', 'Discover your emotional core and Rashi from the Moon placement.'],
   ['Lagna', 'lagna', 'Find your ascendant and the lens through which you meet the world.'],
   ['Nakshatra', 'nakshatra', 'Learn the lunar mansion that shapes your instincts and patterns.'],
-  ['Rahu-Ketu', 'rahu-ketu', 'Explore the karmic axis represented by Rahu and Ketu in your chart.'],
   ['Numerology', 'numerology', 'Calculate your life path and destiny numbers.'],
-  ['Name Number', 'name-number', 'Decode the numerological vibration carried by your name.'],
-  ['Lo Shu Grid', 'lo-shu-grid', 'Map the numbers in your birth date to reveal recurring strengths.'],
-  ['FLAMES', 'flames', 'A playful compatibility exercise for two names.'],
 ].map(([title, slug, description]) => ({ title, slug, description }));
 
 export default function FreeToolsIndex() {

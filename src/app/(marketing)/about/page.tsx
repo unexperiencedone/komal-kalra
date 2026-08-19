@@ -128,7 +128,7 @@ export default async function AboutPage() {
       </section>
 
       {/* ========================= FOUNDER STORY ========================= */}
-      <section aria-labelledby="founder-story-heading" className="band-ivory py-[var(--spacing-section-lg)]">
+      <section aria-labelledby="founder-story-heading" className="band-cream py-[var(--spacing-section-lg)]">
         <div className="shell">
           <Reveal>
             <div className="max-w-2xl">
