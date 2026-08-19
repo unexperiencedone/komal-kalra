@@ -5,6 +5,7 @@ import { notFound } from 'next/navigation';
 import { ArrowRight, Clock, MapPin, Phone as PhoneIcon, Video } from 'lucide-react';
 import { getServiceBySlug } from '@/lib/booking/availability';
 import { createAdminClient } from '@/lib/supabase/admin';
+import { createClient } from '@/lib/supabase/server';
 import { formatPaise, paiseToRupees } from '@/lib/money';
 import { BRAND, POLICY } from '@/lib/config';
 import { Button } from '@/components/ui/button';
@@ -63,8 +64,11 @@ export default async function ServiceDetailPage(props: { params: Promise<{ slug:
   const service = await getServiceBySlug(slug);
   if (!service) notFound();
 
-  const admin = createAdminClient();
-  const { data: testimonials } = await admin
+  // Approved testimonials are intentionally public under RLS. Do not use the
+  // service-role client for this public page: doing so makes an unrelated
+  // server-only environment validation failure turn into a visitor-facing 500.
+  const supabase = await createClient();
+  const { data: testimonials } = await supabase
     .from('testimonials')
     .select('*')
     .eq('approved', true)
