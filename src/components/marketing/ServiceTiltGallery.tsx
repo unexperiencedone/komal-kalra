@@ -226,11 +226,35 @@ function ServiceTiltCard({
   const flatten = hovering ? 0.3 : 1;
   const settle = 0.94 + progress * 0.06;
 
-  const transform = [
+  /**
+   * THE TRANSFORM IS SPLIT ACROSS TWO ELEMENTS. Do not recombine it.
+   *
+   *   wrapper → translate + scale   (moves the whole card, text included)
+   *   plate   → rotateY             (turns only the photograph)
+   *
+   * Putting all of it on the plate detached the card from its own caption: the
+   * plate slid sideways with `spread` and lifted with `arc` while the text,
+   * which lives in the untransformed wrapper, stayed exactly where it was. The
+   * result was five photographs with their prices floating off to one side.
+   *
+   * Splitting it means the text travels with the card — it is inside the
+   * element carrying the positional transform — but is never rotated, so
+   * `rotateY` cannot shear it.
+   *
+   * It also keeps the hover fix intact, which is the subtle part. The
+   * oscillation came from measuring a rect that changed WHILE THE CURSOR MOVED,
+   * and the only cursor-driven value is `swing` — a rotation, now confined to
+   * the plate. `spread`, `arc` and `settle` depend on scroll position alone and
+   * `scale` on a boolean, so the wrapper's rect is stable throughout a
+   * mousemove. Scaling up on enter is safe for the same reason: the card grows
+   * around the cursor rather than out from under it.
+   */
+  const wrapperTransform = [
     `translate3d(${spread}px, ${arc}px, 0)`,
-    `rotateY(${fanDeg * flatten + swing}deg)`,
     `scale(${(hovering ? 1.06 : 1) * settle})`,
   ].join(' ');
+
+  const plateTransform = `rotateY(${fanDeg * flatten + swing}deg)`;
 
   return (
     <div
@@ -245,12 +269,25 @@ function ServiceTiltCard({
         setSwing(0);
         onHover(null);
       }}
+      style={{ transform: wrapperTransform, opacity: dimmed ? 0.55 : 1 }}
       /*
-        The static frame. It holds the SIZE and owns the POINTER; nothing here
-        is ever transformed, so the hit area and the measurement rect both stay
-        still. The plate inside is the only thing that moves.
+        Carries the card's POSITION (translate + scale) and everything that has
+        to travel with it, the text included. It never rotates, so the rect the
+        pointer is measured against does not change mid-mousemove.
+
+        `preserve-3d` matters: the perspective lives on the ROW, and perspective
+        only applies to its DIRECT children. Without this the plate's `rotateY`
+        would be a grandchild of that perspective and would render as a flat
+        horizontal squash with no depth at all.
+
+        `md:min-w-[8rem]` is a collapse guard, not a design choice. The width at
+        md+ is intrinsic — it comes from the in-flow text block below — so any
+        future change that empties this wrapper of flow content would silently
+        take every card to zero width again, which is exactly what happened
+        once. A floor means that failure shows as cards that are too narrow
+        rather than a page with no cards on it.
       */
-      className="group relative aspect-[3/4] w-48 shrink-0 snap-center sm:w-56 md:h-full md:w-auto md:shrink"
+      className="group relative aspect-[3/4] w-48 shrink-0 snap-center [transition:transform_320ms_var(--ease-out-quint),opacity_400ms_ease-out] will-change-transform motion-reduce:transition-none sm:w-56 md:h-full md:w-auto md:min-w-[8rem] md:shrink md:[transform-style:preserve-3d]"
     >
       <Link
         href={`/services/${service.slug}`}
@@ -263,7 +300,7 @@ function ServiceTiltCard({
           setHovering(false);
           onHover(null);
         }}
-        style={{ transform, opacity: dimmed ? 0.55 : 1 }}
+        style={{ transform: plateTransform }}
       /*
         TWO DURATIONS, NOT ONE.
 
@@ -328,27 +365,54 @@ function ServiceTiltCard({
         and `aria-hidden` because the link already carries all of this in its
         accessible name — otherwise a screen reader reads the card twice.
       */}
-      <div aria-hidden className="pointer-events-none absolute inset-0 z-10">
-        <h3 className="absolute inset-y-4 right-3 flex items-center [writing-mode:vertical-rl] rotate-180 font-[family-name:var(--font-display)] text-lg font-medium leading-none tracking-wide text-white lg:text-xl">
-          {service.title}
-        </h3>
+      {/* The vertical spine title. Absolute is fine here — the block below is
+          what gives the wrapper its size. */}
+      <h3
+        aria-hidden
+        className="pointer-events-none absolute inset-y-4 right-3 z-10 flex items-center [writing-mode:vertical-rl] rotate-180 font-[family-name:var(--font-display)] text-lg font-medium leading-none tracking-wide text-white lg:text-xl"
+      >
+        {service.title}
+      </h3>
 
-        <div className="flex h-full flex-col justify-between p-4 pr-11 text-white">
-          <span className="label-small opacity-80">0{index + 1}</span>
+      {/*
+        ⚠️  THIS BLOCK IS IN FLOW (`relative`), NOT ABSOLUTE. It is load-bearing
+        for LAYOUT, not just for reading.
 
-          <div className="flex items-end justify-between gap-3">
-            <div className="flex flex-col gap-1 text-xs opacity-90">
-              <span className="flex items-center gap-1">
-                <Clock className="size-3.5" aria-hidden />
-                {service.duration_minutes} min
-              </span>
-              <span>{formatPaise(service.price_paise)}</span>
-            </div>
-            <span className="inline-flex items-center gap-1 text-xs font-semibold uppercase tracking-widest opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-              {service.bookable_online ? 'Explore' : 'Enquire'}
-              <ArrowUpRight className="size-3.5" aria-hidden />
+        The plate above is `absolute inset-0` and the title is absolute too. If
+        this were absolute as well, the wrapper would contain nothing in normal
+        flow — and a flex item whose width is `auto` sizes from its content, so
+        the wrapper computed a width of ZERO. Every card collapsed to a point
+        and the text piled up in the middle of the screen with no images at all.
+        That is what happened the first time the text was lifted out of the
+        rotating plate.
+
+        Keeping it in flow means the card's intrinsic width comes from this
+        text plus its padding, exactly as it did when the text lived inside the
+        plate — while still sitting outside the transform, so `rotateY` never
+        shears it.
+
+        `pointer-events-none` so clicks fall through to the link beneath, and
+        `aria-hidden` because the link already carries all of this in its
+        accessible name.
+      */}
+      <div
+        aria-hidden
+        className="pointer-events-none relative z-10 flex h-full flex-col justify-between p-4 pr-11 text-white"
+      >
+        <span className="label-small opacity-80">0{index + 1}</span>
+
+        <div className="flex items-end justify-between gap-3">
+          <div className="flex flex-col gap-1 text-xs opacity-90">
+            <span className="flex items-center gap-1">
+              <Clock className="size-3.5" aria-hidden />
+              {service.duration_minutes} min
             </span>
+            <span>{formatPaise(service.price_paise)}</span>
           </div>
+          <span className="inline-flex items-center gap-1 text-xs font-semibold uppercase tracking-widest opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+            {service.bookable_online ? 'Explore' : 'Enquire'}
+            <ArrowUpRight className="size-3.5" aria-hidden />
+          </span>
         </div>
       </div>
     </div>

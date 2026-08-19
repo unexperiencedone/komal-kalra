@@ -123,66 +123,46 @@ export default async function ServiceDetailPage(props: { params: Promise<{ slug:
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
       {/*
-        Same pinned hero as /services, so the whole route reads as one idea:
-        a full-height terracotta panel that holds while the body of the page
-        rises over it. The listing pins a row of cards to the bottom edge;
-        here the single service photograph takes that slot.
+        The original two-column hero, restored.
+
+        This briefly carried the same pinned full-height panel as /services.
+        Reverted for the same reason: pinning charges most a viewport of scroll
+        before the page will move, and this page's whole job is to get someone
+        from "what is this session" to "book it".
       */}
-      <div className="pin-stage" style={{ ['--pin-travel' as string]: '70svh' }}>
-        <section className="band-terracotta pin-panel overflow-hidden py-10 md:py-14">
-          <div
-            aria-hidden
-            className="pointer-events-none absolute inset-0 z-0 opacity-[0.07]"
-            style={{
-              backgroundImage:
-                'repeating-linear-gradient(to right, var(--color-cream) 0 1px, transparent 1px 80px), repeating-linear-gradient(to bottom, var(--color-cream) 0 1px, transparent 1px 80px)',
-            }}
-          />
-          <div className="shell relative z-10">
-            <Reveal>
-              <p className="label-caps text-[var(--color-cream)]">{service.title}</p>
-              <h1 className="mt-4 font-[family-name:var(--font-display)] text-[clamp(2.25rem,1.6rem+3vw,4.75rem)] font-semibold leading-[0.95] text-[var(--color-cream)]">
+      <div className="pb-[var(--spacing-section-lg)] pt-8 md:pt-16">
+        {/* ============================ 1. HERO ============================ */}
+        <section className="shell mb-[var(--spacing-section-lg)]">
+          <div className="grid grid-cols-1 items-center gap-8 md:grid-cols-12">
+            <Reveal className="relative z-10 md:col-span-6">
+              <p className="label-caps text-[var(--color-saffron-deep)]">{service.title}</p>
+              <h1 className="mt-4 text-[length:var(--text-display-lg)] text-[var(--color-cocoa)]">
                 {service.tagline ?? service.title}
               </h1>
-              <div className="mt-8 flex flex-wrap items-center gap-6">
-                <Button asChild size="lg" variant="primary">
+              <div className="mt-10 flex flex-wrap items-center gap-6">
+                <Button asChild size="lg" variant="primary" className="shadow-[4px_4px_0_0_var(--color-saffron-deep)]">
                   <Link href={bookHref}>
                     {bookLabel}
                     <ArrowRight className="size-4 ml-2" aria-hidden />
                   </Link>
                 </Button>
               </div>
-              <p aria-hidden className="label-caps mt-8 flex items-center gap-3 text-[var(--color-saffron-lift)]">
-                Scroll
-                <span className="scroll-cue-rule" />
-              </p>
             </Reveal>
-          </div>
-
-          {/* min-h-0 so this can compress rather than pushing the panel taller
-              — a flex child will not shrink below its content without it. */}
-          <Reveal delay={120} className="relative z-10 mt-auto min-h-0 flex-1 pt-8 md:-mb-14">
-            <div className="shell h-full">
-              <div className="relative mx-auto h-full max-h-full w-full max-w-4xl overflow-hidden rounded-[28px] border border-[var(--color-hairline)] shadow-[0_20px_45px_-20px_rgba(45,20,5,0.55)]">
+            <Reveal delay={120} className="md:col-span-6">
+              <div className="relative aspect-[4/5] w-full border border-[var(--color-hairline)] bg-[var(--color-card-cream)] before:pointer-events-none before:absolute before:inset-[4px] before:z-10 before:border before:border-[var(--color-hairline)] md:aspect-[3/2]">
                 <Image
                   src={photo.src}
                   alt={photo.alt}
                   fill
                   priority
-                  sizes="(min-width: 768px) 60vw, 100vw"
+                  sizes="(min-width: 768px) 58vw, 100vw"
                   className="object-cover contrast-[1.1] grayscale-[20%]"
                 />
               </div>
-            </div>
-          </Reveal>
+            </Reveal>
+          </div>
         </section>
-      </div>
 
-      {/*
-        Everything below rises OVER the pinned panel. It needs `relative z-10`
-        and an opaque band, or it scrolls underneath instead of covering it.
-      */}
-      <div className="band-cream relative z-10 pb-[var(--spacing-section-lg)]">
         {/* ========================== 2. NARRATIVE =========================== */}
         <section aria-labelledby="narrative-heading" className="shell py-[var(--spacing-section-lg)]">
           <div className="grid grid-cols-1 gap-12 md:grid-cols-12 items-center">
