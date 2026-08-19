@@ -2,7 +2,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import type { Metadata } from 'next';
 import { ArrowUpRight, Camera, Quote } from 'lucide-react';
-import { createClient } from '@/lib/supabase/server';
+import { createPublicClient } from '@/lib/supabase/public';
 import { getActiveServices } from '@/lib/booking/availability';
 import { BRAND } from '@/lib/config';
 import { Button } from '@/components/ui/button';
@@ -26,7 +26,11 @@ export const metadata: Metadata = {
 };
 
 export default async function HomePage() {
-  const supabase = await createClient();
+  // Cookie-free: both these pages are prerendered, and cookies() cannot be read
+  // during a prerender. Testimonials are public data with an `approved` RLS
+  // policy, so the anon client returns exactly the right rows. See
+  // src/lib/supabase/public.ts for the full reasoning.
+  const supabase = createPublicClient();
 
   const [services, { data: testimonials }] = await Promise.all([
     getActiveServices(),

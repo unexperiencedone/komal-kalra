@@ -9,6 +9,10 @@ import type { Service } from '@/types/database';
 
 export function CompactServiceRail({ services }: { services: Service[] }) {
   const [active, setActive] = React.useState(0);
+  // Same empty-array crash as ServiceCircle — see the note there. `?? [0]` is
+  // still undefined when the list is empty.
+  if (services.length === 0) return null;
+
   const current = services[active] ?? services[0];
 
   return (

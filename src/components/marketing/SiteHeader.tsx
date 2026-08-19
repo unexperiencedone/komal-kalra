@@ -69,7 +69,12 @@ function useHideOnScroll(active: boolean) {
   return hidden;
 }
 
-export function SiteHeader({ signedIn = false }: { signedIn?: boolean }) {
+/**
+ * No `signedIn` prop. Working it out required a cookie read in the marketing
+ * layout, which broke prerendering of /services/[slug] — see the note there.
+ * /login sends a signed-in visitor onward, so this link is correct either way.
+ */
+export function SiteHeader() {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
 
@@ -112,7 +117,7 @@ export function SiteHeader({ signedIn = false }: { signedIn?: boolean }) {
           </Link>
 
           <div className="flex items-center gap-4">
-            <Link href={signedIn ? '/dashboard' : '/login'} className="hidden text-xs font-semibold uppercase tracking-[0.1em] text-[var(--color-cream)] hover:text-[var(--color-saffron-lift)] md:inline-flex">Login</Link>
+            <Link href="/login" className="hidden text-xs font-semibold uppercase tracking-[0.1em] text-[var(--color-cream)] hover:text-[var(--color-saffron-lift)] md:inline-flex">Login</Link>
             <Button variant="primary" asChild className="hidden bg-[var(--color-saffron)] text-[var(--color-on-saffron)] shadow-[4px_4px_0_0_var(--color-on-saffron)] hover:bg-[var(--color-saffron-lift)] md:inline-flex">
               <Link href="/book">Join Community</Link>
             </Button>

@@ -9,6 +9,21 @@ import type { Service } from '@/types/database';
 
 export function ServiceCircle({ services }: { services: Service[] }) {
   const [active, setActive] = React.useState(0);
+
+  /**
+   * `services[active] ?? services[0]` still yields undefined when the array is
+   * EMPTY, and every line below dereferences it — so an empty catalogue threw
+   * "Cannot read properties of undefined (reading 'title')" and took the whole
+   * of /services down with a 500.
+   *
+   * That was invisible until this page started prerendering: with the cookie
+   * client it always bailed to dynamic and there was always data by the time it
+   * rendered. An empty catalogue is a completely ordinary state — a failed
+   * fetch, a cold database, a migration in flight — and the page it fronts is
+   * one of the two that sell anything. Render nothing rather than crash.
+   */
+  if (services.length === 0) return null;
+
   const current = services[active] ?? services[0];
 
   return (

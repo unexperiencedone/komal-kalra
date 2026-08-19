@@ -1,6 +1,7 @@
 import 'server-only';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { createClient } from '@/lib/supabase/server';
+import { createPublicClient } from '@/lib/supabase/public';
 import { businessDateKey } from '@/lib/date';
 import type { Service } from '@/types/database';
 
@@ -89,9 +90,19 @@ function isPublic(service: Service): boolean {
   return service.internal !== true;
 }
 
-/** Public catalogue read. Uses the anon-scoped client, so RLS applies. */
+/**
+ * Public catalogue read.
+ *
+ * Uses the COOKIE-FREE public client. This is load-bearing: the marketing
+ * layout and `/services/[slug]` are prerendered, and `cookies()` cannot be
+ * called during a prerender — doing so threw DYNAMIC_SERVER_USAGE and returned
+ * a 500 from ISR on Vercel while working perfectly in `next dev`, which
+ * renders everything dynamically. See src/lib/supabase/public.ts.
+ *
+ * RLS still applies; the anon role sees exactly the public catalogue.
+ */
 export async function getActiveServices(): Promise<Service[]> {
-  const supabase = await createClient();
+  const supabase = createPublicClient();
   const { data, error } = await supabase
     .from('services')
     .select('*')
@@ -107,7 +118,8 @@ export async function getActiveServices(): Promise<Service[]> {
 }
 
 export async function getServiceBySlug(slug: string): Promise<Service | null> {
-  const supabase = await createClient();
+  // Cookie-free — this page is prerendered. See getActiveServices above.
+  const supabase = createPublicClient();
   const { data, error } = await supabase
     .from('services')
     .select('*')

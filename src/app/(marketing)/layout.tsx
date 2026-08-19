@@ -1,7 +1,6 @@
 import { SiteHeader } from '@/components/marketing/SiteHeader';
 import { SiteFooter } from '@/components/marketing/SiteFooter';
 import { getActiveServices } from '@/lib/booking/availability';
-import { getCurrentUser } from '@/lib/auth/session';
 
 /**
  * Marketing shell.
@@ -26,12 +25,29 @@ import { getCurrentUser } from '@/lib/auth/session';
  * The hide-on-scroll transform still works — a translated sticky element slides
  * out of view the same way a fixed one does.
  */
+/**
+ * NO AUTH READ IN THIS LAYOUT.
+ *
+ * It used to call `getCurrentUser()` so the header could point "Login" at
+ * `/dashboard` for signed-in visitors. That is a cookie read, and this layout
+ * wraps every marketing route including the prerendered `/services/[slug]` —
+ * so it made a static route reach for request state, which is what threw
+ * DYNAMIC_SERVER_USAGE and 500'd on Vercel's ISR path.
+ *
+ * The header now always links to `/login`, and `/login` redirects an
+ * already-signed-in visitor onward to their own dashboard. Same destination,
+ * one redirect, and it is better behaviour anyway — a signed-in person landing
+ * on a sign-in form is a bug in its own right.
+ *
+ * It also removes a `supabase.auth.getUser()` round trip from every marketing
+ * page render, which was a network call on the critical path of the homepage.
+ */
 export default async function MarketingLayout({ children }: { children: React.ReactNode }) {
-  const [services, user] = await Promise.all([getActiveServices(), getCurrentUser()]);
+  const services = await getActiveServices();
 
   return (
     <div className="flex min-h-dvh flex-col">
-      <SiteHeader signedIn={Boolean(user)} />
+      <SiteHeader />
       <main id="main" className="flex-1">{children}</main>
       <SiteFooter services={services} />
     </div>

@@ -4,8 +4,7 @@ import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { ArrowRight, Clock, MapPin, Phone as PhoneIcon, Video } from 'lucide-react';
 import { getServiceBySlug } from '@/lib/booking/availability';
-import { createAdminClient } from '@/lib/supabase/admin';
-import { createClient } from '@/lib/supabase/server';
+import { createPublicClient } from '@/lib/supabase/public';
 import { formatPaise, paiseToRupees } from '@/lib/money';
 import { BRAND, POLICY } from '@/lib/config';
 import { Button } from '@/components/ui/button';
@@ -23,8 +22,14 @@ import type { Testimonial } from '@/types/database';
 
 export async function generateStaticParams() {
   try {
-    const admin = createAdminClient();
-    const { data } = await admin
+    // Public client, not the service role. This runs during the prerender
+    // pass, and the service-role client validates server-only env at
+    // construction — so a missing or malformed SUPABASE_SERVICE_ROLE_KEY
+    // turned into a failed render of a public marketing page. The anon key
+    // plus the catalogue RLS policy returns exactly the slugs that should be
+    // prerendered anyway, so the elevated key was never needed here.
+    const supabase = createPublicClient();
+    const { data } = await supabase
       .from('services')
       .select('slug, internal')
       .eq('active', true);
@@ -32,6 +37,8 @@ export async function generateStaticParams() {
       .filter((s) => s.internal !== true)
       .map((s) => ({ slug: s.slug as string }));
   } catch {
+    // No database reachable at build time (CI without secrets): render on
+    // demand rather than failing the build.
     return [];
   }
 }
@@ -67,7 +74,11 @@ export default async function ServiceDetailPage(props: { params: Promise<{ slug:
   // Approved testimonials are intentionally public under RLS. Do not use the
   // service-role client for this public page: doing so makes an unrelated
   // server-only environment validation failure turn into a visitor-facing 500.
-  const supabase = await createClient();
+  // Cookie-free: both these pages are prerendered, and cookies() cannot be read
+  // during a prerender. Testimonials are public data with an `approved` RLS
+  // policy, so the anon client returns exactly the right rows. See
+  // src/lib/supabase/public.ts for the full reasoning.
+  const supabase = createPublicClient();
   const { data: testimonials } = await supabase
     .from('testimonials')
     .select('*')
