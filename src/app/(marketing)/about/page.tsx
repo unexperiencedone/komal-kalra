@@ -30,7 +30,7 @@ const FOUNDER_STORY = [
     body: 'Every reading begins with listening. The work is to turn a complex chart into language that feels useful, honest, and possible to act on.',
   },
   {
-    image: 'komalKalra4' as const,
+    image: 'komalKalra5' as const,
     label: 'The work continues',
     heading: 'Guidance you can return to',
     body: 'A consultation is not a prediction set in stone. It is a thoughtful reference point for making decisions with more steadiness and self-trust.',

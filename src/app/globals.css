@@ -96,6 +96,29 @@
     -webkit-text-size-adjust: 100%;
   }
 
+  /*
+    ONLY THE CANVAS BEHIND THE HEADER — not the page.
+
+    `html` and `body` are different surfaces and this relies on the difference:
+    when `html` carries a background it becomes the CANVAS colour, and `body`
+    then paints its own background over its own box only. The body box starts
+    at the top of the document, so cream covers everything you actually read,
+    and terracotta-lo is left showing exactly where the body box is not — the
+    strip behind the header when it slides away, and the rubber-band area above
+    the page when you overscroll at the top.
+
+    Setting this on `body` instead — which is what the first attempt did —
+    repaints the ground under every section that has no band class of its own,
+    turning whole pages terracotta. That is why it is split across the two.
+
+    ⚠️  It matches the header's own background on purpose. If the header colour
+    ever changes, change this with it: nothing breaks if they drift, a
+    mismatched strip just starts appearing on scroll.
+  */
+  html {
+    background-color: var(--color-terracotta-lo);
+  }
+
   body {
     background-color: var(--color-cream);
     color: var(--color-body-warm);
