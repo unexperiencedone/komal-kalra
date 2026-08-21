@@ -292,8 +292,22 @@ function BirthTool({ slug }: { slug: string }) {
 
       <section className="space-y-6">
         <h2 className="border-b border-[var(--color-hairline)] pb-3 font-[family-name:var(--font-display)] text-2xl text-[var(--color-cocoa)]">
-          Where should we send it?
+          Your details
         </h2>
+
+        {/*
+          NOT "where should we send it?".
+
+          Nothing is emailed. The result renders on this page and the contact
+          details go to `leads` so Komal can follow up by hand. Promising a
+          delivery the system does not perform is the same class of lie as the
+          fake OTP that used to live in this file — and it is worse, because the
+          visitor waits for something that is never coming.
+
+          When the outbox actually sends (RESEND_API_KEY + a verified domain),
+          queue a `tool_result` notification here and this heading can change
+          back.
+        */}
 
         <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
           <Field label="Your name" htmlFor="lead-name" required>
