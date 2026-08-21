@@ -15,7 +15,8 @@
     "watermark:prepare": "node scripts/prepare-watermark.js",
     "audit:bands": "node scripts/audit-bands.js",
     "audit:images": "node scripts/audit-images.js",
-    "audit": "npm run audit:contrast && npm run audit:bands && npm run audit:images"
+    "audit": "npm run audit:contrast && npm run audit:bands && npm run audit:images",
+    "astrology:selftest": "node --experimental-strip-types scripts/astrology-selftest.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.1",

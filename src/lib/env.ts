@@ -51,6 +51,18 @@ const serverSchema = z.object({
   /** Email delivery. Optional: without it the outbox queues but does not send. */
   RESEND_API_KEY: z.string().optional(),
   EMAIL_FROM: z.string().optional(),
+
+  /**
+   * Prokerala, for the free astrology tools. Optional at the schema level so
+   * the rest of the app boots without them — the tools then render an honest
+   * "not connected yet" state rather than a broken form, and every other route
+   * is unaffected. See docs/astrology-setup.md for where to get these.
+   *
+   * SERVER ONLY. Neither is NEXT_PUBLIC_, and neither may become so: these are
+   * client-credentials, and in a browser bundle they are simply published.
+   */
+  PROKERALA_CLIENT_ID: z.string().optional(),
+  PROKERALA_CLIENT_SECRET: z.string().optional(),
 });
 
 export type ServerEnv = z.infer<typeof serverSchema>;

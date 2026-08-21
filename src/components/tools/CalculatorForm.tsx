@@ -1,186 +1,588 @@
 'use client';
-import { useState } from 'react';
+
+import { useEffect, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Field, Input, Select } from '@/components/ui/field';
+import { Field, Input } from '@/components/ui/field';
+import { coreNumbers, loShuGrid, nameNumber, flames } from '@/lib/astrology/numerology';
+
+/**
+ * The free-tool forms.
+ *
+ * ⚠️  THE OTP STEP THAT USED TO BE HERE IS GONE, ON PURPOSE.
+ *
+ * It rendered a "we sent a 4-digit code to your phone" screen and then accepted
+ * literally any input, because no code was ever sent. That is a placeholder
+ * impersonating a security control — it teaches visitors that our verification
+ * means nothing, and it is exactly the "placeholder functionality presented as
+ * working" the brief rules out. There is also nothing here worth verifying: a
+ * calculator is not an account.
+ *
+ * SHAPE OF EVERY TOOL
+ *
+ *   pure-arithmetic tools  → compute in the browser, no network, no email gate
+ *   provider-backed tools  → birth details + contact, POST to /api/astrology
+ *
+ * The arithmetic tools deliberately do NOT ask for an email. Gating a sum
+ * behind a form is friction with nothing behind it, and the API-backed tools
+ * are where a lead is actually worth capturing.
+ */
+
+type Place = { label: string; latitude: number; longitude: number; timezone: string };
+
+const NUMEROLOGY_TOOLS = new Set(['numerology', 'name-number', 'lo-shu-grid', 'flames']);
 
 export function CalculatorForm({ toolSlug }: { toolSlug: string }) {
-  const [showModal, setShowModal] = useState(false);
+  if (NUMEROLOGY_TOOLS.has(toolSlug)) return <NumerologyTool slug={toolSlug} />;
+  return <BirthTool slug={toolSlug} />;
+}
 
-  if (toolSlug === 'numerology') {
-    return <NumerologyForm />;
+/* ========================================================================== */
+/*  Place lookup                                                              */
+/* ========================================================================== */
+
+/**
+ * Typeahead against our own /api/astrology/places proxy.
+ *
+ * The selected place is held as an OBJECT, not a string. A chart needs
+ * coordinates and a timezone, and "Hyderabad" is a real city in two countries
+ * — resolving silently to the first match is how a tool returns a confident,
+ * wrong answer. Nothing can be submitted until a place has actually been
+ * chosen from the list.
+ */
+function PlaceField({
+  id,
+  label,
+  value,
+  onChange,
+}: {
+  id: string;
+  label: string;
+  value: Place | null;
+  onChange: (place: Place | null) => void;
+}) {
+  const [query, setQuery] = useState('');
+  const [options, setOptions] = useState<Place[]>([]);
+  const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const abort = useRef<AbortController | null>(null);
+
+  useEffect(() => {
+    // Clearing is deferred rather than set synchronously in the effect body —
+    // a synchronous setState here cascades an extra render on every keystroke,
+    // which on a typeahead is every character the visitor types.
+    if (value || query.trim().length < 2) {
+      const clear = window.setTimeout(() => setOptions([]), 0);
+      return () => window.clearTimeout(clear);
+    }
+
+    // Debounced, and the previous request is aborted. Without the abort a slow
+    // early response can land after a fast later one and repopulate the list
+    // with results for a query the user has already moved past.
+    const timer = window.setTimeout(async () => {
+      abort.current?.abort();
+      const controller = new AbortController();
+      abort.current = controller;
+      setLoading(true);
+      try {
+        const res = await fetch(`/api/astrology/places?q=${encodeURIComponent(query)}`, {
+          signal: controller.signal,
+        });
+        const json = await res.json();
+        if (json.ok) {
+          setOptions(json.data.places);
+          setOpen(true);
+        }
+      } catch {
+        /* aborted or offline — the field simply shows no suggestions */
+      } finally {
+        setLoading(false);
+      }
+    }, 250);
+
+    return () => window.clearTimeout(timer);
+  }, [query, value]);
+
+  return (
+    <div className="relative">
+      <Field label={label} htmlFor={id} required>
+        <Input
+          id={id}
+          value={value ? value.label : query}
+          onChange={(e) => {
+            onChange(null);
+            setQuery(e.target.value);
+          }}
+          placeholder="Start typing a town or city"
+          autoComplete="off"
+          required
+        />
+      </Field>
+
+      {loading && !value && (
+        <p className="mt-1 text-xs text-[var(--color-body-warm)] opacity-70">Searching…</p>
+      )}
+
+      {open && !value && options.length > 0 && (
+        <ul className="absolute z-20 mt-1 max-h-56 w-full overflow-y-auto border border-[var(--color-hairline)] bg-[var(--color-cream)] shadow-lg">
+          {options.map((place) => (
+            <li key={`${place.label}-${place.latitude}`}>
+              <button
+                type="button"
+                onClick={() => {
+                  onChange(place);
+                  setOpen(false);
+                }}
+                className="block w-full px-4 py-2 text-left text-sm hover:bg-[var(--color-card-cream)]"
+              >
+                {place.label}
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+
+      {!value && query.trim().length >= 2 && !loading && options.length === 0 && (
+        <p className="mt-1 text-xs text-[var(--color-body-warm)] opacity-70">
+          No match yet — try the nearest larger town.
+        </p>
+      )}
+    </div>
+  );
+}
+
+/* ========================================================================== */
+/*  Birth-details tools                                                       */
+/* ========================================================================== */
+
+interface BirthState {
+  date: string;
+  time: string;
+  place: Place | null;
+}
+
+const emptyBirth: BirthState = { date: '', time: '', place: null };
+
+function BirthFields({
+  prefix,
+  state,
+  onChange,
+}: {
+  prefix: string;
+  state: BirthState;
+  onChange: (next: BirthState) => void;
+}) {
+  const id = (part: string) => `${prefix}-${part}`;
+  return (
+    <div className="space-y-6">
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+        <Field label="Date of birth" htmlFor={id('date')} required>
+          <Input
+            id={id('date')}
+            type="date"
+            max={new Date().toISOString().slice(0, 10)}
+            value={state.date}
+            onChange={(e) => onChange({ ...state, date: e.target.value })}
+            required
+          />
+        </Field>
+        <Field
+          label="Time of birth"
+          htmlFor={id('time')}
+          required
+          hint="If you are not sure, use your best estimate — the reading still works."
+        >
+          <Input
+            id={id('time')}
+            type="time"
+            value={state.time}
+            onChange={(e) => onChange({ ...state, time: e.target.value })}
+            required
+          />
+        </Field>
+      </div>
+      <PlaceField
+        id={id('place')}
+        label="Place of birth"
+        value={state.place}
+        onChange={(place) => onChange({ ...state, place })}
+      />
+    </div>
+  );
+}
+
+const MATCHING = 'kundli-matching';
+
+function BirthTool({ slug }: { slug: string }) {
+  const isMatching = slug === MATCHING;
+
+  const [primary, setPrimary] = useState<BirthState>(emptyBirth);
+  const [secondary, setSecondary] = useState<BirthState>(emptyBirth);
+  const [lead, setLead] = useState({ name: '', email: '', phone: '', consent: false, website: '' });
+
+  const [status, setStatus] = useState<'idle' | 'loading' | 'done' | 'error'>('idle');
+  const [message, setMessage] = useState('');
+  const [result, setResult] = useState<unknown>(null);
+
+  const ready =
+    Boolean(primary.date && primary.time && primary.place) &&
+    (!isMatching || Boolean(secondary.date && secondary.time && secondary.place)) &&
+    lead.name.trim() &&
+    lead.email.trim() &&
+    lead.consent;
+
+  async function submit(event: React.FormEvent) {
+    event.preventDefault();
+    if (!ready) return;
+
+    setStatus('loading');
+    setMessage('');
+
+    const birth = (s: BirthState) => ({ date: s.date, time: s.time, place: s.place });
+    const payload = isMatching
+      ? { tool: 'matching', slug, bride: birth(primary), groom: birth(secondary), lead }
+      : slug === 'mangal-dosha'
+        ? { tool: 'mangal-dosha', slug, birth: birth(primary), lead }
+        : { tool: 'chart', slug, birth: birth(primary), lead };
+
+    try {
+      const res = await fetch('/api/astrology/calculate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      const json = await res.json();
+
+      if (!json.ok) {
+        setStatus('error');
+        // The API writes these messages for a visitor to read, so they are
+        // shown as-is rather than replaced with something generic.
+        setMessage(json.message ?? 'Something went wrong. Please try again.');
+        return;
+      }
+
+      setResult(json.data.result);
+      setStatus('done');
+    } catch {
+      setStatus('error');
+      setMessage('Could not reach the service. Please check your connection and try again.');
+    }
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setShowModal(true); // Trigger paywall modal before showing results
-  };
-
-  const isMatching = toolSlug === 'kundli-matching';
-
-  const renderFields = (prefix = '') => (
-    <div className="space-y-6">
-      <h3 className="font-medium text-[var(--color-cocoa)] border-b border-[var(--color-hairline)] pb-2 mb-4">
-        {prefix ? `${prefix} Details` : 'Birth Details'}
-      </h3>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <Field label="Full Name" htmlFor={`${prefix}Name`} required>
-          <Input id={`${prefix}Name`} name={`${prefix}Name`} required />
-        </Field>
-        <Field label="Gender" htmlFor={`${prefix}Gender`} required>
-          <Select id={`${prefix}Gender`} name={`${prefix}Gender`} required>
-            <option value="">Select...</option>
-            <option value="male">Male</option>
-            <option value="female">Female</option>
-          </Select>
-        </Field>
-      </div>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Field label="Date of Birth" htmlFor={`${prefix}Date`} required>
-          <Input id={`${prefix}Date`} name={`${prefix}Date`} type="date" required />
-        </Field>
-        <Field label="Time of Birth" htmlFor={`${prefix}Time`} required>
-          <Input id={`${prefix}Time`} name={`${prefix}Time`} type="time" required />
-        </Field>
-        <Field label="Birth City" htmlFor={`${prefix}City`} required>
-          <Input id={`${prefix}City`} name={`${prefix}City`} placeholder="e.g. New Delhi" required />
-        </Field>
-      </div>
-    </div>
-  );
+  if (status === 'done') {
+    return <ResultPanel slug={slug} result={result} onReset={() => setStatus('idle')} />;
+  }
 
   return (
-    <>
-      <form onSubmit={handleSubmit} className="space-y-10">
-        {isMatching ? (
-          <>
-            {renderFields('Boy')}
-            {renderFields('Girl')}
-          </>
-        ) : (
-          renderFields()
-        )}
-        
-        <Button type="submit" size="lg" variant="primary" className="w-full md:w-auto shadow-[4px_4px_0_0_var(--color-saffron-deep)]">
-          Calculate Result
-        </Button>
-      </form>
+    <form onSubmit={submit} className="space-y-10">
+      <section className="space-y-6">
+        <h2 className="border-b border-[var(--color-hairline)] pb-3 font-[family-name:var(--font-display)] text-2xl text-[var(--color-cocoa)]">
+          {isMatching ? 'Bride’s details' : 'Birth details'}
+        </h2>
+        <BirthFields prefix="primary" state={primary} onChange={setPrimary} />
+      </section>
 
-      {showModal && (
-        <LeadCaptureModal toolSlug={toolSlug} onClose={() => setShowModal(false)} />
+      {isMatching && (
+        <section className="space-y-6">
+          <h2 className="border-b border-[var(--color-hairline)] pb-3 font-[family-name:var(--font-display)] text-2xl text-[var(--color-cocoa)]">
+            Groom’s details
+          </h2>
+          <BirthFields prefix="secondary" state={secondary} onChange={setSecondary} />
+        </section>
       )}
-    </>
-  );
-}
 
-function LeadCaptureModal({ toolSlug, onClose }: { toolSlug: string; onClose: () => void }) {
-  const [step, setStep] = useState<'capture' | 'otp' | 'result'>('capture');
+      <section className="space-y-6">
+        <h2 className="border-b border-[var(--color-hairline)] pb-3 font-[family-name:var(--font-display)] text-2xl text-[var(--color-cocoa)]">
+          Where should we send it?
+        </h2>
 
-  const handleCapture = (e: React.FormEvent) => {
-    e.preventDefault();
-    setStep('otp');
-  };
-
-  const handleOtp = (e: React.FormEvent) => {
-    e.preventDefault();
-    setStep('result');
-  };
-
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-      <div className="relative w-full max-w-md bg-[var(--color-card-cream)] p-8 border border-[var(--color-hairline)] before:absolute before:inset-[4px] before:border before:border-[var(--color-hairline)] before:pointer-events-none before:z-10 shadow-2xl">
-        <button onClick={onClose} className="absolute top-6 right-6 z-20 text-[var(--color-body-warm)] hover:text-[var(--color-cocoa)]">&times;</button>
-        
-        <div className="relative z-20">
-          {step === 'capture' && (
-            <form onSubmit={handleCapture}>
-              <h3 className="font-[family-name:var(--font-display)] text-2xl text-[var(--color-cocoa)]">Where should we send your report?</h3>
-              <p className="mt-2 text-sm text-[var(--color-body-warm)]">Enter your details to view your personalized analysis immediately.</p>
-              
-              <div className="mt-6 space-y-4">
-                <Field label="Phone Number (optional)" htmlFor="phone">
-                  <Input id="phone" name="phone" type="tel" />
-                </Field>
-                <Field label="Email Address" htmlFor="email" required>
-                  <Input id="email" name="email" type="email" required />
-                </Field>
-              </div>
-
-              <label className="mt-5 flex items-start gap-3 text-sm leading-relaxed text-[var(--color-body-warm)]">
-                <input type="checkbox" required className="mt-1 accent-[var(--color-saffron-deep)]" />
-                <span>I agree to the <a href="/legal/privacy" target="_blank" rel="noreferrer" className="underline underline-offset-2">privacy policy</a> and consent to receive this calculation.</span>
-              </label>
-              
-              <Button type="submit" variant="primary" className="w-full mt-8">Send OTP</Button>
-            </form>
-          )}
-
-          {step === 'otp' && (
-            <form onSubmit={handleOtp}>
-              <h3 className="font-[family-name:var(--font-display)] text-2xl text-[var(--color-cocoa)]">Verify your number</h3>
-              <p className="mt-2 text-sm text-[var(--color-body-warm)]">We sent a 4-digit code to your phone.</p>
-              
-              <div className="mt-6">
-                <Field label="OTP Code" htmlFor="otp" required>
-                  <Input id="otp" name="otp" type="text" maxLength={4} required className="text-center tracking-[1em] font-mono text-xl" />
-                </Field>
-              </div>
-              
-              <Button type="submit" variant="primary" className="w-full mt-8">Unlock Report</Button>
-            </form>
-          )}
-
-          {step === 'result' && (
-            <div className="text-center py-6">
-              <div className="mx-auto size-16 bg-[var(--color-cocoa)] rounded-full flex items-center justify-center mb-6 text-[var(--color-saffron-lift)] text-2xl">✓</div>
-              <h3 className="font-[family-name:var(--font-display)] text-2xl text-[var(--color-cocoa)]">Analysis Complete</h3>
-              <p className="mt-4 text-base text-[var(--color-body-warm)] mb-8">
-                Your {toolSlug.replace('-', ' ')} request has been received. The completed calculation will appear here once the astrology provider is connected.
-              </p>
-              <Button onClick={onClose} variant="secondary" className="w-full">Close Report</Button>
-            </div>
-          )}
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+          <Field label="Your name" htmlFor="lead-name" required>
+            <Input
+              id="lead-name"
+              value={lead.name}
+              onChange={(e) => setLead({ ...lead, name: e.target.value })}
+              required
+            />
+          </Field>
+          <Field label="Email" htmlFor="lead-email" required>
+            <Input
+              id="lead-email"
+              type="email"
+              value={lead.email}
+              onChange={(e) => setLead({ ...lead, email: e.target.value })}
+              required
+            />
+          </Field>
+          {/* Optional on purpose — a required phone number on a free tool
+              suppresses completion, and email is enough to follow up. */}
+          <Field label="Phone (optional)" htmlFor="lead-phone">
+            <Input
+              id="lead-phone"
+              type="tel"
+              value={lead.phone}
+              onChange={(e) => setLead({ ...lead, phone: e.target.value })}
+            />
+          </Field>
         </div>
-      </div>
-    </div>
+
+        {/* Honeypot. Hidden from people, irresistible to bots. Not `display:
+            none` — some bots skip those; off-screen and aria-hidden works on
+            more of them without ever reaching a screen reader. */}
+        <div aria-hidden className="absolute left-[-9999px]" >
+          <label htmlFor="website">Website</label>
+          <input
+            id="website"
+            tabIndex={-1}
+            autoComplete="off"
+            value={lead.website}
+            onChange={(e) => setLead({ ...lead, website: e.target.value })}
+          />
+        </div>
+
+        <label className="flex items-start gap-3 text-sm leading-relaxed text-[var(--color-body-warm)]">
+          <input
+            type="checkbox"
+            checked={lead.consent}
+            onChange={(e) => setLead({ ...lead, consent: e.target.checked })}
+            required
+            className="mt-1 accent-[var(--color-saffron-deep)]"
+          />
+          <span>
+            I agree to the{' '}
+            <a href="/legal/privacy" target="_blank" rel="noreferrer" className="underline underline-offset-2">
+              privacy policy
+            </a>
+            . My birth details are used to produce this result and are not stored.
+          </span>
+        </label>
+      </section>
+
+      {status === 'error' && (
+        <p role="alert" className="border-l-2 border-[var(--color-error)] py-1 pl-4 text-sm text-[var(--color-error)]">
+          {message}
+        </p>
+      )}
+
+      <Button
+        type="submit"
+        size="lg"
+        variant="primary"
+        disabled={!ready || status === 'loading'}
+        loading={status === 'loading'}
+        loadingText="Calculating…"
+        className="w-full md:w-auto"
+      >
+        Calculate
+      </Button>
+    </form>
   );
 }
 
-function NumerologyForm() {
-  const [name, setName] = useState('');
-  const [date, setDate] = useState('');
-  const [submitted, setSubmitted] = useState(false);
+/* ========================================================================== */
+/*  Results                                                                   */
+/* ========================================================================== */
 
-  const reduce = (value: number) => {
-    let current = value;
-    while (current > 9 && current !== 11 && current !== 22 && current !== 33) {
-      current = String(current).split('').reduce((sum, digit) => sum + Number(digit), 0);
+function ResultPanel({
+  slug,
+  result,
+  onReset,
+}: {
+  slug: string;
+  result: unknown;
+  onReset: () => void;
+}) {
+  const rows: { label: string; value: string }[] = [];
+  const r = result as Record<string, unknown> | null;
+
+  if (r) {
+    if (slug === MATCHING) {
+      rows.push({ label: 'Total points', value: `${r.obtained ?? '—'} / ${r.maximum ?? 36}` });
+      for (const k of (r.kootas as { name: string; obtained: number; maximum: number }[]) ?? []) {
+        rows.push({ label: k.name, value: `${k.obtained} / ${k.maximum}` });
+      }
+    } else if (slug === 'mangal-dosha') {
+      rows.push({ label: 'Mangal Dosha', value: r.present ? 'Present' : 'Not present' });
+      if (r.severity) rows.push({ label: 'Type', value: String(r.severity) });
+    } else {
+      if (r.moonSign) rows.push({ label: 'Moon sign (Rashi)', value: String(r.moonSign) });
+      if (r.sunSign) rows.push({ label: 'Sun sign', value: String(r.sunSign) });
+      const asc = r.ascendant as { sign?: string } | null;
+      if (asc?.sign) rows.push({ label: 'Ascendant (Lagna)', value: asc.sign });
+      const nak = r.nakshatra as { name?: string; pada?: number | null } | null;
+      if (nak?.name) {
+        rows.push({ label: 'Nakshatra', value: nak.pada ? `${nak.name}, pada ${nak.pada}` : nak.name });
+      }
     }
-    return current;
-  };
-  const psychic = date ? reduce(Number(date.slice(-2))) : null;
-  const destiny = date ? reduce(Number(date.replaceAll('-', ''))) : null;
-  const nameNumber = name ? reduce(name.toUpperCase().split('').reduce((sum, char) => sum + (char >= 'A' && char <= 'Z' ? char.charCodeAt(0) - 64 : 0), 0)) : null;
+  }
 
   return (
     <div className="space-y-8">
-      <form onSubmit={(event) => { event.preventDefault(); setSubmitted(true); }} className="space-y-6">
-        <h2 className="border-b border-[var(--color-hairline)] pb-3 font-[family-name:var(--font-display)] text-3xl text-[var(--color-cocoa)]">Enter Details</h2>
-        <Field label="Full Name" htmlFor="numerology-name" required>
-          <Input id="numerology-name" value={name} onChange={(event) => setName(event.target.value)} required />
-        </Field>
-        <Field label="Date of Birth" htmlFor="numerology-date" required>
-          <Input id="numerology-date" type="date" value={date} onChange={(event) => setDate(event.target.value)} required />
-        </Field>
-        <Button type="submit" size="lg" variant="primary" className="w-full shadow-[4px_4px_0_0_var(--color-cocoa)]">Calculate Numbers</Button>
+      <div className="border border-[var(--color-hairline)] bg-[var(--color-card-cream)] p-8">
+        <h2 className="font-[family-name:var(--font-display)] text-2xl text-[var(--color-cocoa)]">
+          Your result
+        </h2>
+
+        {rows.length > 0 ? (
+          <dl className="mt-6 divide-y divide-[var(--color-hairline)]">
+            {rows.map((row) => (
+              <div key={row.label} className="flex items-baseline justify-between gap-6 py-3">
+                <dt className="text-sm text-[var(--color-body-warm)]">{row.label}</dt>
+                <dd className="font-medium text-[var(--color-cocoa)]">{row.value}</dd>
+              </div>
+            ))}
+          </dl>
+        ) : (
+          // Honest empty state rather than a spinner that never resolves or a
+          // fabricated answer. The provider returned something we could not
+          // read, and saying so is better than inventing a result.
+          <p className="mt-4 text-sm text-[var(--color-body-warm)]">
+            The calculation completed but returned nothing we could display. Please try again, or
+            book a consultation and Komal will read the chart properly.
+          </p>
+        )}
+
+        <p className="mt-8 border-t border-[var(--color-hairline)] pt-6 text-sm leading-relaxed text-[var(--color-body-warm)]">
+          This is a computed summary, not a reading. What the placements <em>mean</em> for your
+          situation is what a consultation is for.
+        </p>
+      </div>
+
+      <div className="flex flex-wrap gap-4">
+        <Button asChild size="lg" variant="primary">
+          <a href="/book">Book a consultation</a>
+        </Button>
+        <Button type="button" variant="secondary" onClick={onReset}>
+          Run it again
+        </Button>
+      </div>
+    </div>
+  );
+}
+
+/* ========================================================================== */
+/*  Numerology — no network, no email gate                                    */
+/* ========================================================================== */
+
+function NumerologyTool({ slug }: { slug: string }) {
+  const [name, setName] = useState('');
+  const [date, setDate] = useState('');
+  const [partner, setPartner] = useState('');
+  const [submitted, setSubmitted] = useState(false);
+
+  const needsDate = slug === 'numerology' || slug === 'lo-shu-grid';
+  const needsName = slug !== 'lo-shu-grid';
+  const isFlames = slug === 'flames';
+
+  const core = date ? coreNumbers(date, name) : null;
+  const grid = date ? loShuGrid(date) : null;
+  const nameOnly = name ? nameNumber(name) : null;
+  const flamesResult = isFlames && name && partner ? flames(name, partner) : null;
+
+  return (
+    <div className="space-y-8">
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          setSubmitted(true);
+        }}
+        className="space-y-6"
+      >
+        {needsName && (
+          <Field label={isFlames ? 'Your name' : 'Full name'} htmlFor="num-name" required>
+            <Input id="num-name" value={name} onChange={(e) => setName(e.target.value)} required />
+          </Field>
+        )}
+        {isFlames && (
+          <Field label="Their name" htmlFor="num-partner" required>
+            <Input
+              id="num-partner"
+              value={partner}
+              onChange={(e) => setPartner(e.target.value)}
+              required
+            />
+          </Field>
+        )}
+        {needsDate && (
+          <Field label="Date of birth" htmlFor="num-date" required>
+            <Input
+              id="num-date"
+              type="date"
+              max={new Date().toISOString().slice(0, 10)}
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
+              required
+            />
+          </Field>
+        )}
+
+        <Button type="submit" size="lg" variant="primary" className="w-full md:w-auto">
+          Calculate
+        </Button>
       </form>
+
       {submitted && (
-        <div className="grid gap-4 border-t border-[var(--color-hairline)] pt-8 md:grid-cols-3">
-          {[{ label: 'Psychic Number', value: psychic }, { label: 'Destiny Number', value: destiny }, { label: 'Name Number', value: nameNumber }].map((item) => (
-            <div key={item.label} className="border border-[var(--color-hairline)] bg-[var(--color-cream)] p-5 text-center">
-              <div className="font-[family-name:var(--font-display)] text-4xl text-[var(--color-cocoa)]">{item.value ?? '—'}</div>
-              <p className="mt-2 text-xs font-semibold uppercase tracking-[0.1em] text-[var(--color-saffron-deep)]">{item.label}</p>
+        <div className="border-t border-[var(--color-hairline)] pt-8">
+          {slug === 'numerology' && core && (
+            <div className="grid gap-4 md:grid-cols-3">
+              {[
+                { label: 'Psychic (Mulank)', value: core.psychic },
+                { label: 'Destiny (Bhagyank)', value: core.destiny },
+                { label: 'Name number', value: core.name },
+              ].map((item) => (
+                <div
+                  key={item.label}
+                  className="border border-[var(--color-hairline)] bg-[var(--color-cream)] p-5 text-center"
+                >
+                  <div className="font-[family-name:var(--font-display)] text-4xl text-[var(--color-cocoa)]">
+                    {item.value ?? '—'}
+                  </div>
+                  <p className="mt-2 text-xs font-semibold uppercase tracking-[0.1em] text-[var(--color-saffron-deep)]">
+                    {item.label}
+                  </p>
+                </div>
+              ))}
             </div>
-          ))}
+          )}
+
+          {slug === 'name-number' && nameOnly && (
+            <p className="text-center font-[family-name:var(--font-display)] text-5xl text-[var(--color-cocoa)]">
+              {nameOnly.reduced}
+              <span className="mt-3 block text-sm font-normal tracking-wide text-[var(--color-body-warm)]">
+                Chaldean total {nameOnly.total}
+              </span>
+            </p>
+          )}
+
+          {slug === 'lo-shu-grid' && grid && (
+            <div className="mx-auto grid w-full max-w-xs grid-cols-3 gap-1">
+              {grid.rows.flat().map((cell) => (
+                <div
+                  key={cell.digit}
+                  className="flex aspect-square flex-col items-center justify-center border border-[var(--color-hairline)] bg-[var(--color-cream)]"
+                >
+                  <span className="font-[family-name:var(--font-display)] text-2xl text-[var(--color-cocoa)]">
+                    {cell.count > 0 ? String(cell.digit).repeat(cell.count) : '—'}
+                  </span>
+                  <span className="text-[10px] uppercase tracking-widest text-[var(--color-body-warm)] opacity-60">
+                    {cell.digit}
+                  </span>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {isFlames && (
+            <p className="text-center">
+              <span className="font-[family-name:var(--font-display)] text-4xl text-[var(--color-cocoa)]">
+                {flamesResult ?? '—'}
+              </span>
+              {/* Said plainly rather than buried in small print: this one is a
+                  playground game and presenting it as astrology would be a lie. */}
+              <span className="mt-4 block text-sm text-[var(--color-body-warm)]">
+                FLAMES is a playground game, not astrology. It is here for fun.
+              </span>
+            </p>
+          )}
         </div>
       )}
     </div>
