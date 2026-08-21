@@ -16,7 +16,8 @@
     "audit:bands": "node scripts/audit-bands.js",
     "audit:images": "node scripts/audit-images.js",
     "audit": "npm run audit:contrast && npm run audit:bands && npm run audit:images",
-    "astrology:selftest": "node --experimental-strip-types scripts/astrology-selftest.ts"
+    "astrology:selftest": "node --experimental-strip-types scripts/astrology-selftest.ts",
+    "astrology:check": "node --env-file=.env --experimental-strip-types scripts/astrology-check.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.1",
