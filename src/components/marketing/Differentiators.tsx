@@ -14,7 +14,7 @@ const ITEMS = [
   },
   {
     title: 'Free Rescheduling',
-    description: 'Life happens. Reschedule or cancel for free up to 24 hours before your appointment.',
+    description: 'Life happens. Call us and we will move your session once, to a time that works.',
     Icon: CalendarCheck,
   },
   {

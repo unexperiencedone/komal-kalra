@@ -20,11 +20,15 @@ export const BOOKING_FAQ: FaqItem[] = [
   },
   {
     question: 'Can I cancel or reschedule?',
-    answer: `${POLICY.cancellationSummary} ${POLICY.rescheduleSummary} You can do both yourself from your dashboard, or call us and we will take care of it.`,
+    // "You can do both yourself from your dashboard" was left here after the
+    // policy changed to final sale. Both halves became untrue in the same
+    // commit: there is no cancel control any more, and a reschedule is a phone
+    // call. An FAQ that contradicts the checkout is worse than no FAQ.
+    answer: `${POLICY.cancellationSummary} ${POLICY.rescheduleSummary} If Komal has to cancel, or your session cannot go ahead from our side, you are refunded in full or moved to another time — whichever you prefer.`,
   },
   {
     question: 'How do refunds work?',
-    answer: `${POLICY.refundTiming} Refunds go back to the card, UPI ID or account you paid from — we cannot send them anywhere else, which is a payment industry rule rather than our own.`,
+    answer: `Because bookings are final, a refund only arises where a session cannot go ahead from our side. ${POLICY.refundTiming} Refunds go back to the card, UPI ID or account you paid from — we cannot send them anywhere else, which is a payment industry rule rather than our own.`,
   },
   {
     question: 'Is online payment safe?',

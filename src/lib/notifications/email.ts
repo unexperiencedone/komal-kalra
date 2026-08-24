@@ -1,5 +1,5 @@
 import 'server-only';
-import { BRAND } from '@/lib/config';
+import { BRAND, POLICY } from '@/lib/config';
 import { formatPaise } from '@/lib/money';
 import { formatLongDay, formatTime } from '@/lib/date';
 import { createAdminClient } from '@/lib/supabase/admin';
@@ -79,8 +79,14 @@ export function renderEmail(template: NotificationTemplate, payload: Payload): R
           <p>Your consultation is confirmed. Here are the details:</p>
           ${details}
           ${appt.meeting_url ? `<p><a href="${appt.meeting_url}" style="display:inline-block;background:#C2762B;color:#fff;padding:11px 20px;border-radius:6px;text-decoration:none;font-weight:600;">Join the session</a></p>` : '<p>A joining link will be sent before your session.</p>'}
-          <p style="color:#3D332C;font-size:14px;">If you need to reschedule, you can do that from your dashboard up to 12 hours beforehand.</p>`),
-        text: `Hello ${name},\n\nYour consultation is confirmed.\nReference: ${appt.reference}\nService: ${appt.service}\nWhen: ${when}\n\n— ${BRAND.fullName}`,
+          <!-- Read from POLICY rather than written out. This line said
+               "reschedule from your dashboard up to 12 hours beforehand" long
+               after both halves stopped being true, and a confirmation email
+               is the worst place to carry a stale promise: it is the document
+               the client keeps and quotes back. -->
+          <p style="color:#3D332C;font-size:14px;">${POLICY.rescheduleSummary} Call ${BRAND.phones[0]}.</p>
+          <p style="color:#3D332C;font-size:13px;">${POLICY.cancellationSummary}</p>`),
+        text: `Hello ${name},\n\nYour consultation is confirmed.\nReference: ${appt.reference}\nService: ${appt.service}\nWhen: ${when}\n\n${POLICY.rescheduleSummary} Call ${BRAND.phones[0]}.\n${POLICY.cancellationSummary}\n\n— ${BRAND.fullName}`,
       };
     }
 

@@ -31,7 +31,11 @@ export default async function AppointmentDetailPage(props: { params: Promise<{ i
     .returns<Payment[]>();
 
   const payment = payments?.[0] ?? null;
-  const canCancel = ['confirmed', 'pending_payment'].includes(appointment.status) && !isPast(appointment.starts_at);
+  // Renamed from `canCancel`: nothing here cancels any more. The panel it
+  // gates now explains that bookings are final and offers the phone route for
+  // a reschedule, so it should show for any upcoming booking.
+  const showManagePanel =
+    ['confirmed', 'pending_payment'].includes(appointment.status) && !isPast(appointment.starts_at);
 
   return (
     <div className="mx-auto max-w-3xl px-5 py-8 lg:px-10 lg:py-12">
@@ -137,10 +141,10 @@ export default async function AppointmentDetailPage(props: { params: Promise<{ i
         </div>
       </section>
 
-      {canCancel && (
+      {showManagePanel && (
         <section aria-labelledby="manage-heading" className="mt-8">
           <h2 id="manage-heading" className="font-sans text-sm font-semibold uppercase tracking-[0.1em] text-[var(--color-body-warm)]">
-            Manage this booking
+            Need to change this booking?
           </h2>
           <div className="mt-3">
             <CancelBookingForm />

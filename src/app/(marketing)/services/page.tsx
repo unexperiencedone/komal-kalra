@@ -135,7 +135,7 @@ export default async function ServicesPage() {
             </h2>
             <p className="mt-8 max-w-xl text-base leading-relaxed text-[var(--color-on-primary-container)]">
               Describe what is going on and Komal will tell you which session fits — or that
-              none of them does. Free cancellation up to 24 hours before.
+              none of them does. Sessions are booked and paid for online.
             </p>
             <div className="mt-12 flex flex-wrap items-center gap-6">
               <Button asChild size="lg" variant="onDark">

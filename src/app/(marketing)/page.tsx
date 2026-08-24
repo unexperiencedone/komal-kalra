@@ -237,7 +237,7 @@ export default async function HomePage() {
               Still deciding? One call is usually all it takes
             </h2>
             <p className="mt-4 max-w-md text-base leading-relaxed text-[var(--color-cream)]">
-              Choose a time that suits you. Free cancellation up to 24 hours beforehand.
+              Choose a time that suits you. Bookings are confirmed the moment you pay.
             </p>
           </div>
 

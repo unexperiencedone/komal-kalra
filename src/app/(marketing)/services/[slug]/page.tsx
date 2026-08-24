@@ -92,7 +92,6 @@ export default async function ServiceDetailPage(props: { params: Promise<{ slug:
   const photo = serviceImage(service.slug);
   const contextKey = serviceContextImage(service.slug);
   const context = contextKey ? img(contextKey) : null;
-  const cancellationHours = service.free_cancellation_hours ?? POLICY.freeCancellationHours;
   const reviews = testimonials ?? [];
   const questions = SERVICE_QUESTIONS[service.slug] ?? SERVICE_QUESTIONS['astrological-guidance'];
 
@@ -237,8 +236,15 @@ export default async function ServiceDetailPage(props: { params: Promise<{ slug:
                       </Link>
                     </Button>
                   </div>
-                  <p className="mt-4 text-sm text-[var(--color-body-warm)]">
-                    Free cancellation up to {cancellationHours} hours before your session.
+                  {/*
+                    States the policy at the point of decision, not only in the
+                    legal pages. Someone should not discover a booking is final
+                    after paying for it — and a Razorpay activation review
+                    checks that the terms a buyer agrees to are visible before
+                    the payment, not just linked from the footer.
+                  */}
+                  <p className="mt-4 text-sm leading-relaxed text-[var(--color-body-warm)]">
+                    {POLICY.cancellationSummary} {POLICY.rescheduleSummary}
                   </p>
                 </div>
               </div>
