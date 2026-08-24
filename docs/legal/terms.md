@@ -48,7 +48,7 @@ If we are unable to attend for any reason, you will be offered a new time or a f
 
 ## Cancellation and refunds
 
-Free cancellation up to 24 hours before your session, with a full refund. Within 24 hours, the session fee is non-refundable but you may reschedule once at no cost.
+Bookings are final. Once a session is paid for it cannot be cancelled and the fee is not refundable.
 
 The full policy, including how refunds are paid and what happens to failed payments, is set out on the Cancellation & Refunds page.
 

@@ -49,14 +49,54 @@ export const BOOKING = {
   defaultWindowDays: 21,
 } as const;
 
+/**
+ * Booking policy. Changed from "free cancellation up to 24 hours" to final sale.
+ *
+ * ⚠️  ONE DISTINCTION RUNS THROUGH ALL OF THIS, AND IT IS NOT COSMETIC.
+ *
+ *   A CLIENT cannot cancel and cannot obtain a refund for changing their mind.
+ *   KOMAL can still refund, and the system must always be able to.
+ *
+ * Those are different things and the second is not optional. Three cases need
+ * it, and none of them is a client changing their mind:
+ *
+ *   1. Komal cancels, is ill, or otherwise cannot deliver the session. Keeping
+ *      money for a service that was never provided is not a strict policy, it
+ *      is taking payment for nothing — and under India's Consumer Protection
+ *      Act 2019 an "under no circumstances" term is the kind of clause that
+ *      gets read as unfair and struck out, taking the enforceable parts of the
+ *      policy with it.
+ *   2. `confirm_appointment_payment` has a real path where a payment captures
+ *      but the slot could not be secured — the appointment lands in
+ *      `needs_attention`. That money must be returnable. The comment in
+ *      17_functions_payments.sql already commits to this: "We never silently
+ *      keep money for a booking that does not exist."
+ *   3. The ₹1 live-key verification is refunded after every run.
+ *
+ * So the admin refund tooling stays. What is removed is the CLIENT's ability
+ * to cancel or to reschedule themselves.
+ */
 export const POLICY = {
-  /** Free cancellation window, unless a service overrides it. */
-  freeCancellationHours: 24,
+  /**
+   * Kept at 0 rather than deleted. `services.free_cancellation_hours` is a
+   * nullable column that falls back to this, and several call sites read it —
+   * removing the key would break them silently, whereas 0 makes every window
+   * expression evaluate to "no free window" without any of them changing.
+   */
+  freeCancellationHours: 0,
+
   cancellationSummary:
-    'Free cancellation up to 24 hours before your session, with a full refund. Within 24 hours, the session fee is non-refundable but you may reschedule once at no cost.',
+    'Bookings are final. Once a session is paid for it cannot be cancelled and the fee is not refundable.',
+
   rescheduleSummary:
-    'You can reschedule once, free of charge, up to 12 hours before your session.',
-  refundTiming: 'Refunds return to your original payment method, usually within 5–7 working days.',
+    'You may move your session once. Call us to arrange it — rescheduling is not self-service, so that a new time can be agreed with Komal directly.',
+
+  /** Shown wherever a refund is genuinely possible — i.e. Komal-side only. */
+  refundTiming:
+    'Where a refund is due — if Komal has to cancel, or a session cannot go ahead from our side — it returns to your original payment method, usually within 5–7 working days.',
+
+  /** Hard cap. Enforced in the database, not just described here. */
+  maxReschedules: 1,
 } as const;
 
 export const CURRENCY = 'INR' as const;

@@ -324,32 +324,52 @@ const REFUNDS: LegalDocument = {
   title: 'Cancellation & Refunds',
   description: 'How cancellation, rescheduling and refunds work for consultations.',
   standfirst:
-    'We would rather you rescheduled than lost your money, so this policy is written to be easy to use. If your situation is not covered here, call us — we are reasonable.',
+    'Bookings are final. Please read this before you pay, because it is short and it matters: a paid session cannot be cancelled and the fee is not refundable if you change your mind. You may move your session once, by calling us.',
   sections: [
     {
-      heading: 'Cancelling',
+      heading: 'Bookings are final',
       blocks: [
-        list(
-          `More than ${POLICY.freeCancellationHours} hours before your session — cancel free of charge and receive a full refund.`,
-          `Within ${POLICY.freeCancellationHours} hours of your session — the fee is non-refundable, because the time has been held for you and can no longer be offered to someone else. You may still reschedule once instead.`,
-        ),
-        p('You can cancel yourself from your dashboard, or call us and we will do it for you.'),
+        p('Once a consultation is paid for it cannot be cancelled, and the fee is not refundable if you decide not to attend or change your mind.'),
+        p('The reason is simply how the practice works: the time is taken out of Komal’s calendar and held for you alone, the chart is read in advance of the session, and the slot cannot be offered to anyone else. That preparation happens whether or not you arrive.'),
+        p('This is stated on the booking page and you confirm it before paying. If you are unsure whether a consultation is right for you, call before booking rather than after — we would far rather answer that question first.'),
       ],
     },
     {
-      heading: 'Rescheduling',
-      blocks: [p(POLICY.rescheduleSummary)],
+      heading: 'Moving your session',
+      blocks: [
+        p(POLICY.rescheduleSummary),
+        list(
+          'A session may be moved once.',
+          'It is arranged by telephone, not from the website, so a new time can be agreed with Komal directly rather than guessed at from a calendar.',
+          'There is no charge for moving a session.',
+          'Once a session has been moved once, the new time is final.',
+        ),
+      ],
     },
     {
       heading: 'If you do not attend',
       blocks: [
-        p('If you do not join your session and have not contacted us, it is treated as delivered and the fee is not refundable. If something went wrong on the day, call us — this is applied with common sense, not rigidly.'),
+        p('If you do not join your session and have not contacted us beforehand, it is treated as delivered and the fee is not refundable.'),
+        p('If something genuinely went wrong on the day, call us. This is applied with common sense rather than rigidly.'),
       ],
     },
     {
-      heading: 'If we cancel',
+      // This section is NOT optional and must not be weakened to "no refunds
+      // under any circumstances". Keeping payment for a service that was never
+      // provided is not a strict policy — under India's Consumer Protection Act
+      // 2019 it is the kind of term that gets read as unfair, and a clause
+      // struck out for unfairness can take the enforceable parts of the policy
+      // with it. It is also simply wrong.
+      heading: 'When you ARE refunded',
       blocks: [
-        p('If we have to cancel or move a session for any reason, you will be offered a new time or a full refund, whichever you prefer. This applies regardless of how close to the session it happens.'),
+        p('The policy above covers you changing your mind. It does not cover us failing to deliver. In each of the following, you are refunded in full:'),
+        list(
+          'Komal has to cancel or is unable to hold the session, for any reason.',
+          'A session cannot go ahead because of a fault on our side.',
+          'A payment succeeds but the booking does not complete — see below.',
+          'You were charged more than once for the same booking.',
+        ),
+        p('Where we cancel, you are offered a new time or a full refund, whichever you prefer. That choice is yours, and it applies however close to the session it happens.'),
       ],
     },
     {

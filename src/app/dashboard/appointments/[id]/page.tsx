@@ -4,8 +4,7 @@ import { ArrowLeft, Video } from 'lucide-react';
 import { getMyAppointment } from '@/lib/booking/queries';
 import { createClient } from '@/lib/supabase/server';
 import { formatPaise, formatPaisePrecise } from '@/lib/money';
-import { formatDate, formatLongDay, formatTime, hoursUntil, isPast } from '@/lib/date';
-import { POLICY } from '@/lib/config';
+import { formatDate, formatLongDay, formatTime, isPast } from '@/lib/date';
 import { AppointmentStatusBadge, PaymentStatusBadge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { InlineAlert } from '@/components/ui/states';
@@ -32,9 +31,7 @@ export default async function AppointmentDetailPage(props: { params: Promise<{ i
     .returns<Payment[]>();
 
   const payment = payments?.[0] ?? null;
-  const windowHours = POLICY.freeCancellationHours;
   const canCancel = ['confirmed', 'pending_payment'].includes(appointment.status) && !isPast(appointment.starts_at);
-  const refundEligible = hoursUntil(appointment.starts_at) >= windowHours;
 
   return (
     <div className="mx-auto max-w-3xl px-5 py-8 lg:px-10 lg:py-12">
@@ -145,12 +142,8 @@ export default async function AppointmentDetailPage(props: { params: Promise<{ i
           <h2 id="manage-heading" className="font-sans text-sm font-semibold uppercase tracking-[0.1em] text-[var(--color-body-warm)]">
             Manage this booking
           </h2>
-          <div className="mt-3  border border-[var(--color-outline-variant)] bg-white p-5">
-            <p className="text-sm leading-relaxed text-[var(--color-body-warm)]">
-              {refundEligible
-                ? `Cancelling now is free and a full refund will be requested. ${POLICY.refundTiming}`: `Your session is within ${windowHours} hours, so the fee is non-refundable. You can still cancel, or ask us to reschedule instead.`}
-            </p>
-            <CancelBookingForm appointmentId={appointment.id} refundEligible={refundEligible} />
+          <div className="mt-3">
+            <CancelBookingForm />
           </div>
         </section>
       )}
