@@ -9,6 +9,9 @@ import { FOUNDER } from '@/lib/content/founder';
 import { img } from '@/lib/content/imagery';
 import { BRAND } from '@/lib/config';
 import { getActiveServices } from '@/lib/booking/availability';
+import { Testimonials } from '@/components/marketing/Testimonials';
+import { createPublicClient } from '@/lib/supabase/public';
+import type { Testimonial } from '@/types/database';
 
 export const metadata: Metadata = {
   title: `About ${FOUNDER.name} — ${FOUNDER.role}`,
@@ -49,7 +52,18 @@ const FOUNDER_STORY = [
  * for the brand/navigational searches this page is most likely to catch.
  */
 export default async function AboutPage() {
-  const services = await getActiveServices();
+  const supabase = createPublicClient();
+  const [services, { data: testimonials }] = await Promise.all([
+    getActiveServices(),
+    supabase
+      .from('testimonials')
+      .select('*')
+      .eq('approved', true)
+      .order('featured', { ascending: false })
+      .order('sort_order', { ascending: true })
+      .limit(4)
+      .returns<Testimonial[]>(),
+  ]);
   const portrait = img('komalKalra5');
 
   const jsonLd = {
@@ -318,6 +332,9 @@ export default async function AboutPage() {
           </div>
         </div>
       </section>
+
+      {/* ========================= TESTIMONIALS ========================= */}
+      <Testimonials testimonials={testimonials ?? []} tone="sand" />
     </>
   );
 }

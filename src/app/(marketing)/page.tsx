@@ -220,9 +220,6 @@ export default async function HomePage() {
 
       <ToolsLeadSection />
 
-      {/* Additional approved reviews, if there are more than the featured one. */}
-      <Testimonials testimonials={reviews.slice(1)} />
-
       {/* ===================== SEO PROSE ===================== */}
       <SeoProse />
 
@@ -296,6 +293,10 @@ export default async function HomePage() {
           </Reveal>
         </div>
       </section>
+
+      {/* Additional approved reviews, if there are more than the featured one. */}
+      {/* Tone is cream to contrast with the sand of the Social Proof block above it. */}
+      <Testimonials testimonials={reviews.slice(1)} tone="cream" />
     </div>
   );
 }

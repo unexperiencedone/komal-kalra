@@ -27,10 +27,9 @@ export default async function AdminTestimonialsPage() {
     .from('testimonials')
     .select('*')
     .order('approved', { ascending: true })
-    .order('created_at', { ascending: false })
-    .returns<Testimonial[]>();
+    .order('created_at', { ascending: false });
 
-  const testimonials = data ?? [];
+  const testimonials = data as Testimonial[] ?? [];
   const pending = testimonials.filter((t) => !t.approved);
   const published = testimonials.filter((t) => t.approved);
 

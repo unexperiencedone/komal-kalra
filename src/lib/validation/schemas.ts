@@ -223,3 +223,29 @@ export type ContactInput = z.infer<typeof contactSchema>;
 export type ProfileInput = z.infer<typeof profileSchema>;
 export type ServiceFormInput = z.infer<typeof serviceFormSchema>;
 export type RefundInput = z.infer<typeof refundSchema>;
+
+/**
+ * A client's review of a completed session.
+ *
+ * The 20-character floor mirrors the CHECK constraint on `testimonials.review`
+ * — validating in one place only means either the form accepts something the
+ * database rejects (an unexplained failure) or the database accepts something
+ * the form would not.
+ *
+ * `displayInitialsOnly` exists because astrological consultations are private
+ * for a lot of people. Someone may be glad to recommend Komal and still not
+ * want their full name beside a review of a session about their marriage. The
+ * default is the cautious one.
+ */
+export const testimonialSchema = z.object({
+  appointmentId: z.string().uuid(),
+  rating: z.coerce.number().int().min(1, 'Please choose a rating.').max(5),
+  review: z
+    .string()
+    .trim()
+    .min(20, 'Please write at least a sentence or two.')
+    .max(1500, 'Please keep it under 1500 characters.'),
+  authorName: z.string().trim().min(1, 'Please enter the name to show.').max(120),
+  authorLocation: z.string().trim().max(120).optional().or(z.literal('')),
+  displayInitialsOnly: z.boolean().default(false),
+});

@@ -9,6 +9,7 @@ import { AppointmentStatusBadge, PaymentStatusBadge } from '@/components/ui/badg
 import { Button } from '@/components/ui/button';
 import { InlineAlert } from '@/components/ui/states';
 import { CancelBookingForm } from './CancelBookingForm';
+import { ReviewForm } from './ReviewForm';
 import type { Payment } from '@/types/database';
 
 export const metadata = { title: 'Booking', robots: { index: false } };
@@ -36,6 +37,24 @@ export default async function AppointmentDetailPage(props: { params: Promise<{ i
   // a reschedule, so it should show for any upcoming booking.
   const showManagePanel =
     ['confirmed', 'pending_payment'].includes(appointment.status) && !isPast(appointment.starts_at);
+
+  /*
+    The review invitation, shown only for a session that actually happened and
+    has not already been reviewed.
+
+    `testimonials_select_own` lets a client read their own row whether or not
+    it is approved, so this correctly finds a review that is still awaiting
+    moderation — otherwise someone would be asked to write a second one while
+    the first sat in Komal's queue.
+  */
+  const isCompleted = appointment.status === 'completed';
+  const { data: existingReview } = isCompleted
+    ? await supabase
+        .from('testimonials')
+        .select('id, approved')
+        .eq('appointment_id', id)
+        .maybeSingle<{ id: string; approved: boolean }>()
+    : { data: null };
 
   return (
     <div className="mx-auto max-w-3xl px-5 py-8 lg:px-10 lg:py-12">
@@ -140,6 +159,34 @@ export default async function AppointmentDetailPage(props: { params: Promise<{ i
           </dl>
         </div>
       </section>
+
+      {isCompleted && !existingReview && (
+        <section aria-labelledby="review-heading" className="mt-8">
+          <h2 id="review-heading" className="font-sans text-sm font-semibold uppercase tracking-[0.1em] text-[var(--color-body-warm)]">
+            Leave a review
+          </h2>
+          <div className="mt-3">
+            {/*
+              `subject_name` is who the reading was FOR, which is usually the
+              account holder but not always — people book for a parent or a
+              partner. It is only a default the reviewer can overwrite, and it
+              beats an empty field, but it must not be treated as the author's
+              name without them confirming it.
+            */}
+            <ReviewForm appointmentId={id} defaultName={appointment.subject_name ?? ''} />
+          </div>
+        </section>
+      )}
+
+      {isCompleted && existingReview && (
+        <section className="mt-8">
+          <InlineAlert tone={existingReview.approved ? 'success' : 'info'}>
+            {existingReview.approved
+              ? 'Your review is published — thank you.'
+              : 'Thank you for your review. Komal reads each one before it appears on the site.'}
+          </InlineAlert>
+        </section>
+      )}
 
       {showManagePanel && (
         <section aria-labelledby="manage-heading" className="mt-8">
