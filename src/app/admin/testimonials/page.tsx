@@ -93,12 +93,26 @@ function TestimonialCard({ testimonial: t }: { testimonial: Testimonial }) {
             {t.approved && <Badge tone="success">Published</Badge>}
             {t.featured && <Badge tone="accent">Featured</Badge>}
             {t.display_initials_only && <Badge tone="neutral">Initials only</Badge>}
+            {t.source !== 'site' && (
+              <Badge tone="neutral">{t.source === 'google' ? 'From Google' : 'From WhatsApp'}</Badge>
+            )}
           </div>
-          <div className="mt-1.5 flex items-center gap-0.5" role="img" aria-label={`${t.rating} out of 5`}>
-            {Array.from({ length: 5 }).map((_, i) => (
-              <Star key={i} className={`size-3.5 ${i < t.rating ? 'fill-[var(--color-saffron)] text-[var(--color-saffron)]' : 'text-[var(--color-outline-variant)]'}`} aria-hidden />
-            ))}
-          </div>
+          {/*
+            A missing rating renders as words, not as five empty stars. Five
+            greyed-out stars reads as "this client rated us zero", which is the
+            opposite of what NULL means here — a WhatsApp message simply never
+            had stars to give. It would also have announced "null out of 5" to a
+            screen reader.
+          */}
+          {t.rating === null ? (
+            <p className="mt-1.5 text-xs text-[var(--color-body-warm)]">No star rating — sent as a message</p>
+          ) : (
+            <div className="mt-1.5 flex items-center gap-0.5" role="img" aria-label={`${t.rating} out of 5`}>
+              {Array.from({ length: 5 }).map((_, i) => (
+                <Star key={i} className={`size-3.5 ${i < t.rating! ? 'fill-[var(--color-saffron)] text-[var(--color-saffron)]' : 'text-[var(--color-outline-variant)]'}`} aria-hidden />
+              ))}
+            </div>
+          )}
           <p className="mt-3 max-w-2xl text-sm leading-relaxed text-[var(--color-body-warm)]">{t.review}</p>
           <p className="mt-2 text-xs text-[var(--color-body-warm)]">{formatDate(t.created_at)}</p>
         </div>

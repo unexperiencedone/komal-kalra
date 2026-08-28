@@ -53,6 +53,21 @@ export function Testimonials({
                   {t.author_location && (
                     <p className="mt-1 text-sm text-[var(--color-body-warm)] opacity-80">{t.author_location}</p>
                   )}
+                  {/*
+                    Provenance, stated plainly. A Google review is public under
+                    that person's name and anyone can go and check it; a
+                    WhatsApp message is Komal's word that a client sent it.
+                    Presenting both as undifferentiated "reviews" quietly
+                    borrows the credibility of the first for the second, and a
+                    reader who later finds only four of nine on Google has been
+                    misled. Saying which is which costs a line of small type and
+                    makes the verifiable ones count for more, not less.
+                  */}
+                  {t.source !== 'site' && (
+                    <p className="mt-1 text-xs uppercase tracking-[0.12em] text-[var(--color-body-warm)] opacity-60">
+                      {t.source === 'google' ? 'Google review' : 'Sent by WhatsApp'}
+                    </p>
+                  )}
                 </figcaption>
               </figure>
             </Reveal>

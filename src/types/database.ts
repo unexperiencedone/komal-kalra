@@ -239,6 +239,8 @@ export interface SlotHold {
   created_at: string;
 }
 
+export type TestimonialSource = 'site' | 'whatsapp' | 'google';
+
 export interface Testimonial {
   id: string;
   user_id: string | null;
@@ -247,8 +249,19 @@ export interface Testimonial {
   author_name: string;
   author_location: string | null;
   display_initials_only: boolean;
-  rating: number;
+  /**
+   * NULL where the client never gave one — a WhatsApp message has no stars.
+   * Anything computing an average must decide out loud what to do with these
+   * rather than treating a missing rating as a 5. See 26_testimonial_source.sql.
+   */
+  rating: number | null;
   review: string;
+  /**
+   * Where the review came from. Shown to visitors, because "a client messaged
+   * this to Komal" and "this is public on Google under that person's name" are
+   * different strengths of claim and the reader is entitled to know which.
+   */
+  source: TestimonialSource;
   approved: boolean;
   featured: boolean;
   sort_order: number;

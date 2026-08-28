@@ -33,7 +33,7 @@ export default async function HomePage() {
   // src/lib/supabase/public.ts for the full reasoning.
   const supabase = createPublicClient();
 
-  const [services, { data: testimonials }] = await Promise.all([
+  const [services, { data: testimonials }, { data: rated }] = await Promise.all([
     getActiveServices(),
     supabase
       .from('testimonials')
@@ -43,9 +43,27 @@ export default async function HomePage() {
       .order('sort_order', { ascending: true })
       .limit(4)
       .returns<Testimonial[]>(),
+    // Separate from the display query on purpose. The four rows above are a
+    // page slice chosen for reading; an aggregate rating must describe EVERY
+    // approved review that carries a star rating, or the number published in
+    // structured data is a different claim from the one it appears to make.
+    supabase
+      .from('testimonials')
+      .select('rating')
+      .eq('approved', true)
+      .not('rating', 'is', null)
+      .returns<{ rating: number }[]>(),
   ]);
 
   const reviews = testimonials ?? [];
+
+  const ratingSummary =
+    rated && rated.length > 0
+      ? {
+          average: (rated.reduce((sum, r) => sum + r.rating, 0) / rated.length).toFixed(1),
+          count: rated.length,
+        }
+      : null;
   const hero = img('komalKalra');
   const heroWatermark = img('heroGraphic');
   const gramA = img('journalCompass');
@@ -72,11 +90,35 @@ export default async function HomePage() {
         priceRange: '₹₹',
         areaServed: 'IN',
         availableLanguage: ['English', 'Hindi', 'Punjabi'],
-        ...(reviews.length > 0 && {
+        /*
+          Only emitted when there is something real to say. Two things were
+          wrong here before and both published a false number to Google:
+
+          1. It averaged `reviews`, which is a .limit(4) SLICE for the page —
+             so `reviewCount` reported however many quotes happened to fit on
+             the homepage, not how many reviews exist. The count below is a
+             separate exact count over every approved, rated review.
+
+          2. It summed `t.rating` unconditionally. Ratings are now nullable —
+             a WhatsApp message has no stars — so that sum would have gone
+             NaN, and "fixing" it by defaulting NULL to 5 would be marking up
+             a rating the client never gave. Unrated reviews are excluded from
+             the average and from the count instead, which is the honest
+             denominator.
+
+          Worth knowing: Google has not shown review rich results for
+          self-serving markup — a business rating itself on its own site —
+          since 2019, so this most likely renders no stars in search either
+          way. It stays because it is legitimate structured data about the
+          business; it just must not be wrong.
+        */
+        ...(ratingSummary && {
           aggregateRating: {
             '@type': 'AggregateRating',
-            ratingValue: (reviews.reduce((s, t) => s + t.rating, 0) / reviews.length).toFixed(1),
-            reviewCount: reviews.length,
+            ratingValue: ratingSummary.average,
+            reviewCount: ratingSummary.count,
+            bestRating: 5,
+            worstRating: 1,
           },
         }),
       },
@@ -268,6 +310,17 @@ export default async function HomePage() {
                   {reviews[0].display_initials_only
                     ? reviews[0].author_name.split(/\s+/).map((p) => `${p[0]}.`).join(' ')
                     : reviews[0].author_name}
+                  {/*
+                    The lead quote is the single loudest claim on the homepage,
+                    so it is the one place provenance matters most. Naming the
+                    source makes it checkable rather than asking to be taken on
+                    trust.
+                  */}
+                  {reviews[0].source !== 'site' && (
+                    <span className="ml-2 font-normal normal-case tracking-normal opacity-60">
+                      {reviews[0].source === 'google' ? '· Google review' : '· sent by WhatsApp'}
+                    </span>
+                  )}
                 </figcaption>
               </figure>
             ) : (
