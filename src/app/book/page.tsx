@@ -87,7 +87,6 @@ export default async function BookPage(props: {
         <BookingFlow
           services={services}
           initialServiceId={initial}
-          signedIn={Boolean(profile)}
           defaults={{
             fullName: profile?.full_name ?? '',
             email: profile?.email ?? '',

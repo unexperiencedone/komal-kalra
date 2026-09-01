@@ -26,6 +26,8 @@ export const BRAND = {
   phonesE164: ['+919878577077', '+919115177077'],
   instagram: 'https://www.instagram.com/astrologer.komalkalra',
   instagramHandle: '@astrologer.komalkalra',
+  youtube: 'https://www.youtube.com/@astrologer.komalkalra', // PLACEHOLDER
+  youtubeHandle: '@astrologer.komalkalra', // PLACEHOLDER
   email: 'consult@komalkalra.com', // PLACEHOLDER — replace with the real address
 } as const;
 

@@ -2,6 +2,7 @@ import 'server-only';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { getPaymentProvider } from './razorpay';
 import { queueNotification } from '@/lib/notifications/outbox';
+import { adminWhatsAppNumber } from '@/lib/notifications/whatsapp';
 import type { ConfirmResult, Payment } from '@/types/database';
 
 /**
@@ -60,10 +61,64 @@ export async function settlePayment(params: {
         appointmentId: result.appointment_id,
         dedupeKey: `booking_confirmed:${result.appointment_id}`,
       });
+
+      /**
+       * The same confirmation on WhatsApp.
+       *
+       * A SEPARATE ROW, not a second channel on the first one. Each outbox row
+       * is one delivery attempt with one status and one dedupe key, so email
+       * and WhatsApp succeed or fail independently — a WhatsApp template
+       * rejection must not mark the email as failed, and a bounced email must
+       * not stop the WhatsApp message. The dedupe keys are namespaced by
+       * channel for the same reason.
+       *
+       * `recipient` is left unset so queueNotification resolves it from the
+       * appointment's own contact_phone; see database/29_booking_contact.sql
+       * for why that is not read off the profile.
+       */
+      await queueNotification({
+        template: 'booking_confirmed',
+        channel: 'whatsapp',
+        appointmentId: result.appointment_id,
+        dedupeKey: `booking_confirmed_wa:${result.appointment_id}`,
+      });
+
+      /**
+       * Komal's own copy, to her WhatsApp.
+       *
+       * The practice asked for booking details to reach BOTH sides. This is a
+       * different template from the client's — it carries the client's phone
+       * number and what they want to discuss, which the client's own message
+       * obviously must not, and it addresses her rather than them.
+       *
+       * If no admin number is configured this is skipped rather than queued to
+       * a guess. Sending a stranger the name, number and personal question of
+       * every client who books would be a data breach, not a misconfiguration.
+       */
+      const adminTo = adminWhatsAppNumber();
+      if (adminTo) {
+        await queueNotification({
+          template: 'booking_alert_admin',
+          channel: 'whatsapp',
+          recipient: adminTo,
+          appointmentId: result.appointment_id,
+          dedupeKey: `booking_alert_admin:${result.appointment_id}`,
+        });
+      } else {
+        console.warn('[settle] no WhatsApp admin number configured; practitioner alert skipped');
+      }
+
       await queueNotification({
         template: 'appointment_reminder',
         appointmentId: result.appointment_id,
         dedupeKey: `reminder_24h:${result.appointment_id}`,
+        offsetHoursBeforeStart: 24,
+      });
+      await queueNotification({
+        template: 'appointment_reminder',
+        channel: 'whatsapp',
+        appointmentId: result.appointment_id,
+        dedupeKey: `reminder_24h_wa:${result.appointment_id}`,
         offsetHoursBeforeStart: 24,
       });
       return {

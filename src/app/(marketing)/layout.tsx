@@ -1,5 +1,6 @@
 import { SiteHeader } from '@/components/marketing/SiteHeader';
 import { SiteFooter } from '@/components/marketing/SiteFooter';
+import { WhatsAppButton } from '@/components/marketing/WhatsAppButton';
 import { getActiveServices } from '@/lib/booking/availability';
 
 /**
@@ -50,6 +51,7 @@ export default async function MarketingLayout({ children }: { children: React.Re
       <SiteHeader />
       <main id="main" className="flex-1">{children}</main>
       <SiteFooter services={services} />
+      <WhatsAppButton />
     </div>
   );
 }

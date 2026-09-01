@@ -76,7 +76,7 @@ export function ServiceEditor({
             </Field>
           </div>
 
-          <div className="grid gap-5 sm:grid-cols-3">
+          <div className="grid gap-5 sm:grid-cols-2">
             <Field label="Format" htmlFor="s-mode" required>
               <Select name="mode" defaultValue={s?.mode ?? 'video'}>
                 <option value="video">Video call</option>
@@ -84,7 +84,30 @@ export function ServiceEditor({
                 <option value="in_person">In person</option>
               </Select>
             </Field>
-            <Field label="Minimum notice (hours)" htmlFor="s-notice" required hint="Stops last-minute bookings.">
+            {/*
+              The hint spells the rule out with a worked example on purpose.
+              "Earliest booking: 3 days" is ambiguous in exactly the way that
+              produced an off-by-one in the original request — 2 and 3 are both
+              defensible readings of "two days in advance", and the only way to
+              be sure which one is configured is to state a date.
+            */}
+            <Field
+              label="Earliest booking (days from today)"
+              htmlFor="s-lead"
+              required
+              hint="3 means: someone booking today gets the day after tomorrow's tomorrow — two clear days in between. 0 allows today."
+            >
+              <Input name="minLeadDays" type="number" min={0} max={365} required defaultValue={s?.min_lead_days ?? 3} />
+            </Field>
+          </div>
+
+          <div className="grid gap-5 sm:grid-cols-2">
+            <Field
+              label="Minimum notice (hours)"
+              htmlFor="s-notice"
+              required
+              hint="A second, rolling floor. The later of this and the day rule above wins, so leave it low unless you need an hours-based cut."
+            >
               <Input name="minNoticeHours" type="number" min={0} max={720} required defaultValue={s?.min_notice_hours ?? 12} />
             </Field>
             <Field label="Bookable up to (days)" htmlFor="s-advance" required>

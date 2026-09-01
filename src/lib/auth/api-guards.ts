@@ -18,6 +18,16 @@ type Guard =
   | { ok: true; profile: Profile }
   | { ok: false; response: ReturnType<typeof fail> };
 
+/**
+ * Currently unused, and kept deliberately.
+ *
+ * Its two call sites — /api/payments/order and /api/bookings/status — were the
+ * login gate on the booking funnel, and both now accept a proof appropriate to
+ * a guest instead (a Razorpay-signed checkout response, or a booking capability
+ * token). This is the right guard for any FUTURE endpoint that genuinely needs
+ * a logged-in person, so deleting it would only mean the next such route
+ * open-codes the same check slightly differently.
+ */
 export async function requireUserForApi(): Promise<Guard> {
   const profile = await getProfile();
   if (!profile) {

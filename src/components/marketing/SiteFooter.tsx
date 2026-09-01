@@ -44,7 +44,6 @@ export function SiteFooter({ services = [] }: { services?: Service[] }) {
             <h4 className="label-caps text-[var(--color-saffron-lift)]">Legal</h4>
             <Link href="/legal/privacy" className={linkClass}>Privacy</Link>
             <Link href="/legal/terms" className={linkClass}>Terms</Link>
-            <Link href="/legal/refunds" className={linkClass}>Refunds</Link>
           </nav>
 
           <nav aria-label="Contact" className="flex flex-col gap-3">
@@ -59,6 +58,9 @@ export function SiteFooter({ services = [] }: { services?: Service[] }) {
             <a href={BRAND.instagram} target="_blank" rel="noopener noreferrer" className={linkClass}>
               Instagram
             </a>
+            <a href={BRAND.youtube} target="_blank" rel="noopener noreferrer" className={linkClass}>
+              YouTube
+            </a>
           </nav>
         </div>
 
@@ -70,7 +72,6 @@ export function SiteFooter({ services = [] }: { services?: Service[] }) {
             {[
               { href: '/legal/terms', label: 'Terms' },
               { href: '/legal/privacy', label: 'Privacy' },
-              { href: '/legal/refunds', label: 'Refunds' },
               { href: '/legal/delivery', label: 'Service delivery' },
             ].map((l) => (
               <li key={l.href}>

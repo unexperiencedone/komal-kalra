@@ -96,7 +96,23 @@ export interface Service {
    * ahead of its migration. Test `archived_at ? … : …`, never assume presence.
    */
   archived_at?: string | null;
+  /**
+   * Rolling floor, in hours from now. Kept alongside `min_lead_days`; the
+   * effective earliest start is the LATER of the two.
+   */
   min_notice_hours: number;
+  /**
+   * The earliest bookable DATE is today (Asia/Kolkata) + this many days.
+   *
+   * 3 is the practice's "two clear days" rule: start a booking on the 1st and
+   * the earliest session offered is the 4th. It reads as three because that is
+   * the arithmetic actually performed — storing 2 would mean every reader had
+   * to carry a `+ 1` that looks like an off-by-one bug.
+   *
+   * Optional for the same reason as `internal` and `archived_at`: a deployment
+   * can be running ahead of its migration. Treat absent as "no day rule".
+   */
+  min_lead_days?: number;
   max_advance_days: number;
   free_cancellation_hours: number | null;
   seo_title: string | null;
@@ -123,6 +139,16 @@ export interface Appointment {
   service_title_snapshot: string;
   duration_minutes: number;
   client_question: string | null;
+  /**
+   * Contact details as given on the booking form for THIS booking — not read
+   * back off the profile, which is mutable and shared across bookings. This is
+   * the number the WhatsApp confirmation goes to.
+   *
+   * Optional because a deployment can run ahead of database/29_booking_contact
+   * .sql. Fall back to the profile when absent; never assume presence.
+   */
+  contact_email?: string | null;
+  contact_phone?: string | null;
   subject_name: string | null;
   subject_birth_date: string | null;
   subject_birth_time: string | null;

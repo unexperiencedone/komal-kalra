@@ -1,5 +1,6 @@
 import 'server-only';
 import { createAdminClient } from '@/lib/supabase/admin';
+import { bookingLink } from '@/lib/booking/access-token';
 import type { Appointment, Payment, Profile } from '@/types/database';
 
 /**
@@ -23,6 +24,8 @@ import type { Appointment, Payment, Profile } from '@/types/database';
 
 export type NotificationTemplate =
   | 'booking_confirmed'
+  /** Komal's own copy of a new booking. Never sent to a client. */
+  | 'booking_alert_admin'
   | 'booking_needs_attention'
   | 'payment_failed'
   | 'appointment_reminder'
@@ -63,7 +66,17 @@ export async function queueNotification(args: QueueArgs): Promise<void> {
 
       if (data) {
         userId ??= data.user_id;
-        recipient ??= data.profiles?.email ?? null;
+
+        // Contact details captured for THIS booking take precedence over the
+        // profile. The profile is shared across bookings and mutable; the
+        // snapshot is what the client actually typed this time. See
+        // database/29_booking_contact.sql.
+        const channel = args.channel ?? 'email';
+        recipient ??=
+          channel === 'whatsapp'
+            ? data.contact_phone ?? data.profiles?.phone ?? null
+            : data.contact_email ?? data.profiles?.email ?? null;
+
         payload.appointment = {
           id: data.id,
           reference: data.reference,
@@ -73,6 +86,14 @@ export async function queueNotification(args: QueueArgs): Promise<void> {
           total_paise: data.total_paise,
           meeting_url: data.meeting_url,
           name: data.profiles?.full_name ?? null,
+          // Everything below is for the WhatsApp templates. `link` carries its
+          // own capability token, so it opens the booking without a login —
+          // which is the whole point of sending it to someone who has no
+          // account. `question` and `contact_phone` are for Komal's copy only;
+          // the client template never renders them.
+          link: bookingLink(data.id),
+          contact_phone: data.contact_phone ?? data.profiles?.phone ?? null,
+          question: data.client_question,
         };
 
         if (args.offsetHoursBeforeStart) {

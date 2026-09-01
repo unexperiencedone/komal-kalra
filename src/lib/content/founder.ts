@@ -26,10 +26,10 @@ export const FOUNDER = {
 
   /** Standfirst — used on both the About page and as the homepage intro. */
   standfirst:
-    'Komal Kalra is a Vedic astrologer, consultant, and the founder of her private astrological practice. She specialises in translating classical Vedic principles into strategic, actionable insight for modern professionals, entrepreneurs and individuals.',
+    'With over 7+ years of experience, Komal Kalra is a Vedic astrologer, consultant, and the founder of her private astrological practice. She specialises in translating classical Vedic principles into strategic, actionable insight for modern professionals, entrepreneurs and individuals.',
 
   body: [
-    'With a data-informed approach to planetary cycles — dasha systems, transits, and natal chart synastry — Komal has built a client-centred practice around precision, clarity and practical remediation.',
+    'With 7+ years of experience and a data-informed approach to planetary cycles — dasha systems, transits, and natal chart synastry — Komal has built a client-centred practice around precision, clarity and practical remediation.',
     'Her methodology strips away fatalistic superstition, treating astrology as a diagnostic and strategic tool for career timing, partnership alignment, and long-term life planning.',
   ],
 

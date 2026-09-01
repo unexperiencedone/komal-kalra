@@ -64,13 +64,16 @@ const MODE_ICON = { video: Video, phone: PhoneIcon, in_person: MapPin } as const
 export function BookingFlow({
   services,
   initialServiceId,
-  signedIn,
   defaults,
   taxBps,
 }: {
   services: Service[];
   initialServiceId?: string;
-  signedIn: boolean;
+  /**
+   * Prefilled from the profile when someone happens to be signed in, and empty
+   * otherwise. There is no longer a `signedIn` flag: nothing in this flow
+   * branches on it, because booking no longer requires an account.
+   */
   defaults: { fullName: string; email: string; phone: string };
   taxBps: number;
 }) {
@@ -205,12 +208,11 @@ export function BookingFlow({
   async function onSubmit(values: BookingDetailsInput) {
     if (!hold || !service) return;
 
-    if (!signedIn) {
-      // Identity matters from here on: a booking must belong to someone.
-      router.push(`/login?next=${encodeURIComponent(`/book?service=${service.slug}`)}`);
-      return;
-    }
-
+    // No sign-in detour. This used to bounce to /login at exactly this point —
+    // after a time was chosen, birth details were typed and a slot was being
+    // held — which is the worst possible place to interrupt someone. The
+    // booking still gets an owner; the server derives it from the email and
+    // phone already on this form. See src/lib/auth/booking-identity.ts.
     setError(null);
     setStep('paying');
 
@@ -275,12 +277,17 @@ export function BookingFlow({
             });
             const result = await verify.json();
 
+            // `t` is the capability token minted by /verify. Without it the
+            // confirmation page has no way to prove this visitor is entitled
+            // to see this booking, because there is no longer a session.
+            const t = result.data?.accessToken ? `&t=${result.data.accessToken}` : '';
+
             if (result.ok && result.data.status === 'confirmed') {
-              router.push(`/book/confirm?appointment=${result.data.appointmentId}`);
+              router.push(`/book/confirm?appointment=${result.data.appointmentId}${t}`);
               return;
             }
             if (result.ok && result.data.status === 'needs_attention') {
-              router.push(`/book/confirm?appointment=${result.data.appointmentId}&state=attention`);
+              router.push(`/book/confirm?appointment=${result.data.appointmentId}${t}&state=attention`);
               return;
             }
             // Verification did not settle it. The webhook almost certainly
@@ -312,6 +319,27 @@ export function BookingFlow({
       <EmptyServices />
     );
   }
+
+  /**
+   * The first date this service can be booked for.
+   *
+   * Mirrors database/28_min_lead_days.sql: earliest date = today + the
+   * service's `min_lead_days`. This copy is for DISPLAY ONLY — the server
+   * derives the same date independently inside get_available_slots(), and that
+   * is what actually decides which slots exist. If the two ever disagree the
+   * calendar simply shows nothing on the day named here, which is visible; the
+   * alternative, enforcing the rule in the browser, would be bypassable.
+   *
+   * Undefined `min_lead_days` means the migration has not run on this
+   * deployment — in which case there is no day rule to explain, so say nothing.
+   */
+  const leadDays = service.min_lead_days;
+  const earliestDate = (() => {
+    if (leadDays === undefined || leadDays === null || leadDays <= 0) return null;
+    const d = new Date();
+    d.setDate(d.getDate() + leadDays);
+    return d;
+  })();
 
   const ModeIcon = MODE_ICON[service.mode];
   const net = service.price_paise;
@@ -387,7 +415,26 @@ export function BookingFlow({
               </div>
 
               <div>
-                <h2 className="mb-4 font-sans text-[15px] font-semibold">2. Pick a time</h2>
+                <h2 className="font-sans text-[15px] font-semibold">2. Pick a time</h2>
+                {/*
+                  Says why the next few days are greyed out.
+
+                  Without this the calendar looks broken rather than booked:
+                  a visitor sees today and tomorrow disabled, assumes Komal is
+                  full, and leaves. The date is computed rather than hardcoded
+                  so it cannot drift from what the server will actually accept
+                  if the lead time is changed in the admin console.
+                */}
+                {earliestDate && (
+                  <p className="mb-4 mt-1.5 text-xs leading-relaxed text-[var(--color-body-warm)]">
+                    Komal prepares each chart in advance, so the earliest session is{' '}
+                    <strong className="font-semibold text-[var(--color-cocoa)]">
+                      {formatLongDay(earliestDate)}
+                    </strong>
+                    . Call {BRAND.phones[0]} if you need something sooner.
+                  </p>
+                )}
+                {!earliestDate && <div className="mb-4" />}
                 {slotsError ? (
                   <ErrorState
                     title="Could not load available times"
@@ -442,10 +489,33 @@ export function BookingFlow({
                     <Field label="Email" htmlFor="b-email" required error={form.formState.errors.email?.message}>
                       <Input {...form.register('email')} type="email" autoComplete="email" inputMode="email" />
                     </Field>
-                    <Field label="Phone" htmlFor="b-phone" required error={form.formState.errors.phone?.message}>
+                    {/*
+                      The hint is not decoration. Under the DPDP Act the person
+                      has to know what a piece of personal data will be used
+                      for at the point they give it, and "we will message this
+                      number on WhatsApp" is a use they would not otherwise
+                      assume from a field labelled "Phone".
+                    */}
+                    <Field
+                      label="Phone"
+                      htmlFor="b-phone"
+                      required
+                      hint="Your booking details are sent to this number on WhatsApp."
+                      error={form.formState.errors.phone?.message}
+                    >
                       <Input {...form.register('phone')} type="tel" autoComplete="tel" inputMode="tel" />
                     </Field>
                   </div>
+
+                  {/*
+                    Said plainly, where the decision is made. Someone who has
+                    been asked to create an account on three other sites this
+                    week will assume they are about to be asked again, and that
+                    assumption is itself a reason to abandon.
+                  */}
+                  <p className="text-xs leading-relaxed text-[var(--color-body-warm)]">
+                    No account or password needed — just pay and you are booked.
+                  </p>
                 </fieldset>
 
                 <fieldset disabled={step === 'paying'} className="space-y-5  border border-[var(--color-outline-variant)] bg-white p-5">
@@ -535,7 +605,7 @@ export function BookingFlow({
                   loadingText="Opening secure payment…"
                   disabled={!scriptReady && step !== 'paying'}
                 >
-                  {signedIn ? `Pay ${formatPaise(total)} securely` : 'Sign in to continue'}
+                  Pay {formatPaise(total)} securely
                 </Button>
 
                 <p className="flex items-center justify-center gap-1.5 text-xs text-[var(--color-body-warm)]">

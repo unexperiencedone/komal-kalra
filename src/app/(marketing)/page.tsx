@@ -1,7 +1,8 @@
 import Link from 'next/link';
 import Image from 'next/image';
+import Script from 'next/script';
 import type { Metadata } from 'next';
-import { ArrowUpRight, Camera, Quote } from 'lucide-react';
+import { ArrowUpRight, Camera, Quote, PlayCircle } from 'lucide-react';
 import { createPublicClient } from '@/lib/supabase/public';
 import { getActiveServices } from '@/lib/booking/availability';
 import { BRAND } from '@/lib/config';
@@ -128,6 +129,7 @@ export default async function HomePage() {
   return (
     <div className="overflow-x-hidden">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <Script src="https://static.elfsight.com/platform/platform.js" strategy="lazyOnload" />
 
 
       {/* ========================= HERO — cinematic ========================= */}
@@ -298,7 +300,7 @@ export default async function HomePage() {
       <section aria-labelledby="proof-heading" className="band-sand relative isolate overflow-hidden py-[var(--spacing-section-lg)]">
         <SectionWatermark corner="top-right" />
         <h2 id="proof-heading" className="sr-only">In their words and curated insights</h2>
-        <div className="shell grid grid-cols-1 gap-16 md:grid-cols-2">
+        <div className="shell grid grid-cols-1 gap-12 lg:grid-cols-3">
           <Reveal>
             {reviews.length > 0 ? (
               <figure className="flex h-full flex-col justify-center border-l border-[var(--color-saffron)] pl-8">
@@ -336,12 +338,28 @@ export default async function HomePage() {
           <Reveal delay={120}>
             <div className="relative flex h-full flex-col items-center border border-[var(--color-hairline)] bg-[var(--color-card-cream)] p-8 text-center before:pointer-events-none before:absolute before:inset-[4px] before:border before:border-[var(--color-hairline)] sm:p-10">
               <Camera className="size-7 text-[var(--color-cocoa)]" aria-hidden />
-              <h3 className="mt-4 font-[family-name:var(--font-display)] text-xl font-medium text-[var(--color-cocoa)]">Curated Insights</h3>
+              <h3 className="mt-4 font-[family-name:var(--font-display)] text-xl font-medium text-[var(--color-cocoa)]">Instagram</h3>
               <p className="mt-4 max-w-sm text-base leading-relaxed text-[var(--color-body-warm)]">Follow reflections on timing, energy management, and leading a conscious professional life.</p>
-              <div className="mt-8 grid w-full grid-cols-2 gap-4">
-                {[gramA, gramB].map((g) => <Image key={g.src} src={g.src} alt={g.alt} width={600} height={600} className="relative z-20 aspect-square size-full border border-[var(--color-hairline)] object-cover opacity-80" />)}
+              <div className="mt-8 w-full min-h-[250px] relative z-20 flex items-center justify-center border border-dashed border-[var(--color-hairline)] bg-black/5">
+                {/* ⚠️ REPLACE THIS ID with your actual Elfsight Instagram widget ID */}
+                <div className="elfsight-app-PLACEHOLDER-INSTAGRAM" data-elfsight-app-lazy></div>
+                <span className="text-sm opacity-50 absolute">Elfsight Widget Here</span>
               </div>
               <a href={BRAND.instagram} target="_blank" rel="noopener noreferrer" className="label-caps relative z-20 mt-8 border-b border-[var(--color-terracotta)] pb-1 text-[var(--color-terracotta)]">View Instagram <ArrowUpRight className="inline size-3.5" aria-hidden /></a>
+            </div>
+          </Reveal>
+          
+          <Reveal delay={240}>
+            <div className="relative flex h-full flex-col items-center border border-[var(--color-hairline)] bg-[var(--color-card-cream)] p-8 text-center before:pointer-events-none before:absolute before:inset-[4px] before:border before:border-[var(--color-hairline)] sm:p-10">
+              <PlayCircle className="size-7 text-[var(--color-cocoa)]" aria-hidden />
+              <h3 className="mt-4 font-[family-name:var(--font-display)] text-xl font-medium text-[var(--color-cocoa)]">Latest from YouTube</h3>
+              <p className="mt-4 max-w-sm text-base leading-relaxed text-[var(--color-body-warm)]">Deep dives into astrological cycles, remedies, and structural life transitions.</p>
+              <div className="mt-8 w-full min-h-[250px] relative z-20 flex items-center justify-center border border-dashed border-[var(--color-hairline)] bg-black/5">
+                {/* ⚠️ REPLACE THIS ID with your actual Elfsight YouTube widget ID */}
+                <div className="elfsight-app-PLACEHOLDER-YOUTUBE" data-elfsight-app-lazy></div>
+                <span className="text-sm opacity-50 absolute">Elfsight Widget Here</span>
+              </div>
+              <a href={BRAND.youtube} target="_blank" rel="noopener noreferrer" className="label-caps relative z-20 mt-8 border-b border-[var(--color-terracotta)] pb-1 text-[var(--color-terracotta)]">Watch on YouTube <ArrowUpRight className="inline size-3.5" aria-hidden /></a>
             </div>
           </Reveal>
         </div>

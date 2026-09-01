@@ -15,7 +15,18 @@ import { Loader2 } from 'lucide-react';
  * forever matters: a payment that has not confirmed in a minute needs a person,
  * not another request.
  */
-export function PendingPaymentWatcher({ appointmentId }: { appointmentId: string }) {
+export function PendingPaymentWatcher({
+  appointmentId,
+  /**
+   * The capability token from the page URL, forwarded so a guest can poll.
+   * Booking creates no session, so without this the one screen where someone
+   * is anxious about their money would 401 on every tick and sit frozen.
+   */
+  accessToken,
+}: {
+  appointmentId: string;
+  accessToken?: string | null;
+}) {
   const router = useRouter();
   const [elapsed, setElapsed] = useState(0);
 
@@ -27,7 +38,10 @@ export function PendingPaymentWatcher({ appointmentId }: { appointmentId: string
       setElapsed((e) => e + 3);
 
       try {
-        const response = await fetch(`/api/bookings/status?appointment=${appointmentId}`, {
+        const query = accessToken
+          ? `appointment=${appointmentId}&t=${encodeURIComponent(accessToken)}`
+          : `appointment=${appointmentId}`;
+        const response = await fetch(`/api/bookings/status?${query}`, {
           cache: 'no-store',
         });
         const json = await response.json();
@@ -47,7 +61,7 @@ export function PendingPaymentWatcher({ appointmentId }: { appointmentId: string
       clearInterval(interval);
       clearTimeout(stop);
     };
-  }, [appointmentId, router]);
+  }, [appointmentId, accessToken, router]);
 
   if (elapsed >= 60) return null;
 

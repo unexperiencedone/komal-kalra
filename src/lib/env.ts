@@ -53,6 +53,31 @@ const serverSchema = z.object({
   EMAIL_FROM: z.string().optional(),
 
   /**
+   * WhatsApp delivery. All optional, and the default is OFF.
+   *
+   * Unset means booking confirmations queue on the `whatsapp` channel and stay
+   * queued — visible in notification_outbox, logged by the worker, never marked
+   * sent. They deliver themselves once these land. See docs/whatsapp-setup.md.
+   *
+   * SERVER ONLY. WHATSAPP_ACCESS_TOKEN can send messages as the practice to
+   * anyone; in a browser bundle it is simply published.
+   */
+  WHATSAPP_PROVIDER: z.enum(['meta']).optional(),
+  WHATSAPP_PHONE_NUMBER_ID: z.string().optional(),
+  WHATSAPP_ACCESS_TOKEN: z.string().optional(),
+  WHATSAPP_TEMPLATE_LANG: z.string().optional(),
+  /** Where Komal's own copy of each booking goes. Falls back to BRAND.phones. */
+  WHATSAPP_ADMIN_TO: z.string().optional(),
+
+  /**
+   * Signs the booking links that let a client open their confirmation without
+   * an account. Optional: lib/booking/access-token.ts derives a key from the
+   * service-role key when unset, so links keep working on a deployment where
+   * this has not been set yet. Rotating it invalidates every outstanding link.
+   */
+  BOOKING_LINK_SECRET: z.string().min(16).optional(),
+
+  /**
    * Prokerala, for the free astrology tools. Optional at the schema level so
    * the rest of the app boots without them — the tools then render an honest
    * "not connected yet" state rather than a broken form, and every other route

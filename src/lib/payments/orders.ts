@@ -147,10 +147,26 @@ export async function createBookingOrder(params: {
     throw paymentError ?? new Error('Could not record the payment');
   }
 
+  // Contact details are written with payment_status in ONE statement, not two.
+  //
+  // They are snapshotted onto the appointment rather than read back off the
+  // profile at send time because the profile is mutable and shared across
+  // bookings — see database/29_booking_contact.sql. This is the number the
+  // WhatsApp confirmation goes to, so it has to be the one typed for THIS
+  // booking.
   await admin
     .from('appointments')
-    .update({ payment_status: 'pending' })
+    .update({
+      payment_status: 'pending',
+      contact_email: params.details.email.trim().toLowerCase(),
+      contact_phone: params.details.phone.trim(),
+    })
     .eq('id', appointment.id);
+
+  // The in-memory row predates that update, so reflect it rather than returning
+  // an object that disagrees with the database.
+  appointment.contact_email = params.details.email.trim().toLowerCase();
+  appointment.contact_phone = params.details.phone.trim();
 
   // Attach contact details to the hold so an abandoned checkout still produces
   // a usable lead (research §3.4).

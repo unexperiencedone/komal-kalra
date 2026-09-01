@@ -2,7 +2,8 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 import { CalendarPlus, CheckCircle2, Clock, Download, Phone, TriangleAlert } from 'lucide-react';
 import { createAdminClient } from '@/lib/supabase/admin';
-import { requireUser } from '@/lib/auth/session';
+import { getProfile } from '@/lib/auth/session';
+import { isValidBookingToken } from '@/lib/booking/access-token';
 import { formatPaise } from '@/lib/money';
 import { formatLongDay, formatTime } from '@/lib/date';
 import { BRAND, POLICY } from '@/lib/config';
@@ -33,11 +34,32 @@ export default async function ConfirmPage(props: {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
   const searchParams = await props.searchParams;
-  const profile = await requireUser('/dashboard');
+
+  /**
+   * NO LONGER requireUser().
+   *
+   * Booking does not create a session, so demanding one here would mean
+   * bouncing someone to a login screen in the seconds after they have paid —
+   * the single worst moment in the product to do it.
+   *
+   * Access is granted by EITHER of two independent proofs, and never by the
+   * appointment id alone:
+   *
+   *   1. a signed capability token in the URL (see lib/booking/access-token.ts)
+   *   2. a real session whose user owns the row
+   *
+   * The `order` lookup keeps the session requirement, because a Razorpay order
+   * id is not something we mint a token for and a booking link always carries
+   * the appointment id. An unauthenticated visitor arriving on the order path
+   * lands on the "could not find that booking" panel with a phone number,
+   * which is correct: we genuinely cannot prove who they are.
+   */
+  const profile = await getProfile();
 
   const appointmentId = typeof searchParams.appointment === 'string' ? searchParams.appointment : null;
   const orderId = typeof searchParams.order === 'string' ? searchParams.order : null;
   const state = typeof searchParams.state === 'string' ? searchParams.state : null;
+  const token = typeof searchParams.t === 'string' ? searchParams.t : null;
 
   const admin = createAdminClient();
 
@@ -45,18 +67,29 @@ export default async function ConfirmPage(props: {
   let payment: Payment | null = null;
 
   if (appointmentId) {
-    const { data } = await admin
-      .from('appointments')
-      .select('*, payments(*)')
-      .eq('id', appointmentId)
-      .eq('user_id', profile.id)   // ownership, enforced server-side
-      .maybeSingle();
-    if (data) {
-      const { payments, ...rest } = data as Appointment & { payments: Payment[] };
-      appointment = rest;
-      payment = payments?.find((p) => ['paid', 'partially_refunded', 'refunded'].includes(p.status)) ?? payments?.[0] ?? null;
+    const hasToken = isValidBookingToken(appointmentId, token);
+
+    // The row is fetched only once one of the two proofs holds. Fetching first
+    // and checking afterwards would work, but it puts every client's booking a
+    // single forgotten `if` away from being served to a stranger — references
+    // are sequential, so that mistake is immediately exploitable.
+    if (hasToken || profile) {
+      let query = admin
+        .from('appointments')
+        .select('*, payments(*)')
+        .eq('id', appointmentId);
+
+      // Without a token, ownership is the proof — unchanged from before.
+      if (!hasToken && profile) query = query.eq('user_id', profile.id);
+
+      const { data } = await query.maybeSingle();
+      if (data) {
+        const { payments, ...rest } = data as Appointment & { payments: Payment[] };
+        appointment = rest;
+        payment = payments?.find((p) => ['paid', 'partially_refunded', 'refunded'].includes(p.status)) ?? payments?.[0] ?? null;
+      }
     }
-  } else if (orderId) {
+  } else if (orderId && profile) {
     const { data } = await admin
       .from('payments')
       .select('*, appointments(*)')
@@ -74,12 +107,27 @@ export default async function ConfirmPage(props: {
     return (
       <Shell>
         <InlineAlert tone="warning" title="We could not find that booking">
-          It may still be processing. Check your dashboard in a moment, or call us on{' '}
-          {BRAND.phones[0]} and we will look it up straight away.
+          It may still be processing, or this link may be incomplete. Call us on{' '}
+          {BRAND.phones[0]} and we will look it up straight away — if money has left
+          your account, the booking exists and we can find it.
         </InlineAlert>
+        {/*
+          A phone number, not a dashboard link. This panel is reached by exactly
+          the people who have no session — a truncated link, a copied URL that
+          lost its token — so sending them to /dashboard sends them to /login,
+          which is no help at all when they are worried they have just paid for
+          nothing.
+        */}
         <Button asChild className="mt-6">
-          <Link href="/dashboard">Go to my dashboard</Link>
+          <a href={`tel:${BRAND.phonesE164[0]}`}>
+            <Phone aria-hidden /> Call {BRAND.phones[0]}
+          </a>
         </Button>
+        {profile && (
+          <Button asChild variant="secondary" className="mt-3 sm:ml-3 sm:mt-6">
+            <Link href="/dashboard">Go to my dashboard</Link>
+          </Button>
+        )}
       </Shell>
     );
   }
@@ -114,9 +162,11 @@ export default async function ConfirmPage(props: {
               <Phone aria-hidden /> Call {BRAND.phones[0]}
             </a>
           </Button>
-          <Button asChild size="lg" variant="secondary">
-            <Link href="/dashboard">Go to my dashboard</Link>
-          </Button>
+          {profile && (
+            <Button asChild size="lg" variant="secondary">
+              <Link href="/dashboard">Go to my dashboard</Link>
+            </Button>
+          )}
         </div>
       </Shell>
     );
@@ -135,7 +185,7 @@ export default async function ConfirmPage(props: {
           You do not need to pay again — if anything was debited, it is recorded.
         </p>
 
-        <PendingPaymentWatcher appointmentId={appointment.id} />
+        <PendingPaymentWatcher appointmentId={appointment.id} accessToken={token} />
 
         <BookingFacts appointment={appointment} payment={payment} />
 
@@ -154,8 +204,9 @@ export default async function ConfirmPage(props: {
       </div>
       <h1 className="mt-6 text-[length:var(--text-h1)]">You&apos;re booked in</h1>
       <p className="mt-3 max-w-lg text-[15px] leading-relaxed text-[var(--color-body-warm)]">
-        A confirmation is on its way to your email. Komal will send the joining link before
-        your session.
+        Your booking details are on their way to{' '}
+        {appointment.contact_phone ? 'WhatsApp and your email' : 'your email'}. Komal will
+        send the joining link before your session.
       </p>
 
       <BookingFacts appointment={appointment} payment={payment} />
@@ -165,27 +216,45 @@ export default async function ConfirmPage(props: {
           What happens next
         </h2>
         <ol className="space-y-2 text-sm leading-relaxed text-[var(--color-body-warm)]">
-          <li>1. You will receive a confirmation email with your booking reference.</li>
+          <li>
+            1. Your booking details arrive on WhatsApp
+            {appointment.contact_phone ? ` at ${appointment.contact_phone}` : ''} and by email.
+          </li>
           <li>2. A joining link is sent before your appointment.</li>
           <li>3. A reminder arrives 24 hours beforehand.</li>
           <li>4. Find somewhere quiet where you will not be interrupted.</li>
         </ol>
       </div>
 
-      <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-        <Button asChild size="lg">
-          <Link href={`/dashboard/appointments/${appointment.id}`}>
-            <CalendarPlus aria-hidden /> View my booking
-          </Link>
-        </Button>
-        {payment?.receipt_number && (
-          <Button asChild size="lg" variant="secondary">
-            <Link href={`/dashboard/payments/${payment.id}/receipt`}>
-              <Download aria-hidden /> Download receipt
+      {/*
+        The dashboard links are shown only to someone who can actually open
+        them. A guest reached this page with a capability token, not a session,
+        so "View my booking" would drop them on a login screen seconds after
+        paying — precisely the interruption this whole change removed. They keep
+        this page's URL instead, which is in their WhatsApp message and email.
+      */}
+      {profile ? (
+        <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+          <Button asChild size="lg">
+            <Link href={`/dashboard/appointments/${appointment.id}`}>
+              <CalendarPlus aria-hidden /> View my booking
             </Link>
           </Button>
-        )}
-      </div>
+          {payment?.receipt_number && (
+            <Button asChild size="lg" variant="secondary">
+              <Link href={`/dashboard/payments/${payment.id}/receipt`}>
+                <Download aria-hidden /> Download receipt
+              </Link>
+            </Button>
+          )}
+        </div>
+      ) : (
+        <p className="mt-8 border border-[var(--color-outline-variant)] bg-white px-5 py-4 text-sm leading-relaxed text-[var(--color-body-warm)]">
+          Keep this page — the same link is in your WhatsApp message and email, and it
+          opens your booking any time. Reference{' '}
+          <strong className="font-semibold text-[var(--color-cocoa)]">{appointment.reference}</strong>.
+        </p>
+      )}
 
       <p className="mt-8 border-t border-[var(--color-outline-variant)] pt-6 text-xs leading-relaxed text-[var(--color-body-warm)]">
         {POLICY.cancellationSummary} {POLICY.refundTiming}

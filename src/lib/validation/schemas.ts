@@ -166,6 +166,10 @@ export const serviceFormSchema = z.object({
   bufferMinutes: z.coerce.number().int().min(0).max(120),
   mode: z.enum(['video', 'phone', 'in_person']),
   minNoticeHours: z.coerce.number().int().min(0).max(720),
+  // The earliest bookable date is today + this many days. 3 is the practice's
+  // "two clear days" rule. See database/28_min_lead_days.sql for why it is not
+  // stored as 2.
+  minLeadDays: z.coerce.number().int().min(0).max(365),
   maxAdvanceDays: z.coerce.number().int().min(1).max(365),
   active: z.boolean(),
   bookableOnline: z.boolean(),

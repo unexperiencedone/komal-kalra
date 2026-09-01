@@ -2,7 +2,7 @@ import 'server-only';
 import { BRAND, POLICY } from '@/lib/config';
 import { formatPaise } from '@/lib/money';
 import { formatLongDay, formatTime } from '@/lib/date';
-import { createAdminClient } from '@/lib/supabase/admin';
+import { drainOutbox, ChannelNotConfiguredError, type DrainSummary } from './worker';
 import type { NotificationTemplate } from './outbox';
 
 /**
@@ -153,6 +153,32 @@ export function renderEmail(template: NotificationTemplate, payload: Payload): R
       };
     }
 
+    /**
+     * Komal's own copy of a new booking.
+     *
+     * Queued on WhatsApp, not email — but this case exists so that a row
+     * mis-queued onto the email channel produces something correct rather than
+     * falling through to `lead_received` and sending the practitioner "Thank
+     * you for your message. Komal will get back to you shortly."
+     */
+    case 'booking_alert_admin': {
+      const at = appt.starts_at
+        ? `${formatLongDay(appt.starts_at)} at ${formatTime(appt.starts_at)}`
+        : 'the scheduled time';
+      return {
+        subject: `New booking — ${appt.service ?? 'consultation'}, ${at}`,
+        html: wrap('New booking', `
+          <p><strong>${name}</strong> has booked and paid.</p>
+          <table style="width:100%;border-collapse:collapse;font-size:14px;margin:16px 0;">
+            ${row('Service', appt.service ?? '—')}
+            ${row('When', at)}
+            ${row('Reference', appt.reference ?? '—')}
+            ${row('Amount', appt.total_paise != null ? formatPaise(appt.total_paise) : '—')}
+          </table>`),
+        text: `New booking: ${name}, ${appt.service ?? 'consultation'}, ${at}. Ref ${appt.reference ?? '—'}.`,
+      };
+    }
+
     case 'lead_received':
       return {
         subject: 'Thank you for getting in touch',
@@ -171,7 +197,7 @@ async function send(to: string, email: RenderedEmail): Promise<void> {
 
   if (!key) {
     console.info('[email] RESEND_API_KEY not set; message left queued', { to, subject: email.subject });
-    throw new Error('email_not_configured');
+    throw new ChannelNotConfiguredError('email');
   }
 
   const response = await fetch('https://api.resend.com/emails', {
@@ -186,60 +212,15 @@ async function send(to: string, email: RenderedEmail): Promise<void> {
 }
 
 /**
- * Outbox worker. Called by /api/cron/notifications.
+ * Email outbox worker. Called by /api/cron/notifications.
  *
- * Claims rows by flipping them to `sending` before doing any network work, so
- * two overlapping cron runs cannot send the same message twice.
+ * The claim-and-drain loop lives in ./worker.ts and is shared with WhatsApp —
+ * getting the claim wrong double-sends, and two copies of that logic would
+ * drift. This function is now only "what an email row means".
  */
-export async function processOutbox(batchSize = 25) {
-  const admin = createAdminClient();
-  const summary = { processed: 0, sent: 0, failed: 0, skipped: 0 };
-
-  const { data: due } = await admin
-    .from('notification_outbox')
-    .select('*')
-    .in('status', ['queued', 'failed'])
-    .lte('scheduled_for', new Date().toISOString())
-    .lt('attempts', 5)
-    .eq('channel', 'email')
-    .order('scheduled_for', { ascending: true })
-    .limit(batchSize);
-
-  if (!due?.length) return summary;
-
-  for (const item of due) {
-    summary.processed += 1;
-
-    const { data: claimed } = await admin
-      .from('notification_outbox')
-      .update({ status: 'sending', attempts: item.attempts + 1 })
-      .eq('id', item.id)
-      .in('status', ['queued', 'failed'])
-      .select('id')
-      .maybeSingle();
-
-    if (!claimed) { summary.skipped += 1; continue; }
-
-    try {
-      const rendered = renderEmail(item.template as NotificationTemplate, item.payload ?? {});
-      await send(item.recipient, rendered);
-      await admin
-        .from('notification_outbox')
-        .update({ status: 'sent', sent_at: new Date().toISOString(), last_error: null })
-        .eq('id', item.id);
-      summary.sent += 1;
-    } catch (error) {
-      const message = error instanceof Error ? error.message : String(error);
-      await admin
-        .from('notification_outbox')
-        .update({
-          status: message === 'email_not_configured' ? 'queued' : 'failed',
-          last_error: message.slice(0, 500),
-        })
-        .eq('id', item.id);
-      summary.failed += 1;
-    }
-  }
-
-  return summary;
+export async function processOutbox(batchSize = 25): Promise<DrainSummary> {
+  return drainOutbox('email', async (row) => {
+    const rendered = renderEmail(row.template as NotificationTemplate, row.payload as Payload);
+    await send(row.recipient, rendered);
+  }, batchSize);
 }

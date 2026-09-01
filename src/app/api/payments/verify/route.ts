@@ -2,6 +2,7 @@ import { createAdminClient } from '@/lib/supabase/admin';
 import { getPaymentProvider } from '@/lib/payments/razorpay';
 import { settlePayment } from '@/lib/payments/settle';
 import { getCurrentUser } from '@/lib/auth/session';
+import { bookingAccessToken } from '@/lib/booking/access-token';
 import { verifyPaymentSchema } from '@/lib/validation/schemas';
 import { ok, fail, fromZodError, fromUnknownError } from '@/lib/api';
 import { rateLimit, clientIp, LIMITS } from '@/lib/rate-limit';
@@ -22,6 +23,19 @@ import { rateLimit, clientIp, LIMITS } from '@/lib/rate-limit';
  * and settle using the amount and status the provider reports — not the ones
  * the browser sent. A valid signature proves the ids are genuine; it does not
  * prove the payment was captured for the right amount.
+ *
+ * NO LONGER REQUIRES A SESSION, because booking no longer creates one.
+ *
+ * The checkout signature is a better proof of standing here than a login was.
+ * It is an HMAC over this order and payment id, keyed with a secret only
+ * Razorpay and this server hold, so producing a valid one means you completed
+ * this specific checkout. A session only meant you were logged in as somebody.
+ *
+ * The old ownership check (`payment.user_id !== user.id`) is therefore applied
+ * only when a session actually exists, where it still catches the genuine case
+ * it was written for: a signed-in person replaying another account's checkout
+ * response. With no session there is nothing to compare, and the signature has
+ * already answered the question.
  */
 
 export const runtime = 'nodejs';
@@ -34,8 +48,8 @@ export async function POST(request: Request) {
       return fail('rate_limited', 'Too many attempts. Please wait a moment.', 429);
     }
 
+    // Optional. See the header comment: the signature below is the proof.
     const user = await getCurrentUser();
-    if (!user) return fail('unauthorized', 'Please sign in to continue.', 401);
 
     const parsed = verifyPaymentSchema.safeParse(await request.json());
     if (!parsed.success) return fromZodError(parsed.error);
@@ -51,7 +65,7 @@ export async function POST(request: Request) {
     });
 
     if (!valid) {
-      console.warn('[verify] signature mismatch', { user: user.id, order: razorpay_order_id });
+      console.warn('[verify] signature mismatch', { user: user?.id ?? 'guest', order: razorpay_order_id });
       return fail(
         'invalid_signature',
         'We could not verify this payment. If money has left your account, it will be returned automatically — please contact us.',
@@ -68,9 +82,11 @@ export async function POST(request: Request) {
 
     if (!payment) return fail('not_found', 'We could not find that payment.', 404);
 
-    // Ownership. A valid signature proves the payment is real; it does not
-    // prove it belongs to the person asking about it.
-    if (payment.user_id !== user.id) {
+    // Only meaningful when there IS an account to compare against. This catches
+    // a signed-in person replaying a checkout response that belongs to a
+    // different account; for a guest there is no second identity in play and
+    // the signature has already established that they completed this checkout.
+    if (user && payment.user_id !== user.id) {
       return fail('forbidden', 'That payment belongs to a different account.', 403);
     }
 
@@ -94,19 +110,32 @@ export async function POST(request: Request) {
       source: 'verify',
     });
 
+    /**
+     * The capability token for the confirmation page travels back with the
+     * result. This is the only moment we can hand it over safely: the caller
+     * has just proved, with a Razorpay-signed HMAC, that they completed this
+     * checkout. Minting it anywhere reachable by id alone would defeat it.
+     */
+    const linkToken = (id: string | null | undefined) =>
+      id ? bookingAccessToken(id) : null;
+
     switch (outcome.status) {
       case 'confirmed':
-      case 'duplicate':
+      case 'duplicate': {
+        const id = outcome.appointmentId ?? payment.appointment_id;
         return ok({
           status: 'confirmed',
-          appointmentId: outcome.appointmentId ?? payment.appointment_id,
+          appointmentId: id,
+          accessToken: linkToken(id),
           reference: outcome.reference ?? null,
         });
+      }
 
       case 'conflict':
         return ok({
           status: 'needs_attention',
           appointmentId: outcome.appointmentId,
+          accessToken: linkToken(outcome.appointmentId),
           message:
             'Your payment succeeded, but that time was taken moments before it completed. We will contact you right away to rearrange, or refund you in full.',
         });
