@@ -24,11 +24,16 @@
 do $$
 declare
   -- 1. Your deployed origin. Trailing slash is fine — it gets normalised.
-  v_site_url text := 'CHANGE_ME';
+  v_site_url text := 'https://komal-kalra.vercel.app';
 
   -- 2. The EXACT value of CRON_SECRET as set in Vercel's environment
   --    variables. Not your local .env if the two have drifted — pg_cron calls
   --    the deployed app, so Vercel's copy is the one that has to match.
+  --    ⚠️ PASTE IT IN THE SQL EDITOR, DO NOT SAVE IT INTO THIS FILE.
+  --    This file is tracked by git. `.env` is gitignored; `database/*.sql` is
+  --    not, so a real value left here goes into the repository — and into
+  --    GitHub the moment you push. Git history is not edited by deleting the
+  --    line later; the secret stays in every earlier commit.
   v_cron_secret text := 'CHANGE_ME';
 
   v_id uuid;
