@@ -1,10 +1,10 @@
 'use client';
 
-import { useMemo, useState, useEffect } from 'react';
+import { useMemo } from 'react';
 import { CheckCircle2, ChevronLeft, ChevronRight } from 'lucide-react';
-import { formatTime } from '@/lib/date';
+import { formatTime, addMonths } from '@/lib/date';
 import { cn } from '@/lib/utils';
-import { Skeleton, EmptyState } from '@/components/ui/states';
+import { Skeleton } from '@/components/ui/states';
 import type { DaySlots } from '@/lib/booking/availability';
 
 /**
@@ -38,6 +38,10 @@ export function SlotPicker({
   selectedSlot,
   onSelectDate,
   onSelectSlot,
+  month,
+  onMonthChange,
+  minMonth,
+  maxMonth,
   disabled,
 }: {
   days: DaySlots[];
@@ -46,46 +50,46 @@ export function SlotPicker({
   selectedSlot: string | null;
   onSelectDate: (date: string) => void;
   onSelectSlot: (startIso: string) => void;
-  weekOffset?: number;
-  onWeekChange?: (offset: number) => void;
+  /**
+   * Which month is on screen, "YYYY-MM", OWNED BY THE PARENT.
+   *
+   * This used to be local state, and that was the bug: the arrows moved the
+   * grid but nothing refetched, so the parent's fixed "next 14 days from today"
+   * window was all the availability that ever existed. Every date past day 14
+   * rendered disabled, and paging to the next month showed a calendar where
+   * every single day was greyed out — indistinguishable from "she is fully
+   * booked for the whole of October".
+   *
+   * The month has to live where the fetch lives.
+   */
+  month: string;
+  onMonthChange: (month: string) => void;
+  /** Earliest month with any bookable date, e.g. the lead-time month. */
+  minMonth: string;
+  /** Latest month the service allows booking into. */
+  maxMonth: string;
   disabled?: boolean;
 }) {
   const byDate = useMemo(() => new Map(days.map((d) => [d.date, d.slots])), [days]);
   const firstAvailable = days.find((d) => d.slots.length > 0)?.date ?? null;
   const active = selectedDate ?? firstAvailable;
 
-  const [cursor, setCursor] = useState(() => {
-    const base = active ? new Date(`${active}T00:00:00`) : new Date();
-    return new Date(base.getFullYear(), base.getMonth(), 1);
-  });
-
-  // Follow the selection into its month if it lands outside the shown one.
-  useEffect(() => {
-    if (!active) return;
-    const d = new Date(`${active}T00:00:00`);
-    const syncCursor = window.setTimeout(() => {
-      setCursor((c) =>
-        c.getFullYear() === d.getFullYear() && c.getMonth() === d.getMonth()
-          ? c
-          : new Date(d.getFullYear(), d.getMonth(), 1),
-      );
-    }, 0);
-    return () => window.clearTimeout(syncCursor);
-  }, [active]);
-
   const grid = useMemo(() => {
-    const start = new Date(cursor.getFullYear(), cursor.getMonth(), 1);
-    const daysInMonth = new Date(cursor.getFullYear(), cursor.getMonth() + 1, 0).getDate();
+    const [y, m] = month.split('-').map(Number);
+    const start = new Date(y, m - 1, 1);
+    const daysInMonth = new Date(y, m, 0).getDate();
     const lead = start.getDay();
     const cells: (Date | null)[] = Array.from({ length: lead }, () => null);
-    for (let i = 1; i <= daysInMonth; i++) {
-      cells.push(new Date(cursor.getFullYear(), cursor.getMonth(), i));
-    }
+    for (let i = 1; i <= daysInMonth; i++) cells.push(new Date(y, m - 1, i));
     return cells;
-  }, [cursor]);
+  }, [month]);
 
-  const monthLabel = cursor.toLocaleDateString('en-IN', { month: 'long', year: 'numeric' });
+  const monthLabel = new Date(`${month}-01T00:00:00`).toLocaleDateString('en-IN', {
+    month: 'long',
+    year: 'numeric',
+  });
   const slots = active ? byDate.get(active) ?? [] : [];
+  const emptyMonth = !loading && days.every((d) => d.slots.length === 0);
 
   if (loading) {
     return (
@@ -99,15 +103,13 @@ export function SlotPicker({
     );
   }
 
-  if (days.every((d) => d.slots.length === 0)) {
-    return (
-      <EmptyState
-        title="No times available in this period"
-        description="Try looking further ahead, or call and we will find a time that works."
-        action={{ label: 'Contact us', href: '/contact' }}
-      />
-    );
-  }
+  /*
+    A month with nothing in it no longer replaces the whole picker.
+    It used to return an EmptyState instead of the calendar — which removed the
+    month arrows, so a visitor whose current month happened to be full had no
+    way to look at the next one. The way out of an empty month is the control
+    that was being hidden.
+  */
 
   return (
     <div className="grid gap-10 md:grid-cols-2">
@@ -118,19 +120,27 @@ export function SlotPicker({
             {monthLabel}
           </h3>
           <div className="flex items-center gap-1">
+            {/*
+              Bounded by the same limits the server enforces. Letting someone
+              page back to a month that is entirely in the past, or forward
+              past max_advance_days, only ever shows them an empty grid — and an
+              empty grid reads as "no availability", not "out of range".
+            */}
             <button
               type="button"
               aria-label="Previous month"
-              onClick={() => setCursor((c) => new Date(c.getFullYear(), c.getMonth() - 1, 1))}
-              className="flex size-9 items-center justify-center text-[var(--color-cocoa)] transition-colors hover:bg-[var(--color-cream)]"
+              disabled={month <= minMonth}
+              onClick={() => onMonthChange(addMonths(month, -1))}
+              className="flex size-9 items-center justify-center text-[var(--color-cocoa)] transition-colors hover:bg-[var(--color-cream)] disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:bg-transparent"
             >
               <ChevronLeft className="size-5" aria-hidden />
             </button>
             <button
               type="button"
               aria-label="Next month"
-              onClick={() => setCursor((c) => new Date(c.getFullYear(), c.getMonth() + 1, 1))}
-              className="flex size-9 items-center justify-center text-[var(--color-cocoa)] transition-colors hover:bg-[var(--color-cream)]"
+              disabled={month >= maxMonth}
+              onClick={() => onMonthChange(addMonths(month, 1))}
+              className="flex size-9 items-center justify-center text-[var(--color-cocoa)] transition-colors hover:bg-[var(--color-cream)] disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:bg-transparent"
             >
               <ChevronRight className="size-5" aria-hidden />
             </button>
@@ -227,8 +237,15 @@ export function SlotPicker({
           })}
 
           {slots.length === 0 && (
-            <p className="border border-dashed border-[var(--color-outline-variant)] px-6 py-8 text-center text-sm text-[var(--color-body-warm)]">
-              No times remaining on this date. Choose another from the calendar.
+            <p className="border border-dashed border-[var(--color-outline-variant)] px-6 py-8 text-center text-sm leading-relaxed text-[var(--color-body-warm)]">
+              {/*
+                Distinguishes "this month is full" from "this day is full".
+                Both used to render the same sentence, which sent people hunting
+                the calendar for an open date in a month that had none.
+              */}
+              {emptyMonth
+                ? `Nothing available in ${monthLabel}. Use the arrow above to look at the next month.`
+                : 'No times remaining on this date. Choose another from the calendar.'}
             </p>
           )}
         </div>

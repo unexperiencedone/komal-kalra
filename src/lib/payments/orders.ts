@@ -87,13 +87,13 @@ export async function createBookingOrder(params: {
       p_service_id: params.serviceId,
       p_hold_id: params.holdId,
       p_session_key: params.sessionKey,
-      p_client_question: params.details.question || null,
-      p_subject_name: params.details.subjectName || params.details.fullName,
+      p_client_question: null,
+      p_subject_name: params.details.fullName,
       p_subject_birth_date: params.details.birthDate || null,
       p_subject_birth_time: params.details.birthTimeKnown ? params.details.birthTime || null : null,
-      p_subject_birth_place: params.details.birthPlace || null,
+      p_subject_birth_place: [params.details.birthCity, params.details.birthState, params.details.birthCountry].filter(Boolean).join(', ') || null,
       p_subject_birth_time_known: params.details.birthTimeKnown,
-      p_coupon_code: params.details.couponCode || null,
+      p_coupon_code: null,
       p_tax_bps: e.TAX_BPS,
     })
     .single<Appointment>();

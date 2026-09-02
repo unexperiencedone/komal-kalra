@@ -73,10 +73,11 @@ export const createHoldSchema = z.object({
  * abandonment cause. `birthTimeKnown: false` is a first-class answer.
  */
 export const birthDetailsSchema = z.object({
-  subjectName: z.string().trim().max(80).optional().or(z.literal('')),
-  birthDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Use the date picker').optional().or(z.literal('')),
+  birthDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Please enter a valid date of birth'),
   birthTime: z.string().regex(/^\d{2}:\d{2}$/, 'Use HH:MM').optional().or(z.literal('')),
-  birthPlace: z.string().trim().max(120).optional().or(z.literal('')),
+  birthCity: z.string().trim().min(1, 'Please enter your birth city').max(120),
+  birthState: z.string().trim().min(1, 'Please enter your birth state').max(120),
+  birthCountry: z.string().trim().min(1, 'Please enter your birth country').max(120),
   // NOTE: no .default() here. z.default() makes the schema's input type
   // differ from its output type, which breaks the React Hook Form resolver
   // generic. The form always supplies this field, so a default earns nothing.
@@ -87,8 +88,6 @@ export const bookingDetailsSchema = birthDetailsSchema.extend({
   fullName: nameSchema,
   email: emailSchema,
   phone: phoneSchema,
-  question: z.string().trim().max(1500, 'Please keep this under 1500 characters').optional().or(z.literal('')),
-  couponCode: z.string().trim().toUpperCase().max(32).optional().or(z.literal('')),
   acceptTerms: z.literal(true, { message: 'Please accept the terms to continue' }),
 });
 

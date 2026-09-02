@@ -46,6 +46,51 @@ export function businessDateKey(v: string | Date): string {
   return `${get('year')}-${get('month')}-${get('day')}`;
 }
 
+/** Today's calendar date in the business timezone, as YYYY-MM-DD. */
+export function businessToday(): string {
+  return businessDateKey(new Date());
+}
+
+/**
+ * Adds whole days to a YYYY-MM-DD key.
+ *
+ * Done in UTC deliberately. `new Date('2026-09-02')` then `setDate()` runs in
+ * the BROWSER's zone, so for a visitor west of UTC the result can land on the
+ * previous day — which, for the booking lead time, means offering a date the
+ * server will refuse. Calendar-date arithmetic must not touch local time.
+ */
+export function addDaysToKey(key: string, days: number): string {
+  const [y, m, d] = key.split('-').map(Number);
+  const dt = new Date(Date.UTC(y, m - 1, d));
+  dt.setUTCDate(dt.getUTCDate() + days);
+  return dt.toISOString().slice(0, 10);
+}
+
+/** "2026-09" → "2026-09-01". */
+export const monthStartKey = (month: string) => `${month}-01`;
+
+/** "2026-09" → "2026-09-30". */
+export function monthEndKey(month: string): string {
+  const [y, m] = month.split('-').map(Number);
+  return new Date(Date.UTC(y, m, 0)).toISOString().slice(0, 10);
+}
+
+/** Whole days from one YYYY-MM-DD to another. Negative if `to` is earlier. */
+export function daysBetweenKeys(from: string, to: string): number {
+  const ms = Date.parse(`${to}T00:00:00Z`) - Date.parse(`${from}T00:00:00Z`);
+  return Math.round(ms / 86_400_000);
+}
+
+/** "2026-09-04" → "2026-09". */
+export const monthOfKey = (key: string) => key.slice(0, 7);
+
+/** Shifts a "YYYY-MM" by whole months. */
+export function addMonths(month: string, delta: number): string {
+  const [y, m] = month.split('-').map(Number);
+  const dt = new Date(Date.UTC(y, m - 1 + delta, 1));
+  return dt.toISOString().slice(0, 7);
+}
+
 export function addDays(v: Date, days: number): Date {
   const d = new Date(v);
   d.setDate(d.getDate() + days);

@@ -97,6 +97,14 @@ Phone: {{5}}
 Wants to discuss: {{6}}
 ```
 
+> **`{{6}}` currently always renders `—`.** The booking form's "What would you
+> like to discuss?" field was removed in a later refactor, so
+> `appointments.client_question` is never populated and nothing fills this
+> placeholder. Either put that field back on the form, or register this template
+> with five variables and drop the last line — because changing an approved
+> template means submitting it for approval again. Worth deciding *before* you
+> register it, not after.
+
 ### `appointment_reminder` — Utility, English
 
 ```

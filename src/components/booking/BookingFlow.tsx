@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Script from 'next/script';
 import Link from 'next/link';
@@ -9,10 +9,23 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { ArrowLeft, Clock, Lock, ShieldCheck, Video, Phone as PhoneIcon, MapPin } from 'lucide-react';
 import { bookingDetailsSchema, type BookingDetailsInput } from '@/lib/validation/schemas';
 import { formatPaise } from '@/lib/money';
-import { formatLongDay, formatTime } from '@/lib/date';
+import {
+  formatLongDay,
+  formatTime,
+  businessToday,
+  addDaysToKey,
+  monthOfKey,
+  monthStartKey,
+  monthEndKey,
+  daysBetweenKeys,
+} from '@/lib/date';
+
+/** Calendar-date min/max. Plain string compare is correct for YYYY-MM-DD. */
+const maxKey = (a: string, b: string) => (a > b ? a : b);
+const minKey = (a: string, b: string) => (a < b ? a : b);
 import { POLICY, BRAND } from '@/lib/config';
 import { Button } from '@/components/ui/button';
-import { Field, Input, Textarea, Checkbox } from '@/components/ui/field';
+import { Field, Input, Checkbox } from '@/components/ui/field';
 import { InlineAlert, ErrorState } from '@/components/ui/states';
 import { SlotPicker } from './SlotPicker';
 import { BookingStepper, type BookingStepName } from './BookingStepper';
@@ -81,7 +94,6 @@ export function BookingFlow({
 
   const [serviceId, setServiceId] = useState(initialServiceId ?? services[0]?.id ?? '');
   const [step, setStep] = useState<Step>('time');
-  const [weekOffset, setWeekOffset] = useState(0);
   const [days, setDays] = useState<DaySlots[]>([]);
   const [loadingSlots, setLoadingSlots] = useState(true);
   const [slotsError, setSlotsError] = useState(false);
@@ -100,18 +112,51 @@ export function BookingFlow({
       fullName: defaults.fullName,
       email: defaults.email,
       phone: defaults.phone,
-      subjectName: '',
       birthDate: '',
       birthTime: '',
-      birthPlace: '',
+      birthCity: '',
+      birthState: '',
+      birthCountry: '',
       birthTimeKnown: true,
-      question: '',
-      couponCode: '',
       acceptTerms: undefined as unknown as true,
     },
   });
 
   const birthTimeKnown = form.watch('birthTimeKnown');
+
+  /* ---- Date window --------------------------------------------------------
+   *
+   * All of this is computed from the BUSINESS timezone, not the browser's.
+   * `new Date()` plus `setDate()` resolves in whatever zone the visitor's device
+   * is set to, so for anyone west of IST it can land a day early — and offering
+   * a date the server will then refuse is worse than not offering it.
+   *
+   * These bounds are for RENDERING ONLY. get_available_slots() derives the same
+   * limits independently in Postgres, and that is what decides which slots
+   * exist. If the two ever disagree the calendar shows an empty day, which is
+   * visible; enforcing the rule only here would make it bypassable.
+   */
+  const today = useMemo(() => businessToday(), []);
+
+  /** First date this service can be booked for. */
+  const earliestKey = useMemo(
+    () => addDaysToKey(today, service?.min_lead_days ?? 0),
+    [today, service?.min_lead_days],
+  );
+
+  /** Last date, from the service's own max_advance_days. */
+  const latestKey = useMemo(
+    () => addDaysToKey(today, service?.max_advance_days ?? 60),
+    [today, service?.max_advance_days],
+  );
+
+  const [month, setMonth] = useState<string>(() => monthOfKey(earliestKey));
+
+  // Follow the lead time when it moves — switching service can change it, and
+  // the calendar must not open on a month the service cannot be booked in.
+  useEffect(() => {
+    setMonth((m) => (m < monthOfKey(earliestKey) ? monthOfKey(earliestKey) : m));
+  }, [earliestKey]);
 
   // ---- Load availability --------------------------------------------------
   const loadSlots = useCallback(async () => {
@@ -119,10 +164,27 @@ export function BookingFlow({
     setLoadingSlots(true);
     setSlotsError(false);
     try {
-      const from = new Date();
-      from.setDate(from.getDate() + weekOffset * 14);
+      /*
+       * Fetch the MONTH ON SCREEN, clamped to the bookable range.
+       *
+       * This replaces a fixed "14 days from today" window, which was the actual
+       * bug behind the dead calendar: the grid renders a whole month, so
+       * everything past day 14 had no slots to show and rendered disabled, and
+       * paging to the next month showed a grid where every day was greyed out.
+       * A visitor cannot tell that apart from "she is fully booked".
+       */
+      const from = maxKey(monthStartKey(month), earliestKey);
+      const to = minKey(monthEndKey(month), latestKey);
+      const span = daysBetweenKeys(from, to);
+
+      // The whole visible month is out of range. Nothing to ask the server for.
+      if (span < 0) {
+        setDays([]);
+        return;
+      }
+
       const response = await fetch(
-        `/api/bookings/slots?serviceId=${serviceId}&from=${from.toISOString()}&days=14`,
+        `/api/bookings/slots?serviceId=${serviceId}&from=${from}&days=${span}`,
         { cache: 'no-store' },
       );
       const json = await response.json();
@@ -134,7 +196,7 @@ export function BookingFlow({
     } finally {
       setLoadingSlots(false);
     }
-  }, [serviceId, weekOffset]);
+  }, [serviceId, month, earliestKey, latestKey]);
 
   useEffect(() => { void loadSlots(); }, [loadSlots]);
 
@@ -333,13 +395,14 @@ export function BookingFlow({
    * Undefined `min_lead_days` means the migration has not run on this
    * deployment — in which case there is no day rule to explain, so say nothing.
    */
-  const leadDays = service.min_lead_days;
-  const earliestDate = (() => {
-    if (leadDays === undefined || leadDays === null || leadDays <= 0) return null;
-    const d = new Date();
-    d.setDate(d.getDate() + leadDays);
-    return d;
-  })();
+  /*
+    Whether to explain the lead time at all.
+    `earliestKey` is already computed in the business timezone above — the
+    previous version built this date with `new Date()` + `setDate()`, which
+    resolves in the visitor's own zone and could therefore name a date one day
+    off from the one the server would actually accept.
+  */
+  const showsLeadNote = (service.min_lead_days ?? 0) > 0;
 
   const ModeIcon = MODE_ICON[service.mode];
   const net = service.price_paise;
@@ -425,16 +488,17 @@ export function BookingFlow({
                   so it cannot drift from what the server will actually accept
                   if the lead time is changed in the admin console.
                 */}
-                {earliestDate && (
+                {showsLeadNote ? (
                   <p className="mb-4 mt-1.5 text-xs leading-relaxed text-[var(--color-body-warm)]">
                     Komal prepares each chart in advance, so the earliest session is{' '}
                     <strong className="font-semibold text-[var(--color-cocoa)]">
-                      {formatLongDay(earliestDate)}
+                      {formatLongDay(`${earliestKey}T00:00:00+05:30`)}
                     </strong>
                     . Call {BRAND.phones[0]} if you need something sooner.
                   </p>
+                ) : (
+                  <div className="mb-4" />
                 )}
-                {!earliestDate && <div className="mb-4" />}
                 {slotsError ? (
                   <ErrorState
                     title="Could not load available times"
@@ -454,8 +518,10 @@ export function BookingFlow({
                     selectedSlot={selectedSlot}
                     onSelectDate={setSelectedDate}
                     onSelectSlot={(iso) => void selectSlot(iso)}
-                    weekOffset={weekOffset}
-                    onWeekChange={setWeekOffset}
+                    month={month}
+                    onMonthChange={setMonth}
+                    minMonth={monthOfKey(earliestKey)}
+                    maxMonth={monthOfKey(latestKey)}
                     disabled={holdPending}
                   />
                 )}
@@ -513,64 +579,58 @@ export function BookingFlow({
                     week will assume they are about to be asked again, and that
                     assumption is itself a reason to abandon.
                   */}
-                  <p className="text-xs leading-relaxed text-[var(--color-body-warm)]">
+                  <p className="text-xs leading-relaxed text-[var(--color-body-warm)] mb-4">
                     No account or password needed — just pay and you are booked.
                   </p>
-                </fieldset>
 
-                <fieldset disabled={step === 'paying'} className="space-y-5  border border-[var(--color-outline-variant)] bg-white p-5">
-                  <legend className="px-1.5 text-sm font-semibold">Birth details</legend>
-                  <p className="text-xs leading-relaxed text-[var(--color-body-warm)]">
-                    Optional, but the more Komal has beforehand the more useful the session
-                    will be. These details are private and visible only to her.
-                  </p>
+                  <div className="pt-2">
+                    <h3 className="font-sans text-[15px] font-semibold mb-1">Birth details</h3>
+                    <p className="text-xs leading-relaxed text-[var(--color-body-warm)] mb-5">
+                      These details are private and visible only to Komal.
+                    </p>
 
-                  <Field
-                    label="Whose chart is this?"
-                    htmlFor="b-subject"
-                    hint="Leave blank if it is your own."
-                    error={form.formState.errors.subjectName?.message}
-                  >
-                    <Input {...form.register('subjectName')} placeholder="Name" autoComplete="off" />
-                  </Field>
+                    <div className="grid gap-5 sm:grid-cols-2 mb-5">
+                      <Field label="Date of birth" htmlFor="b-bdate" required error={form.formState.errors.birthDate?.message}>
+                        <Input {...form.register('birthDate')} type="date" />
+                      </Field>
+                      <Field label="Time of birth" htmlFor="b-btime" error={form.formState.errors.birthTime?.message}>
+                        <Input {...form.register('birthTime')} type="time" disabled={!birthTimeKnown} />
+                      </Field>
+                    </div>
 
-                  <div className="grid gap-5 sm:grid-cols-2">
-                    <Field label="Date of birth" htmlFor="b-bdate" error={form.formState.errors.birthDate?.message}>
-                      <Input {...form.register('birthDate')} type="date" />
-                    </Field>
-                    <Field label="Time of birth" htmlFor="b-btime" error={form.formState.errors.birthTime?.message}>
-                      <Input {...form.register('birthTime')} type="time" disabled={!birthTimeKnown} />
-                    </Field>
+                    <div className="mb-5">
+                      {/* "I do not know" is a first-class answer. Demanding an exact
+                          birth time from someone who does not have it is a real
+                          abandonment cause in this category. */}
+                      <Checkbox
+                        id="b-timeknown"
+                        label="I am not sure of the exact birth time"
+                        checked={!birthTimeKnown}
+                        onChange={(e) => form.setValue('birthTimeKnown', !e.target.checked)}
+                      />
+                    </div>
+
+                    <div className="grid gap-5 sm:grid-cols-3">
+                      <Field label="City of birth" htmlFor="b-bcity" required error={form.formState.errors.birthCity?.message}>
+                        <Input {...form.register('birthCity')} placeholder="City" autoComplete="off" />
+                      </Field>
+                      <Field label="State of birth" htmlFor="b-bstate" required error={form.formState.errors.birthState?.message}>
+                        <Input {...form.register('birthState')} placeholder="State" autoComplete="off" />
+                      </Field>
+                      <Field label="Country of birth" htmlFor="b-bcountry" required error={form.formState.errors.birthCountry?.message}>
+                        <Input {...form.register('birthCountry')} placeholder="Country" autoComplete="off" />
+                      </Field>
+                    </div>
                   </div>
 
-                  {/* "I do not know" is a first-class answer. Demanding an exact
-                      birth time from someone who does not have it is a real
-                      abandonment cause in this category. */}
-                  <Checkbox
-                    id="b-timeknown"
-                    label="I am not sure of the exact birth time"
-                    checked={!birthTimeKnown}
-                    onChange={(e) => form.setValue('birthTimeKnown', !e.target.checked)}
-                  />
-
-                  <Field label="Place of birth" htmlFor="b-bplace" error={form.formState.errors.birthPlace?.message}>
-                    <Input {...form.register('birthPlace')} placeholder="City, state or country" autoComplete="off" />
-                  </Field>
-                </fieldset>
-
-                <fieldset disabled={step === 'paying'} className="space-y-5">
-                  <Field
-                    label="What would you like to discuss?"
-                    htmlFor="b-question"
-                    hint="A couple of sentences helps Komal prepare."
-                    error={form.formState.errors.question?.message}
-                  >
-                    <Textarea {...form.register('question')} rows={4} />
-                  </Field>
-
-                  <Field label="Discount code" htmlFor="b-coupon" error={form.formState.errors.couponCode?.message}>
-                    <Input {...form.register('couponCode')} placeholder="If you have one" className="uppercase" autoCapitalize="characters" />
-                  </Field>
+                  <div className="pt-2">
+                    <div className="flex items-start gap-2 rounded bg-white p-4 border border-[var(--color-outline-variant)]">
+                      <ShieldCheck className="size-5 text-[var(--color-saffron-deep)] shrink-0 mt-0.5" aria-hidden />
+                      <p className="text-sm leading-relaxed text-[var(--color-cocoa)]">
+                        <strong>100% Confidential.</strong> Everything you talk about during your consultation remains strictly confidential.
+                      </p>
+                    </div>
+                  </div>
 
                   <div>
                     <Checkbox
