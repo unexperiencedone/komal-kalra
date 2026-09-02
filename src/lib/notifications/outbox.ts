@@ -26,6 +26,8 @@ export type NotificationTemplate =
   | 'booking_confirmed'
   /** Komal's own copy of a new booking. Never sent to a client. */
   | 'booking_alert_admin'
+  /** Komal's own 24h reminder. Never sent to a client. */
+  | 'appointment_reminder_admin'
   | 'booking_needs_attention'
   | 'payment_failed'
   | 'appointment_reminder'

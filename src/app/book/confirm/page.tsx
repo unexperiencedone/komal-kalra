@@ -9,6 +9,7 @@ import { formatLongDay, formatTime } from '@/lib/date';
 import { BRAND, POLICY } from '@/lib/config';
 import { Button } from '@/components/ui/button';
 import { InlineAlert } from '@/components/ui/states';
+import { ConfirmActionButtons } from './ConfirmActionButtons';
 import { PendingPaymentWatcher } from './PendingPaymentWatcher';
 import type { Appointment, Payment } from '@/types/database';
 
@@ -199,6 +200,9 @@ export default async function ConfirmPage(props: {
   // ------------------------------- CONFIRMED -------------------------------
   return (
     <Shell>
+      <div className="flex justify-end w-full mb-2 print:hidden">
+        <ConfirmActionButtons />
+      </div>
       <div className="flex size-12 items-center justify-center rounded-full bg-[var(--color-success-container)]">
         <CheckCircle2 className="size-6 text-[var(--color-success)]" aria-hidden />
       </div>
@@ -226,35 +230,21 @@ export default async function ConfirmPage(props: {
         </ol>
       </div>
 
-      {/*
-        The dashboard links are shown only to someone who can actually open
-        them. A guest reached this page with a capability token, not a session,
-        so "View my booking" would drop them on a login screen seconds after
-        paying — precisely the interruption this whole change removed. They keep
-        this page's URL instead, which is in their WhatsApp message and email.
-      */}
       {profile ? (
-        <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-          <Button asChild size="lg">
-            <Link href={`/dashboard/appointments/${appointment.id}`}>
-              <CalendarPlus aria-hidden /> View my booking
-            </Link>
-          </Button>
-          {payment?.receipt_number && (
-            <Button asChild size="lg" variant="secondary">
-              <Link href={`/dashboard/payments/${payment.id}/receipt`}>
-                <Download aria-hidden /> Download receipt
-              </Link>
-            </Button>
-          )}
-        </div>
+        <p className="mt-8 border border-[var(--color-outline-variant)] bg-white px-5 py-4 text-sm leading-relaxed text-[var(--color-body-warm)] print:hidden">
+          Keep this page — the same link is in your WhatsApp message and email, and it
+          opens your booking any time. Reference{' '}
+          <strong className="font-semibold text-[var(--color-cocoa)]">{appointment.reference}</strong>.
+        </p>
       ) : (
-        <p className="mt-8 border border-[var(--color-outline-variant)] bg-white px-5 py-4 text-sm leading-relaxed text-[var(--color-body-warm)]">
+        <p className="mt-8 border border-[var(--color-outline-variant)] bg-white px-5 py-4 text-sm leading-relaxed text-[var(--color-body-warm)] print:hidden">
           Keep this page — the same link is in your WhatsApp message and email, and it
           opens your booking any time. Reference{' '}
           <strong className="font-semibold text-[var(--color-cocoa)]">{appointment.reference}</strong>.
         </p>
       )}
+
+
 
       <p className="mt-8 border-t border-[var(--color-outline-variant)] pt-6 text-xs leading-relaxed text-[var(--color-body-warm)]">
         {POLICY.cancellationSummary} {POLICY.refundTiming}

@@ -34,7 +34,7 @@ export function Field({ label, htmlFor, error, hint, required, className, childr
     <div className={cn('space-y-2', className)}>
       <label
         htmlFor={htmlFor}
-        className="label-caps block text-[var(--color-body-warm)]"
+        className={cn("label-caps block", error ? "text-[var(--color-error)]" : "text-[var(--color-body-warm)]")}
       >
         {label}
         {required && <span className="ml-1 text-[var(--color-error)]" aria-hidden>*</span>}

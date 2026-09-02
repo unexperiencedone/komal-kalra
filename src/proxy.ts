@@ -14,7 +14,7 @@ import { updateSession } from '@/lib/supabase/proxy';
  * not a security boundary. `/admin` pages and `/api/admin/*` handlers each
  * re-read the caller's role from the database. See docs/architecture.md.
  */
-const PROTECTED_PREFIXES = ['/dashboard', '/admin', '/book/confirm'];
+const PROTECTED_PREFIXES = ['/dashboard', '/admin'];
 
 export async function proxy(request: NextRequest) {
   const { response, user } = await updateSession(request);
@@ -46,13 +46,17 @@ export async function proxy(request: NextRequest) {
 export const config = {
   matcher: [
     /*
-     * Everything except static assets AND the payment webhook.
+     * Everything except static assets AND the two provider webhooks.
      *
-     * Excluding /api/payments/webhook is deliberate: Razorpay's request carries
-     * no session cookie, so refreshing one is pure latency on the single most
-     * correctness-critical endpoint in the system. It also keeps the raw request
-     * body untouched, which the HMAC check depends on.
+     * Excluding them is deliberate: neither Razorpay nor Meta sends a session
+     * cookie, so refreshing one is pure latency on the two most
+     * correctness-critical endpoints in the system. It also keeps the raw
+     * request body untouched, which both HMAC checks depend on.
+     *
+     * /api/whatsapp/webhook additionally serves Meta's GET verification
+     * handshake, which must return the challenge as plain text — anything that
+     * wraps or redirects the response makes "Verify and save" fail.
      */
-    '/((?!_next/static|_next/image|favicon.ico|api/payments/webhook|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|woff2?)$).*)',
+    '/((?!_next/static|_next/image|favicon.ico|api/payments/webhook|api/whatsapp/webhook|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|woff2?)$).*)',
   ],
 };

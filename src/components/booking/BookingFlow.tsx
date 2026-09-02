@@ -102,7 +102,6 @@ export function BookingFlow({
   const [hold, setHold] = useState<HoldState | null>(null);
   const [holdPending, setHoldPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [scriptReady, setScriptReady] = useState(false);
 
   const service = services.find((s) => s.id === serviceId) ?? services[0];
 
@@ -415,7 +414,6 @@ export function BookingFlow({
       <Script
         src="https://checkout.razorpay.com/v1/checkout.js"
         strategy="lazyOnload"
-        onLoad={() => setScriptReady(true)}
       />
 
       <div className="grid gap-10 lg:grid-cols-[1fr_380px] lg:items-start">
@@ -663,7 +661,6 @@ export function BookingFlow({
                   full
                   loading={step === 'paying'}
                   loadingText="Opening secure payment…"
-                  disabled={!scriptReady && step !== 'paying'}
                 >
                   Pay {formatPaise(total)} securely
                 </Button>

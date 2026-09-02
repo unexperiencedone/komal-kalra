@@ -107,15 +107,83 @@ Wants to discuss: {{6}}
 
 ### `appointment_reminder` — Utility, English
 
+The client's reminder, 24 hours before.
+
 ```
 Namaste {{1}}, a reminder that your {{2}} with Astrologer Komal Kalra is {{3}}.
 
 Details: {{4}}
 ```
 
+### `appointment_reminder_admin` — Utility, English
+
+Komal's reminder, same 24 hours. Separate from the client's for a reason beyond
+tone: the client's version links to *their* booking page, so sending Komal the
+same message would give her a reminder about her own day written as though she
+were the client, pointing at one client's booking.
+
+```
+Reminder: {{1}} with {{2}} is {{3}}.
+Their number: {{4}}
+```
+
+| # | Value | Sample |
+|---|---|---|
+| 1 | Service | `Astrological Guidance` |
+| 2 | Client name | `Simran` |
+| 3 | Date and time | `Thursday, 4 September 2026 at 11:00 am IST` |
+| 4 | Client's phone | `+919812345678` |
+
 **Approval takes minutes to a few hours.** A rejection is almost always the
 category (Marketing vs Utility) or a variable at the very start or end of the
 message body, which Meta rejects. None of the three above start or end with one.
+
+---
+
+## 3a. Going to production
+
+The values currently in `.env` are **test credentials**. Two things about them
+will stop working, and both fail in ways that look like a bug rather than a
+configuration expiry:
+
+- **The test access token expires in 24 hours.** Confirmations send perfectly
+  all day and then stop. Nobody notices until a client says they got nothing.
+- **The test number only sends to up to 5 pre-registered recipients.** Any real
+  client booking is silently not delivered.
+
+So the test setup is fine for proving the wiring works and is not a soft launch.
+
+### The checklist, in dependency order
+
+| # | Step | Where | Blocks |
+|---|---|---|---|
+| 1 | **Business verification** | Business Settings → Security Centre | everything below |
+| 2 | Add a **real phone number** to the WABA | WhatsApp Manager → Phone numbers | step 3 |
+| 3 | **Display name** approval for that number | same screen | sending |
+| 4 | Add a **payment method** to the WABA | WhatsApp Manager → Billing | sending past the free tier |
+| 5 | **Permanent System User token** | Business Settings → System Users | tokens expiring daily |
+| 6 | App to **Live mode** | App Dashboard, toggle top of page | webhook events |
+| 7 | **Webhook** configured and subscribed | §4a below | receipts and replies |
+| 8 | Templates submitted and approved | §3 above | sending anything |
+
+**Business verification is the long pole — budget 2–4 days.** Everything
+technical takes hours once it clears. Median end-to-end is 3–5 business days, so
+do not schedule the go-live announcement against the technical work.
+
+**Step 5 in detail, because this is the one people get wrong.** The token on the
+API Setup page is temporary no matter how production-ready everything else is.
+Business Settings → System Users → Add → give it Admin on the app and the WABA →
+Generate token → select the WhatsApp Business Account → scopes
+`whatsapp_business_messaging` and `whatsapp_business_management` → **set expiry
+to Never**. That is the value for `WHATSAPP_ACCESS_TOKEN`.
+
+**Messaging limits.** A newly verified number starts at **1,000 business-initiated
+conversations per rolling 24 hours** and tiers up automatically on quality and
+volume. That is far above this practice's booking rate, so it will not bite —
+but a low **quality rating** can drop the tier or pause the number. Quality is
+driven by users blocking and reporting, which is exactly why the confirmations
+are Utility templates sent only to people who just paid, and why nothing here
+sends marketing.
 
 ---
 
@@ -143,6 +211,85 @@ alert is *skipped* and a warning is logged, rather than being sent to
 question; delivering it to whatever number happens to be published — a landline,
 an old number, a shared office phone — would be a data breach that looks exactly
 like the feature working.
+
+---
+
+## 4a. Webhooks
+
+**Endpoint:** `https://your-domain.com/api/whatsapp/webhook`
+
+It must be **HTTPS on a public domain with a valid certificate**. Meta will not
+accept `localhost`, an IP address, or a self-signed cert. For local development
+use a tunnel (`cloudflared tunnel --url http://localhost:3000`) and paste the
+tunnel URL — but remember the URL changes each restart and has to be re-saved.
+
+### Why bother
+
+Sending returns `200` when Meta **accepts** a message. That is not delivery. A
+message can be accepted and then never arrive — the number has no WhatsApp
+account, the person blocked the business, a template variable contained a
+newline. Without the webhook every one of those is recorded as `sent`, and the
+first anyone hears is a client who missed their consultation.
+
+It is also the only way replies reach you at all. On the Cloud API direct there
+is no inbox; a client answering *"can we make it 4pm?"* is dropped unless this
+endpoint writes it down.
+
+### Configure it
+
+1. App Dashboard → **WhatsApp → Configuration → Webhook → Edit**.
+2. **Callback URL**: the endpoint above.
+3. **Verify token**: any string you invent. Put the same value in
+   `WHATSAPP_VERIFY_TOKEN`. Generate one with `openssl rand -hex 24`.
+4. Click **Verify and save**. Meta immediately `GET`s the URL and expects
+   `hub.challenge` echoed back as **plain text**. The route does this.
+5. **Manage → subscribe to the `messages` field.** This single field carries
+   both inbound messages and delivery statuses, despite the name.
+6. App Settings → Basic → **App Secret** → copy into `WHATSAPP_APP_SECRET`.
+
+**Step 5 is the step that gets skipped.** Saving the callback URL is not
+subscribing. The dashboard's "Test" button fires sample events and everything
+looks correct, while real traffic produces nothing — because the WABA itself was
+never subscribed to the app. If receipts never arrive, check this first.
+
+### What the endpoint does with events
+
+| Meta status | Stored as | Effect |
+|---|---|---|
+| `sent` | `sent` | already set at send time |
+| `delivered` / `read` | `delivered` | `delivered_at` stamped |
+| `failed` | `undelivered` | terminal, logged as an error, **not retried** |
+
+`failed` becomes `undelivered` rather than `failed` deliberately: the worker
+retries `failed` rows, and re-sending to a number with no WhatsApp account never
+succeeds while being billed every time.
+
+Matching a receipt to a booking depends on the `wamid` captured at send time in
+`notification_outbox.provider_message_id`. Messages sent before that column
+existed, and any smoke-test sends, simply will not match — that is expected and
+not logged as an error.
+
+Inbound replies land in `public.whatsapp_inbound`, linked to a client where the
+sender's number matches one used at booking. **There is no UI for this yet.** It
+guarantees nothing is lost; it does not let Komal reply. That still needs either
+a BSP inbox or the WhatsApp Business app on the number.
+
+### Security
+
+Every event is authenticated with `X-Hub-Signature-256` — an HMAC-SHA256 of the
+**raw** body keyed with the App Secret. The route reads `request.text()` and
+verifies before `JSON.parse`, because any middleware that parses and re-encodes
+JSON changes the bytes and breaks the comparison. That is the usual way this
+check ends up quietly disabled.
+
+If `WHATSAPP_APP_SECRET` is unset the route returns **503 and processes
+nothing**, rather than trusting unverified events. An open webhook accepts
+forged `delivered` receipts from anyone who finds the URL, which would hide the
+exact failures it was added to surface. 503 makes Meta retry, so nothing is lost
+once the secret is set.
+
+`src/proxy.ts` excludes this path so the raw body reaches the route untouched
+and the GET handshake is not wrapped or redirected.
 
 ---
 
@@ -192,14 +339,15 @@ the client number, one to Komal.
 
 ## 6. What is queued, and when
 
-On a confirmed payment, `settlePayment()` queues four rows:
+On a confirmed payment, `settlePayment()` queues five rows:
 
-| Template | Channel | When |
-|---|---|---|
-| `booking_confirmed` | email | immediately |
-| `booking_confirmed` | whatsapp | immediately |
-| `booking_alert_admin` | whatsapp | immediately, to Komal |
-| `appointment_reminder` | email + whatsapp | 24 h before the session |
+| Template | Channel | To | When |
+|---|---|---|---|
+| `booking_confirmed` | email | client | immediately |
+| `booking_confirmed` | whatsapp | client | immediately |
+| `booking_alert_admin` | whatsapp | Komal | immediately |
+| `appointment_reminder` | email + whatsapp | client | 24 h before |
+| `appointment_reminder_admin` | whatsapp | Komal | 24 h before |
 
 Each is a **separate row with its own dedupe key**, so the channels succeed and
 fail independently: a rejected WhatsApp template must not mark the email failed,
@@ -229,6 +377,25 @@ select channel, status, template, count(*), max(last_error)
 - `last_error` starting `unusable_number_` → `toE164()` could not parse what the
   client typed. It assumes India for a bare 10-digit number and returns nothing
   rather than guessing for anything else. The email still went.
+- `status = 'sent'` that never becomes `delivered` → the webhook is not
+  configured, or the WABA is not subscribed to the `messages` field (§4a).
+- `status = 'undelivered'` → the message genuinely did not arrive. `last_error`
+  has Meta's reason. **These are worth watching**; nothing else in the system
+  will tell you a client missed their confirmation.
+
+```sql
+-- Bookings whose WhatsApp confirmation did not arrive.
+select o.recipient, o.template, o.last_error, o.created_at
+  from public.notification_outbox o
+ where o.channel = 'whatsapp' and o.status = 'undelivered'
+ order by o.created_at desc;
+
+-- Replies nobody has dealt with.
+select from_phone, profile_name, body, received_at
+  from public.whatsapp_inbound
+ where handled = false
+ order by received_at desc;
+```
 
 The cron route returns both channels' summaries separately, so one glance says
 which side is stuck:

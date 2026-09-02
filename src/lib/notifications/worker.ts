@@ -56,7 +56,13 @@ const MAX_ATTEMPTS = 5;
 
 export async function drainOutbox(
   channel: OutboxChannel,
-  send: (row: OutboxRow) => Promise<void>,
+  /**
+   * Returns the provider's message id where there is one, so a later delivery
+   * receipt can be matched back to this row. Returning nothing is fine — email
+   * has no equivalent — but discarding an id the provider DID give us means
+   * "accepted" and "arrived" become indistinguishable forever after.
+   */
+  send: (row: OutboxRow) => Promise<string | null | void>,
   batchSize = 25,
 ): Promise<DrainSummary> {
   const admin = createAdminClient();
@@ -90,10 +96,15 @@ export async function drainOutbox(
     if (!claimed) { summary.skipped += 1; continue; }
 
     try {
-      await send(item);
+      const providerMessageId = (await send(item)) || null;
       await admin
         .from('notification_outbox')
-        .update({ status: 'sent', sent_at: new Date().toISOString(), last_error: null })
+        .update({
+          status: 'sent',
+          sent_at: new Date().toISOString(),
+          last_error: null,
+          ...(providerMessageId ? { provider_message_id: providerMessageId } : {}),
+        })
         .eq('id', item.id);
       summary.sent += 1;
     } catch (error) {

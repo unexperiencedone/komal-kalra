@@ -93,6 +93,17 @@ export function renderWhatsApp(
   const reference = param(a.reference);
   const amount = a.total_paise != null ? formatPaise(a.total_paise) : dash;
 
+  /*
+   * ⚠️ These three were temporarily collapsed to Meta's stock `hello_world`
+   * template to smoke-test the connection. That has been undone, because
+   * shipping it would have sent every client the literal words "Hello world"
+   * instead of their booking — and it would have looked like a working
+   * integration the whole time, since Meta returns 200 for it.
+   *
+   * To smoke-test again, use the curl command in docs/whatsapp-setup.md. It
+   * exercises the same credentials and the same endpoint WITHOUT routing real
+   * confirmations through a placeholder template.
+   */
   switch (template) {
     case 'booking_confirmed':
       return {
@@ -107,9 +118,8 @@ export function renderWhatsApp(
 
     /**
      * Komal's own copy. A separate template rather than the client one sent
-     * twice: she needs the client's NAME and NUMBER and what they want to
-     * discuss, and the client must never receive a message containing their own
-     * details phrased as though they were somebody else's.
+     * twice: she needs the client's NAME and NUMBER, and the client must never
+     * receive a message containing their own details phrased as somebody else's.
      */
     case 'booking_alert_admin':
       return {
@@ -129,6 +139,31 @@ export function renderWhatsApp(
         fallbackText:
           `Namaste ${name}, a reminder that your ${service} with ${BRAND.fullName} ` +
           `is ${at}.\n\nDetails: ${param(a.link)}`,
+      };
+
+    /**
+     * Komal's own reminder, 24 hours out.
+     *
+     * Again a separate template, and for a reason beyond phrasing: the client's
+     * reminder is addressed to them and carries a link to THEIR booking page.
+     * Sending Komal that same message would give her a reminder about her own
+     * appointment written as though she were the client, and a link that opens
+     * one client's booking rather than her day. This one names the client and
+     * their number, so she can call ahead if she needs to.
+     */
+    case 'appointment_reminder_admin':
+      return {
+        templateName: 'appointment_reminder_admin',
+        // ORDER: service, name, when, phone — matching
+        // "Reminder: {{1}} with {{2}} is {{3}}" in docs/whatsapp-setup.md.
+        // Meta numbers placeholders sequentially, so the reading order of the
+        // sentence dictates this array. Swapping the first two here would send
+        // "Reminder: Simran with Astrological Guidance", which is accepted by
+        // the API and merely reads as nonsense to Komal.
+        variables: [service, name, at, param(a.contact_phone)],
+        fallbackText:
+          `Reminder: ${service} with ${name} is ${at}.\n` +
+          `Their number: ${param(a.contact_phone)}`,
       };
 
     /**
@@ -183,17 +218,23 @@ export function toE164(raw: string | null | undefined): string | null {
 
 export interface WhatsAppProvider {
   readonly name: string;
-  send(to: string, message: WhatsAppMessage): Promise<void>;
+  /**
+   * Returns the provider's message id where it has one.
+   *
+   * This is not bookkeeping. Delivery receipts arrive keyed on this id and
+   * nothing else, so a send that discards it can never be told apart from one
+   * that silently failed to arrive — see database/30_whatsapp_delivery.sql.
+   */
+  send(to: string, message: WhatsAppMessage): Promise<string | null>;
 }
 
 /**
  * Meta Cloud API, direct.
  *
- * ⚠️ WRITTEN FROM THE DOCUMENTED REQUEST SHAPE AND NOT YET EXERCISED AGAINST A
- * LIVE ACCOUNT — the practice has not chosen a provider, so there are no
- * credentials to test with. Send one message to a test number and read the
- * response before trusting it in production. `docs/whatsapp-setup.md` has the
- * curl command.
+ * ⚠️ WRITTEN FROM THE DOCUMENTED REQUEST SHAPE. Exercise it against the test
+ * number with the curl command in docs/whatsapp-setup.md before going live —
+ * and note that a 200 here means ACCEPTED, not delivered. Only the webhook can
+ * tell you a message actually arrived.
  */
 class MetaCloudProvider implements WhatsAppProvider {
   readonly name = 'meta-cloud';
@@ -204,7 +245,7 @@ class MetaCloudProvider implements WhatsAppProvider {
     private readonly lang: string,
   ) {}
 
-  async send(to: string, message: WhatsAppMessage): Promise<void> {
+  async send(to: string, message: WhatsAppMessage): Promise<string | null> {
     const response = await fetch(
       `https://graph.facebook.com/v21.0/${this.phoneNumberId}/messages`,
       {
@@ -241,6 +282,19 @@ class MetaCloudProvider implements WhatsAppProvider {
       // most common failure here and are useless once flattened to "400".
       throw new Error(`whatsapp_send_failed ${response.status}: ${body.slice(0, 300)}`);
     }
+
+    // { messages: [{ id: "wamid.HBg..." }] }
+    //
+    // A parse failure here is NOT a send failure — Meta already accepted the
+    // message, and throwing would make the worker send it again. Lose the id,
+    // keep the message: the cost is a receipt we cannot match, not a duplicate.
+    try {
+      const json = (await response.json()) as { messages?: { id?: string }[] };
+      return json.messages?.[0]?.id ?? null;
+    } catch {
+      console.warn('[whatsapp] sent but could not read the message id');
+      return null;
+    }
   }
 }
 
@@ -255,7 +309,7 @@ class MetaCloudProvider implements WhatsAppProvider {
 class UnconfiguredProvider implements WhatsAppProvider {
   readonly name = 'none';
 
-  async send(to: string, message: WhatsAppMessage): Promise<void> {
+  async send(to: string, message: WhatsAppMessage): Promise<string | null> {
     console.info(
       `[whatsapp] not configured — holding message to ${to}\n` +
       `  template: ${message.templateName}\n` +
@@ -313,6 +367,6 @@ export async function processWhatsAppOutbox(batchSize = 25): Promise<DrainSummar
     const to = toE164(row.recipient);
     if (!to) throw new Error(`unusable_number_${row.recipient.slice(0, 6)}`);
 
-    await wa.send(to, message);
+    return wa.send(to, message);
   }, batchSize);
 }

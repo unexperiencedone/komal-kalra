@@ -48,6 +48,8 @@
   --color-warning:      #8c4a12;
   --color-warning-container: #fcebd1;
   --color-success-container: #e3f3e8;
+  --color-error:        #b3261e;
+  --color-error-container: #f9dedc;
 
   --font-display: var(--font-cormorant), 'Cormorant Garamond', Garamond, Georgia, ui-serif, serif;
   --font-sans: var(--font-poppins), Poppins, ui-sans-serif, system-ui, -apple-system, sans-serif;

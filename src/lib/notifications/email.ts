@@ -179,6 +179,22 @@ export function renderEmail(template: NotificationTemplate, payload: Payload): R
       };
     }
 
+    /** Komal's own reminder. WhatsApp-only in practice; see booking_alert_admin. */
+    case 'appointment_reminder_admin': {
+      const at = appt.starts_at
+        ? `${formatLongDay(appt.starts_at)} at ${formatTime(appt.starts_at)}`
+        : 'the scheduled time';
+      return {
+        subject: `Tomorrow — ${appt.service ?? 'consultation'} with ${name}`,
+        html: wrap('Session tomorrow', `
+          <p><strong>${appt.service ?? 'Consultation'}</strong> with ${name} is ${at}.</p>
+          <table style="width:100%;border-collapse:collapse;font-size:14px;margin:16px 0;">
+            ${row('Reference', appt.reference ?? '—')}
+          </table>`),
+        text: `Reminder: ${appt.service ?? 'consultation'} with ${name} is ${at}.`,
+      };
+    }
+
     case 'lead_received':
       return {
         subject: 'Thank you for getting in touch',

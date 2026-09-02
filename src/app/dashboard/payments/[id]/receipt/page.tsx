@@ -129,7 +129,7 @@ export default async function ReceiptPage(props: { params: Promise<{ id: string 
           </p>
           <p className="mt-2">
             This is a computer-generated receipt and is valid without a signature. For any
-            queries about this payment, call {BRAND.phones[0]} quoting the receipt number above.
+            queries about this payment, call or WhatsApp {BRAND.phones[0]} quoting the receipt number above.
           </p>
         </footer>
       </article>

@@ -121,6 +121,18 @@ export async function settlePayment(params: {
         dedupeKey: `reminder_24h_wa:${result.appointment_id}`,
         offsetHoursBeforeStart: 24,
       });
+
+      // Komal's own reminder, to the same number as her booking alert.
+      if (adminTo) {
+        await queueNotification({
+          template: 'appointment_reminder_admin',
+          channel: 'whatsapp',
+          recipient: adminTo,
+          appointmentId: result.appointment_id,
+          dedupeKey: `reminder_24h_admin:${result.appointment_id}`,
+          offsetHoursBeforeStart: 24,
+        });
+      }
       return {
         status: 'confirmed',
         appointmentId: result.appointment_id,

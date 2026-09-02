@@ -82,6 +82,9 @@ export const birthDetailsSchema = z.object({
   // differ from its output type, which breaks the React Hook Form resolver
   // generic. The form always supplies this field, so a default earns nothing.
   birthTimeKnown: z.boolean(),
+}).refine(data => !data.birthTimeKnown || data.birthTime, {
+  message: 'Please enter your time of birth',
+  path: ['birthTime'],
 });
 
 export const bookingDetailsSchema = birthDetailsSchema.extend({

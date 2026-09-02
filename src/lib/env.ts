@@ -70,6 +70,21 @@ const serverSchema = z.object({
   WHATSAPP_ADMIN_TO: z.string().optional(),
 
   /**
+   * Webhook credentials. Both are needed for delivery receipts and replies.
+   *
+   * VERIFY_TOKEN is a string you invent and paste into both the Meta console
+   * and here; it only guards the one-time subscription handshake.
+   *
+   * APP_SECRET is Meta's, from App Settings → Basic, and is what actually
+   * authenticates every incoming event. Without it the route refuses events
+   * with a 503 rather than trusting them — an unverified webhook will accept
+   * fabricated "delivered" receipts from anyone, masking the exact failures it
+   * exists to reveal.
+   */
+  WHATSAPP_VERIFY_TOKEN: z.string().min(16).optional(),
+  WHATSAPP_APP_SECRET: z.string().optional(),
+
+  /**
    * Signs the booking links that let a client open their confirmation without
    * an account. Optional: lib/booking/access-token.ts derives a key from the
    * service-role key when unset, so links keep working on a deployment where
