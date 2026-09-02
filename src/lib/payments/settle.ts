@@ -3,6 +3,7 @@ import { createAdminClient } from '@/lib/supabase/admin';
 import { getPaymentProvider } from './razorpay';
 import { queueNotification } from '@/lib/notifications/outbox';
 import { adminWhatsAppNumber } from '@/lib/notifications/whatsapp';
+import { flushOutboxAfterResponse } from '@/lib/notifications/flush';
 import type { ConfirmResult, Payment } from '@/types/database';
 
 /**
@@ -133,6 +134,11 @@ export async function settlePayment(params: {
           offsetHoursBeforeStart: 24,
         });
       }
+      // Fires as soon as the response is out, so the confirmation lands within
+      // seconds of payment rather than waiting for the next sweep. It cannot
+      // affect the status code this handler returns — see flush.ts.
+      flushOutboxAfterResponse();
+
       return {
         status: 'confirmed',
         appointmentId: result.appointment_id,
@@ -157,6 +163,9 @@ export async function settlePayment(params: {
         appointmentId: result.appointment_id,
         dedupeKey: `needs_attention:${result.appointment_id}`,
       });
+      // This one especially should not wait for a sweep: the client has paid
+      // for a slot that no longer exists and needs telling now, not later.
+      flushOutboxAfterResponse();
       return {
         status: 'conflict',
         appointmentId: result.appointment_id,
