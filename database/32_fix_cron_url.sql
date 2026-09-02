@@ -68,14 +68,31 @@ revoke all on function public.call_cron_endpoint(text) from public, anon, authen
 -- ---------------------------------------------------------------------------
 select public.call_cron_endpoint('/api/cron/notifications') as request_id;
 
--- Wait ~5 seconds, then:
+-- Wait ~5 seconds, then run this. Note it does NOT cast content to jsonb:
+-- a 404 or a platform error page is HTML, and the cast would throw
+-- "invalid input syntax for type json" instead of showing you the status code
+-- you actually needed to see.
 --
---   select id, status_code, (content::jsonb) as body, created
+--   select id,
+--          status_code,
+--          timed_out,
+--          error_msg,
+--          left(content, 300) as body,
+--          created
 --     from net._http_response
 --    order by created desc limit 3;
 --
---   200 -> working. `body` shows what each channel did.
---   401 -> CRON_SECRET in the vault does not match the one deployed on Vercel.
---   404 -> URL is wrong, or that commit is not deployed yet.
---   503 -> the route booted but CRON_SECRET is not set in the Vercel
---          environment at all.
+-- Reading the result:
+--
+--   status_code 200  -> working end to end. `body` shows what each channel did.
+--   status_code 401  -> the vault's cron_secret does not match the CRON_SECRET
+--                       deployed on Vercel. They are separate copies.
+--   status_code 404  -> wrong URL, or that route is not in the deployed commit.
+--   status_code 503  -> the route booted but CRON_SECRET is unset in Vercel's
+--                       environment (not just in your local .env).
+--   status_code NULL -> the request never completed. Read `error_msg` and
+--                       `timed_out` — this is DNS, TLS, or the host being
+--                       unreachable, none of which produce a status code.
+--
+-- An empty result set means pg_net has not flushed the response yet. Wait and
+-- re-run; it is asynchronous.
