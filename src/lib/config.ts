@@ -26,8 +26,20 @@ export const BRAND = {
   phonesE164: ['+919878577077', '+919115177077'],
   instagram: 'https://www.instagram.com/astrologer.komalkalra',
   instagramHandle: '@astrologer.komalkalra',
-  youtube: 'https://www.youtube.com/@astrologer.komalkalra', // PLACEHOLDER
-  youtubeHandle: '@astrologer.komalkalra', // PLACEHOLDER
+  /*
+   * Verified against the live channel, not guessed.
+   *
+   * These were placeholders reading `@astrologer.komalkalra` — with a dot —
+   * which is not her handle and resolved to nothing. The footer link and the
+   * "Watch on YouTube" button have therefore been dead.
+   */
+  youtube: 'https://www.youtube.com/@Astrologerkomalkalra',
+  youtubeHandle: '@Astrologerkomalkalra',
+  /**
+   * Canonical channel id. Needed for the public RSS feed, which is keyed on
+   * this and not on the handle. Read from the channel's own page metadata.
+   */
+  youtubeChannelId: 'UCVZ48EhW7CP3jxf-a5JCOrQ',
   email: 'consult@komalkalra.com', // PLACEHOLDER — replace with the real address
 } as const;
 

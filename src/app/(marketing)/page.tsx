@@ -23,6 +23,8 @@ import { Differentiators } from '@/components/marketing/Differentiators';
 import { SeoProse } from '@/components/marketing/SeoProse';
 import { ToolsLeadSection } from '@/components/marketing/ToolsLeadSection';
 import { BeejMantras } from '@/components/marketing/BeejMantras';
+import { LatestVideos } from '@/components/marketing/LatestVideos';
+import { getLatestVideos } from '@/lib/content/youtube';
 
 export const metadata: Metadata = {
   title: 'Clarity for the Curated Life',
@@ -38,7 +40,7 @@ export default async function HomePage() {
   // src/lib/supabase/public.ts for the full reasoning.
   const supabase = createPublicClient();
 
-  const [services, { data: testimonials }, { data: rated }] = await Promise.all([
+  const [services, { data: testimonials }, { data: rated }, latestVideos] = await Promise.all([
     getActiveServices(),
     supabase
       .from('testimonials')
@@ -58,6 +60,9 @@ export default async function HomePage() {
       .eq('approved', true)
       .not('rating', 'is', null)
       .returns<{ rating: number }[]>(),
+    // Public RSS, no credentials. Returns [] on any failure, so a YouTube
+    // outage costs one section rather than the homepage.
+    getLatestVideos(3),
   ]);
 
   const reviews = testimonials ?? [];
@@ -405,8 +410,13 @@ export default async function HomePage() {
               <PlayCircle className="size-7 text-[var(--color-cocoa)]" aria-hidden />
               <h3 className="mt-4 font-[family-name:var(--font-display)] text-xl font-medium text-[var(--color-cocoa)]">Latest from YouTube</h3>
               <p className="mt-4 max-w-sm text-base leading-relaxed text-[var(--color-body-warm)]">Deep dives into astrological cycles, remedies, and structural life transitions.</p>
-              <div className="mt-8 w-full min-h-[250px] relative z-20 flex items-center justify-center">
-                <div className="elfsight-app-d3add452-2a47-4941-a0ed-f5a3c958e64e w-full" data-elfsight-app-lazy></div>
+              {/*
+                Was an Elfsight widget. Replaced by the channel's own public RSS
+                feed — no badge, no 200-view monthly cap, no third-party script,
+                and it renders in this site's type rather than theirs.
+              */}
+              <div className="mt-8 w-full relative z-20">
+                <LatestVideos videos={latestVideos} />
               </div>
               <a href={BRAND.youtube} target="_blank" rel="noopener noreferrer" className="label-caps relative z-20 mt-8 border-b border-[var(--color-terracotta)] pb-1 text-[var(--color-terracotta)]">Watch on YouTube <ArrowUpRight className="inline size-3.5" aria-hidden /></a>
             </div>
