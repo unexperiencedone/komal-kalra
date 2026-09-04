@@ -341,47 +341,15 @@ export default async function HomePage() {
 
       <ToolsLeadSection />
 
-      {/* ===================== SEO PROSE ===================== */}
-      <SeoProse />
-
-      {/* Purpose statement for OAuth */}
-      <PurposeStatement />
-
-      {/* ============================ FINAL CTA ============================ */}
-      <section className="band-navy py-[var(--spacing-section-lg)] border-t border-white/25">
-        <div className="shell flex flex-col items-start justify-between gap-10 md:flex-row md:items-center">
-          <div>
-            <h2 className="font-[family-name:var(--font-display)] text-4xl text-white">
-              Still deciding? One call is usually all it takes
-            </h2>
-            <p className="mt-4 max-w-md text-base leading-relaxed text-[var(--color-cream)]">
-              Choose a time that suits you. Bookings are confirmed the moment you pay.
-            </p>
-          </div>
-
-          <div className="flex flex-wrap items-center gap-4">
-            <Button asChild size="lg" variant="primary" className="shadow-[4px_4px_0_0_var(--color-saffron-deep)]">
-              <Link href="/book">Schedule a Call &rarr;</Link>
-            </Button>
-            <a
-              href={`tel:${BRAND.phonesE164[0]}`}
-              className="label-caps border-b border-white pb-1 text-white transition-opacity hover:opacity-80"
-            >
-              {BRAND.phones[0]}
-            </a>
-          </div>
-        </div>
-      </section>
-
       {/*
         ========================== BEEJ MANTRAS ==========================
-        `cream`, sitting between the navy CTA above and the sand social-proof
-        band below — navy → cream → sand, so no two neighbours share a tone.
-        `npm run audit:bands` enforces that.
+        `cream`, sitting between the sand Tools section above and the sand
+        social-proof band below — sand → cream → sand, so no two neighbours
+        share a tone. `npm run audit:bands` enforces that.
       */}
       <BeejMantras tone="cream" />
 
-      {/* ================= SOCIAL PROOF — immediately before footer ================= */}
+      {/* ================= SOCIAL PROOF ================= */}
       <section aria-labelledby="proof-heading" className="band-sand relative isolate overflow-hidden py-[var(--spacing-section-lg)]">
         <SectionWatermark corner="top-right" />
         <h2 id="proof-heading" className="sr-only">In their words and curated insights</h2>
@@ -446,8 +414,40 @@ export default async function HomePage() {
         </div>
       </section>
 
+      {/* ===================== SEO PROSE ===================== */}
+      <SeoProse />
+
+      {/* Purpose statement for OAuth */}
+      <PurposeStatement />
+
+      {/* ============================ FINAL CTA ============================ */}
+      <section className="band-navy py-[var(--spacing-section-lg)] border-t border-white/25">
+        <div className="shell flex flex-col items-start justify-between gap-10 md:flex-row md:items-center">
+          <div>
+            <h2 className="font-[family-name:var(--font-display)] text-4xl text-white">
+              Still deciding? One call is usually all it takes
+            </h2>
+            <p className="mt-4 max-w-md text-base leading-relaxed text-[var(--color-cream)]">
+              Choose a time that suits you. Bookings are confirmed the moment you pay.
+            </p>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-4">
+            <Button asChild size="lg" variant="primary" className="shadow-[4px_4px_0_0_var(--color-saffron-deep)]">
+              <Link href="/book">Schedule a Call &rarr;</Link>
+            </Button>
+            <a
+              href={`tel:${BRAND.phonesE164[0]}`}
+              className="label-caps border-b border-white pb-1 text-white transition-opacity hover:opacity-80"
+            >
+              {BRAND.phones[0]}
+            </a>
+          </div>
+        </div>
+      </section>
+
       {/* Additional approved reviews, if there are more than the featured one. */}
-      {/* Tone is cream to contrast with the sand of the Social Proof block above it. */}
+      {/* Tone is cream to contrast with the navy of the Final CTA block above it. */}
       <Testimonials testimonials={reviews.slice(1)} tone="cream" />
     </div>
   );

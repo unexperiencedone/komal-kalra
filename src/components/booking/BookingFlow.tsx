@@ -6,7 +6,7 @@ import Script from 'next/script';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ArrowLeft, Clock, Lock, ShieldCheck, Video, Phone as PhoneIcon, MapPin } from 'lucide-react';
+import { ArrowLeft, Clock, Lock, MessageCircle, ShieldCheck, Video, Phone as PhoneIcon, MapPin } from 'lucide-react';
 import { bookingDetailsSchema, type BookingDetailsInput } from '@/lib/validation/schemas';
 import { formatPaise } from '@/lib/money';
 import {
@@ -23,7 +23,9 @@ import {
 /** Calendar-date min/max. Plain string compare is correct for YYYY-MM-DD. */
 const maxKey = (a: string, b: string) => (a > b ? a : b);
 const minKey = (a: string, b: string) => (a < b ? a : b);
-import { POLICY, BRAND } from '@/lib/config';
+import { POLICY, BRAND, BOOKING_MODE } from '@/lib/config';
+import { buildEnquiryMessage, enquiryLink } from '@/lib/booking/whatsapp-message';
+import { useT } from '@/lib/i18n/LanguageProvider';
 import { Button } from '@/components/ui/button';
 import { Field, Input, Checkbox } from '@/components/ui/field';
 import { InlineAlert, ErrorState } from '@/components/ui/states';
@@ -102,7 +104,15 @@ export function BookingFlow({
   const [hold, setHold] = useState<HoldState | null>(null);
   const [holdPending, setHoldPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  /**
+   * WhatsApp mode: the deep link has been opened. NOT "sent" — opening WhatsApp
+   * only fills the compose box, and nothing here can observe whether the
+   * visitor pressed send. Naming this `sent` would be the beginning of a UI
+   * that lies about it.
+   */
+  const [handedOff, setHandedOff] = useState(false);
 
+  const t = useT();
   const service = services.find((s) => s.id === serviceId) ?? services[0];
 
   const form = useForm<BookingDetailsInput>({
@@ -211,6 +221,22 @@ export function BookingFlow({
   // ---- Hold ---------------------------------------------------------------
   async function selectSlot(startIso: string) {
     setError(null);
+
+    /*
+     * WhatsApp mode writes nothing to the database, so there is no hold to
+     * create — the visitor is asking for a time, not reserving one.
+     *
+     * This is why every label in this mode says "requested". Calling /hold here
+     * would put a row in slot_holds that blocks the calendar for ten minutes on
+     * behalf of someone who may never send the message, and would imply a
+     * reservation the practice has not agreed to.
+     */
+    if (BOOKING_MODE === 'whatsapp') {
+      setSelectedSlot(startIso);
+      setStep('details');
+      return;
+    }
+
     setHoldPending(true);
     setSelectedSlot(startIso);
     try {
@@ -265,9 +291,46 @@ export function BookingFlow({
     void loadSlots();
   }
 
-  // ---- Pay ----------------------------------------------------------------
+  // ---- Submit -------------------------------------------------------------
   async function onSubmit(values: BookingDetailsInput) {
-    if (!hold || !service) return;
+    if (!service) return;
+
+    /*
+     * WHATSAPP MODE: format the details and hand off. No network call of any
+     * kind, no database write, no payment.
+     *
+     * `window.open` is called SYNCHRONOUSLY inside this handler, still within
+     * the user-gesture window. Building the URL after an await would lose that
+     * gesture and every mobile browser would block the popup — the visitor
+     * would press the button and watch nothing happen.
+     */
+    if (BOOKING_MODE === 'whatsapp') {
+      const message = buildEnquiryMessage({
+        fullName: values.fullName,
+        email: values.email,
+        phone: values.phone,
+        serviceTitle: service.title,
+        requestedAt: selectedSlot
+          ? `${formatLongDay(selectedSlot)}, ${formatTime(selectedSlot)} IST`
+          : null,
+        birthDate: values.birthDate,
+        birthTime: values.birthTime,
+        birthTimeKnown: values.birthTimeKnown,
+        birthPlace: [values.birthCity, values.birthState, values.birthCountry]
+          .filter(Boolean)
+          .join(', '),
+      });
+
+      window.open(enquiryLink(message), '_blank', 'noopener,noreferrer');
+
+      // Deliberately NOT "sent". Opening WhatsApp only fills the compose box,
+      // and nothing here can observe whether the visitor pressed send. The
+      // panel this triggers tells them to.
+      setHandedOff(true);
+      return;
+    }
+
+    if (!hold) return;
 
     // No sign-in detour. This used to bounce to /login at exactly this point —
     // after a time was chosen, birth details were typed and a slot was being
@@ -434,8 +497,35 @@ export function BookingFlow({
 
           {step === 'time' && (
             <div className="mt-8 space-y-8">
+              {/*
+                Explains the whole flow BEFORE the first field, because it is
+                not the flow anyone expects. A visitor who reaches the end
+                assuming they were about to pay, and instead gets handed to
+                WhatsApp, has to work out what just happened — and some of them
+                will decide it went wrong and leave. Four numbered lines up
+                front costs nothing and removes that entirely.
+              */}
+              {BOOKING_MODE === 'whatsapp' && (
+                <div className="border border-[var(--color-outline-variant)] bg-white p-5">
+                  <h2 className="font-sans text-[15px] font-semibold text-[var(--color-cocoa)]">
+                    {t('book.wa.howItWorks')}
+                  </h2>
+                  <ol className="mt-3 space-y-1.5 text-sm leading-relaxed text-[var(--color-body-warm)]">
+                    <li>1. {t('book.wa.step.fill')}</li>
+                    <li>2. {t('book.wa.step.open')}</li>
+                    <li>
+                      3.{' '}
+                      <strong className="font-semibold text-[var(--color-cocoa)]">
+                        {t('book.wa.step.send')}
+                      </strong>
+                    </li>
+                    <li>4. {t('book.wa.step.confirm')}</li>
+                  </ol>
+                </div>
+              )}
+
               <div>
-                <h2 className="font-sans text-[15px] font-semibold">1. Choose a consultation</h2>
+                <h2 className="font-sans text-[15px] font-semibold">{t('book.step1')}</h2>
                 <div className="mt-3 grid gap-2.5 sm:grid-cols-2">
                   {services.filter((s) => s.bookable_online).map((s) => (
                     <button
@@ -476,7 +566,7 @@ export function BookingFlow({
               </div>
 
               <div>
-                <h2 className="font-sans text-[15px] font-semibold">2. Pick a time</h2>
+                <h2 className="font-sans text-[15px] font-semibold">{t('book.step2')}</h2>
                 {/*
                   Says why the next few days are greyed out.
 
@@ -496,6 +586,18 @@ export function BookingFlow({
                   </p>
                 ) : (
                   <div className="mb-4" />
+                )}
+                {/*
+                  No slot is held in WhatsApp mode, so this has to be said where
+                  the choice is made — not further down and not in small print.
+                  A calendar that looks exactly like a booking calendar but
+                  reserves nothing is the one genuinely misleading thing about
+                  this flow, and this line is what stops it being so.
+                */}
+                {BOOKING_MODE === 'whatsapp' && (
+                  <p className="mb-4 border-l-2 border-[var(--color-saffron)] bg-[var(--color-cream)] py-2 pl-3 text-xs leading-relaxed text-[var(--color-body-warm)]">
+                    {t('book.wa.notReserved')}
+                  </p>
                 )}
                 {slotsError ? (
                   <ErrorState
@@ -537,13 +639,40 @@ export function BookingFlow({
                 <ArrowLeft className="size-3.5" aria-hidden /> Choose a different time
               </button>
 
-              <div className="mb-6">
-                <HoldTimer expiresAt={hold.expiresAt} onExpire={onHoldExpired} />
-              </div>
+              {/* No hold exists in WhatsApp mode, so there is no countdown to
+                  show — and a timer would imply the slot is being held. */}
+              {BOOKING_MODE === 'payment' && hold && (
+                <div className="mb-6">
+                  <HoldTimer expiresAt={hold.expiresAt} onExpire={onHoldExpired} />
+                </div>
+              )}
+
+              {/*
+                The post-click panel. It says "press send", never "sent".
+                Rendered above the form rather than replacing it so the details
+                stay on screen — if the message did not go, the visitor can
+                re-open it without retyping everything.
+              */}
+              {handedOff && (
+                <div className="mb-6 border border-[var(--color-saffron)] bg-[var(--color-cream)] p-5">
+                  <p className="font-sans text-[15px] font-semibold text-[var(--color-cocoa)]">
+                    {t('book.wa.opened.title')}
+                  </p>
+                  <p className="mt-2 text-sm leading-relaxed text-[var(--color-body-warm)]">
+                    {t('book.wa.opened.body')}
+                  </p>
+                  <button
+                    type="submit"
+                    className="mt-3 text-sm font-medium text-[var(--color-saffron-deep)] underline underline-offset-4"
+                  >
+                    {t('book.wa.opened.retry')}
+                  </button>
+                </div>
+              )}
 
               <form onSubmit={form.handleSubmit(onSubmit)} noValidate className="space-y-6">
                 <fieldset disabled={step === 'paying'} className="space-y-5">
-                  <legend className="font-sans text-[15px] font-semibold">3. Your details</legend>
+                  <legend className="font-sans text-[15px] font-semibold">{t('book.step3')}</legend>
 
                   <Field label="Full name" htmlFor="b-name" required error={form.formState.errors.fullName?.message}>
                     <Input {...form.register('fullName')} autoComplete="name" />
@@ -655,20 +784,45 @@ export function BookingFlow({
                   </div>
                 </fieldset>
 
-                <Button
-                  type="submit"
-                  size="lg"
-                  full
-                  loading={step === 'paying'}
-                  loadingText="Opening secure payment…"
-                >
-                  Pay {formatPaise(total)} securely
-                </Button>
+                {BOOKING_MODE === 'whatsapp' ? (
+                  <>
+                    <Button type="submit" size="lg" full>
+                      <MessageCircle aria-hidden /> {t('book.wa.cta')}
+                    </Button>
 
-                <p className="flex items-center justify-center gap-1.5 text-xs text-[var(--color-body-warm)]">
-                  <Lock className="size-3" aria-hidden />
-                  Payment is processed by Razorpay. Your card details never reach our servers.
-                </p>
+                    {/*
+                      Shown BEFORE the click as well as after. Someone who has
+                      just filled in a form expects pressing the button to
+                      finish the job; being told beforehand that one more action
+                      is required is what stops them closing the tab on a
+                      message they never sent.
+                    */}
+                    <p className="text-center text-xs leading-relaxed text-[var(--color-body-warm)]">
+                      {t('book.wa.step.send')}
+                    </p>
+                    <p className="flex items-center justify-center gap-1.5 text-xs text-[var(--color-body-warm)]">
+                      <Lock className="size-3" aria-hidden />
+                      {t('book.wa.noPaymentNow')}
+                    </p>
+                  </>
+                ) : (
+                  <>
+                    <Button
+                      type="submit"
+                      size="lg"
+                      full
+                      loading={step === 'paying'}
+                      loadingText="Opening secure payment…"
+                    >
+                      Pay {formatPaise(total)} securely
+                    </Button>
+
+                    <p className="flex items-center justify-center gap-1.5 text-xs text-[var(--color-body-warm)]">
+                      <Lock className="size-3" aria-hidden />
+                      Payment is processed by Razorpay. Your card details never reach our servers.
+                    </p>
+                  </>
+                )}
               </form>
             </div>
           )}

@@ -69,6 +69,22 @@ function componentTone(name) {
     const src = fs.readFileSync(file, 'utf8');
     const tag = src.match(/<(?:section|Band)\b[\s\S]{0,600}?>/);
     if (tag) tone = toneOf(tag[0]);
+
+    /*
+     * A component that forwards a prop renders `<Band tone={tone}>`, which is a
+     * JSX expression and matches no colour literal — so the line above returns
+     * null and the section becomes invisible to this check. Fall back to the
+     * DEFAULT declared in its signature (`tone = 'sand'`), which is what
+     * actually renders when the call site says nothing.
+     *
+     * This mattered: <BeejMantras tone="cream" /> sits between two sand bands
+     * and was being skipped entirely, so the audit reported those two sand
+     * neighbours as adjacent when a cream band was in fact between them.
+     */
+    if (!tone) {
+      const def = src.match(/\btone\s*(?::[^=]*)?=\s*['"](cream|sand|terracotta|amber|maroon)['"]/);
+      if (def) tone = def[1];
+    }
   }
   componentToneCache.set(name, tone);
   return tone;
@@ -85,7 +101,11 @@ function bandsIn(file) {
   while ((m = re.exec(src))) {
     const line = src.slice(0, m.index).split('\n').length;
     if (m[3]) {
-      const tone = componentTone(m[3]);
+      // An explicit tone at the CALL SITE wins over the component's default.
+      // `<BeejMantras tone="cream" />` renders cream whatever the component
+      // falls back to, and the same component is deliberately used at two
+      // different tones on different pages.
+      const tone = toneOf(m[0]) || componentTone(m[3]);
       if (tone) out.push({ line, tone, label: `<${m[3]} />` });
     } else {
       const tone = toneOf(m[0]);

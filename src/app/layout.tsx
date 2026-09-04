@@ -3,6 +3,7 @@ import { Poppins, Cormorant_Garamond } from 'next/font/google';
 import { Toaster } from 'sonner';
 import { BRAND } from '@/lib/config';
 import './globals.css';
+import { LanguageProvider } from '@/lib/i18n/LanguageProvider';
 
 /**
  * Fonts are self-hosted through next/font: no render-blocking request to a
@@ -105,7 +106,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         {/* First focusable element on every page. */}
         <a href="#main" className="skip-link">Skip to content</a>
-        {children}
+        {/*
+          Wraps everything so the header's toggle and the booking flow share one
+          locale. The provider renders English on the server and switches after
+          mount — see LanguageProvider for why it must not read localStorage
+          during render.
+        */}
+        <LanguageProvider>{children}</LanguageProvider>
         <Toaster
           position="top-center"
           toastOptions={{

@@ -8,14 +8,20 @@ import { Menu, X } from 'lucide-react';
 import { BRAND } from '@/lib/config';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
+import { LanguageToggle } from '@/components/common/LanguageToggle';
+import { useT } from '@/lib/i18n/LanguageProvider';
 
+/**
+ * Labels are translation KEYS, not text. The dictionary is the single place
+ * both languages live, so a nav item cannot exist in one language only.
+ */
 const NAV = [
-  { href: '/services', label: 'Consultation' },
-  { href: '/free-tools', label: 'Free Tools' },
-  { href: '/about', label: 'About Komal' },
-  { href: '/faq', label: 'FAQ' },
-  { href: '/contact', label: 'Contact' },
-];
+  { href: '/services', key: 'nav.consultation' },
+  { href: '/free-tools', key: 'nav.freeTools' },
+  { href: '/about', key: 'nav.about' },
+  { href: '/faq', key: 'nav.faq' },
+  { href: '/contact', key: 'nav.contact' },
+] as const;
 
 /**
  * Hide the bar on scroll down, bring it back on scroll up.
@@ -78,6 +84,7 @@ function useHideOnScroll(active: boolean) {
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
+  const t = useT();
 
   // Never auto-hide while the mobile menu is open — the close button lives in
   // the bar, and sliding it off screen would trap the user in the overlay.
@@ -125,6 +132,9 @@ export function SiteHeader() {
           </Link>
 
           <div className="flex items-center gap-4">
+            {/* Visible on mobile too: the audience most likely to want Punjabi
+                is not the one most likely to be on a desktop. */}
+            <LanguageToggle className="border-[color-mix(in_srgb,var(--color-cream)_35%,transparent)]" />
             <Link href="/login" className="hidden text-xs font-semibold uppercase tracking-[0.1em] text-[var(--color-cream)] hover:text-[var(--color-saffron-lift)] md:inline-flex">Login</Link>
             <Button variant="primary" asChild className="hidden bg-[var(--color-saffron)] text-[var(--color-on-saffron)] shadow-[4px_4px_0_0_var(--color-on-saffron)] hover:bg-[var(--color-saffron-lift)] md:inline-flex">
               <Link href="/book">Join Community</Link>
@@ -153,7 +163,7 @@ export function SiteHeader() {
                   : 'text-[var(--color-cream)] hover:text-[var(--color-saffron-lift)]',
               )}
             >
-              {item.label}
+              {t(item.key)}
             </Link>
           ))}
         </nav>
@@ -169,7 +179,7 @@ export function SiteHeader() {
               {NAV.map((item) => (
                 <li key={item.href}>
                   <Link href={item.href} className="block py-4 text-2xl font-[family-name:var(--font-display)] text-[var(--color-cream)]">
-                    {item.label}
+                    {t(item.key)}
                   </Link>
                 </li>
               ))}

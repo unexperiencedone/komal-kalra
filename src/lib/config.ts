@@ -52,6 +52,52 @@ export const BOOKING = {
 } as const;
 
 /**
+ * How a booking is completed.
+ *
+ *   'payment'   the built checkout — slot hold, Razorpay order, appointment row
+ *   'whatsapp'  details are formatted into a WhatsApp message the visitor sends;
+ *               payment and confirmation are arranged in that conversation
+ *
+ * WHY A SWITCH AND NOT A REWRITE
+ *
+ * The practice does not have Razorpay or WhatsApp Business API credentials yet,
+ * so nothing can be taken online today. That is a temporary fact about the
+ * paperwork, not a decision about the product — so the checkout is disabled,
+ * not deleted. Turning payments on when the keys arrive is this one variable.
+ *
+ * NEXT_PUBLIC_ because the booking flow is a client component and has to render
+ * a different final step. It is a mode flag, not a secret; nothing about
+ * knowing it helps an attacker, and the server still refuses to create an order
+ * when Razorpay is unconfigured regardless of what the browser believes.
+ *
+ * WHAT 'whatsapp' MODE DELIBERATELY DOES NOT DO
+ *
+ * It writes NOTHING to the database — no lead, no hold, no appointment. So no
+ * slot is reserved and two people can ask for the same time. Every label in
+ * that mode therefore says "requested", never "booked" or "reserved", and the
+ * session is not confirmed until Komal replies. Saying otherwise would be a
+ * promise the system cannot keep.
+ *
+ * One genuine benefit of storing nothing: birth details never reach our
+ * database at all, which is the cleanest possible position under the DPDP Act
+ * for that category of personal data.
+ */
+export type BookingMode = 'payment' | 'whatsapp';
+
+export const BOOKING_MODE: BookingMode =
+  process.env.NEXT_PUBLIC_BOOKING_MODE === 'whatsapp' ? 'whatsapp' : 'payment';
+
+/**
+ * The number booking enquiries go to, digits only — wa.me rejects the `+`.
+ *
+ * Deliberately the published business number rather than WHATSAPP_ADMIN_TO:
+ * that one is a server-side notification target, whereas this is where a client
+ * starts a conversation, and it must be a number Komal actually reads and
+ * replies from.
+ */
+export const WHATSAPP_ENQUIRY_NUMBER = BRAND.phonesE164[0].replace(/\D/g, '');
+
+/**
  * Booking policy. Changed from "free cancellation up to 24 hours" to final sale.
  *
  * ⚠️  ONE DISTINCTION RUNS THROUGH ALL OF THIS, AND IT IS NOT COSMETIC.
