@@ -5,7 +5,7 @@ import { notFound } from 'next/navigation';
 import { ArrowRight, Clock, MapPin, Phone as PhoneIcon, Video } from 'lucide-react';
 import { getServiceBySlug } from '@/lib/booking/availability';
 import { createPublicClient } from '@/lib/supabase/public';
-import { formatPaise, paiseToRupees } from '@/lib/money';
+import { paiseToRupees } from '@/lib/money';
 import { BRAND, POLICY } from '@/lib/config';
 import { Button } from '@/components/ui/button';
 import { Reveal } from '@/components/common/Reveal';
@@ -19,6 +19,8 @@ import { IncludesList } from '@/components/marketing/IncludesList';
 import { Differentiators } from '@/components/marketing/Differentiators';
 import { Testimonials } from '@/components/marketing/Testimonials';
 import type { Testimonial } from '@/types/database';
+import { publicPrice } from '@/lib/money';
+import { SHOW_PRICES } from '@/lib/config';
 
 export async function generateStaticParams() {
   try {
@@ -106,15 +108,28 @@ export default async function ServiceDetailPage(props: { params: Promise<{ slug:
     provider: { '@type': 'Person', name: BRAND.fullName },
     areaServed: 'IN',
     serviceType: service.title,
-    offers: {
-      '@type': 'Offer',
-      price: paiseToRupees(service.price_paise).toFixed(2),
-      priceCurrency: service.currency,
-      availability: service.bookable_online
-        ? 'https://schema.org/InStock'
-        : 'https://schema.org/LimitedAvailability',
-      url: `${process.env.NEXT_PUBLIC_SITE_URL}/book?service=${service.slug}`,
-    },
+    /*
+      Dropped entirely when prices are hidden — not blanked, not zeroed.
+      Structured data is a claim to Google as much as the page is a claim to a
+      reader, and a price that is invisible on the page but published here can
+      still surface in a search result. Hiding it in one place and publishing it
+      in the other is the worst of both: the figure is out in the world and
+      nobody looking at the site can see what it says.
+
+      `availability` goes with it. An Offer is the wrapper for both, and there
+      is no offer being made while fees are arranged in conversation.
+    */
+    ...(SHOW_PRICES && {
+      offers: {
+        '@type': 'Offer',
+        price: paiseToRupees(service.price_paise).toFixed(2),
+        priceCurrency: service.currency,
+        availability: service.bookable_online
+          ? 'https://schema.org/InStock'
+          : 'https://schema.org/LimitedAvailability',
+        url: `${process.env.NEXT_PUBLIC_SITE_URL}/book?service=${service.slug}`,
+      },
+    }),
   };
 
   return (
@@ -223,11 +238,13 @@ export default async function ServiceDetailPage(props: { params: Promise<{ slug:
 
                   <IncludesList highlights={service.highlights} />
 
-                  <p className="mt-10 flex items-baseline gap-2">
-                    <span className="tabular font-[family-name:var(--font-display)] text-5xl font-semibold text-[var(--color-cocoa)]">
-                      {formatPaise(service.price_paise)}
-                    </span>
-                  </p>
+                  {publicPrice(service.price_paise) && (
+                    <p className="mt-10 flex items-baseline gap-2">
+                      <span className="tabular font-[family-name:var(--font-display)] text-5xl font-semibold text-[var(--color-cocoa)]">
+                        {publicPrice(service.price_paise)}
+                      </span>
+                    </p>
+                  )}
 
                   <div className="mt-8">
                     <Button asChild size="lg" variant="primary" className="shadow-[4px_4px_0_0_var(--color-saffron-deep)]">

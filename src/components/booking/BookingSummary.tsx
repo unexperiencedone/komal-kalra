@@ -5,6 +5,7 @@ import { formatLongDay, formatTime } from '@/lib/date';
 import { BRAND, POLICY } from '@/lib/config';
 import { img } from '@/lib/content/imagery';
 import type { Service } from '@/types/database';
+import { SHOW_PRICES } from '@/lib/config';
 
 /**
  * Booking Summary panel from the design — Linen Grey block, sharp edges,
@@ -88,7 +89,7 @@ export function BookingSummary({
           </div>
         </div>
 
-        {taxPaise > 0 && (
+        {SHOW_PRICES && taxPaise > 0 && (
           <div className="flex items-center justify-between">
             <dt className="text-sm text-[var(--color-body-warm)]">GST</dt>
             <dd className="tabular text-sm text-[var(--color-body-warm)]">{formatPaise(taxPaise)}</dd>
@@ -96,11 +97,25 @@ export function BookingSummary({
         )}
       </dl>
 
-      <div className="mt-8 flex items-baseline justify-between border-t border-[var(--color-hairline)] pt-8">
-        <span className="text-base text-[var(--color-body-warm)]">Total Amount</span>
-        <span className="tabular font-[family-name:var(--font-display)] text-3xl font-medium text-[var(--color-cocoa)]">
-          {formatPaise(totalPaise)}
-        </span>
+      <div className="mt-8 flex items-baseline justify-between gap-4 border-t border-[var(--color-hairline)] pt-8">
+        {SHOW_PRICES ? (
+          <>
+            <span className="text-base text-[var(--color-body-warm)]">Total Amount</span>
+            <span className="tabular font-[family-name:var(--font-display)] text-3xl font-medium text-[var(--color-cocoa)]">
+              {formatPaise(totalPaise)}
+            </span>
+          </>
+        ) : (
+          /*
+            A sentence, not a blank or a dash. This panel's job is to answer
+            "what am I committing to", and with fees arranged in conversation
+            the honest answer is that the amount is not settled here — which is
+            information, where an empty total is just an apparent bug.
+          */
+          <span className="text-sm leading-relaxed text-[var(--color-body-warm)]">
+            Komal confirms the fee when she replies to your message.
+          </span>
+        )}
       </div>
 
       <p className="mt-6 text-xs leading-relaxed text-[var(--color-body-warm)]">

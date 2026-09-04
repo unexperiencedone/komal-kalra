@@ -8,7 +8,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ArrowLeft, Clock, Lock, MessageCircle, ShieldCheck, Video, Phone as PhoneIcon, MapPin } from 'lucide-react';
 import { bookingDetailsSchema, type BookingDetailsInput } from '@/lib/validation/schemas';
-import { formatPaise } from '@/lib/money';
+import { formatPaise, publicPrice } from '@/lib/money';
 import {
   formatLongDay,
   formatTime,
@@ -521,6 +521,37 @@ export function BookingFlow({
                     </li>
                     <li>4. {t('book.wa.step.confirm')}</li>
                   </ol>
+
+                  {/*
+                    The escape hatch, offered up front rather than buried at the
+                    end. Some people arrive not knowing which session they need,
+                    and for them the form is an obstacle course guarding the
+                    thing they actually want — a conversation. Making them fill
+                    in a birth date to ask a question loses them.
+
+                    Deliberately quieter than the primary path: a link, not a
+                    second button of equal weight. The form produces a message
+                    Komal can act on immediately, so it stays the default.
+                  */}
+                  <div className="mt-5 flex items-center gap-3 border-t border-[var(--color-outline-variant)] pt-4">
+                    <span className="text-xs uppercase tracking-[0.12em] text-[var(--color-body-warm)]">
+                      {t('book.wa.or')}
+                    </span>
+                    <div>
+                      <a
+                        href={enquiryLink('Hello, I would like to ask about a consultation.')}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 text-sm font-medium text-[var(--color-saffron-deep)] underline underline-offset-4"
+                      >
+                        <MessageCircle className="size-4" aria-hidden />
+                        {t('book.wa.direct')}
+                      </a>
+                      <p className="mt-1 text-xs leading-relaxed text-[var(--color-body-warm)]">
+                        {t('book.wa.directHint')}
+                      </p>
+                    </div>
+                  </div>
                 </div>
               )}
 
@@ -558,7 +589,7 @@ export function BookingFlow({
                         </span>
                       )}
                       <span className="mt-1 block text-xs text-[var(--color-body-warm)]">
-                        {s.duration_minutes} min · {formatPaise(s.price_paise)}
+                        {s.duration_minutes} min{publicPrice(s.price_paise) ? ` · ${publicPrice(s.price_paise)}` : ''}
                       </span>
                     </button>
                   ))}

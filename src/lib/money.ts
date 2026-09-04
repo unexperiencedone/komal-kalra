@@ -1,3 +1,4 @@
+import { SHOW_PRICES } from './config';
 /**
  * Money.
  *
@@ -57,4 +58,23 @@ export function paiseToRupees(paise: number): number {
 export function taxOn(netPaise: number, bps: number): number {
   if (bps <= 0) return 0;
   return Math.floor((netPaise * bps) / 10_000);
+}
+
+/**
+ * A price for a PUBLIC surface — or null when fees are not being shown.
+ *
+ * Every public price goes through this one function rather than each component
+ * checking the flag itself. Nine call sites each writing their own conditional
+ * is nine chances to miss one, and the one that gets missed is the one still
+ * displaying a stale figure after someone was told prices were hidden.
+ *
+ * Callers must handle `null` by rendering nothing — not "—", not "Price on
+ * request" unless that is genuinely the intent, and never a fallback number.
+ *
+ * NOT for admin screens, receipts, or the booking summary in payment mode.
+ * Those show what is actually being charged and must never be blank; use
+ * formatPaise directly there.
+ */
+export function publicPrice(paise: number): string | null {
+  return SHOW_PRICES ? formatPaise(paise) : null;
 }

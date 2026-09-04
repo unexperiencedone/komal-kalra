@@ -135,9 +135,19 @@ export function SiteHeader() {
             {/* Visible on mobile too: the audience most likely to want Punjabi
                 is not the one most likely to be on a desktop. */}
             <LanguageToggle className="border-[color-mix(in_srgb,var(--color-cream)_35%,transparent)]" />
-            <Link href="/login" className="hidden text-xs font-semibold uppercase tracking-[0.1em] text-[var(--color-cream)] hover:text-[var(--color-saffron-lift)] md:inline-flex">Login</Link>
+            {/*
+              One call to action, and it names what it does.
+              "Join Community" promised something this site does not have, and
+              "Login" sat beside it competing for the same click while being
+              useless to a first-time visitor — nobody arriving to book a
+              consultation has an account.
+
+              /login still works by direct URL, which is how Komal reaches the
+              admin console. Removing the link removes a dead end for clients,
+              not the route.
+            */}
             <Button variant="primary" asChild className="hidden bg-[var(--color-saffron)] text-[var(--color-on-saffron)] shadow-[4px_4px_0_0_var(--color-on-saffron)] hover:bg-[var(--color-saffron-lift)] md:inline-flex">
-              <Link href="/book">Join Community</Link>
+              <Link href="/book">{t('nav.book')}</Link>
             </Button>
             <button
               type="button"
@@ -187,7 +197,7 @@ export function SiteHeader() {
 
             <div className="pb-8">
               <Button variant="primary" asChild className="w-full bg-[var(--color-cream)] text-[var(--color-cocoa)] hover:bg-[var(--color-card-cream)] shadow-none mb-4">
-                <Link href="/book">Book Consultation</Link>
+                <Link href="/book">{t('nav.book')}</Link>
               </Button>
               <a
                 href={`tel:${BRAND.phonesE164[0]}`}

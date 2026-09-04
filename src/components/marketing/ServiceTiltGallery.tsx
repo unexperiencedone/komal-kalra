@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowUpRight, Clock } from 'lucide-react';
-import { formatPaise } from '@/lib/money';
+import { publicPrice } from '@/lib/money';
 import { serviceImage } from '@/lib/content/imagery';
 import type { Service } from '@/types/database';
 
@@ -291,7 +291,7 @@ function ServiceTiltCard({
     >
       <Link
         href={`/services/${service.slug}`}
-        aria-label={`${service.title} — ${service.duration_minutes} minutes, ${formatPaise(service.price_paise)}`}
+        aria-label={`${service.title} — ${service.duration_minutes} minutes${publicPrice(service.price_paise) ? `, ${publicPrice(service.price_paise)}` : ''}`}
         onFocus={() => {
           setHovering(true);
           onHover(index);
@@ -407,7 +407,7 @@ function ServiceTiltCard({
               <Clock className="size-3.5" aria-hidden />
               {service.duration_minutes} min
             </span>
-            <span>{formatPaise(service.price_paise)}</span>
+            {publicPrice(service.price_paise) && <span>{publicPrice(service.price_paise)}</span>}
           </div>
           <span className="inline-flex items-center gap-1 text-xs font-semibold uppercase tracking-widest opacity-0 transition-opacity duration-300 group-hover:opacity-100">
             {service.bookable_online ? 'Explore' : 'Enquire'}

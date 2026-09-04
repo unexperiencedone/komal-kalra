@@ -1,10 +1,10 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { Clock, GitCompareArrows, Handshake, Sparkles, Timer, Waves } from 'lucide-react';
-import { formatPaise } from '@/lib/money';
 import { cn } from '@/lib/utils';
 import { img, serviceCardImage } from '@/lib/content/imagery';
 import type { Service } from '@/types/database';
+import { publicPrice } from '@/lib/money';
 
 /**
  * Service card — the "bento" tile from the home design.
@@ -17,9 +17,12 @@ import type { Service } from '@/types/database';
  * numerical indicators to maintain the literary aesthetic". It is passed in
  * rather than derived so the grid can number cards in display order.
  *
- * Price is shown because hiding it forces a "request a quote" step that adds a
- * day of latency and loses buyers who are ready now — a finding from the
- * earlier research pass that the visual redesign does not change.
+ * Price goes through publicPrice(), which returns null while fees are not being
+ * published. The research finding still stands — hiding a price adds a
+ * "request a quote" round trip and loses buyers who are ready now — but it
+ * assumed the site could take the money. It cannot at the moment: payment is
+ * arranged in conversation, so the quote step exists either way and printing a
+ * figure here would only be the wrong half of it.
  */
 
 const SERVICE_ICON: Record<string, React.ComponentType<{ className?: string }>> = {
@@ -116,10 +119,14 @@ export function ServiceCard({
               <Clock className="size-3.5 text-[var(--color-saffron)]" aria-hidden />
               <dd className="label-small">{service.duration_minutes} MIN</dd>
             </div>
-            <div>
-              <dt className="sr-only">Session fee</dt>
-              <dd className="tabular label-small">{formatPaise(service.price_paise)}</dd>
-            </div>
+            {/* The whole <div> goes, not just the value — a "Session fee"
+                label with nothing beside it reads as a loading failure. */}
+            {publicPrice(service.price_paise) && (
+              <div>
+                <dt className="sr-only">Session fee</dt>
+                <dd className="tabular label-small">{publicPrice(service.price_paise)}</dd>
+              </div>
+            )}
           </dl>
         </div>
 

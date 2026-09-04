@@ -94,6 +94,16 @@ export const DICT = {
     pa: 'ਇਸ ਵੈੱਬਸਾਈਟ ਉੱਤੇ ਕੋਈ ਭੁਗਤਾਨ ਨਹੀਂ ਲਿਆ ਜਾਂਦਾ। ਭੁਗਤਾਨ ਕੋਮਲ ਨਾਲ ਸਿੱਧਾ ਤੈਅ ਹੁੰਦਾ ਹੈ।',
   },
 
+  'book.wa.or': { en: 'or', pa: 'ਜਾਂ' },
+  'book.wa.direct': {
+    en: 'Message Komal directly',
+    pa: 'ਕੋਮਲ ਨੂੰ ਸਿੱਧਾ ਸੁਨੇਹਾ ਭੇਜੋ',
+  },
+  'book.wa.directHint': {
+    en: 'Skip the form and start a conversation. Useful if you are not sure which session you need.',
+    pa: 'ਫਾਰਮ ਛੱਡ ਕੇ ਸਿੱਧੀ ਗੱਲ ਸ਼ੁਰੂ ਕਰੋ। ਜੇ ਤੁਹਾਨੂੰ ਪਤਾ ਨਹੀਂ ਕਿਹੜੀ ਸੇਵਾ ਚਾਹੀਦੀ ਹੈ ਤਾਂ ਇਹ ਸੌਖਾ ਹੈ।',
+  },
+
   // ---- Booking: fields ---------------------------------------------------
   'field.fullName': { en: 'Full name', pa: 'ਪੂਰਾ ਨਾਮ' },
   'field.email': { en: 'Email', pa: 'ਈਮੇਲ' },

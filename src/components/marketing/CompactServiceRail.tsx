@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import React from 'react';
 import { ArrowUpRight, Clock } from 'lucide-react';
-import { formatPaise } from '@/lib/money';
+import { publicPrice } from '@/lib/money';
 import { Reveal } from '@/components/common/Reveal';
 import type { Service } from '@/types/database';
 
@@ -46,7 +46,9 @@ export function CompactServiceRail({ services }: { services: Service[] }) {
         <div className="relative z-10 mt-10 flex flex-wrap items-center justify-between gap-5 border-t border-[var(--color-hairline)] pt-6">
           <div className="flex items-center gap-6 text-sm text-[var(--color-body-warm)]">
             <span className="flex items-center gap-2"><Clock className="size-4 text-[var(--color-saffron-deep)]" aria-hidden /> {current.duration_minutes} min</span>
-            <span className="tabular">{formatPaise(current.price_paise)}</span>
+            {publicPrice(current.price_paise) && (
+              <span className="tabular">{publicPrice(current.price_paise)}</span>
+            )}
           </div>
           <Link href={`/services/${current.slug}`} className="label-caps inline-flex items-center gap-2 border border-[var(--color-terracotta)] px-5 py-3 text-[var(--color-terracotta)] transition-colors hover:bg-[var(--color-terracotta)] hover:text-white">View service <ArrowUpRight className="size-4" aria-hidden /></Link>
         </div>

@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowUpRight } from 'lucide-react';
-import { formatPaise } from '@/lib/money';
+import { publicPrice } from '@/lib/money';
 import { serviceImage } from '@/lib/content/imagery';
 import type { Service } from '@/types/database';
 
@@ -69,7 +69,7 @@ export function ExpertiseList({ services }: { services: Service[] }) {
           />
           <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent" />
           <p className="absolute inset-x-6 bottom-6 z-10 text-sm text-white/90">
-            {current.duration_minutes} min · {formatPaise(current.price_paise)}
+            {current.duration_minutes} min{publicPrice(current.price_paise) ? ` · ${publicPrice(current.price_paise)}` : ''}
           </p>
         </div>
       </div>

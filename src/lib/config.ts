@@ -98,6 +98,34 @@ export const BOOKING_MODE: BookingMode =
 export const WHATSAPP_ENQUIRY_NUMBER = BRAND.phonesE164[0].replace(/\D/g, '');
 
 /**
+ * Whether fees are shown anywhere public.
+ *
+ * DEFAULTS TO HIDDEN IN WHATSAPP MODE, and the default is the point.
+ *
+ * If this were simply "off unless you set it on", forgetting the variable on
+ * one deployment republishes every price. That is not hypothetical here: the
+ * live catalogue currently carries a ₹1 test price on a real consultation, on a
+ * page Google is allowed to index. The safe direction to fail is hidden.
+ *
+ * It is a SEPARATE flag from BOOKING_MODE rather than derived from it, because
+ * the two are genuinely independent — a practice may publish its fees while
+ * taking bookings over WhatsApp, or keep them private with card payments live.
+ * More usefully, keeping them separate means switching payments back on does
+ * not silently republish prices nobody has looked at since; that becomes its
+ * own deliberate decision.
+ *
+ *   unset   → shown only when BOOKING_MODE === 'payment'
+ *   'true'  → always shown
+ *   'false' → always hidden
+ */
+export const SHOW_PRICES: boolean = (() => {
+  const explicit = process.env.NEXT_PUBLIC_SHOW_PRICES;
+  if (explicit === 'true') return true;
+  if (explicit === 'false') return false;
+  return BOOKING_MODE === 'payment';
+})();
+
+/**
  * Booking policy. Changed from "free cancellation up to 24 hours" to final sale.
  *
  * ⚠️  ONE DISTINCTION RUNS THROUGH ALL OF THIS, AND IT IS NOT COSMETIC.
