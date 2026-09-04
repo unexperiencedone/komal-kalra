@@ -32,7 +32,20 @@ export const DICT = {
   // ---- Navigation --------------------------------------------------------
   'nav.consultation': { en: 'Consultation', pa: 'ਸਲਾਹ-ਮਸ਼ਵਰਾ' },
   'nav.freeTools': { en: 'Free Tools', pa: 'ਮੁਫ਼ਤ ਸਾਧਨ' },
-  'nav.about': { en: 'About Komal', pa: 'ਕੋਮਲ ਬਾਰੇ' },
+  /*
+   * "About", not "About Komal".
+   *
+   * The old label named one person, and the /about page now introduces a second
+   * practitioner — so it was already inaccurate. Naming a person in navigation
+   * is brittle by construction: it has to be revisited every time the practice
+   * changes shape. "Our Astrologers" would have the same problem the day a
+   * counsellor joins who is not an astrologer.
+   *
+   * The PAGE stays founder-led — her portrait, her name as the h1 — which is
+   * correct for a practice trading under her name. The nav just stops making a
+   * claim about how many people work there.
+   */
+  'nav.about': { en: 'About', pa: 'ਸਾਡੇ ਬਾਰੇ' },
   'nav.faq': { en: 'FAQ', pa: 'ਸਵਾਲ-ਜਵਾਬ' },
   'nav.contact': { en: 'Contact', pa: 'ਸੰਪਰਕ' },
   'nav.book': { en: 'Book a Consultation', pa: 'ਸਲਾਹ ਬੁੱਕ ਕਰੋ' },
