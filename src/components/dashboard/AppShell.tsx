@@ -186,7 +186,7 @@ export function AppShell({
       {/* Mobile top bar */}
       <header className="sticky top-0 z-40 flex h-16 items-center justify-between border-b border-[var(--color-hairline)] bg-[var(--color-card-cream)] px-6 lg:hidden">
         <Link href="/" className="flex items-center gap-2 font-[family-name:var(--font-display)] text-xl font-medium text-[var(--color-cocoa)]">
-          <Image src="/images/favicon.png" alt="" width={28} height={28} className="size-7" />
+          <Image src="/images/favicon_new.png" alt="" width={28} height={28} className="size-7" />
           {BRAND.name}
         </Link>
         <button

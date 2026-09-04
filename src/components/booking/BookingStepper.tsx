@@ -12,7 +12,24 @@ import { cn } from '@/lib/utils';
 export const BOOKING_STEPS = ['Selection', 'Schedule', 'Details', 'Payment'] as const;
 export type BookingStepName = (typeof BOOKING_STEPS)[number];
 
-export function BookingStepper({ current }: { current: BookingStepName }) {
+/**
+ * The last step is only called "Payment" when a payment happens here.
+ *
+ * In WhatsApp mode nothing is charged on the site, so labelling the final step
+ * Payment sets up the wrong expectation twice over: the visitor braces for a
+ * card form that never comes, and — worse — some of them will read the step as
+ * proof they have already paid once the message is sent.
+ */
+const WHATSAPP_STEPS = ['Selection', 'Schedule', 'Details', 'Send'] as const;
+
+export function BookingStepper({
+  current,
+  mode = 'payment',
+}: {
+  current: BookingStepName;
+  mode?: 'payment' | 'whatsapp';
+}) {
+  const steps = mode === 'whatsapp' ? WHATSAPP_STEPS : BOOKING_STEPS;
   const activeIndex = BOOKING_STEPS.indexOf(current);
 
   return (
@@ -20,7 +37,7 @@ export function BookingStepper({ current }: { current: BookingStepName }) {
       aria-label="Booking progress"
       className="flex items-center gap-3 overflow-x-auto pb-1 sm:gap-4"
     >
-      {BOOKING_STEPS.map((step, i) => {
+      {steps.map((step, i) => {
         const done = i < activeIndex;
         const active = i === activeIndex;
         return (

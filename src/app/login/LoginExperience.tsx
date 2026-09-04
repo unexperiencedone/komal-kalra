@@ -45,7 +45,7 @@ export function LoginExperience() {
           href="/"
           className="flex items-center gap-2.5 font-[family-name:var(--font-display)] text-lg font-medium tracking-tight text-[var(--color-cocoa)] sm:text-2xl"
         >
-          <Image src="/images/favicon.png" alt="" width={32} height={32} className="size-8" />
+          <Image src="/images/favicon_new.png" alt="" width={32} height={32} className="size-8" />
           {BRAND.name}
         </Link>
 

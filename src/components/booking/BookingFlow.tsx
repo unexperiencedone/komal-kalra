@@ -282,12 +282,16 @@ export function BookingFlow({
   async function releaseAndGoBack() {
     if (hold) {
       // Fire-and-forget: freeing the slot for other people should not block the
-      // user's navigation.
+      // user's navigation. No-op in WhatsApp mode — nothing was ever held.
       void fetch(`/api/bookings/hold?holdId=${hold.id}`, { method: 'DELETE' });
     }
     setHold(null);
     setSelectedSlot(null);
     setStep('time');
+    // Going back after a hand-off must clear it, or the "press send in
+    // WhatsApp" panel reappears above a form for a booking they have moved on
+    // from — pointing at a message that no longer matches what is on screen.
+    setHandedOff(false);
     void loadSlots();
   }
 
@@ -487,7 +491,7 @@ export function BookingFlow({
             engages — the grid item just grows to fit it instead, and the
             whole page gains a horizontal scrollbar. */}
         <div className="min-w-0">
-          <BookingStepper current={STEP_LABEL[step]} />
+          <BookingStepper current={STEP_LABEL[step]} mode={BOOKING_MODE} />
 
           {error && (
             <div className="mt-6">
@@ -660,7 +664,14 @@ export function BookingFlow({
             </div>
           )}
 
-          {(step === 'details' || step === 'paying') && hold && (
+          {/*
+            `hold` is null in WhatsApp mode by design — no slot is reserved.
+            This condition used to require it, so selecting a time moved the
+            step to 'details' and then rendered NOTHING: an empty page with a
+            stepper and a summary, and no form. Gate on having chosen a time
+            instead, which is the thing that is actually true in both modes.
+          */}
+          {(step === 'details' || step === 'paying') && (hold || selectedSlot) && (
             <div className="mt-8">
               <button
                 type="button"
@@ -860,10 +871,23 @@ export function BookingFlow({
         </div>
 
         {/* --------------------------- SUMMARY ---------------------------- */}
+        {/*
+          Falls back to `selectedSlot`, because in WhatsApp mode there is no
+          hold to read the time off — which is why the summary showed
+          "Date & Time —" after a time had plainly been chosen. The end time is
+          derived from the service duration for the same reason.
+        */}
         <BookingSummary
           service={service}
-          startsAt={hold?.startsAt}
-          endsAt={hold?.endsAt}
+          startsAt={hold?.startsAt ?? selectedSlot}
+          endsAt={
+            hold?.endsAt ??
+            (selectedSlot
+              ? new Date(
+                  new Date(selectedSlot).getTime() + service.duration_minutes * 60_000,
+                ).toISOString()
+              : null)
+          }
           totalPaise={total}
           taxPaise={tax}
         />
