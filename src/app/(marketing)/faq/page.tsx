@@ -58,7 +58,7 @@ export default function FaqPage() {
           <div className="band-navy mt-14  border border-[var(--color-outline)]/25 p-8 text-center">
             <h2 className="text-[length:var(--text-h3)]">Still not sure?</h2>
             <p className="mx-auto mt-3 max-w-md text-[15px] leading-relaxed text-[var(--color-cream)] opacity-90">
-              Ask before you book. Komal reads every enquiry personally.
+              Ask before you book. Astrologer Komal Kalra reads every enquiry personally.
             </p>
             <div className="mt-6 flex flex-col justify-center gap-3 sm:flex-row">
               <Button asChild variant="onDark"><Link href="/contact">Send a message</Link></Button>

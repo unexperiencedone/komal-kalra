@@ -39,7 +39,9 @@ export function LanguageToggle({ className }: { className?: string }) {
             aria-pressed={active}
             lang={l}
             className={cn(
-              'px-2.5 py-1 text-xs transition-colors',
+              // Tighter on a phone — this sits next to a two-line wordmark and
+              // a hamburger in a 375px bar, and it was the widest thing there.
+              'px-1.5 py-0.5 text-[10px] transition-colors sm:px-2.5 sm:py-1 sm:text-xs',
               active
                 ? 'bg-[var(--color-cocoa)] text-[var(--color-cream)]'
                 : 'text-[var(--color-body-warm)] hover:bg-[var(--color-cream)]',

@@ -137,7 +137,7 @@ export function BeejMantras({
               rel="noopener noreferrer"
               className="inline-flex items-center gap-1.5 border-b border-[var(--color-saffron)] pb-0.5 transition-opacity hover:opacity-80"
             >
-              More on Komal&rsquo;s YouTube channel
+              More on Astrologer Komal Kalra&rsquo;s YouTube channel
               <ExternalLink className="size-3.5" aria-hidden />
             </a>
           </p>

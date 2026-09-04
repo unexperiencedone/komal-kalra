@@ -21,15 +21,15 @@
  */
 
 export const FOUNDER = {
-  name: 'Komal Kalra',
+  name: 'Astrologer Komal Kalra',
   role: 'Founder & Lead Astrological Consultant',
 
   /** Standfirst — used on both the About page and as the homepage intro. */
   standfirst:
-    'With over 7+ years of experience, Komal Kalra is a Vedic astrologer, consultant, and the founder of her private astrological practice. She specialises in translating classical Vedic principles into strategic, actionable insight for modern professionals, entrepreneurs and individuals.',
+    'With over 7+ years of experience, Astrologer Komal Kalra is a Vedic astrologer, consultant, and the founder of her private astrological practice. She specialises in translating classical Vedic principles into strategic, actionable insight for modern professionals, entrepreneurs and individuals.',
 
   body: [
-    'With 7+ years of experience and a data-informed approach to planetary cycles — dasha systems, transits, and natal chart synastry — Komal has built a client-centred practice around precision, clarity and practical remediation.',
+    'With 7+ years of experience and a data-informed approach to planetary cycles — dasha systems, transits, and natal chart synastry — Astrologer Komal Kalra has built a client-centred practice around precision, clarity and practical remediation.',
     'Her methodology strips away fatalistic superstition, treating astrology as a diagnostic and strategic tool for career timing, partnership alignment, and long-term life planning.',
   ],
 
@@ -57,7 +57,7 @@ export const FOUNDER = {
     heading: 'A note from the founder',
     quote:
       'When I founded this practice, the goal was simple: to strip away the fear and fatalism often associated with astrology and replace it with clarity, strategic timing, and genuine empowerment. Whether you are navigating a business milestone or a personal transition, our work is designed to help you move forward with confidence and foresight.',
-    attribution: 'Komal Kalra',
+    attribution: 'Astrologer Komal Kalra',
   },
 
   /**

@@ -113,7 +113,7 @@ export function BookingSummary({
             information, where an empty total is just an apparent bug.
           */
           <span className="text-sm leading-relaxed text-[var(--color-body-warm)]">
-            Komal confirms the fee when she replies to your message.
+            Astrologer Komal Kalra confirms the fee when she replies to your message.
           </span>
         )}
       </div>

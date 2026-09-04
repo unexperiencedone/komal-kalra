@@ -29,7 +29,7 @@ import { getLatestVideos } from '@/lib/content/youtube';
 export const metadata: Metadata = {
   title: 'Clarity for the Curated Life',
   description:
-    'Professional astrological consultation and life coaching designed to provide precision, discretion, and profound insight. Book a private session with Komal Kalra.',
+    'Professional astrological consultation and life coaching designed to provide precision, discretion, and profound insight. Book a private session with Astrologer Komal Kalra.',
   alternates: { canonical: '/' },
 };
 
@@ -191,7 +191,7 @@ export default async function HomePage() {
 
             <Reveal delay={200}>
               <p className="relative z-10 mt-8 max-w-lg text-lg leading-relaxed text-[var(--color-cream)]">
-                Stuck on a decision? Not sure what the next year holds? Talk to Komal or Sunil directly — in English, Hindi, or Punjabi.
+                Stuck on a decision? Not sure what the next year holds? Talk to Astrologer Komal Kalra or Astrologer Sunil Sharma directly — in English, Hindi, or Punjabi.
               </p>
             </Reveal>
 
@@ -388,7 +388,7 @@ export default async function HomePage() {
                 <p className="label-caps text-[var(--color-saffron-deep)]">In their words</p>
                 <p className="mt-6 max-w-md text-base leading-relaxed text-[var(--color-body-warm)]">
                   Client reflections appear here once they have been reviewed and approved.
-                  Nothing is published without Komal&apos;s explicit approval.
+                  Nothing is published without Astrologer Komal Kalra&apos;s explicit approval.
                 </p>
               </div>
             )}

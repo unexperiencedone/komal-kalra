@@ -116,22 +116,44 @@ export function SiteHeader() {
       )}
     >
       <div className="shell relative flex min-h-20 flex-col">
-        <div className="flex min-h-20 items-center justify-between border-b border-[color-mix(in_srgb,var(--color-cream)_22%,transparent)]">
+        <div className="flex min-h-20 items-center justify-between gap-3 border-b border-[color-mix(in_srgb,var(--color-cream)_22%,transparent)]">
+          {/*
+            IN FLOW ON MOBILE, absolutely centred only from md up.
+
+            This was `absolute left-1/2 -translate-x-1/2` at every width, so the
+            wordmark was taken out of the layout and centred over a flex row
+            that still believed it had the whole bar to itself. On a phone that
+            put the logo, the language toggle and the hamburger in the same
+            physical space, all overlapping.
+
+            Centring a mark over other controls only works when there is room
+            for both, which there is not at 375px — so below md it becomes an
+            ordinary flex child and `justify-between` does the work.
+          */}
           <Link
-          href="/"
-          className="absolute left-1/2 flex -translate-x-1/2 items-center gap-2 font-[family-name:var(--font-display)] text-xl sm:text-2xl uppercase tracking-[0.15em] text-[var(--color-cream)]"
-        >
-          <Image
-            src="/images/favicon_new.png"
-            alt=""
-            width={40}
-            height={40}
-            className="size-8 object-contain sm:size-10"
-          />
-          Komal Kalra
+            href="/"
+            className="flex min-w-0 items-center gap-2 font-[family-name:var(--font-display)] uppercase text-[var(--color-cream)] md:absolute md:left-1/2 md:-translate-x-1/2"
+          >
+            <Image
+              src="/images/favicon_new.png"
+              alt=""
+              width={40}
+              height={40}
+              className="size-8 shrink-0 object-contain sm:size-10"
+            />
+            {/*
+              Wraps to two lines on a narrow screen rather than being clipped —
+              "Astrologer / Komal Kalra" reads as a lockup, which three words of
+              tracked uppercase display type on one line at this width does not.
+            */}
+            <span className="min-w-0 text-[13px] leading-[1.15] tracking-[0.1em] sm:text-xl sm:tracking-[0.15em] md:whitespace-nowrap md:text-2xl">
+              {BRAND.name}
+            </span>
           </Link>
 
-          <div className="flex items-center gap-4">
+          {/* ml-auto so this stays right-aligned at md+, where the wordmark
+              leaves the flow and is no longer the flex partner. */}
+          <div className="ml-auto flex shrink-0 items-center gap-2 sm:gap-4">
             {/* Visible on mobile too: the audience most likely to want Punjabi
                 is not the one most likely to be on a desktop. */}
             <LanguageToggle className="border-[color-mix(in_srgb,var(--color-cream)_35%,transparent)]" />

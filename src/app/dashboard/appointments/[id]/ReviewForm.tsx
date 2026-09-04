@@ -60,7 +60,7 @@ export function ReviewForm({
       <input type="hidden" name="rating" value={rating} />
 
       <p className="text-sm leading-relaxed text-[var(--color-body-warm)]">
-        How was your session? Komal reads every review before anything appears on the site.
+        How was your session? Astrologer Komal Kalra reads every review before anything appears on the site.
       </p>
 
       {/* --- Rating ---------------------------------------------------- */}
@@ -124,7 +124,7 @@ export function ReviewForm({
       {/*
         Offered prominently rather than hidden in small print. Astrological
         consultations are private for a lot of people — someone may be glad to
-        recommend Komal and still not want their full name beside a review of a
+        recommend Astrologer Komal Kalra and still not want their full name beside a review of a
         session about their marriage. Making them hunt for this option is how
         you lose the review entirely.
       */}

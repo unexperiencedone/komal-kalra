@@ -224,7 +224,7 @@ export default async function ServiceDetailPage(props: { params: Promise<{ slug:
                     Session Investment
                   </h2>
                   <p className="mt-3 max-w-md text-base leading-relaxed text-[var(--color-body-warm)]">
-                    A tailored one-to-one consultation directly with Komal Kalra.
+                    A tailored one-to-one consultation directly with Astrologer Komal Kalra.
                   </p>
 
                   <div className="mt-8 flex gap-4">

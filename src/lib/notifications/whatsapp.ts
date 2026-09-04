@@ -113,7 +113,7 @@ export function renderWhatsApp(
           `Namaste ${name}, your consultation with ${BRAND.fullName} is confirmed.\n\n` +
           `Service: ${service}\nWhen: ${at}\nReference: ${reference}\nPaid: ${amount}\n\n` +
           `Your booking: ${param(a.link)}\n\n` +
-          `Komal will send the joining link before your session.`,
+          `Astrologer Komal Kalra will send the joining link before your session.`,
       };
 
     /**

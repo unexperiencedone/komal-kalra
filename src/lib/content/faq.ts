@@ -24,7 +24,7 @@ export const BOOKING_FAQ: FaqItem[] = [
     // policy changed to final sale. Both halves became untrue in the same
     // commit: there is no cancel control any more, and a reschedule is a phone
     // call. An FAQ that contradicts the checkout is worse than no FAQ.
-    answer: `${POLICY.cancellationSummary} ${POLICY.rescheduleSummary} If Komal has to cancel, or your session cannot go ahead from our side, you are refunded in full or moved to another time — whichever you prefer.`,
+    answer: `${POLICY.cancellationSummary} ${POLICY.rescheduleSummary} If Astrologer Komal Kalra has to cancel, or your session cannot go ahead from our side, you are refunded in full or moved to another time — whichever you prefer.`,
   },
   {
     question: 'How do refunds work?',
@@ -38,7 +38,7 @@ export const BOOKING_FAQ: FaqItem[] = [
   {
     question: 'What if I do not know my exact birth time?',
     answer:
-      'That is very common and it is not a problem. Tell us what you do know — even the approximate part of the day helps — and mark the "I am not sure of the time" option when you book. Komal will work with what is available and will tell you honestly if a particular reading needs a more precise time.',
+      'That is very common and it is not a problem. Tell us what you do know — even the approximate part of the day helps — and mark the "I am not sure of the time" option when you book. Astrologer Komal Kalra will work with what is available and will tell you honestly if a particular reading needs a more precise time.',
   },
   {
     question: 'How does the consultation actually happen?',
@@ -48,11 +48,11 @@ export const BOOKING_FAQ: FaqItem[] = [
   {
     question: 'Will my information stay private?',
     answer:
-      'Yes. Your birth details, your questions and anything discussed in a session are confidential. They are visible only to Komal and are never shared, sold or used for marketing.',
+      'Yes. Your birth details, your questions and anything discussed in a session are confidential. They are visible only to Astrologer Komal Kalra and are never shared, sold or used for marketing.',
   },
   {
     question: 'What if I want to talk to someone before booking?',
     answer:
-      'Call either of the numbers on this page, or send a message through the contact form. Komal reads every enquiry personally. If a consultation is not the right fit for what you need, she will say so.',
+      'Call either of the numbers on this page, or send a message through the contact form. Astrologer Komal Kalra reads every enquiry personally. If a consultation is not the right fit for what you need, she will say so.',
   },
 ];

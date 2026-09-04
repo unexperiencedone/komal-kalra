@@ -26,7 +26,7 @@ const FOUNDER_STORY = [
     image: 'komalKalra2' as const,
     label: 'A grounded practice',
     heading: 'Space to ask the real question',
-    body: 'Komal creates a calm, confidential space where the practical details of life and the deeper patterns underneath them can be held together.',
+    body: 'Astrologer Komal Kalra creates a calm, confidential space where the practical details of life and the deeper patterns underneath them can be held together.',
   },
   {
     image: 'komalKalra' as const,

@@ -79,8 +79,8 @@ export const DICT = {
     pa: 'ਉਹ ਸੁਨੇਹਾ ਭੇਜੋ। ਜਦੋਂ ਤੱਕ ਤੁਸੀਂ ਇਹ ਨਹੀਂ ਭੇਜਦੇ, ਬੁਕਿੰਗ ਦੀ ਬੇਨਤੀ ਨਹੀਂ ਹੁੰਦੀ।',
   },
   'book.wa.step.confirm': {
-    en: 'Komal replies to confirm the time and arrange payment.',
-    pa: 'ਕੋਮਲ ਜਵਾਬ ਦੇ ਕੇ ਸਮਾਂ ਪੱਕਾ ਕਰੇਗੀ ਅਤੇ ਭੁਗਤਾਨ ਬਾਰੇ ਦੱਸੇਗੀ।',
+    en: 'Astrologer Komal Kalra replies to confirm the time and arrange payment.',
+    pa: 'ਜੋਤਸ਼ੀ ਕੋਮਲ ਕਾਲੜਾ ਜਵਾਬ ਦੇ ਕੇ ਸਮਾਂ ਪੱਕਾ ਕਰੇਗੀ ਅਤੇ ਭੁਗਤਾਨ ਬਾਰੇ ਦੱਸੇਗੀ।',
   },
   'book.wa.cta': {
     en: 'Send booking details on WhatsApp',
@@ -99,18 +99,18 @@ export const DICT = {
     pa: 'ਵਟਸਐਪ ਨਹੀਂ ਖੁੱਲ੍ਹਿਆ? ਇੱਥੇ ਦਬਾਓ',
   },
   'book.wa.notReserved': {
-    en: 'Times shown are requested, not reserved. Komal confirms your slot by reply.',
-    pa: 'ਵਿਖਾਏ ਗਏ ਸਮੇਂ ਸਿਰਫ਼ ਬੇਨਤੀ ਹਨ, ਰਾਖਵੇਂ ਨਹੀਂ। ਕੋਮਲ ਜਵਾਬ ਦੇ ਕੇ ਸਮਾਂ ਪੱਕਾ ਕਰੇਗੀ।',
+    en: 'Times shown are requested, not reserved. Astrologer Komal Kalra confirms your slot by reply.',
+    pa: 'ਵਿਖਾਏ ਗਏ ਸਮੇਂ ਸਿਰਫ਼ ਬੇਨਤੀ ਹਨ, ਰਾਖਵੇਂ ਨਹੀਂ। ਜੋਤਸ਼ੀ ਕੋਮਲ ਕਾਲੜਾ ਜਵਾਬ ਦੇ ਕੇ ਸਮਾਂ ਪੱਕਾ ਕਰੇਗੀ।',
   },
   'book.wa.noPaymentNow': {
-    en: 'Nothing is charged on this website. Payment is arranged with Komal directly.',
-    pa: 'ਇਸ ਵੈੱਬਸਾਈਟ ਉੱਤੇ ਕੋਈ ਭੁਗਤਾਨ ਨਹੀਂ ਲਿਆ ਜਾਂਦਾ। ਭੁਗਤਾਨ ਕੋਮਲ ਨਾਲ ਸਿੱਧਾ ਤੈਅ ਹੁੰਦਾ ਹੈ।',
+    en: 'Nothing is charged on this website. Payment is arranged with Astrologer Komal Kalra directly.',
+    pa: 'ਇਸ ਵੈੱਬਸਾਈਟ ਉੱਤੇ ਕੋਈ ਭੁਗਤਾਨ ਨਹੀਂ ਲਿਆ ਜਾਂਦਾ। ਭੁਗਤਾਨ ਜੋਤਸ਼ੀ ਕੋਮਲ ਕਾਲੜਾ ਨਾਲ ਸਿੱਧਾ ਤੈਅ ਹੁੰਦਾ ਹੈ।',
   },
 
   'book.wa.or': { en: 'or', pa: 'ਜਾਂ' },
   'book.wa.direct': {
-    en: 'Message Komal directly',
-    pa: 'ਕੋਮਲ ਨੂੰ ਸਿੱਧਾ ਸੁਨੇਹਾ ਭੇਜੋ',
+    en: 'Message Astrologer Komal Kalra directly',
+    pa: 'ਜੋਤਸ਼ੀ ਕੋਮਲ ਕਾਲੜਾ ਨੂੰ ਸਿੱਧਾ ਸੁਨੇਹਾ ਭੇਜੋ',
   },
   'book.wa.directHint': {
     en: 'Skip the form and start a conversation. Useful if you are not sure which session you need.',
@@ -143,8 +143,8 @@ export const DICT = {
 
   // ---- Shared ------------------------------------------------------------
   'common.confidential': {
-    en: '100% Confidential. Everything you discuss stays between you and Komal.',
-    pa: '100% ਗੁਪਤ। ਤੁਹਾਡੀ ਸਾਰੀ ਗੱਲਬਾਤ ਤੁਹਾਡੇ ਅਤੇ ਕੋਮਲ ਵਿਚਕਾਰ ਹੀ ਰਹਿੰਦੀ ਹੈ।',
+    en: '100% Confidential. Everything you discuss stays between you and Astrologer Komal Kalra.',
+    pa: '100% ਗੁਪਤ। ਤੁਹਾਡੀ ਸਾਰੀ ਗੱਲਬਾਤ ਤੁਹਾਡੇ ਅਤੇ ਜੋਤਸ਼ੀ ਕੋਮਲ ਕਾਲੜਾ ਵਿਚਕਾਰ ਹੀ ਰਹਿੰਦੀ ਹੈ।',
   },
   'common.callInstead': { en: 'Call us instead', pa: 'ਸਾਨੂੰ ਫ਼ੋਨ ਕਰੋ' },
 } as const;

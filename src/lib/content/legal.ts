@@ -61,7 +61,7 @@ export const LEGAL_LAST_UPDATED = 'August 2026';
  * IT Rules this must be a named natural person, not a role or a shared inbox.
  */
 export const GRIEVANCE_OFFICER = {
-  name: 'Komal Kalra',
+  name: 'Astrologer Komal Kalra',
   designation: 'Grievance Officer',
   email: BRAND.email,
   phone: BRAND.phones[0],
@@ -330,7 +330,7 @@ const REFUNDS: LegalDocument = {
       heading: 'Bookings are final',
       blocks: [
         p('Once a consultation is paid for it cannot be cancelled, and the fee is not refundable if you decide not to attend or change your mind.'),
-        p('The reason is simply how the practice works: the time is taken out of Komal’s calendar and held for you alone, the chart is read in advance of the session, and the slot cannot be offered to anyone else. That preparation happens whether or not you arrive.'),
+        p('The reason is simply how the practice works: the time is taken out of Astrologer Komal Kalra’s calendar and held for you alone, the chart is read in advance of the session, and the slot cannot be offered to anyone else. That preparation happens whether or not you arrive.'),
         p('This is stated on the booking page and you confirm it before paying. If you are unsure whether a consultation is right for you, call before booking rather than after — we would far rather answer that question first.'),
       ],
     },
@@ -340,7 +340,7 @@ const REFUNDS: LegalDocument = {
         p(POLICY.rescheduleSummary),
         list(
           'A session may be moved once.',
-          'It is arranged by telephone, not from the website, so a new time can be agreed with Komal directly rather than guessed at from a calendar.',
+          'It is arranged by telephone, not from the website, so a new time can be agreed with Astrologer Komal Kalra directly rather than guessed at from a calendar.',
           'There is no charge for moving a session.',
           'Once a session has been moved once, the new time is final.',
         ),
@@ -364,7 +364,7 @@ const REFUNDS: LegalDocument = {
       blocks: [
         p('The policy above covers you changing your mind. It does not cover us failing to deliver. In each of the following, you are refunded in full:'),
         list(
-          'Komal has to cancel or is unable to hold the session, for any reason.',
+          'Astrologer Komal Kalra has to cancel or is unable to hold the session, for any reason.',
           'A session cannot go ahead because of a fault on our side.',
           'A payment succeeds but the booking does not complete — see below.',
           'You were charged more than once for the same booking.',

@@ -200,9 +200,9 @@ export function renderEmail(template: NotificationTemplate, payload: Payload): R
         subject: 'Thank you for getting in touch',
         html: wrap('Message received', `
           <p>Hello ${name},</p>
-          <p>Thank you for your message. Komal reads every enquiry personally and will get back to you shortly.</p>
+          <p>Thank you for your message. Astrologer Komal Kalra reads every enquiry personally and will get back to you shortly.</p>
           <p style="color:#3D332C;font-size:14px;">If it is urgent, call ${BRAND.phones[0]}.</p>`),
-        text: 'Thank you for your message. Komal will get back to you shortly.',
+        text: 'Thank you for your message. Astrologer Komal Kalra will get back to you shortly.',
       };
   }
 }

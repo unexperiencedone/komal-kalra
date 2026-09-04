@@ -209,7 +209,7 @@ export default async function ConfirmPage(props: {
       <h1 className="mt-6 text-[length:var(--text-h1)]">You&apos;re booked in</h1>
       <p className="mt-3 max-w-lg text-[15px] leading-relaxed text-[var(--color-body-warm)]">
         Your booking details are on their way to{' '}
-        {appointment.contact_phone ? 'WhatsApp and your email' : 'your email'}. Komal will
+        {appointment.contact_phone ? 'WhatsApp and your email' : 'your email'}. Astrologer Komal Kalra will
         send the joining link before your session.
       </p>
 
