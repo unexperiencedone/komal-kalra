@@ -32,13 +32,23 @@
 -- ---------------------------------------------------------------------------
 -- 1. Lead time
 -- ---------------------------------------------------------------------------
+-- Deliberately does NOT filter on `internal`.
+--
+-- That column is added by 20_verification_service.sql / 21_repair_services_
+-- policy.sql, and this file cannot assume those have run — on a database where
+-- they have not, referencing it fails the whole script with
+-- `42703: column "internal" does not exist`, which is exactly what happened.
+--
+-- It is not needed anyway: the only internal row is the verification service,
+-- and the statement below corrects it by slug immediately afterwards. Ordering
+-- carries the exception, so nothing depends on a column that may be missing.
 update public.services
-   set min_lead_days   = 1,
-       min_notice_hours = 0
- where coalesce(internal, false) = false;
+   set min_lead_days    = 1,
+       min_notice_hours = 0;
 
 -- The ₹1 verification service stays bookable today — it exists so Komal can
 -- push a live payment through and watch it settle, which a lead time defeats.
+-- Runs AFTER the blanket update above, so it wins.
 update public.services
    set min_lead_days = 0, min_notice_hours = 0
  where slug = 'guidance-verification';

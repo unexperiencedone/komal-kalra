@@ -141,13 +141,9 @@ export function SiteHeader() {
               height={40}
               className="size-8 shrink-0 object-contain sm:size-10"
             />
-            {/*
-              Wraps to two lines on a narrow screen rather than being clipped —
-              "Astrologer / Komal Kalra" reads as a lockup, which three words of
-              tracked uppercase display type on one line at this width does not.
-            */}
-            <span className="min-w-0 text-[13px] leading-[1.15] tracking-[0.1em] sm:text-xl sm:tracking-[0.15em] md:whitespace-nowrap md:text-2xl">
-              {BRAND.name}
+            {/* BRAND.wordmark, not BRAND.name — see the note on that constant. */}
+            <span className="min-w-0 text-base leading-[1.15] tracking-[0.12em] sm:text-xl sm:tracking-[0.15em] md:whitespace-nowrap md:text-2xl">
+              {BRAND.wordmark}
             </span>
           </Link>
 

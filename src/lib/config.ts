@@ -20,6 +20,20 @@
 export const BRAND = {
   name: 'Astrologer Komal Kalra',
   fullName: 'Astrologer Komal Kalra',
+  /**
+   * The header logotype, deliberately SHORTER than `name`.
+   *
+   * Everywhere else the full professional name is used — that is the practice's
+   * name and how it should read in prose, metadata and messages. A logo is not
+   * prose: three words of tracked uppercase display type do not fit a phone
+   * header beside a mark, a language toggle and a hamburger, and forcing them
+   * in either wraps to three lines or shrinks past legibility.
+   *
+   * A named constant rather than a literal in the component, so the difference
+   * is a decision on the record instead of looking like something that was
+   * missed when the names were updated.
+   */
+  wordmark: 'Komal Kalra',
   tagline: 'Find clarity. Choose your direction. Move forward with confidence.',
   phones: ['+91 98785 77077', '+91 91151 77077'],
   /** E.164, for tel: and wa.me links */
