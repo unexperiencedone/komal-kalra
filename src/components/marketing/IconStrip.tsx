@@ -10,9 +10,22 @@ const ICONS = [
   { href: '/contact', label: 'Contact', Icon: Mail },
 ];
 
+/**
+ * `sand`, not `cream`.
+ *
+ * It was cream, and it now sits directly above the cream "Meet Our Astrologers"
+ * band — two identical bands meeting with no seam, which reads as one
+ * over-long section. `npm run audit:bands` catches exactly this.
+ *
+ * The tone is hardcoded rather than passed in, deliberately: this component has
+ * one call site, and the audit works by reading `band-*` classes out of the
+ * source. A tone prop would hide the real value behind a default and leave the
+ * check unable to see what actually renders — trading a verifiable fact for
+ * flexibility nothing is asking for.
+ */
 export function IconStrip({ className }: { className?: string }) {
   return (
-    <section className={cn("band-cream py-8 md:py-12", className)}>
+    <section className={cn("band-sand py-8 md:py-12", className)}>
       <div className="shell">
         <ul className="flex flex-wrap justify-center gap-6 md:gap-12">
           {ICONS.map(({ href, label, Icon }) => (

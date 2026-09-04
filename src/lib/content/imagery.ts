@@ -132,7 +132,7 @@ export const IMAGES = {
     // Pointed at a practitionerPortrait file that has never existed on disk.
     // Nothing referenced the key, so it stayed invisible until audit:images
     // went looking. Uses the real portrait now.
-    local: '/images/komal_kalra.jpg',
+    local: '/images/komal_kalra_bg_1.png',
     alt:
       "A professional, high-end portrait photograph of Astrologer Komal Kalra. She is dressed elegantly in subtle, warm earthy tones, looking directly at the camera with a calm, authoritative yet welcoming expression. The lighting is soft and…",
   },
@@ -327,9 +327,9 @@ export const IMAGES = {
     local: '/images/komal_kalra_4.jpeg',
     alt: 'Komal Kalra seated for a thoughtful astrology consultation.',
   },
-  komalKalra5: {
+  komalKalraBg2: {
     remote: '/images/komal_kalra_5.jpeg',
-    local: '/images/komal_kalra_5.jpeg',
+    local: '/images/komal_kalra_bg_2.png',
     alt: 'Komal Kalra in a warm, editorial portrait.',
   },
   signInImage: {
@@ -343,6 +343,11 @@ export const IMAGES = {
     local: '/images/createAccountImage.webp',
     alt:
       "A brass astrolabe resting on a hand-drawn birth chart beside a fountain pen, with leather-bound books in the background.",
+  },
+  sunilSharma: {
+    remote: '/images/sunil_sharma.jpeg',
+    local: '/images/sunil_sharma.jpeg',
+    alt: 'Sunil Sharma, expert astrologer portrait.',
   },
 } as const satisfies Record<string, BrandImage>;
 

@@ -6,10 +6,12 @@ import { Reveal } from '@/components/common/Reveal';
 import { PortraitFrame } from '@/components/marketing/PortraitFrame';
 import { ServiceGrid } from '@/components/marketing/ServiceGrid';
 import { FOUNDER } from '@/lib/content/founder';
+import { SUNIL } from '@/lib/content/sunil';
 import { img } from '@/lib/content/imagery';
 import { BRAND } from '@/lib/config';
 import { getActiveServices } from '@/lib/booking/availability';
 import { Testimonials } from '@/components/marketing/Testimonials';
+import { BeejMantras } from '@/components/marketing/BeejMantras';
 import { createPublicClient } from '@/lib/supabase/public';
 import type { Testimonial } from '@/types/database';
 
@@ -33,7 +35,7 @@ const FOUNDER_STORY = [
     body: 'Every reading begins with listening. The work is to turn a complex chart into language that feels useful, honest, and possible to act on.',
   },
   {
-    image: 'komalKalra5' as const,
+    image: 'komalKalraBg2' as const,
     label: 'The work continues',
     heading: 'Guidance you can return to',
     body: 'A consultation is not a prediction set in stone. It is a thoughtful reference point for making decisions with more steadiness and self-trust.',
@@ -64,7 +66,7 @@ export default async function AboutPage() {
       .limit(4)
       .returns<Testimonial[]>(),
   ]);
-  const portrait = img('komalKalra5');
+  const portrait = img('komalKalraBg2');
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -237,6 +239,58 @@ export default async function AboutPage() {
         </div>
       </section>
 
+      {/* ======================== SUNIL SHARMA ======================== */}
+      <section id="sunil" aria-labelledby="sunil-heading" className="py-[var(--spacing-section-lg)]">
+        <div className="shell grid grid-cols-1 gap-12 md:grid-cols-12 md:items-center">
+          <Reveal className="md:col-span-5 md:col-start-1">
+            <PortraitFrame
+              src={img('sunilSharma').src}
+              alt={img('sunilSharma').alt}
+              aspect="portrait"
+              objectPosition="50% 22%"
+              sizes="(min-width: 768px) 38vw, 100vw"
+              frameStyle="gallery"
+            />
+          </Reveal>
+
+          <Reveal delay={100} className="md:col-span-6 md:col-start-7">
+            <p className="label-caps text-[var(--color-saffron-deep)]">Meet Our Expert Astrologer</p>
+            <div className="w-fit">
+              <h2 id="sunil-heading" className="mt-4 text-[length:var(--text-display-sm)] text-[var(--color-cocoa)]">
+                {SUNIL.name}
+              </h2>
+              <span className="gold-rule mt-6 !w-[calc(100%+1rem)]" aria-hidden />
+            </div>
+            
+            <p className="label-caps mt-5 text-[var(--color-cocoa)] opacity-90">
+              {SUNIL.role}
+            </p>
+
+            <div className="prose-editorial text-base mt-8">
+              {SUNIL.body.map((para) => (
+                <p key={para.slice(0, 24)}>{para}</p>
+              ))}
+            </div>
+
+            <h3 className="mt-12 font-[family-name:var(--font-display)] text-2xl font-medium text-[var(--color-cocoa)]">
+              {SUNIL.competenciesHeading}
+            </h3>
+            <dl className="mt-8 border-t border-[var(--color-hairline)]">
+              {SUNIL.competencies.map((item, i) => (
+                <div key={item.title} className="grid grid-cols-1 gap-2 border-b border-[var(--color-hairline)] py-6 md:grid-cols-12 md:gap-8">
+                  <dt className="font-[family-name:var(--font-display)] text-lg font-medium text-[var(--color-cocoa)] md:col-span-4">
+                    {item.title}
+                  </dt>
+                  <dd className="text-base leading-relaxed text-[var(--color-body-warm)] md:col-span-8">
+                    {item.body}
+                  </dd>
+                </div>
+              ))}
+            </dl>
+          </Reveal>
+        </div>
+      </section>
+
       {/* =========================== FOUNDER NOTE ========================= */}
       <section aria-labelledby="note-heading" className="py-[var(--spacing-section-lg)]">
         <div className="shell grid grid-cols-1 items-center gap-12 md:grid-cols-12 md:gap-16">
@@ -299,6 +353,16 @@ export default async function AboutPage() {
           </div>
         </div>
       </section>
+
+      {/*
+        ========================== BEEJ MANTRAS ==========================
+        `sand` here, not cream: the closing band above is navy and the services
+        band below is cream, so navy → sand → cream keeps every neighbour
+        distinct. The tone differs from the homepage's copy of this section for
+        that reason alone — the component takes it as a prop precisely because
+        its correct value depends on what it sits between.
+      */}
+      <BeejMantras tone="sand" />
 
       {/* ============================ SERVICES ============================ */}
       <section

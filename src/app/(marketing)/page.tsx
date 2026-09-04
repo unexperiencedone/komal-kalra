@@ -12,13 +12,17 @@ import { ServiceGrid } from '@/components/marketing/ServiceGrid';
 import { PurposeStatement } from '@/components/marketing/PurposeStatement';
 import { Testimonials } from '@/components/marketing/Testimonials';
 import { img } from '@/lib/content/imagery';
+import { FOUNDER } from '@/lib/content/founder';
+import { SUNIL } from '@/lib/content/sunil';
 import type { Testimonial } from '@/types/database';
+import { PortraitFrame } from '@/components/marketing/PortraitFrame';
 
 import { IconStrip } from '@/components/marketing/IconStrip';
 import { SectionWatermark } from '@/components/marketing/SectionWatermark';
 import { Differentiators } from '@/components/marketing/Differentiators';
 import { SeoProse } from '@/components/marketing/SeoProse';
 import { ToolsLeadSection } from '@/components/marketing/ToolsLeadSection';
+import { BeejMantras } from '@/components/marketing/BeejMantras';
 
 export const metadata: Metadata = {
   title: 'Clarity for the Curated Life',
@@ -65,7 +69,7 @@ export default async function HomePage() {
           count: rated.length,
         }
       : null;
-  const hero = img('komalKalra');
+  const hero = img('practitionerPortrait');
   const heroWatermark = img('heroGraphic');
   const gramA = img('journalCompass');
   const gramB = img('journalCandle');
@@ -182,7 +186,7 @@ export default async function HomePage() {
 
             <Reveal delay={200}>
               <p className="relative z-10 mt-8 max-w-lg text-lg leading-relaxed text-[var(--color-cream)]">
-                Stuck on a decision? Not sure what the next year holds? Talk to Komal directly — in English, Hindi, or Punjabi.
+                Stuck on a decision? Not sure what the next year holds? Talk to Komal or Sunil directly — in English, Hindi, or Punjabi.
               </p>
             </Reveal>
 
@@ -218,7 +222,80 @@ export default async function HomePage() {
       </section>
 
       {/* ====================== ICON QUICK ACCESS ====================== */}
+      {/* Renders `sand`, so it does not run into the cream "Meet Our
+          Astrologers" band below — terracotta → sand → cream. */}
       <IconStrip />
+
+      {/* ======================= OUR ASTROLOGERS ======================= */}
+      <section aria-labelledby="astrologers-heading" className="band-cream py-[var(--spacing-section-lg)]">
+        <div className="shell">
+          <Reveal>
+            <div className="mb-16 md:w-1/2">
+              <div className="w-fit">
+                <h2 id="astrologers-heading" className="text-[length:var(--text-h2)] text-[var(--color-cocoa)]">
+                  Meet Our Astrologers
+                </h2>
+                <span className="gold-rule mt-6 !w-[calc(100%+1rem)]" aria-hidden />
+              </div>
+              <p className="mt-6 text-base leading-relaxed text-[var(--color-body-warm)]">
+                Our practice offers consultations with two highly experienced practitioners, ensuring you find the right approach for your needs.
+              </p>
+            </div>
+          </Reveal>
+
+          <div className="grid grid-cols-1 gap-12 md:grid-cols-2 md:gap-16">
+            <Reveal delay={100}>
+              <div className="flex flex-col gap-6">
+                <div className="w-full max-w-sm">
+                  <PortraitFrame
+                    src={img('practitionerPortrait').src}
+                    alt={img('practitionerPortrait').alt}
+                    aspect="portrait"
+                    objectPosition="50% 22%"
+                    sizes="(min-width: 768px) 38vw, 100vw"
+                    frameStyle="gallery"
+                  />
+                </div>
+                <div>
+                  <h3 className="font-[family-name:var(--font-display)] text-2xl text-[var(--color-cocoa)]">{FOUNDER.name}</h3>
+                  <p className="label-caps mt-2 text-[var(--color-saffron-deep)]">{FOUNDER.role}</p>
+                  <p className="mt-4 text-base leading-relaxed text-[var(--color-body-warm)] line-clamp-3">
+                    {FOUNDER.standfirst}
+                  </p>
+                  <Button asChild variant="link" className="mt-4 p-0 text-[var(--color-terracotta)]">
+                    <Link href="/about">Read more &rarr;</Link>
+                  </Button>
+                </div>
+              </div>
+            </Reveal>
+
+            <Reveal delay={200}>
+              <div className="flex flex-col gap-6">
+                <div className="w-full max-w-sm">
+                  <PortraitFrame
+                    src={img('sunilSharma').src}
+                    alt={img('sunilSharma').alt}
+                    aspect="portrait"
+                    objectPosition="50% 22%"
+                    sizes="(min-width: 768px) 38vw, 100vw"
+                    frameStyle="gallery"
+                  />
+                </div>
+                <div>
+                  <h3 className="font-[family-name:var(--font-display)] text-2xl text-[var(--color-cocoa)]">{SUNIL.name}</h3>
+                  <p className="label-caps mt-2 text-[var(--color-saffron-deep)]">{SUNIL.role}</p>
+                  <p className="mt-4 text-base leading-relaxed text-[var(--color-body-warm)] line-clamp-3">
+                    {SUNIL.standfirst}
+                  </p>
+                  <Button asChild variant="link" className="mt-4 p-0 text-[var(--color-terracotta)]">
+                    <Link href="/about#sunil">Read more &rarr;</Link>
+                  </Button>
+                </div>
+              </div>
+            </Reveal>
+          </div>
+        </div>
+      </section>
 
       {/* ====================== CONSULTATION SERVICES ====================== */}
       {/*
@@ -296,6 +373,14 @@ export default async function HomePage() {
         </div>
       </section>
 
+      {/*
+        ========================== BEEJ MANTRAS ==========================
+        `cream`, sitting between the navy CTA above and the sand social-proof
+        band below — navy → cream → sand, so no two neighbours share a tone.
+        `npm run audit:bands` enforces that.
+      */}
+      <BeejMantras tone="cream" />
+
       {/* ================= SOCIAL PROOF — immediately before footer ================= */}
       <section aria-labelledby="proof-heading" className="band-sand relative isolate overflow-hidden py-[var(--spacing-section-lg)]">
         <SectionWatermark corner="top-right" />
@@ -340,10 +425,8 @@ export default async function HomePage() {
               <Camera className="size-7 text-[var(--color-cocoa)]" aria-hidden />
               <h3 className="mt-4 font-[family-name:var(--font-display)] text-xl font-medium text-[var(--color-cocoa)]">Instagram</h3>
               <p className="mt-4 max-w-sm text-base leading-relaxed text-[var(--color-body-warm)]">Follow reflections on timing, energy management, and leading a conscious professional life.</p>
-              <div className="mt-8 w-full min-h-[250px] relative z-20 flex items-center justify-center border border-dashed border-[var(--color-hairline)] bg-black/5">
-                {/* ⚠️ REPLACE THIS ID with your actual Elfsight Instagram widget ID */}
-                <div className="elfsight-app-PLACEHOLDER-INSTAGRAM" data-elfsight-app-lazy></div>
-                <span className="text-sm opacity-50 absolute">Elfsight Widget Here</span>
+              <div className="mt-8 w-full min-h-[250px] relative z-20 flex items-center justify-center">
+                <div className="elfsight-app-f75946a7-3365-4b78-aa31-d78b5f528daf w-full" data-elfsight-app-lazy></div>
               </div>
               <a href={BRAND.instagram} target="_blank" rel="noopener noreferrer" className="label-caps relative z-20 mt-8 border-b border-[var(--color-terracotta)] pb-1 text-[var(--color-terracotta)]">View Instagram <ArrowUpRight className="inline size-3.5" aria-hidden /></a>
             </div>
@@ -354,10 +437,8 @@ export default async function HomePage() {
               <PlayCircle className="size-7 text-[var(--color-cocoa)]" aria-hidden />
               <h3 className="mt-4 font-[family-name:var(--font-display)] text-xl font-medium text-[var(--color-cocoa)]">Latest from YouTube</h3>
               <p className="mt-4 max-w-sm text-base leading-relaxed text-[var(--color-body-warm)]">Deep dives into astrological cycles, remedies, and structural life transitions.</p>
-              <div className="mt-8 w-full min-h-[250px] relative z-20 flex items-center justify-center border border-dashed border-[var(--color-hairline)] bg-black/5">
-                {/* ⚠️ REPLACE THIS ID with your actual Elfsight YouTube widget ID */}
-                <div className="elfsight-app-PLACEHOLDER-YOUTUBE" data-elfsight-app-lazy></div>
-                <span className="text-sm opacity-50 absolute">Elfsight Widget Here</span>
+              <div className="mt-8 w-full min-h-[250px] relative z-20 flex items-center justify-center">
+                <div className="elfsight-app-d3add452-2a47-4941-a0ed-f5a3c958e64e w-full" data-elfsight-app-lazy></div>
               </div>
               <a href={BRAND.youtube} target="_blank" rel="noopener noreferrer" className="label-caps relative z-20 mt-8 border-b border-[var(--color-terracotta)] pb-1 text-[var(--color-terracotta)]">Watch on YouTube <ArrowUpRight className="inline size-3.5" aria-hidden /></a>
             </div>

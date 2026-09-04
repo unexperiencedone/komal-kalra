@@ -29,6 +29,16 @@ const buttonVariants = cva(
         secondary: 'border border-[var(--color-terracotta)] bg-transparent text-[var(--color-terracotta)] hover:bg-[var(--color-terracotta)] hover:text-white',
         onDark: 'border border-[var(--color-cream)] bg-transparent text-[var(--color-cream)] hover:bg-[var(--color-cream)] hover:text-[var(--color-terracotta-lo)]',
         ghost: 'text-[var(--color-body-warm)] hover:text-[var(--color-terracotta)]',
+        /*
+          Inline "Read more →" affordances that should read as text, not a
+          control. Two call sites on the homepage were already asking for this
+          variant and failing to typecheck; they were also each re-styling it by
+          hand with `p-0` and a colour override, which is the usual sign that a
+          variant is missing rather than that one is being abused.
+          `h-auto` and `px-0` undo the size classes, since a text link has no
+          button box.
+        */
+        link: 'h-auto px-0 text-[var(--color-terracotta)] underline-offset-4 hover:underline',
         destructive: 'bg-[var(--color-error)] text-white hover:brightness-90',
       },
       size: {
