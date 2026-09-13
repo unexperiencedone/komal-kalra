@@ -47,14 +47,14 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000';
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: `${BRAND.fullName} — Astrology, Coaching & Counselling`,
+    default: `${BRAND.fullName} — Expert Astrology, Coaching & Healing`,
     template: `%s — ${BRAND.fullName}`,
   },
   description:
-    'One-to-one Vedic astrology consultations, Kundli Milan, coaching, healing and counselling with Komal Kalra. Book a private online session at a time that suits you.',
+    'Transform your life with expert guidance from Astrologer Komal Kalra. Book private, one-to-one online sessions for in-depth Vedic astrology readings, Kundli Milan, compassionate life coaching, and spiritual healing.',
   keywords: [
     'astrologer Komal Kalra', 'online astrology consultation', 'kundli milan',
-    'vedic astrology consultation', 'birth chart reading', 'life coach', 'counselling',
+    'vedic astrology consultation', 'birth chart reading', 'life coach', 'spiritual healing', 'counselling',
   ],
   authors: [{ name: BRAND.fullName }],
   openGraph: {
@@ -62,16 +62,16 @@ export const metadata: Metadata = {
     locale: 'en_IN',
     url: siteUrl,
     siteName: BRAND.fullName,
-    title: `${BRAND.fullName} — Astrology, Coaching & Counselling`,
+    title: `${BRAND.fullName} — Expert Astrology, Coaching & Healing`,
     description:
-      'Private one-to-one consultations. Astrological guidance, Kundli Milan, coaching, healing and counselling.',
+      'Unlock your true potential with Astrologer Komal Kalra. Explore personalized Vedic astrology insights, Kundli Milan, and transformative life coaching. Book a private, one-to-one online consultation today.',
     // Fallback for any page that doesn't set its own openGraph.images.
     images: [{ url: '/images/logo.png', width: 1024, height: 1024, alt: BRAND.fullName }],
   },
   twitter: {
     card: 'summary_large_image',
-    title: `${BRAND.fullName}`,
-    description: 'Private one-to-one astrology and counselling consultations.',
+    title: `${BRAND.fullName} — Expert Astrology, Coaching & Healing`,
+    description: 'Transform your life with personalized Vedic astrology insights, Kundli Milan, life coaching, and spiritual healing by Astrologer Komal Kalra.',
     images: ['/images/logo.png'],
   },
   alternates: { canonical: '/' },
