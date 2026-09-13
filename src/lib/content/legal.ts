@@ -111,7 +111,7 @@ const PRIVACY: LegalDocument = {
             },
             {
               term: 'Payment records — amount, status, method type, and the transaction reference issued by Razorpay',
-              text: 'To confirm your booking, issue receipts, process refunds, and meet tax and accounting obligations.',
+              text: 'To confirm your booking, issue receipts, and meet tax and accounting obligations.',
             },
             {
               term: 'Enquiries — anything you send through the contact form',
@@ -265,13 +265,6 @@ const TERMS: LegalDocument = {
         p('Joining details are sent to the email address on your booking. Please be ready at the agreed time; sessions run to the booked duration and a late start does not extend the end time.'),
         p('If you do not attend and have not contacted us, the session is treated as delivered and the fee is not refundable. If something genuinely went wrong on the day, contact us — this is applied with common sense.'),
         p('If we are unable to attend for any reason, you will be offered a new time or a full refund, whichever you prefer.'),
-      ],
-    },
-    {
-      heading: 'Cancellation and refunds',
-      blocks: [
-        p(POLICY.cancellationSummary),
-        p('The full policy, including how refunds are paid and what happens to failed payments, is set out on the Cancellation & Refunds page.'),
       ],
     },
     {
