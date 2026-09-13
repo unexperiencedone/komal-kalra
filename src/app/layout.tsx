@@ -90,7 +90,7 @@ export const metadata: Metadata = {
    * practice name show properly. See docs/google-auth-setup.md.
    */
   verification: {
-    google: 'ZmWGt-xPRrOJjnBHw3S3vGMJFsrQPhxio2hTBER0Pf0',
+    google: '_tba18Z8obrGcgCxx7h8p40imo3yePPFNom0TRdCR_8',
   },
 };
 
