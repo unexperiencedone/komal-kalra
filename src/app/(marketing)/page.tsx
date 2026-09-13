@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import Script from 'next/script';
 import type { Metadata } from 'next';
 import { ArrowUpRight, Camera, Quote, PlayCircle } from 'lucide-react';
 import { createPublicClient } from '@/lib/supabase/public';
@@ -24,6 +23,7 @@ import { SeoProse } from '@/components/marketing/SeoProse';
 import { ToolsLeadSection } from '@/components/marketing/ToolsLeadSection';
 import { BeejMantras } from '@/components/marketing/BeejMantras';
 import { LatestVideos } from '@/components/marketing/LatestVideos';
+import { InstagramPosts } from '@/components/marketing/InstagramPosts';
 import { getLatestVideos } from '@/lib/content/youtube';
 
 export const metadata: Metadata = {
@@ -138,7 +138,6 @@ export default async function HomePage() {
   return (
     <div className="overflow-x-hidden">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-      <Script src="https://static.elfsight.com/platform/platform.js" strategy="lazyOnload" />
 
 
       {/* ========================= HERO — cinematic ========================= */}
@@ -398,8 +397,8 @@ export default async function HomePage() {
               <Camera className="size-7 text-[var(--color-cocoa)]" aria-hidden />
               <h3 className="mt-4 font-[family-name:var(--font-display)] text-xl font-medium text-[var(--color-cocoa)]">Instagram</h3>
               <p className="mt-4 max-w-sm text-base leading-relaxed text-[var(--color-body-warm)]">Follow reflections on timing, energy management, and leading a conscious professional life.</p>
-              <div className="mt-8 w-full min-h-[250px] relative z-20 flex items-center justify-center">
-                <div className="elfsight-app-f75946a7-3365-4b78-aa31-d78b5f528daf w-full" data-elfsight-app-lazy></div>
+              <div className="mt-8 w-full relative z-20">
+                <InstagramPosts />
               </div>
               <a href={BRAND.instagram} target="_blank" rel="noopener noreferrer" className="label-caps relative z-20 mt-8 border-b border-[var(--color-terracotta)] pb-1 text-[var(--color-terracotta)]">View Instagram <ArrowUpRight className="inline size-3.5" aria-hidden /></a>
             </div>

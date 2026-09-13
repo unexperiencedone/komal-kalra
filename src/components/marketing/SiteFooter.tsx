@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { BRAND } from '@/lib/config';
+import { InstagramIcon, YouTubeIcon } from '@/components/common/icons';
 import type { Service } from '@/types/database';
 
 export function SiteFooter({ services = [] }: { services?: Service[] }) {
@@ -55,12 +56,14 @@ export function SiteFooter({ services = [] }: { services?: Service[] }) {
               </a>
             ))}
             <a href={`mailto:${BRAND.email}`} className={linkClass}>{BRAND.email}</a>
-            <a href={BRAND.instagram} target="_blank" rel="noopener noreferrer" className={linkClass}>
-              Instagram
-            </a>
-            <a href={BRAND.youtube} target="_blank" rel="noopener noreferrer" className={linkClass}>
-              YouTube
-            </a>
+            <div className="mt-1 flex items-center gap-4">
+              <a href={BRAND.instagram} target="_blank" rel="noopener noreferrer" aria-label="Instagram" title="Instagram" className={linkClass}>
+                <InstagramIcon className="size-6" />
+              </a>
+              <a href={BRAND.youtube} target="_blank" rel="noopener noreferrer" aria-label="YouTube" title="YouTube" className={linkClass}>
+                <YouTubeIcon className="size-7" />
+              </a>
+            </div>
           </nav>
         </div>
 
