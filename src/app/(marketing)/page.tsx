@@ -27,9 +27,11 @@ import { InstagramPosts } from '@/components/marketing/InstagramPosts';
 import { getLatestVideos } from '@/lib/content/youtube';
 
 export const metadata: Metadata = {
-  title: 'Clarity for the Curated Life',
+  title: {
+    absolute: `${BRAND.fullName} — Expert Astrology, Coaching & Healing`,
+  },
   description:
-    'Professional astrological consultation and life coaching designed to provide precision, discretion, and profound insight. Book a private session with Astrologer Komal Kalra.',
+    'Transform your life with expert guidance from Astrologer Komal Kalra. Book private, one-to-one online sessions for in-depth Vedic astrology readings, Kundli Milan, compassionate life coaching, and spiritual healing.',
   alternates: { canonical: '/' },
 };
 
