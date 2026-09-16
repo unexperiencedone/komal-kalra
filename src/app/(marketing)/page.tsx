@@ -80,22 +80,40 @@ export default async function HomePage() {
   const gramB = img('journalCandle');
   const diya = img('diyaLamp');
 
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.astrokomalkalra.com';
+
   const jsonLd = {
     '@context': 'https://schema.org',
     '@graph': [
       {
+        '@type': 'WebSite',
+        '@id': `${siteUrl}/#website`,
+        url: siteUrl,
+        name: 'Astro Komal Kalra',
+        alternateName: [
+          'Astrologer Komal Kalra',
+          'Komal Kalra',
+          'astrokomalkalra.com',
+        ],
+        publisher: {
+          '@id': `${siteUrl}/#business`,
+        },
+      },
+      {
         '@type': 'Person',
-        '@id': `${process.env.NEXT_PUBLIC_SITE_URL}/#person`,
+        '@id': `${siteUrl}/#person`,
         name: BRAND.fullName,
         jobTitle: 'Astrologer, Life Coach & Counsellor',
         telephone: BRAND.phonesE164,
-        sameAs: [BRAND.instagram],
+        sameAs: [BRAND.instagram, BRAND.youtube],
         knowsLanguage: ['en', 'hi', 'pa'],
       },
       {
         '@type': 'ProfessionalService',
-        '@id': `${process.env.NEXT_PUBLIC_SITE_URL}/#business`,
-        name: BRAND.fullName,
+        '@id': `${siteUrl}/#business`,
+        name: 'Astro Komal Kalra',
+        alternateName: BRAND.fullName,
+        url: siteUrl,
         telephone: BRAND.phonesE164[0],
         priceRange: '₹₹',
         areaServed: 'IN',

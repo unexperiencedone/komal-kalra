@@ -42,7 +42,7 @@ const cormorant = Cormorant_Garamond({
   display: 'swap',
 });
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000';
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.astrokomalkalra.com';
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -61,7 +61,7 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'en_IN',
     url: siteUrl,
-    siteName: BRAND.fullName,
+    siteName: 'Astro Komal Kalra',
     title: `${BRAND.fullName} — Expert Astrology, Coaching & Healing`,
     description:
       'Unlock your true potential with Astrologer Komal Kalra. Explore personalized Vedic astrology insights, Kundli Milan, and transformative life coaching. Book a private, one-to-one online consultation today.',
