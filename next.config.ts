@@ -1,6 +1,40 @@
 import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
+  async redirects() {
+    return [
+      {
+        source: '/:path*',
+        has: [
+          {
+            type: 'host',
+            value: 'komal-kalra.vercel.app',
+          },
+        ],
+        destination: 'https://www.astrokomalkalra.com/:path*',
+        permanent: true, // 308 Permanent Redirect
+      },
+    ];
+  },
+  async headers() {
+    return [
+      {
+        source: '/:path*',
+        has: [
+          {
+            type: 'host',
+            value: 'komal-kalra.vercel.app',
+          },
+        ],
+        headers: [
+          {
+            key: 'X-Robots-Tag',
+            value: 'noindex, nofollow',
+          },
+        ],
+      },
+    ];
+  },
   images: {
     /**
      * All brand photography is served from /public/images (see
