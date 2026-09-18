@@ -17,6 +17,7 @@ import { SERVICE_QUESTIONS } from '@/lib/content/questions';
 import { QuestionCards } from '@/components/marketing/QuestionCards';
 import { IncludesList } from '@/components/marketing/IncludesList';
 import { Differentiators } from '@/components/marketing/Differentiators';
+import { ConsultationPackages } from '@/components/marketing/ConsultationPackages';
 import { Testimonials } from '@/components/marketing/Testimonials';
 import type { Testimonial } from '@/types/database';
 import { publicPrice } from '@/lib/money';
@@ -284,8 +285,28 @@ export default async function ServiceDetailPage(props: { params: Promise<{ slug:
           </Reveal>
         </section>
 
+        {/* ===================== 8. CONSULTATION PACKAGES ===================== */}
+        {/*
+          The full fee list, directly under this service's own panel.
+
+          The panel above describes THIS session; the packages are what the
+          practice charges across the board, including Astrologer Sunil
+          Sharma's sessions and the family pack. Someone reading one service
+          page should not have to go back to /services to find out that a
+          longer conversation, or one covering four people, exists.
+
+          Sand: the pricing panel above it and the testimonials below it both
+          sit on the page's own cream, so this needs the one tonal step to read
+          as its own section rather than as more of the panel. Testimonials is
+          switched to cream here for the same reason — see below.
+        */}
+        <ConsultationPackages tone="sand" headingId="service-packages-heading" />
+
         {/* ===================== 9. TESTIMONIALS ===================== */}
-        <Testimonials testimonials={reviews} />
+        {/* Cream rather than its sand default: the packages band immediately
+            above is now sand, and two sand sections in a row read as one.
+            npm run audit:bands enforces this. */}
+        <Testimonials testimonials={reviews} tone="cream" />
 
         {/* ============================ 10. FINAL CTA ============================ */}
         <section className="band-navy py-[var(--spacing-section-lg)] border-t border-white/20">

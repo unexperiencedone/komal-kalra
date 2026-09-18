@@ -3,6 +3,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { getActiveServices } from '@/lib/booking/availability';
 import { ExpertiseList } from '@/components/marketing/ExpertiseList';
+import { ConsultationPackages } from '@/components/marketing/ConsultationPackages';
 import { Reveal } from '@/components/common/Reveal';
 import { Button } from '@/components/ui/button';
 import { BRAND } from '@/lib/config';
@@ -124,6 +125,18 @@ export default async function ServicesPage() {
           <ExpertiseList services={services} />
         </Reveal>
       </section>
+
+      {/* ---------------------------- PACKAGES ----------------------------- */}
+      {/*
+        The fee list sits after the expertise list and before the closing CTA:
+        someone has just seen what each conversation is, and the next thing
+        they want is what it costs — asked and answered before the call to
+        action rather than after it.
+
+        Cream, between the sand expertise band and the navy CTA. See
+        npm run audit:bands.
+      */}
+      <ConsultationPackages tone="cream" headingId="packages-heading" />
 
       {/* --------------------------- CLOSING CTA --------------------------- */}
       <section className="band-navy py-[var(--spacing-section-lg)]">
