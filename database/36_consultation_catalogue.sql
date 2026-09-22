@@ -54,11 +54,12 @@
 -- 1. THE FAMILY PACK HAS NO STATED SESSION LENGTH on the fee sheet, but
 --    services.duration_minutes is NOT NULL (check: 5–480) because the slot
 --    engine schedules against it. It is set to 90 here as a SCHEDULING figure
---    and the row is marked bookable_online = false, so no slot is ever held
---    against it and no visitor is ever quoted that number as a promise — the
---    detail page routes them to /contact instead. The published fee card on
---    /services still prints no duration at all for this package, because that
---    card renders from src/lib/content/packages.ts where the value is null.
+--    that is never quoted to a client: hasStatedDuration() in
+--    src/lib/content/practitioners.ts returns false for this slug alone, so
+--    the booking card, the booking summary and the published fee card all
+--    print who the fee covers ("Four members") where every other consultation
+--    prints its length. The fee card on /services renders straight from
+--    src/lib/content/packages.ts, where the value is null.
 --
 -- 2. THE FAMILY PACK HAS NO STATED FORMAT either, and services.mode is NOT
 --    NULL. 'video' is recorded because the in-depth Kundli work it contains is
@@ -216,10 +217,15 @@ values
       'You would rather arrange one engagement than four bookings'
     ],
     2100000, 90, 15, 'video',
-    -- bookable_online = false: the fee sheet states no session length, so this
-    -- package is arranged in conversation. The detail page's CTA becomes
-    -- "Enquire About This Service" and points at /contact. See the header.
-    true, false, false, 5,
+    -- bookable_online = TRUE. This shipped as false — see 37_family_pack_
+    -- bookable.sql for why that was reversed. Short version: booking is in
+    -- WhatsApp mode, so /book arranges rather than reserves, and marking the
+    -- package enquiry-only only took it off the screen where people choose.
+    --
+    -- The 90 minutes above remains a SCHEDULING figure and is never quoted:
+    -- hasStatedDuration() in src/lib/content/practitioners.ts is false for
+    -- this slug, so the booking card and summary print "Four members" instead.
+    true, true, false, 5,
     0, 1, 60, 48,
     'Family Pack — Kundli Analysis for Four Members | Komal Kalra',
     'Individual Kundli analysis for four family members with a PDF for each, by Astrologer Komal Kalra. ₹21,000. Enquire to arrange.'

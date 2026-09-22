@@ -26,6 +26,7 @@ const minKey = (a: string, b: string) => (a < b ? a : b);
 import { POLICY, BRAND, BOOKING_MODE } from '@/lib/config';
 import { buildEnquiryMessage, enquiryLink } from '@/lib/booking/whatsapp-message';
 import { useT } from '@/lib/i18n/LanguageProvider';
+import { servicePractitioner, serviceAudience, hasStatedDuration } from '@/lib/content/practitioners';
 import { Button } from '@/components/ui/button';
 import { Field, Input, Checkbox } from '@/components/ui/field';
 import { InlineAlert, ErrorState } from '@/components/ui/states';
@@ -579,6 +580,26 @@ export function BookingFlow({
                         s.internal && 'border-dashed',
                       )}
                     >
+                      {/*
+                        Who takes the session, ABOVE the title.
+
+                        Two astrologers practise here and the fee sheet prices
+                        them differently — the ₹2,100 half hour is Astrologer
+                        Sunil Sharma's, the rest are Komal's. This is the screen
+                        where the choice is actually made, so it is the screen
+                        that has to say so; without it the only clue was the
+                        price, and the summary panel then showed a portrait the
+                        client had never been told about.
+
+                        Internal rows are skipped: the ₹1 verification service
+                        is a staff payment test, not a consultation with anyone,
+                        and its own badge below says what it is.
+                      */}
+                      {!s.internal && (
+                        <span className="mb-1 block text-[11px] font-semibold uppercase tracking-wider text-[var(--color-saffron-deep)]">
+                          {servicePractitioner(s.slug).name}
+                        </span>
+                      )}
                       <span className="block text-sm font-semibold text-[var(--color-cocoa)]">
                         {s.title}
                       </span>
@@ -592,8 +613,17 @@ export function BookingFlow({
                           Staff only · real payment
                         </span>
                       )}
+                      {/*
+                        The family pack states no session length on the fee
+                        sheet, so its card leads with who the fee covers
+                        ("Four members") instead of the 90 minutes the slot
+                        engine schedules against. See practitioners.ts.
+                      */}
                       <span className="mt-1 block text-xs text-[var(--color-body-warm)]">
-                        {s.duration_minutes} min{publicPrice(s.price_paise) ? ` · ${publicPrice(s.price_paise)}` : ''}
+                        {hasStatedDuration(s.slug)
+                          ? `${s.duration_minutes} min`
+                          : (serviceAudience(s.slug) ?? `${s.duration_minutes} min`)}
+                        {publicPrice(s.price_paise) ? ` · ${publicPrice(s.price_paise)}` : ''}
                       </span>
                     </button>
                   ))}

@@ -13,6 +13,7 @@ import { FaqAccordion } from '@/components/marketing/FaqAccordion';
 import { BOOKING_FAQ } from '@/lib/content/faq';
 import { img, serviceImage } from '@/lib/content/imagery';
 import { serviceContextImage } from '@/lib/content/service-journeys';
+import { servicePractitioner } from '@/lib/content/practitioners';
 import { SERVICE_QUESTIONS } from '@/lib/content/questions';
 import { QuestionCards } from '@/components/marketing/QuestionCards';
 import { IncludesList } from '@/components/marketing/IncludesList';
@@ -102,6 +103,9 @@ export default async function ServiceDetailPage(props: { params: Promise<{ slug:
   // being undefined on a page that does not check.
   const questions = SERVICE_QUESTIONS[service.slug] ?? SERVICE_QUESTIONS['consultation-40'];
 
+  const practitioner = servicePractitioner(service.slug);
+  const practitionerPhoto = img(practitioner.portrait);
+
   const bookHref = service.bookable_online ? `/book?service=${service.slug}` : '/contact';
   const bookLabel = service.bookable_online ? 'Schedule a Call' : 'Enquire About This Service';
 
@@ -110,7 +114,11 @@ export default async function ServiceDetailPage(props: { params: Promise<{ slug:
     '@type': 'Service',
     name: service.title,
     description: service.description,
-    provider: { '@type': 'Person', name: BRAND.fullName },
+    // The practitioner who actually takes this session. This said BRAND.fullName
+    // for every service, which published a claim that Komal delivers Sunil's
+    // consultation — structured data is a statement to Google in the same way
+    // the page is one to a reader.
+    provider: { '@type': 'Person', name: practitioner.name },
     areaServed: 'IN',
     serviceType: service.title,
     /*
@@ -158,6 +166,33 @@ export default async function ServiceDetailPage(props: { params: Promise<{ slug:
               <h1 className="mt-4 text-[length:var(--text-display-lg)] text-[var(--color-cocoa)]">
                 {service.tagline ?? service.title}
               </h1>
+
+              {/*
+                Who takes this session, with their face.
+
+                Two astrologers practise here and the fee sheet prices them
+                differently — the thirty-minute session is Astrologer Sunil
+                Sharma's. The page used to name neither, so the only way to
+                find out who you were booking was to read the description and
+                hope it said. See src/lib/content/practitioners.ts.
+              */}
+              <div className="mt-8 flex items-center gap-4">
+                <Image
+                  src={practitionerPhoto.src}
+                  alt={practitionerPhoto.alt}
+                  width={112}
+                  height={112}
+                  sizes="56px"
+                  className="size-14 shrink-0 rounded-full border border-[var(--color-hairline)] object-cover"
+                />
+                <div>
+                  <p className="label-caps text-[var(--color-body-warm)]">Your astrologer</p>
+                  <p className="mt-1 font-[family-name:var(--font-display)] text-lg font-medium text-[var(--color-cocoa)]">
+                    {practitioner.name}
+                  </p>
+                </div>
+              </div>
+
               <div className="mt-10 flex flex-wrap items-center gap-6">
                 <Button asChild size="lg" variant="primary" className="shadow-[4px_4px_0_0_var(--color-saffron-deep)]">
                   <Link href={bookHref}>

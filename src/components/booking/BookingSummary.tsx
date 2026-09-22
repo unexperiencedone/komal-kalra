@@ -1,9 +1,10 @@
 import Image from 'next/image';
-import { Clock } from 'lucide-react';
+import { Clock, Users } from 'lucide-react';
 import { formatPaise } from '@/lib/money';
 import { formatLongDay, formatTime } from '@/lib/date';
-import { BRAND, POLICY } from '@/lib/config';
+import { POLICY } from '@/lib/config';
 import { img } from '@/lib/content/imagery';
+import { servicePractitioner, serviceAudience, hasStatedDuration } from '@/lib/content/practitioners';
 import type { Service } from '@/types/database';
 import { SHOW_PRICES } from '@/lib/config';
 
@@ -28,7 +29,22 @@ export function BookingSummary({
   totalPaise: number;
   taxPaise?: number;
 }) {
-  const portrait = img('komalKalra');
+  /*
+    The practitioner follows the SELECTED SERVICE, and is not fixed to Komal.
+
+    This panel is the one that answers "what am I committing to", and the
+    ₹2,100 thirty-minute session is Astrologer Sunil Sharma's. It previously
+    showed her portrait, her name and "Vedic Astrologer" whatever was chosen,
+    so a client booking him was looking at the wrong face at the moment of
+    commitment. See src/lib/content/practitioners.ts.
+
+    With nothing selected yet this resolves to Komal, which is correct: she
+    runs the practice, and the panel is showing a placeholder state rather than
+    making a claim about a booking that does not exist.
+  */
+  const practitioner = servicePractitioner(service?.slug);
+  const portrait = img(practitioner.portrait);
+  const audience = serviceAudience(service?.slug);
 
   return (
     <aside className="border border-[var(--color-hairline)] bg-[var(--color-card-cream)] p-8 lg:sticky lg:top-28">
@@ -49,9 +65,9 @@ export function BookingSummary({
         />
         <div>
           <p className="font-[family-name:var(--font-display)] text-lg font-medium text-[var(--color-cocoa)]">
-            {BRAND.name}
+            {practitioner.name}
           </p>
-          <p className="text-sm text-[var(--color-body-warm)]">Vedic Astrologer</p>
+          <p className="text-sm text-[var(--color-body-warm)]">{practitioner.role}</p>
         </div>
       </div>
 
@@ -64,13 +80,29 @@ export function BookingSummary({
         </div>
 
         <div className="grid grid-cols-2 gap-4">
-          <div>
-            <dt className="label-caps text-[var(--color-body-warm)]">Duration</dt>
-            <dd className="mt-2 flex items-center gap-2 text-base text-[var(--color-body-warm)]">
-              <Clock className="size-4 text-[var(--color-saffron)]" aria-hidden />
-              {service ? `${service.duration_minutes} mins` : '—'}
-            </dd>
-          </div>
+          {/*
+            Reads "Covers · Four members" for the family pack, which states no
+            session length on the fee sheet. The services row does carry one
+            because the slot engine needs it, but that number belongs to the
+            calendar — printing it here would quote a commitment nobody made.
+          */}
+          {service && !hasStatedDuration(service.slug) && audience ? (
+            <div>
+              <dt className="label-caps text-[var(--color-body-warm)]">Covers</dt>
+              <dd className="mt-2 flex items-center gap-2 text-base text-[var(--color-body-warm)]">
+                <Users className="size-4 text-[var(--color-saffron)]" aria-hidden />
+                {audience}
+              </dd>
+            </div>
+          ) : (
+            <div>
+              <dt className="label-caps text-[var(--color-body-warm)]">Duration</dt>
+              <dd className="mt-2 flex items-center gap-2 text-base text-[var(--color-body-warm)]">
+                <Clock className="size-4 text-[var(--color-saffron)]" aria-hidden />
+                {service ? `${service.duration_minutes} mins` : '—'}
+              </dd>
+            </div>
+          )}
           <div>
             <dt className="label-caps text-[var(--color-body-warm)]">Date &amp; Time</dt>
             <dd className="mt-2 text-base text-[var(--color-body-warm)]">
@@ -113,7 +145,7 @@ export function BookingSummary({
             information, where an empty total is just an apparent bug.
           */
           <span className="text-sm leading-relaxed text-[var(--color-body-warm)]">
-            Astrologer Komal Kalra confirms the fee when she replies to your message.
+            {practitioner.name} confirms the fee on reply to your message.
           </span>
         )}
       </div>
