@@ -1,5 +1,6 @@
 import type { MetadataRoute } from 'next';
 import { createAdminClient } from '@/lib/supabase/admin';
+import { JOURNAL_POSTS } from '@/lib/content/journal';
 
 /**
  * Dynamic sitemap.
@@ -17,6 +18,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticRoutes: MetadataRoute.Sitemap = [
     { url: base, changeFrequency: 'weekly', priority: 1 },
     { url: `${base}/services`, changeFrequency: 'weekly', priority: 0.9 },
+    { url: `${base}/blog`, changeFrequency: 'weekly', priority: 0.7 },
     { url: `${base}/about`, changeFrequency: 'monthly', priority: 0.7 },
     { url: `${base}/faq`, changeFrequency: 'monthly', priority: 0.6 },
     { url: `${base}/contact`, changeFrequency: 'monthly', priority: 0.6 },
@@ -25,6 +27,21 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${base}/legal/refunds`, changeFrequency: 'yearly', priority: 0.3 },
     { url: `${base}/legal/delivery`, changeFrequency: 'yearly', priority: 0.2 },
   ];
+
+  /*
+    Blog posts come from a TypeScript module rather than the database, so
+    unlike the service routes below they cannot fail and do not need the
+    try/catch. They sit at 0.8 — the same priority as a service page, because
+    these are the pages most likely to be the first thing a stranger sees, and
+    `lastModified` is the post's own updatedAt so a revision is announced
+    rather than the whole section looking stale.
+  */
+  const blogRoutes: MetadataRoute.Sitemap = JOURNAL_POSTS.map((post) => ({
+    url: `${base}/blog/${post.slug}`,
+    lastModified: new Date(`${post.updatedAt ?? post.publishedAt}T00:00:00Z`),
+    changeFrequency: 'monthly' as const,
+    priority: 0.8,
+  }));
 
   try {
     const admin = createAdminClient();
@@ -47,9 +64,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         priority: 0.8,
       }));
 
-    return [...staticRoutes, ...serviceRoutes];
+    return [...staticRoutes, ...blogRoutes, ...serviceRoutes];
   } catch {
     // A sitemap that fails to build must not take the whole site down with it.
-    return staticRoutes;
+    // The blog routes are static data and are unaffected by the database being
+    // unreachable, so they stay in the degraded sitemap rather than vanishing
+    // from it alongside the rows that actually failed.
+    return [...staticRoutes, ...blogRoutes];
   }
 }

@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { BRAND } from '@/lib/config';
 import { InstagramIcon, YouTubeIcon } from '@/components/common/icons';
+import { JOURNAL_POSTS } from '@/lib/content/journal';
 import type { Service } from '@/types/database';
 
 export function SiteFooter({ services = [] }: { services?: Service[] }) {
@@ -21,7 +22,17 @@ export function SiteFooter({ services = [] }: { services?: Service[] }) {
           </p>
         </div>
 
-        <div className="grid w-full grid-cols-1 gap-x-8 gap-y-12 text-left sm:grid-cols-2 lg:grid-cols-4 lg:gap-x-12 lg:gap-y-0">
+        {/*
+          FIVE COLUMNS AT lg, NOT FOUR.
+
+          The Reading column was added with the blog and is not decoration: the
+          articles are the only pages on this site a stranger has any reason to
+          link to, and a footer link from every page is the cheapest internal
+          link they will ever get. `shortTitle` rather than `title` because a
+          column here is about 220px wide — see the note on that field in
+          content/journal.ts.
+        */}
+        <div className="grid w-full grid-cols-1 gap-x-8 gap-y-12 text-left sm:grid-cols-2 lg:grid-cols-5 lg:gap-x-10 lg:gap-y-0">
           <nav aria-label="Services" className="flex flex-col gap-3">
             <h4 className="label-caps text-[var(--color-saffron-lift)]">Services</h4>
             {services.length > 0
@@ -39,6 +50,16 @@ export function SiteFooter({ services = [] }: { services?: Service[] }) {
             <Link href="/free-tools" className={linkClass}>Calculators</Link>
             <Link href="/free-tools/free-kundli" className={linkClass}>Free Kundli</Link>
             <Link href="/free-tools/kundli-matching" className={linkClass}>Kundli Matching</Link>
+          </nav>
+
+          <nav aria-label="Reading" className="flex flex-col gap-3">
+            <h4 className="label-caps text-[var(--color-saffron-lift)]">Reading</h4>
+            {JOURNAL_POSTS.map((post) => (
+              <Link key={post.slug} href={`/blog/${post.slug}`} className={linkClass}>
+                {post.shortTitle}
+              </Link>
+            ))}
+            <Link href="/blog" className={linkClass}>All articles</Link>
           </nav>
 
           <nav aria-label="Legal" className="flex flex-col gap-3">

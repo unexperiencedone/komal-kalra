@@ -18,6 +18,7 @@ import { useT } from '@/lib/i18n/LanguageProvider';
 const NAV = [
   { href: '/services', key: 'nav.consultation' },
   { href: '/free-tools', key: 'nav.freeTools' },
+  { href: '/blog', key: 'nav.blog' },
   { href: '/about', key: 'nav.about' },
   { href: '/faq', key: 'nav.faq' },
   { href: '/contact', key: 'nav.contact' },

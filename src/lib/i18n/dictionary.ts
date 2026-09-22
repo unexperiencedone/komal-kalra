@@ -46,6 +46,18 @@ export const DICT = {
    * claim about how many people work there.
    */
   'nav.about': { en: 'About', pa: 'ਸਾਡੇ ਬਾਰੇ' },
+  /*
+   * "Blog", not "Journal" — and the route is /blog to match.
+   *
+   * The imagery catalogue has `journalCompass` and `journalCandle`, so the
+   * design anticipated a section called Journal, and Journal reads better
+   * against this brand. It is still the wrong choice: /blog is the path
+   * readers guess and other sites link to, and a route called /blog under a
+   * label saying "Journal" would put two names for one thing on the site —
+   * which is precisely the fault the note on BRAND.name in config.ts records
+   * failing a Google review over.
+   */
+  'nav.blog': { en: 'Blog', pa: 'ਬਲੌਗ' },
   'nav.faq': { en: 'FAQ', pa: 'ਸਵਾਲ-ਜਵਾਬ' },
   'nav.contact': { en: 'Contact', pa: 'ਸੰਪਰਕ' },
   'nav.book': { en: 'Book a Consultation', pa: 'ਸਲਾਹ ਬੁੱਕ ਕਰੋ' },

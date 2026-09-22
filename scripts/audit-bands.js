@@ -123,6 +123,8 @@ const PAGES = [
   'src/app/(marketing)/contact/page.tsx',
   'src/app/(marketing)/faq/page.tsx',
   'src/app/(marketing)/free-tools/page.tsx',
+  'src/app/(marketing)/blog/page.tsx',
+  'src/app/(marketing)/blog/[slug]/page.tsx',
   'src/app/(marketing)/free-kundli/page.tsx',
   'src/app/(marketing)/kundli-matching/page.tsx',
 ].filter((p) => fs.existsSync(path.join(ROOT, p)));
