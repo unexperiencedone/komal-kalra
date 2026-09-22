@@ -19,19 +19,35 @@ import { SUNIL } from './sunil';
  *
  * WHY IT DOES NOT GO THROUGH publicPrice()
  *
- * SHOW_PRICES defaults to hidden, and that default is right for the catalogue:
- * it guards against a stale or test figure in the DATABASE reaching a public
- * page, which has happened here before (see database/tools/audit-live-
- * catalogue.sql — a real consultation was live at ₹1). These figures are not
- * database state. They are a fee list written down deliberately, reviewed in
- * a diff, and published on purpose — there is no unattended value for the flag
- * to protect against, and hiding them would leave the section empty.
+ * publicPrice() returns null while SHOW_PRICES is off, and its job is to guard
+ * against a stale or test figure in the DATABASE reaching a public page —
+ * which has happened here before (see database/tools/audit-live-catalogue.sql,
+ * where a real consultation was live at ₹1). These figures are not database
+ * state. They are a fee list written down deliberately, reviewed in a diff,
+ * and published on purpose, so there is no unattended value for the flag to
+ * protect against and hiding them would leave the section empty.
+ *
+ * Prices are now published site-wide as well (NEXT_PUBLIC_SHOW_PRICES=true, at
+ * the client's request, with NEXT_PUBLIC_BOOKING_MODE still `whatsapp`), so in
+ * practice the two paths agree today. This one stays direct regardless: these
+ * cards ARE the fee sheet, and a fee sheet that can silently blank itself when
+ * an unrelated flag moves is not one.
  *
  * PRICES ARE PAISE, like every other monetary value in this codebase.
  * See src/lib/money.ts.
  */
 export type ConsultationPackage = {
   id: string;
+  /**
+   * The `services.slug` of the row this package is published as.
+   *
+   * These five slugs ARE the live catalogue — database/36_consultation_
+   * catalogue.sql archives the placeholder topic services and inserts exactly
+   * these. Holding the slug here is what lets a fee card link to its own
+   * detail page, and it is the one field that must stay in step with the
+   * migration: change a slug in one place and the card links to a 404.
+   */
+  slug: string;
   /** Who takes the session — two astrologers practise here. */
   astrologer: string;
   /** Card heading, in the fee sheet's own wording. */
@@ -55,6 +71,7 @@ export type ConsultationPackage = {
 export const CONSULTATION_PACKAGES: readonly ConsultationPackage[] = [
   {
     id: 'sunil-30-minute',
+    slug: 'consultation-30-sunil',
     astrologer: SUNIL.name,
     name: '30-minute consultation',
     pricePaise: 210000,
@@ -65,6 +82,7 @@ export const CONSULTATION_PACKAGES: readonly ConsultationPackage[] = [
   },
   {
     id: 'komal-25-minute',
+    slug: 'consultation-25',
     astrologer: BRAND.fullName,
     name: '25-minute consultation',
     pricePaise: 310000,
@@ -75,6 +93,7 @@ export const CONSULTATION_PACKAGES: readonly ConsultationPackage[] = [
   },
   {
     id: 'komal-40-minute',
+    slug: 'consultation-40',
     astrologer: BRAND.fullName,
     name: '40-minute consultation',
     pricePaise: 510000,
@@ -85,6 +104,7 @@ export const CONSULTATION_PACKAGES: readonly ConsultationPackage[] = [
   },
   {
     id: 'komal-in-depth-kundli',
+    slug: 'in-depth-kundli',
     astrologer: BRAND.fullName,
     name: 'In-depth Kundli consultation',
     pricePaise: 1100000,
@@ -95,6 +115,7 @@ export const CONSULTATION_PACKAGES: readonly ConsultationPackage[] = [
   },
   {
     id: 'komal-family-pack',
+    slug: 'family-pack',
     astrologer: BRAND.fullName,
     name: 'Family pack',
     pricePaise: 2100000,

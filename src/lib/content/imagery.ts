@@ -362,11 +362,36 @@ export function img(key: ImageKey): { src: string; alt: string } {
 /**
  * Maps a service slug to its hero photograph.
  *
- * Falls back to the astrological-guidance image rather than rendering a broken
- * frame, so adding a service in the admin panel before its photograph exists
- * degrades gracefully instead of failing.
+ * Falls back to the chart-work image rather than rendering a broken frame, so
+ * adding a service in the admin panel before its photograph exists degrades
+ * gracefully instead of failing.
+ *
+ * KEYED ON THE CONSULTATION PACKAGES, NOT THE OLD TOPIC SERVICES.
+ *
+ * The catalogue used to be five topics (Astrological Guidance, Kundli Milan,
+ * Life Coaching, Healing Session, Counselling) and each had a photograph
+ * commissioned for it. database/36_consultation_catalogue.sql replaced those
+ * placeholders with the practice's real fee sheet, which is five TIERS, so
+ * the existing photographs are reassigned to the tier each one still reads
+ * correctly for rather than reshot:
+ *
+ *   30 / 25 min   short, direct chart work      → the guidance and counsel stills
+ *   40 min        a longer working session      → the coaching still
+ *   in-depth      chart open on screen          → the Kundli still
+ *   family pack   more than one person's chart  → the circle still
+ *
+ * The old keys are left in place below the new ones. They cost nothing, and
+ * a visitor arriving on an old URL is redirected (see next.config.ts) rather
+ * than served a frame that has lost its picture.
  */
 const SERVICE_IMAGE: Record<string, ImageKey> = {
+  'consultation-30-sunil': 'serviceAstrologicalGuidance',
+  'consultation-25': 'serviceCounselling',
+  'consultation-40': 'serviceLifeCoaching',
+  'in-depth-kundli': 'serviceKundliMilan',
+  'family-pack': 'serviceHealing',
+
+  // Retired topic slugs — see database/36_consultation_catalogue.sql.
   'astrological-guidance': 'serviceAstrologicalGuidance',
   'life-coaching': 'serviceLifeCoaching',
   'healing-session': 'serviceHealing',
@@ -386,6 +411,13 @@ export function serviceImage(slug: string) {
  * borrowing someone else's.
  */
 const SERVICE_CARD_IMAGE: Record<string, ImageKey> = {
+  'consultation-30-sunil': 'astrologyGuidanceCardImage',
+  'consultation-25': 'counsellingCardImage',
+  'consultation-40': 'lifeCoachingCardImage',
+  'in-depth-kundli': 'kundliMilanCardImage',
+  'family-pack': 'healingCardImage',
+
+  // Retired topic slugs — see database/36_consultation_catalogue.sql.
   'astrological-guidance': 'astrologyGuidanceCardImage',
   'life-coaching': 'lifeCoachingCardImage',
   'healing-session': 'healingCardImage',

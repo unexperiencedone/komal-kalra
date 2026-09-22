@@ -18,14 +18,31 @@ import { publicPrice } from '@/lib/money';
  * rather than derived so the grid can number cards in display order.
  *
  * Price goes through publicPrice(), which returns null while fees are not being
- * published. The research finding still stands — hiding a price adds a
- * "request a quote" round trip and loses buyers who are ready now — but it
- * assumed the site could take the money. It cannot at the moment: payment is
- * arranged in conversation, so the quote step exists either way and printing a
- * figure here would only be the wrong half of it.
+ * published. They ARE published now — NEXT_PUBLIC_SHOW_PRICES=true, at the
+ * client's request, with booking still arranged over WhatsApp — so this prints
+ * a figure. That is the research finding applied rather than reversed: hiding
+ * a price adds a "request a quote" round trip and loses buyers who are ready
+ * now, and the fee sheet is fixed and published, so there is nothing for the
+ * visitor to discover later that they were not told here.
+ *
+ * The call still goes through publicPrice() rather than formatPaise(). These
+ * figures are DATABASE state, and the flag's real job is guarding against a
+ * stale or test row reaching a public page — a ₹1 consultation has been live
+ * on this site before. One switch turns them all off again if it happens.
  */
 
+/**
+ * Keyed on the consultation packages. The retired topic slugs are kept below
+ * them so a service restored from the archive in /admin still draws an icon
+ * rather than none — see database/36_consultation_catalogue.sql.
+ */
 const SERVICE_ICON: Record<string, React.ComponentType<{ className?: string }>> = {
+  'consultation-30-sunil': Timer,
+  'consultation-25': Handshake,
+  'consultation-40': Sparkles,
+  'in-depth-kundli': GitCompareArrows,
+  'family-pack': Waves,
+
   'astrological-guidance': Timer,
   'life-coaching': Sparkles,
   'healing-session': Waves,

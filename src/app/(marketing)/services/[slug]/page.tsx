@@ -96,7 +96,11 @@ export default async function ServiceDetailPage(props: { params: Promise<{ slug:
   const contextKey = serviceContextImage(service.slug);
   const context = contextKey ? img(contextKey) : null;
   const reviews = testimonials ?? [];
-  const questions = SERVICE_QUESTIONS[service.slug] ?? SERVICE_QUESTIONS['astrological-guidance'];
+  // Falls back to a LIVE slug. This pointed at 'astrological-guidance', which
+  // database/36_consultation_catalogue.sql archived — the key is still in the
+  // map, but a fallback that names a retired service is one tidy-up away from
+  // being undefined on a page that does not check.
+  const questions = SERVICE_QUESTIONS[service.slug] ?? SERVICE_QUESTIONS['consultation-40'];
 
   const bookHref = service.bookable_online ? `/book?service=${service.slug}` : '/contact';
   const bookLabel = service.bookable_online ? 'Schedule a Call' : 'Enquire About This Service';

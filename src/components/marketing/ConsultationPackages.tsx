@@ -1,4 +1,5 @@
-import { CheckCircle2, Clock, Phone as PhoneIcon, Users, Video } from 'lucide-react';
+import Link from 'next/link';
+import { ArrowUpRight, CheckCircle2, Clock, Phone as PhoneIcon, Users, Video } from 'lucide-react';
 import { Reveal } from '@/components/common/Reveal';
 import { cn } from '@/lib/utils';
 import { formatPaise } from '@/lib/money';
@@ -87,15 +88,32 @@ export function ConsultationPackages({
               <Reveal as="li" key={pkg.id} delay={i * 80} className={fillsRow(i)}>
                 <article
                   className={cn(
-                    'relative flex h-full flex-col border border-[var(--color-hairline)] p-8 sm:p-10',
+                    'group relative flex h-full flex-col border border-[var(--color-hairline)] p-8 sm:p-10',
                     'before:pointer-events-none before:absolute before:inset-[4px] before:border before:border-[var(--color-hairline)]',
+                    'transition-colors duration-300 hover:border-[var(--color-saffron)]',
                     skin.card,
                   )}
                 >
                   <p className="label-caps text-[var(--color-saffron-deep)]">{pkg.astrologer}</p>
 
+                  {/*
+                    The whole card is the target, via a stretched link on the
+                    heading rather than an <a> wrapped around the <article>.
+
+                    Wrapping would put the inclusions list and the duration
+                    definition list inside a link, and a screen reader then
+                    reads the entire card as one run-on link name. This way the
+                    accessible name is the package title, the ::after covers the
+                    card for a pointer, and the nested <dl>/<ul> stay outside
+                    the link where they belong.
+                  */}
                   <h3 className="mt-4 font-[family-name:var(--font-display)] text-2xl font-medium text-[var(--color-cocoa)]">
-                    {pkg.name}
+                    <Link
+                      href={`/services/${pkg.slug}`}
+                      className="after:absolute after:inset-0 after:content-[''] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--color-saffron)]"
+                    >
+                      {pkg.name}
+                    </Link>
                   </h3>
 
                   <p className="mt-6 tabular font-[family-name:var(--font-display)] text-4xl font-semibold text-[var(--color-cocoa)]">
@@ -128,6 +146,11 @@ export function ConsultationPackages({
                     <Users className="size-3.5 shrink-0 text-[var(--color-saffron)]" aria-hidden />
                     {pkg.audience}
                   </p>
+
+                  <ArrowUpRight
+                    aria-hidden
+                    className="absolute right-8 top-8 size-5 text-[var(--color-saffron-deep)] opacity-0 transition-opacity duration-300 group-hover:opacity-100 sm:right-10 sm:top-10"
+                  />
 
                   {pkg.inclusions.length > 0 && (
                     <ul className="mt-6 space-y-3 border-t border-[color-mix(in_srgb,var(--color-hairline)_60%,transparent)] pt-6">

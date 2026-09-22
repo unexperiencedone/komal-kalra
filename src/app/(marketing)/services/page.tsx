@@ -12,7 +12,7 @@ import { img } from '@/lib/content/imagery';
 export const metadata: Metadata = {
   title: 'Consultation Services',
   description:
-    'Astrological guidance, Kundli Milan, life coaching, healing and counselling with Komal Kalra. Fixed fees, clear durations, booked online.',
+    'Consultations with Astrologer Komal Kalra and Astrologer Sunil Sharma, from ₹2,100. 25, 30 and 40-minute sessions, an in-depth Kundli reading with PDF, and a four-member family pack. Fixed fees, stated upfront.',
   alternates: { canonical: '/services' },
 };
 

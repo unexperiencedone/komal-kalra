@@ -1,4 +1,20 @@
-export const SERVICE_QUESTIONS: Record<string, Array<{ area: string; questions: string[] }>> = {
+type QuestionGroup = { area: string; questions: string[] };
+
+/**
+ * The question cards on each service detail page — what people actually arrive
+ * with, grouped by the area of life they come from.
+ *
+ * WRITTEN AGAINST THE OLD TOPIC CATALOGUE, REUSED BY THE TIERS.
+ *
+ * These four sets were authored when the catalogue was five topics. The
+ * catalogue is now five tiers (database/36_consultation_catalogue.sql), and a
+ * tier does not narrow what may be asked — someone booking forty minutes can
+ * bring a marriage question or a career one. So the sets are kept as written
+ * and each tier is pointed at the set that matches the conversation that tier
+ * is usually taken for; SERVICE_QUESTIONS below is the mapping, not a second
+ * copy of the copy.
+ */
+const QUESTION_SETS: Record<string, QuestionGroup[]> = {
   'astrological-guidance': [
     {
       area: 'Career & Ambition',
@@ -169,4 +185,33 @@ export const SERVICE_QUESTIONS: Record<string, Array<{ area: string; questions: 
       ],
     },
   ]
+};
+
+/**
+ * Consultation slug → question set.
+ *
+ * The retired topic slugs are kept alongside the live ones. Nothing links to
+ * them any more (next.config.ts redirects the old URLs), but this map is also
+ * read for any service added later in the admin console, and a missing key
+ * falls back rather than throwing — see the call site in
+ * src/app/(marketing)/services/[slug]/page.tsx.
+ */
+export const SERVICE_QUESTIONS: Record<string, QuestionGroup[]> = {
+  // A half hour with Sunil: one question, usually a chart-and-timing one.
+  'consultation-30-sunil': QUESTION_SETS['astrological-guidance'],
+  // Twenty-five minutes is the session people take to talk one thing through.
+  'consultation-25': QUESTION_SETS['counselling'],
+  // Forty minutes is the working session — a decision being moved forward.
+  'consultation-40': QUESTION_SETS['life-coaching'],
+  // The full hour with the chart open: the complete reading.
+  'in-depth-kundli': QUESTION_SETS['astrological-guidance'],
+  // Four charts read together is nearly always a family or marriage matter.
+  'family-pack': QUESTION_SETS['kundli-milan'],
+
+  // Retired topic slugs — see database/36_consultation_catalogue.sql.
+  'astrological-guidance': QUESTION_SETS['astrological-guidance'],
+  'life-coaching': QUESTION_SETS['life-coaching'],
+  counselling: QUESTION_SETS['counselling'],
+  'healing-session': QUESTION_SETS['healing-session'],
+  'kundli-milan': QUESTION_SETS['kundli-milan'],
 };

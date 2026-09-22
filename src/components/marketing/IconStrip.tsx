@@ -1,12 +1,21 @@
 import Link from 'next/link';
-import { Timer, Sparkles, Waves, Handshake, Mail } from 'lucide-react';
+import { Timer, Sparkles, Waves, GitCompareArrows, Mail } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
+/**
+ * Four ways in, plus contact.
+ *
+ * These pointed at the old topic services (Astrological Guidance, Life
+ * Coaching, Healing, Counselling) until database/36_consultation_catalogue.sql
+ * replaced the placeholder catalogue with the practice's real fee sheet. The
+ * labels stay short and plain — they are a wayfinding strip, not a price list —
+ * and each now lands on the consultation it names.
+ */
 const ICONS = [
-  { href: '/services/astrological-guidance', label: 'Astrology', Icon: Timer },
-  { href: '/services/life-coaching', label: 'Coaching', Icon: Sparkles },
-  { href: '/services/healing-session', label: 'Healing', Icon: Waves },
-  { href: '/services/counselling', label: 'Counselling', Icon: Handshake },
+  { href: '/services/consultation-30-sunil', label: '30 Minutes', Icon: Timer },
+  { href: '/services/consultation-40', label: '40 Minutes', Icon: Sparkles },
+  { href: '/services/in-depth-kundli', label: 'In-Depth Kundli', Icon: GitCompareArrows },
+  { href: '/services/family-pack', label: 'Family Pack', Icon: Waves },
   { href: '/contact', label: 'Contact', Icon: Mail },
 ];
 

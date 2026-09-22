@@ -37,7 +37,7 @@ export interface ServiceJourney {
   phases: [JourneyPhase, JourneyPhase, JourneyPhase];
 }
 
-const JOURNEYS: Record<string, ServiceJourney> = {
+const JOURNEY_SETS: Record<string, ServiceJourney> = {
   'healing-session': {
     heading: 'The Healing Journey',
     intro:
@@ -132,9 +132,43 @@ const JOURNEYS: Record<string, ServiceJourney> = {
  * heading and rule alone, which the layout already handles.
  */
 const CONTEXT_IMAGE: Record<string, ImageKey> = {
+  // Chart work, so the journal of astronomical notation reads correctly.
+  'consultation-30-sunil': 'serviceContext',
+  'consultation-40': 'serviceContext',
+  'in-depth-kundli': 'serviceContext',
+  'family-pack': 'serviceContext',
+
+  // Retired topic slugs — see database/36_consultation_catalogue.sql.
   'astrological-guidance': 'serviceContext',
-  // Kundli Milan is also chart work, so the same still-life reads correctly.
   'kundli-milan': 'serviceContext',
+};
+
+/**
+ * Consultation slug → journey.
+ *
+ * The four journeys above were authored against the old topic catalogue. The
+ * catalogue is now five tiers (database/36_consultation_catalogue.sql), and
+ * the journeys describe HOW A SESSION RUNS rather than what it is about — the
+ * consultation arc, the coaching arc, the matching process — so each tier is
+ * pointed at the arc its session actually follows instead of the copy being
+ * rewritten five times.
+ *
+ * The 25-minute session is deliberately absent. It is one question taken
+ * directly, with no three-phase shape to describe, and the detail page already
+ * renders without this section when it returns null. Inventing an arc for it
+ * would be describing a structure that session does not have.
+ */
+const JOURNEYS: Record<string, ServiceJourney | undefined> = {
+  'consultation-30-sunil': JOURNEY_SETS['astrological-guidance'],
+  'consultation-40': JOURNEY_SETS['life-coaching'],
+  'in-depth-kundli': JOURNEY_SETS['astrological-guidance'],
+  'family-pack': JOURNEY_SETS['kundli-milan'],
+
+  // Retired topic slugs — see database/36_consultation_catalogue.sql.
+  'astrological-guidance': JOURNEY_SETS['astrological-guidance'],
+  'kundli-milan': JOURNEY_SETS['kundli-milan'],
+  'life-coaching': JOURNEY_SETS['life-coaching'],
+  'healing-session': JOURNEY_SETS['healing-session'],
 };
 
 export function serviceContextImage(slug: string): ImageKey | null {
