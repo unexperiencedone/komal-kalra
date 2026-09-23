@@ -52,35 +52,25 @@ const nextConfig: NextConfig = {
         destination: '/services/consultation-25',
         permanent: true,
       },
+      /*
+        Every *.vercel.app hostname this project answers on (the default
+        komal-kalra.vercel.app plus the team/branch aliases Vercel generates,
+        e.g. komal-kalra-git-main-<team>.vercel.app) permanently redirects to
+        the real domain, path preserved. This is the ONLY signal these hosts
+        send: no noindex header. A noindex on a redirecting URL is a mixed
+        signal that can make Google drop the old URL without consolidating
+        its ranking onto www.astrokomalkalra.com.
+      */
       {
         source: '/:path*',
         has: [
           {
             type: 'host',
-            value: 'komal-kalra.vercel.app',
+            value: '(?<vercelhost>.+)\\.vercel\\.app',
           },
         ],
         destination: 'https://www.astrokomalkalra.com/:path*',
         permanent: true, // 308 Permanent Redirect
-      },
-    ];
-  },
-  async headers() {
-    return [
-      {
-        source: '/:path*',
-        has: [
-          {
-            type: 'host',
-            value: 'komal-kalra.vercel.app',
-          },
-        ],
-        headers: [
-          {
-            key: 'X-Robots-Tag',
-            value: 'noindex, nofollow',
-          },
-        ],
       },
     ];
   },

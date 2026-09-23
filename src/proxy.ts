@@ -17,10 +17,10 @@ import { updateSession } from '@/lib/supabase/proxy';
 const PROTECTED_PREFIXES = ['/dashboard', '/admin'];
 
 export async function proxy(request: NextRequest) {
-  // Permanent 301 redirect: ensure any traffic landing on the vercel.app domain
-  // is immediately passed to the primary custom domain for SEO transfer.
-  const host = request.headers.get('host') ?? '';
-  if (host.includes('komal-kalra.vercel.app')) {
+  // Backup for the host redirect in next.config.ts: any *.vercel.app hostname
+  // (default domain or a team/branch alias) goes permanently to the real domain.
+  const host = (request.headers.get('host') ?? '').split(':')[0].toLowerCase();
+  if (host.endsWith('.vercel.app')) {
     const targetUrl = new URL(request.url);
     targetUrl.host = 'www.astrokomalkalra.com';
     targetUrl.protocol = 'https:';
