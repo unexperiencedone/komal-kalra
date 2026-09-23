@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import { Poppins, Cormorant_Garamond } from 'next/font/google';
 import { Toaster } from 'sonner';
+import { Analytics } from '@vercel/analytics/next';
 import { BRAND } from '@/lib/config';
 import './globals.css';
 import { LanguageProvider } from '@/lib/i18n/LanguageProvider';
@@ -123,6 +124,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             },
           }}
         />
+        {/* Vercel Web Analytics — page views on the production domain. */}
+        <Analytics />
       </body>
     </html>
   );
